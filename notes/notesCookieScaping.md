@@ -29,3 +29,23 @@ RESCAN
 ###### ALNINC WM1 P1
 
 Check to see if it's the same ALNINC WM P1
+
+BETALL GR12 P3
+
+Really unsure of the rings. Most rings seem to be penatrated by cells. Check with Neil.
+
+Outer ring, probably 2022, but not sure
+
+BETALL GR9 P3
+
+Outer ring likely to be 2023, 
+
+BETALL GR9 PNA
+
+Really unsure of ring measurements. Lots of potential false rings. 
+
+BETALL 
+
+GR12 P1
+
+Not sure of 2020 measurement
