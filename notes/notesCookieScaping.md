@@ -44,8 +44,47 @@ BETALL GR9 PNA
 
 Really unsure of ring measurements. Lots of potential false rings. 
 
-BETALL 
-
-GR12 P1
+BETALL GR12 P1
 
 Not sure of 2020 measurement
+
+####BETALL GR13 P15
+Outer ring is probably 2023 growth, and the closest one to the pit is probably 2 years, not one like I scraped it. I did this because the ring is almost non-existent at some angles. 
+#### BETALL GR14 P15
+Outer ring is probably actually 2022 growth because of how wide it is.
+####BETALL SH2 P6
+Outer ring is probably actually 2022 growth because of how wide it is.
+I am not sure of the inner rings.
+####BETALL SH4 P3 
+Outer ring may be false ring
+I could resand, quality isn't great.
+####BETALL SH5 P6
+Good
+####BETALL SH9 P6
+Really hard to tell the false rings. As of what I did now, there is 6 rings that go back to 2015 which would be hard to tell. 
+####BETALL SH9 P9
+ONLY two measurements for this cookie, as there is a huge know that could be mistaken for the pit. I selected the "knot" that was the most centered. 
+####BETALL WM8A P12
+The first ring after the pit is probably false because it's very narrow, but it's well defined, so I am not sure.
+####BETALL WM8B P12
+Bit know on the right of the image. I marked the rings following the other guide's pattern. 
+####BETALL WM8 P1
+Looks good
+####BETALL WM8D P5
+Really not sure of false rings.
+####BETPAP GR5B P2
+Outer ring, very likely to be 2023 growth.
+####BETPAP GR5A P2
+Outer ring, very likely to be 2023 growth.
+####BETPAP HF 16A P6
+Outer ring, very likely to be 2022 growth.
+####BETPAP HF16 P12
+Pit NA, 2017 ring for 1 guide line isn't there. Outer ring likely to be 2022 growth. 
+####BETPAP HF16B P6
+Outer ring, very likely to be 2023 growth.
+####BETPOP GR 5A P3
+A lot of what appears to be false rings, but not sure. I don't know if outer ring is 2022/2023.
+####BETPOP GR5B P12
+Outer ring probably 2022, but not sure if there is a false ring. 
+####BETPOP GR3 P16
+Only 4 rings. They are well defined and the cookies is very symmetrical. 
