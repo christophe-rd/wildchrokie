@@ -88,3 +88,13 @@ A lot of what appears to be false rings, but not sure. I don't know if outer rin
 Outer ring probably 2022, but not sure if there is a false ring. 
 ####BETPOP GR3 P16
 Only 4 rings. They are well defined and the cookies is very symmetrical. 
+#### BETPOP HF1 P2
+The whitish outer part could be active cambium? However, there would be a ring before it. Outer ring likely to be 2022. Would be too large for 2023. 
+Realy not sure of multiple rings because none of them appear to be a strong false ring. 
+#### BETPOP HF P6
+Outer ring probably 2022. Pretty sure of the calls. 
+#### BETPOP GR5 P1
+Outer ring probably 2023 (entered as 2023). Really hard to tell. 2 very small rings. To double check
+#### BETPOP GR5 P6
+Good
+
