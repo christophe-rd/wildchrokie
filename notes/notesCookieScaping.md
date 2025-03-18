@@ -4,9 +4,17 @@
 I lost all of my previous notes from the cookies before ALNINC HF1 P1
 
 #### ALNINC G8 P3
+Microscope
+#### ALNINC GR8 P16
 RESAND
+Confident but check outer ring year
 #### ALNINC GR8B P5
 RESAND
+One side has a ring which may be early 2023 growth. 
+Confident but check outer ring year
+#### ALNINC GR11 P15
+RESAND OK
+Confident but check outer ring year
 #### ALNINC SH5 P2
 RESCAN
 #### ALNINC WM5 P1
@@ -18,8 +26,7 @@ OK.
 Outer ring 2023? If so, i need to change the measurement. 
 Neil: 
 - Outer ring 2022 or 2023?
-#### ALNINC GR11 P15
-RESAND OK
+
 #### ALNINC GR11A P3 
 Sanding ok
 #### ALNINC_HF1_P1_guides
