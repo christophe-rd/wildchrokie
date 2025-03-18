@@ -10,14 +10,16 @@ RESAND
 #### ALNINC SH5 P2
 RESCAN
 #### ALNINC WM5 P1
-RESAND
+RESEND
+**MISSING**
 #### ALNINC GR 11B P3_guides
 RESAND
+OK.
 Outer ring 2023? If so, i need to change the measurement. 
 Neil: 
 - Outer ring 2022 or 2023?
 #### ALNINC GR11 P15
-RESAND
+RESAND OK
 #### ALNINC GR11A P3 
 Sanding ok
 #### ALNINC_HF1_P1_guides
@@ -27,7 +29,7 @@ sanding ok
 #### ALNINC_HF5_P6_guides
 sanding not great but ok
 #### ALNINC HF9 P2_guides
-RESAND
+RESAND ok.
 #### ALNINC HF9 P15_guides
 Sanding ok
 #### ALNINC_P16_GR8_guides_1
@@ -39,7 +41,7 @@ RESAND
 #### ALNINC_SH4_P2_guides
 RESAND
 #### ALNINC_SH4_P15_guides
-RESAND
+RESAND MISSING from newly scanned cookies. probably missed it
 #### ALNINC WM5 B2
 Sanding ok
 #### ALNINC_GR8A_P5_guides
@@ -53,8 +55,6 @@ Same as the others. 2022 growth is likely to be 2023, but setting it as 2022 for
 
 **Onward, all ALNINC for their last ring are set as 2022, but no specific notes are taken for them.**
 
-#### ALNINC GR11B P3
-
 ####ALNINC HF9 P15. 
 Only 2 rings. Set as 2022 and 21. 
 
@@ -67,6 +67,7 @@ Too many years and commented on a ring that looks like a false ring. Outer ring 
 It's WM1 P1
 #### ALNINC WM5BP16
 RESAND
+MISSING will need to rescan and ressand
 #### BETALL_GR_12_P3_guides
 Sanding ok
 #### BETALL GR12 P3
@@ -158,6 +159,7 @@ Outer ring probably 2022. Pretty confident of the calls made.
 Good
 #### BETPOP HF1 P3
 RESAND
+MISSING MAY Be HF3 P1 
 #### BETPOP HF3 P1
 Pretty sure
 #### BETPOP HF3A P6
