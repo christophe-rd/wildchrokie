@@ -24,7 +24,9 @@ Catherine Chamberlain
 ## *General Files*
 | **File** | **Where** | **What** |
 |----------|----------|----------|
-
+|guidelinescookies.md| [Github](https://github.com/christophe-rd/wildchrokie/tree/cded7a644b12f0f88d5f67f1263c6e4590eda67c/notes)|Notes on how to use the tool Adam created to add guidelines to cookies. [Python code can be found here](https://github.com/temporalecologylab/TreeRings/blob/5333f5718b23e93632f067be184e9366cf1ffc75/code/cookie_guidelines.py)
+|notesCookieScaping.md|[Github](https://github.com/christophe-rd/wildchrokie/tree/cded7a644b12f0f88d5f67f1263c6e4590eda67c/notes)|All the notes taken while measuring tree rings. This includes measurements rounds, the cookies for which I was confident and the ones I am not. 
+|wherethingsare.md|[Github](https://github.com/christophe-rd/wildchrokie/tree/cded7a644b12f0f88d5f67f1263c6e4590eda67c/notes)|Temporary file to try to make sens of where the information is located. I need to work better on that and the end goal is to gather all the information together. 
 ---
 
 ## *Data*
