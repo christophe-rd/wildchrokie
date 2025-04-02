@@ -66,14 +66,19 @@ Only 2 rings. Set as 2022 and 21.
 #### ALNINC SH1 P12
 RESAND 3RD ROUND: forgot to resanded it in the 2nd round.
 Too many years and commented on a ring that looks like a false ring. Outer ring likely 2023. Also, a lot of rot
+Microscoped: checked and not super confident about the rings, but defined false and real are consistent.
 #### ALNINC WM1 P1
  RESAND 3RD ROUND: forgot to resanded it in the 2nd round. could just check under microscope also
+RESCAN 3RD ROUND
 #### ALNINC_WM_2A_P1_
 RESAND 3RD ROUND: forgot to resanded it in the 2nd round. check under microscope also
+Microscoped.Pretty confident
 #### ALNINC_WM_5B_P2
 RESAND 3RD ROUND: forgot to resanded it in the 2nd round. check under microscope also
+Microscoped: pretty confident
 #### ALNINC WM5BP16
 RESAND 3RD ROUND
+Microscoped: pretty confident.
 #### ALNINC_WM8_P1
 Confident but  check outer ring year
 
@@ -91,7 +96,7 @@ Really unsure of the rings. Most rings seem to be penatrated by cells. Check wit
 Confident
 #### BETALL GR9 P3
  RESAND 3RD ROUND
-
+Really hard to call the false rings, but ended up with something pretty confident with microscope.
 ####BETALL GR12 P1
 Not sure of 2020 measurement
 ####BETALL GR13 P15
@@ -129,6 +134,7 @@ Bit know on the right of the image. I marked the rings following the other guide
 Looks good
 #### BETALL_WM8A_P5
 RESAND 3RD ROUND:
+Second outer ring is not well defined at some places, but I believe it's real. First outer ring is also really thin and not well defined but similar to second one so for consistency, they are both real. Medium confident.
 ####BETALL WM8D P5
 RESAND
 Really not sure of false rings.
@@ -162,6 +168,7 @@ Looked up. Outer rings appear to be false
 Confident
 ####BETPOP GR5B P12
 Microscope: check the outer rings to make sure they are false. Looked up and will resand.
+Microscoped: no reason to exclude outer ring even though looking back it seems false, I did 2 whole rounds of it and it seems like real ring with thin but defined ring boundary.
 ####BETPOP GR3 P16
 Only 4 rings. They are well defined and the cookies is very symmetrical. 
 #### BETPOP_GR_5C_P12
@@ -205,12 +212,14 @@ Good
 Pretty sure
 #### BETPOP HF3A P6
 Pretty sure
+There is another one, that has a rougher cut, maybe the one that was scanned and measured was collected at the end of 2023 GS.
 ####BETPOP HF4 P9
 RESAND
 Microscope: too many years and don't know any ring that could be false. Not super confident because goes to 2015...
 #### BETPOP WM7 P3
 Not sure, because goes to 2015, but sanding is pretty good. 
 Microscope. Looked up and will resand.
+Microscoped: outer ring not well defined, so called false. Medium confident.
 #### BETPOP WM P1
 Pretty sure 
 #### BETPOP WM7 P2
@@ -224,6 +233,7 @@ General comment: Accross most of the betpop, I notice that the 2 last rings have
 #### BETPOP WM7 P15
 not too sure
 Microscope. Looked up and will resand.
+Resanded and not super confident, but ok. The outer ring and the third are called ot be false.
 #### BETPOP WM8 P16
 Pretty sure
 #### BETPOP WM8 PNA
