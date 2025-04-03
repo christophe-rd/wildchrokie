@@ -37,6 +37,7 @@ RESAND
 Confident but check outer ring year
 #### ALNINC HF9 P15_guides
 Sanding ok
+4TH ROUND: look up last ring and adjust measurements if not ok.
 #### ALNINC_P16_GR8_guides_1
 RESAND + ethanol
 #### ALNINC_SH1_P1_guides
