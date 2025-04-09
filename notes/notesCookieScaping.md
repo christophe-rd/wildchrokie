@@ -37,12 +37,13 @@ RESAND
 Confident but check outer ring year
 #### ALNINC HF9 P15_guides
 Sanding ok
-4TH ROUND: look up last ring and adjust measurements if not ok.
+4TH ROUND: look up last ring and adjust measurements if not ok. Sanding ok, just microscope
 #### ALNINC_P16_GR8_guides_1
 RESAND + ethanol
 #### ALNINC_SH1_P1_guides
 RESAND
 It was scanned and given name ALNINC SH1 na bu verified and its SH1 P1
+There are 2 cookies SH1-P1. 
 #### ALNINC_SH3_P16_guides
 RESAND
 Confident but check outer ring year
@@ -105,6 +106,7 @@ Outer ring is probably 2023 growth, and the closest one to the pit is probably 2
 #### BETALL GR14 P15
 Outer ring is probably actually 2022 growth because of how wide it is.
 Neil: Is the outer ring 2022 or 2023
+4TH ROUND: look up last ring and adjust measurements if not ok.
 ####BETALL SH2 P6
 RESAND
 Outer ring is probably actually 2022 growth because of how wide it is.
@@ -130,7 +132,7 @@ RESAND
 The first ring after the pit is probably false because it's very narrow, but it's well defined, so I am not sure.
 Microscope: check the first 2 rings from the center. Ok, confident
 ####BETALL WM8B P12
-Bit know on the right of the image. I marked the rings following the other guide's pattern. 
+For red guideline, measured above the guide as it was directly on a knot
 ####BETALL WM8 P1
 Looks good
 #### BETALL_WM8A_P5
@@ -153,6 +155,7 @@ Confident
 Outer ring, very likely to be 2023 growth.
 ####BETPAP GR5A P2
 Outer ring, very likely to be 2023 growth.
+CHECK GR5A P2 AND 5B BECASUE THEY ARE LIKELY THE SAME THEY are almost identical
 ####BETPAP HF 16A P6
 Outer ring, very likely to be 2022 growth.
 ####BETPAP HF16 P12
@@ -192,6 +195,7 @@ Microscope: look at all rings and inner ones as well.
 Pretty confident.
 #### BETPOP HF P6
 Outer ring probably 2022. Pretty sure of the calls. 
+4TH ROUND: look up last ring and adjust measurements if not ok.
 #### BETPOP GR5 P1
 RESAND
 Outer ring probably 2023 (entered as 2023). Really hard to tell. 2 very small rings. To double check
