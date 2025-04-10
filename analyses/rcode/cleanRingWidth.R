@@ -38,7 +38,15 @@ e$Year <- as.numeric(e$Year)
 e$LengthCM <- e$Length*2.54
 # Create a new df with only necessary columns
 d <- e[, c("Name", "Year", "LengthCM")]
-
+# Take the mean of each year and each tree replicate
+agg <- aggregate(d$LengthCM, by = list(d$Name, d$Year), FUN = mean)
+# rename the columns
+colnames(agg) <- c("Name", "Year", "LengthCM")
+# select one replicate
+ALNINC_WM_2A_P1 <- subset(agg, Name == "ALNINC_WM_2A_P1")
+# calculate diameter by adding the mean ring width of each year
+radius <- sum(ALNINC_WM_2A_P1$LengthCM)
+radius*2
 ### Select random measurements that I will physically measure on the cookies to verify the accuracy of the measurements
 # Select 20 random measurements
 set.seed(123) # for reproducibility0
@@ -47,6 +55,6 @@ random_rows <- sample(nrow(d), 10)
 # Create a new data frame with the selected rows  
 vec <- d$Name[random_rows]
 # Create a new data frame with the selected rows
-random_measurements <- d[vec, ]
+random_measurements <- subset(agg, Name %in% vec)
 
 newdf <- subset(d, Name %in% vec)
