@@ -18,6 +18,7 @@ Confident but check outer ring year
 #### ALNINC SH5 P2
 RESCAN
 Confident but check outer ring year
+
 #### ALNINC WM5 P1
 RESEND
 **MISSING**
@@ -160,6 +161,7 @@ CHECK GR5A P2 AND 5B BECASUE THEY ARE LIKELY THE SAME THEY are almost identical
 Outer ring, very likely to be 2022 growth.
 ####BETPAP HF16 P12
 Pit NA, 2017 ring for 1 guide line isn't there. Outer ring likely to be 2022 growth. 
+NO PIT. So missiing first year growth ring. 
 ####BETPAP HF16B P6
 Outer ring, very likely to be 2023 growth.
 
