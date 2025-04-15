@@ -1,0 +1,48 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath, amssymb, hyperref, listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{textgreek}
+
+\geometry{margin=1in}
+\setlength\parindent{0pt}
+
+\title{CoringTreespotters Model notes}
+\author{Christophe}
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\section*{15 April 2025}
+Quick notes after meeting with Victor where we talked about preliminary steps of building a model to answer the question of how juvenile trees respond to climate change. I would like to approach this as a recruitement capacity of tree saplings and how their growth varies across years and how it's impacted by temperature and growing season length (or maybe not length... more on that below)
+
+\subsection*{What are my predictors?}
+We discussed which of the following would be the most relevant variable that relates to growth:
+\begin{enumerate}
+	\item \textbf{Growing Degree Days (GDD)} which would be calculated between the budburst and budset date of each individual. 
+	\item \textbf{Growing Season Length (GSL)} which could be calculated by:
+	\begin{enumerate}
+		\item Substracting budset DOY by budburst DOY or 
+		\item By taking the number of days of each year when the mean (or max/min) was above 5$^{\circ}$C (or maybe the nb of consecutive days when the temperature was above 5 or something like that).
+	\end{enumerate}
+\end{enumerate}
+
+\par
+\textbf{Preliminary model} \\ 
+\begin{align}
+	\log (w_{i,t}) \sim \text{normal}(\text{X}, \sigma) \\
+	\alpha + \alpha_{sp[i]} + \beta_{sp[i]} X_{i,t} + \cdots
+\end{align} 
+What kind of pooling? Partial pooling since they are all within the same family?
+
+
+Where: 
+\begin{itemize}
+	\item 
+	\item alpha
+\end{itemize} 
+
+\end{document}
