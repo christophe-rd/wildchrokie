@@ -31,6 +31,8 @@ Sanding ok
 sanding ok
 #### ALNINC_HF2_P1_guides
 sanding ok
+#### ALNINC HF3 P16
+Confident
 #### ALNINC_HF5_P6_guides
 sanding not great but ok
 #### ALNINC HF9 P2_guides
@@ -72,7 +74,7 @@ Too many years and commented on a ring that looks like a false ring. Outer ring 
 Microscoped: checked and not super confident about the rings, but defined false and real are consistent.
 #### ALNINC WM1 P1
  RESAND 3RD ROUND: forgot to resanded it in the 2nd round. could just check under microscope also
-RESCAN 3RD ROUND
+RESCAN 3RD ROUND: MICROSCOPE
 #### ALNINC_WM_2A_P1_
 RESAND 3RD ROUND: forgot to resanded it in the 2nd round. check under microscope also
 Microscoped.Pretty confident
@@ -217,6 +219,7 @@ Good
 
 #### BETPOP HF3 P1
 Pretty sure
+
 #### BETPOP HF3A P6
 Pretty sure
 There is another one, that has a rougher cut, maybe the one that was scanned and measured was collected at the end of 2023 GS.

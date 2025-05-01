@@ -19,6 +19,11 @@
 \section*{15 April 2025}
 Quick notes after meeting with Victor where we talked about preliminary steps of building a model to answer the question of how juvenile trees respond to climate change. I would like to approach this as a recruitement capacity of tree saplings and how their growth varies across years and how it's impacted by temperature and growing season length (or maybe not length... more on that below)
 
+\newpage
+\textit{Below I will be stating the obvious because I want to make sure I understand the notations and stuff. The steps will be notes and thoughts that I have when I code my model in R.}
+
+\section{Come up with a model}
+
 \subsection*{What are my predictors?}
 We discussed which of the following would be the most relevant variable that relates to growth:
 \begin{enumerate}
@@ -36,9 +41,46 @@ We discussed which of the following would be the most relevant variable that rel
 	\log (w_{i,t}) \sim \text{normal}(\text{X}, \sigma) \\
 	\alpha + \alpha_{sp[i]} + \beta_{sp[i]} X_{i,t} + \cdots
 \end{align} 
-What kind of pooling? Partial pooling since they are all within the same family?
+What kind of pooling? Partial pooling since they are all within the same family?\\
+
+\section{Simulate data}
+I arbitrarily decided to sum up th GDD between 100 and 250 days for now in order to simplify data simulation. 
+
+\subsection*{Common Bayesian Notation} % found online
+
+\begin{itemize}
+  \item $\theta$ --- Parameters of the model (can be a vector of parameters)
+  \item $y$ --- Observed data
+  \item $x$ --- Predictor variables or covariates
+  \item $p(\theta)$ --- Prior distribution over parameters
+  \item $p(y \mid \theta)$ --- Likelihood: the probability of the data given parameters
+  \item $p(\theta \mid y)$ --- Posterior distribution: updated beliefs about parameters after observing data
+  \item $p(y)$ --- Marginal likelihood or evidence: probability of the data under the model
+  \item $p(y \mid x, \theta)$ --- Likelihood conditional on predictors
+  \item $p(\theta, y)$ --- Joint distribution of parameters and data
+  \item $\mu$ --- Mean (typically of a normal distribution or prior)
+  \item $\sigma$ --- Standard deviation (scale of a distribution)
+  \item $\tau$ --- Precision (inverse of variance: $\tau = 1/\sigma^2$)
+  \item $\mathcal{N}(\mu, \sigma^2)$ --- Normal (Gaussian) distribution with mean $\mu$ and variance $\sigma^2$
+  \item $\text{Beta}(\alpha, \beta)$ --- Beta distribution (common prior for probabilities)
+  \item $\text{Gamma}(\alpha, \beta)$ --- Gamma distribution (common prior for positive variables)
+  \item $\text{InvGamma}(\alpha, \beta)$ --- Inverse Gamma distribution (common prior for variances)
+  \item $\text{Bernoulli}(p)$ --- Bernoulli distribution for binary data
+  \item $\text{Binomial}(n, p)$ --- Binomial distribution
+  \item $\text{Poisson}(\lambda)$ --- Poisson distribution for count data
+  \item $\sim$ --- "Is distributed as" (e.g., $y \sim \mathcal{N}(\mu, \sigma^2)$)
+  \item $\propto$ --- Proportional to (used in unnormalized posteriors: $p(\theta \mid y) \propto p(y \mid \theta) p(\theta)$)
+\end{itemize}
 
 
+
+
+
+\section{Set your priors}
+
+\section{Run model on empirical data}
+
+\section{Perform retrodictive checks using the model fit to your empirical data}
 %Where: 
 %\begin{itemize}
 %	\item 
