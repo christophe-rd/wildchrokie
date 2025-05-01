@@ -9,7 +9,7 @@ options(stringsAsFactors = FALSE)
 
 ## Load Libraries
 library(ggplot2)
-
+library(xlsx)
 # Set Working Directory
 # Christophe's directory
 directory <- "/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input"
@@ -22,6 +22,38 @@ data_list <- lapply(file_list, read.csv)
 
 # combine tables
 c <- do.call(rbind, data_list)
+
+### === === === === === ###
+#####  ##### 
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies")
+d <- read.xlsx("treecookies.xlsx", sheetName = "Sheet1")
+# paste id and plot
+d$idfull <- paste(d$id, d$Plot, sep = "_")
+# subset only for species I want
+vec <- c("ALNINC", "BETALL", "BETPAP", "BETPOP", "QUERUB")
+dsub <- subset(d, species %in% vec )
+cookies <- subset(dsub, cookie. == "1")
+cores <- subset(dsub, core == "1") 
+# select only the rows for which the cookie column doesnt have a "1"
+corewNocookie <- subset(cores, cookie. == "1")
+
+vec<- unique(corewNocookie$idfull)
+temp <- subset(cores, !(idfull %in% vec))
+
+# List the cores for which we have no cookies
+# ALNINC_SH_6_P5
+# BETALL_SH_4A_9
+# BETPAP HF16 P2
+# BETPOP_HF_5_6
+
+# List the cores for which we have cookies but were not entered as such!
+# BETALL_GR_9_P3
+
+# List the cores for which i dont have a core matching this name yet. 
+# ALNINC HF8 P12 actually we don't have the core either... TO CHECK 
+# BETALL SH9 P9, I have a PNA TO CHECK
+# BETALL_WM_8_9
+# BETPOP_GR_5_P6
 
 ### === === === === === ###
 # Clean labels and years #

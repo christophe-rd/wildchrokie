@@ -54,6 +54,6 @@ goo18$GDD_10<- pollen::gdd(tmax = goo18$maxTc,tmin = goo18$minTc,tbase = 10,type
 goo19$GDD_10<- pollen::gdd(tmax = goo19$maxTc,tmin = goo19$minTc,tbase = 10,type = "B")
 goo20$GDD_10<- pollen::gdd(tmax = goo20$maxTc,tmin = goo20$minTc,tbase = 10,type = "B")
 goober<-rbind(goo18,goo19,goo20)
-
+ 
 write.csv(goober, "output/gddData.csv", row.names = F)
 
