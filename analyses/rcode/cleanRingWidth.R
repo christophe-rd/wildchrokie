@@ -45,15 +45,25 @@ temp <- subset(cores, !(idfull %in% vec))
 # BETALL_SH_4A_9
 # BETPAP HF16 P2
 # BETPOP_HF_5_6
+# ALNINC HF8 P12
 
 # List the cores for which we have cookies but were not entered as such!
 # BETALL_GR_9_P3
 
 # List the cores for which i dont have a core matching this name yet. 
-# ALNINC HF8 P12 actually we don't have the core either... TO CHECK 
 # BETALL SH9 P9, I have a PNA TO CHECK
 # BETALL_WM_8_9
 # BETPOP_GR_5_P6
+
+# Clean cookie and cores when I made mistakes in entering them
+### Remove cookie for ALNINC HF9 P6
+dsub$cookie.[which(dsub$idfull == "ALNINC_HF_9_6")] <- "0"
+### Remove cookie for ALNINC WM2B P1
+dsub$cookie.[which(dsub$idfull == "ALNINC_WM_2B_1")] <- "0"
+### Change number of cookies to 2 for BETALL GR13 P15
+dsub$cookie.[which(dsub$idfull == "BETALL_GR_13_15")] <- "2"
+### Change number of cookies to 2 for BETALL GR13 P1
+dsub$cookie.[which(dsub$idfull == "BETALL_GR_13_1")] <- "0"
 
 ### === === === === === ###
 # Clean labels and years #
