@@ -99,6 +99,8 @@ Confident
 RESAND
 Really unsure of the rings. Most rings seem to be penatrated by cells. Check with Neil.
 Confident
+#### BETALL GR13 P2
+Confident that last ring is 2023 after checking with core. 
 #### BETALL GR9 P3
  RESAND 3RD ROUND
 Really hard to call the false rings, but ended up with something pretty confident with microscope.
@@ -106,6 +108,7 @@ Really hard to call the false rings, but ended up with something pretty confiden
 Not sure of 2020 measurement
 ####BETALL GR13 P15
 Outer ring is probably 2023 growth, and the closest one to the pit is probably 2 years, not one like I scraped it. I did this because the ring is almost non-existent at some angles. 
+TO CHECK because I have 2 cookies for this tree. The one measured is the small one
 #### BETALL GR14 P15
 Outer ring is probably actually 2022 growth because of how wide it is.
 Neil: Is the outer ring 2022 or 2023
@@ -200,6 +203,9 @@ Pretty confident.
 #### BETPOP HF P6
 Outer ring probably 2022. Pretty sure of the calls. 
 4TH ROUND: look up last ring and adjust measurements if not ok.
+#### BETPOP HF16A P2
+Outer ring is 2023. To change in R
+The cookie that was erased. I double checked to make sure if was really a BETPOP and not a BETPAP.
 #### BETPOP GR5 P1
 RESAND
 Outer ring probably 2023 (entered as 2023). Really hard to tell. 2 very small rings. To double check
