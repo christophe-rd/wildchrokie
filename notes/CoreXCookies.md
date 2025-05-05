@@ -25,7 +25,6 @@ No cookies. RESCAN
 ###BETAL_GR9_P3_guides
 Two cores for the same tree.
 Really unsure of the ring patterns, especially the outer ones. Missing first growth year.
-TO DO: measure ring width for the tree core and add to core checked folder.
 ###BETAL_GR9_P3_guides
 Probably cored the same tree twice, as the ring patterns matched, but I am still very unsure of the calls. 
 ### BETALL GR12 P1
@@ -41,12 +40,12 @@ TO Double check, but cookie and core are similar in diameter, but the cookie has
 ### BETALL_SH4A_P9_guides
 No cookies. Measured and includes pit. Confident
 ### BETALL_SH5_P6
-Look up in R the ring width. There is differences between the years when I compare core vs cookie. Its likely that last ring is 2023. 
+TO DO: Look up in R the ring width. There is differences between the years when I compare core vs cookie. Its likely that last ring is 2023. 
 ### BETALL WM 8 P1
 Confident that last ring is 2023. No csv in R because the rings are so weird and 2 knots!
 ### BETALL SH9 PNA
 Very likely to be P9. TO CHECK 
-If it's SH9 P9, THEN BETALL SH9 P9 outer ring is 2023.\
+If it's SH9 P9, THEN BETALL SH9 P9 outer ring is 2023.
 ### BETALL WM8 P9
 No cookies.
 Very strange. It seems like one side of the core started growing while the other didnt... look patern to other cores and MICROSCOPE.
@@ -64,8 +63,7 @@ TO DO:
 2. Change core name WM8B P95 -->WM8B P5
 3. Years are changed on the cookie so nothing to do there. 
 ### Core BETALL WM9 P5
-There is a cookie, but I don't have guidelines for it, I don't know why. TO DO : ADD GUIDELINES to cookie
-Cookie most likely collected in the fall so last ring would be 2023
+Cookie most likely collected in the fall so last ring would be 2023. To confirm, but if it's the case, then ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 
 ## BETPAP
 ### Core BETPAP HF16 P2 
@@ -84,6 +82,7 @@ TO DO: measure cookie and check with core. Desn't match the cookie at all. Waay 
 Outer ring 2022. Fit well the core.
 ### BETPOP GR5 P6
 MICROSCOPE: look the cookie last ring. It matches well the last ring of the core, but it could also mean that it started growing already in early 2023. However, at some places, the outer ring of the cookie is well defined, so it's hard to tell. 
+RESCAN
 ### BETPOP GR5A P3
 ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. There is potentially 2 and 3 false rings within 2022... it could be an early 2023 that has stoped also. 
 ### BETPOP GR5A P12
