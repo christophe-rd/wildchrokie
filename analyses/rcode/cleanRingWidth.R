@@ -198,7 +198,7 @@ colnames(agg) <- c("Name", "Year", "LengthCM")
 ALNINC_WM_2A_P1 <- subset(agg, Name == "ALNINC_WM_2A_P1")
 # calculate diameter by adding the mean ring width of each year
 radius <- sum(ALNINC_WM_2A_P1$LengthCM)
-radius*2
+radius*2 
 ### Select random measurements that I will physically measure on the cookies to verify the accuracy of the measurements
 # Select 20 random measurements
 set.seed(123) # for reproducibility0
