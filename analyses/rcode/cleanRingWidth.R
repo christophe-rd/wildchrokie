@@ -10,37 +10,56 @@ options(stringsAsFactors = FALSE)
 ## Load Libraries
 library(ggplot2)
 library(xlsx)
-# Set Working Directory
-# Christophe's directory
+
+# Set main directory
 directory <- "/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input"
 
-# list files in directory
-file_list <- list.files(path = directory, pattern = "\\.csv$", full.names = TRUE)
+# List all items and keep only directories
+items <- list.files(path = directory, full.names = TRUE)
+folders <- items[file.info(items)$isdir]
 
-# read all files
-data_list <- lapply(file_list, read.csv)
+# Get folder names and exclude undesired ones
+folder_names <- basename(folders)
+valid_folders <- folder_names[!folder_names %in% c("_notcookies", "_readme.md")]
 
-# combine tables
-c <- do.call(rbind, data_list)
+# Initialize list to store all data
+all_data <- list()
+
+# Loop through each folder
+for (folder in valid_folders) {
+  folder_path <- file.path(directory, folder)
+  file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+  
+  # Read all CSVs and tag each row with the folder name
+  data_list <- lapply(file_list, function(file) {
+    df <- read.csv(file)
+    df$sourceFolder <- folder
+    return(df)
+  })
+  
+  all_data <- c(all_data, data_list)
+}
+
+# Combine all into a single data frame
+c <- do.call(rbind, all_data)
 
 ### === === === === === ###
-#####  ##### 
-setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies")
-d <- read.xlsx("treecookies.xlsx", sheetName = "Sheet1")
+##### Read initial table that compiled what tree we had cookies/cores ##### 
+# it involves a couple of mistakes when I entered the data that I will fix bellow #
+### === === === === === ###
+# read table
+setwd(directory)
+list.files()
+d <- read.xlsx("_notcookies/treecookies.xlsx", sheetName = "Sheet1")
+# remove _ between provenance and number
+d$id <- gsub("(_)([A-Z]+)_([0-9]+[A-Z]?)$", "\\1\\2\\3", d$id)
 # paste id and plot
-d$idfull <- paste(d$id, d$Plot, sep = "_")
+d$idfull <- paste(d$id, paste0("P", d$Plot), sep = "_")
 # subset only for species I want
 vec <- c("ALNINC", "BETALL", "BETPAP", "BETPOP", "QUERUB")
 dsub <- subset(d, species %in% vec )
-cookies <- subset(dsub, cookie. == "1")
-cores <- subset(dsub, core == "1") 
-# select only the rows for which the cookie column doesnt have a "1"
-corewNocookie <- subset(cores, cookie. == "1")
 
-vec<- unique(corewNocookie$idfull)
-temp <- subset(cores, !(idfull %in% vec))
-
-# List the cores for which we have no cookies
+# List the cores for which we have #no cookies
 # ALNINC_SH_6_P5
 # BETALL_SH_4A_9
 # BETPAP HF16 P2
@@ -57,19 +76,26 @@ temp <- subset(cores, !(idfull %in% vec))
 
 # Clean cookie and cores when I made mistakes in entering them
 ### Remove cookie for ALNINC HF9 P6
-dsub$cookie.[which(dsub$idfull == "ALNINC_HF_9_6")] <- "0"
+dsub$cookie.[which(dsub$idfull == "ALNINC_HF_9_6")] <- "0" 
 ### Remove cookie for ALNINC WM2B P1
 dsub$cookie.[which(dsub$idfull == "ALNINC_WM_2B_1")] <- "0"
 ### Change number of cookies to 2 for BETALL GR13 P15
 dsub$cookie.[which(dsub$idfull == "BETALL_GR_13_15")] <- "2"
 ### Change number of cookies to 2 for BETALL GR13 P1
 dsub$cookie.[which(dsub$idfull == "BETALL_GR_13_1")] <- "0"
+### Change number of cookie for BETALL_GR9_P3
+dsub$cookie.[which(dsub$idfull == "BETALL_GR9_P3")] <- "1"
+### Change number of cookie for ALNINC_GR8B_P5
+dsub$core[which(dsub$idfull == "ALNINC_GR8B_P5")] <- "1"
 
+cookiesOG <- subset(dsub, cookie. == "1")
+
+coresOG <- subset(dsub, core %in% c("1","2"))
 ### === === === === === ###
-# Clean labels and years #
+##### Clean labels and years #####
 ### === === === === === ###
 # cleaned name column
-c$Name <- gsub("_guides(_[0-9]+)?\\.tif", "", sub(":.*", "", c$Label))
+c$Name <- gsub("[-_]?guides([-_][0-9]+)?\\.tif$", "", sub(":.*", "", c$Label))
 # cleaned year column
 c$Year <- sub(".*:", "", c$Label)
 # Create a new table with only year values in the Year column i.e. excluding comments
@@ -79,7 +105,91 @@ e$Year <- as.numeric(e$Year)
 # Create a new column with the length in cm with a conversion factor of 2.54cm because 1 inch is 2.540005 cm
 e$LengthCM <- e$Length*2.54
 # Create a new df with only necessary columns
-d <- e[, c("Name", "Year", "LengthCM")]
+d <- e[, c("Name", "Year", "LengthCM", "sourceFolder")]
+
+#### Extra cleaning steps ####
+# clean names that I entered wrong when scanning
+# BETALL_WM8B_P95: decision made in CoreXCookies.md
+d$Name[which(d$Name == "BETALL_WM8B_P95")] <- "BETALL_WM8B_P5" 
+# BETALL_WM8D_P5: decision made in CoreXCookies.md
+d$Name[which(d$Name == "BETALL_WM8D_P5")] <- "BETALL_WM8B_P5" 
+# BETALL_WM_9_P5
+d$Name[which(d$Name == "BETALL_WM_9_P5")] <- "BETALL_WM9_P5" 
+# BETALL_WM_8B_P12
+d$Name[which(d$Name == "BETALL_WM_8B_P12")] <- "BETALL_WM8B_P12" 
+# BETPOP_WM-7_P2
+d$Name[which(d$Name == "BETPOP_WM-7_P2")] <- "BETPOP_WM7_P2" 
+# BETPOP_GRB_P12: decision made in CoreXCookies.md
+d$Name[which(d$Name == "BETPOP_GRB_P12")] <- "BETPOP_GR5B_P12" 
+# BETPOP_GR_5B_P12
+d$Name[which(d$Name == "BETPOP_GR_5B_P12")] <- "BETPOP_GR5B_P12" 
+# ALNINC_WM_2A_P1
+d$Name[which(d$Name == "ALNINC_WM_2A_P1")] <- "ALNINC_WM2A_P1" 
+# ALNINC_WM_5B_P2
+d$Name[which(d$Name == "ALNINC_WM_5B_P2")] <- "ALNINC_WM5B_P2" 
+# BETPAP_HF_16A_P6
+d$Name[which(d$Name == "BETPAP_HF_16A_P6")] <- "BETPAP_HF16A_P6" 
+# BETPOP_GR_5A_P3
+d$Name[which(d$Name == "BETPOP_GR_5A_P3")] <- "BETPOP_GR5A_P3" 
+# BETPOP_GR_5B_P11
+d$Name[which(d$Name == "BETPOP_GR_5B_P11")] <- "BETPOP_GR5B_P11" 
+# BETPOP_GR_5C_P12: need to find what it is
+d$Name[which(d$Name == "BETPOP_GR_5C_P12")] <- "BETPOP_GR5C_P12" 
+# BETPOP_HF__P6
+d$Name[which(d$Name == "BETPOP_HF__P6")] <- "BETPOP_HFNA_P6"
+# BETAL_GR9_P3
+d$Name[which(d$Name == "BETAL_GR9_P3")] <- "BETALL_GR9_P3"
+# BETALL_SH9_PNA: decision made in CoreXCookies.md
+d$Name[which(d$Name == "BETALL_SH9_PNA")] <- "BETALL_SH9_P9"
+# BETALL_WM8_P12: 
+d$Name[which(d$Name == "BETALL_WM8_P12")] <- "BETALL_WM8B_P12" 
+
+### === === === === === ###
+# Verification steps #
+### === === === === === ###
+# compare if I have the data from all cookies in the og dataset
+vcook <- c("cookies", "cookiesUnconfident")
+cookies <- subset(d, sourceFolder %in% vcook)
+listCookieNames <- unique(cookies$Name)
+cookieInOG <- listCookieNames[which(!listCookieNames%in%cookiesOG$idfull)]
+### investigate the mistmatches
+# ALNINC_HF3_P16: not in table: to check if the cookie really exist
+# ALNINC_SH5_P2: not added in table : to check
+# ALNINC_WM8_P1: not in table: to check if the cookie really exist
+# BETPAP_GR5B_P2: not added in table : to check
+# BETPOP_GR5_P6: not added in table : to check
+
+# compare if I have scanned the cookies from the data from og dataset 
+OGtoCookies <- cookiesOG$idfull[which(!cookiesOG$idfull%in%listCookieNames)]
+
+### investigate the mistmatches
+# ALNINC_GR11B_P3: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
+# ALNINC_GR8_P3: scanned, but not sure and have to look under microscope
+# ALNINC_HF9_P6: look if cookie exists
+# ALNINC_SH4_P2: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
+# ALNINC_SH5_P3: could be the same as SH5_P2, TO LOOK at the core and at the cookie
+# ALNINC_WM1_P1: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls. Also, entered as WM_P1 not WM1
+# ALNINC_WM2B_P1: need to add guidelines
+# ALNINC_WM5_P1: look for cookie
+# ALNINC_WM5A_P16: look for cookie
+# BETALL_GR13_P1: core without cookie
+# BETALL_SH9_P6: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls.
+# BETPAP_GR8_P6: look for cookie
+# BETPAP_HF16_P3: look for cookie
+# BETPOP_GR3_P6: look for cookie
+
+# compare if I have the data from all cores in the og dataset
+vcores <- c("coresUnconfident", "coresWithCookies", "coresWithoutCookies")
+cores <- subset(d, sourceFolder %in% vcores)
+listCoreNames <- unique(cores$Name)
+coresinOG <- listCoreNames[which(!listCoreNames%in%coresOG$idfull)]
+
+# BETALL_SH5_P6: look if its not SH6 P5 instead
+# ALNINC_HF9_P6: verify if it's the right tag.
+
+### === === === === === ###
+# Start playing with the data #
+### === === === === === ###
 # Take the mean of each year and each tree replicate
 agg <- aggregate(d$LengthCM, by = list(d$Name, d$Year), FUN = mean)
 # rename the columns
@@ -100,3 +210,4 @@ vec <- d$Name[random_rows]
 random_measurements <- subset(agg, Name %in% vec)
 
 newdf <- subset(d, Name %in% vec)
+
