@@ -1,7 +1,7 @@
 #Notes on cookie 
 
 ## Started on January 6th 2025 by CRD
-I lost all of my previous notes from the cookies before ALNINC HF1 P1
+I lost all of my previous notes from the cookies before 
 
 #### ALNINC GR8 P3
 Microscope. Still not sure of outer ring. Extremely hard to tell if it's false. The whole ring indicates true ring except one part that I marked in black.
@@ -20,15 +20,13 @@ RESCAN
 Confident but check outer ring year
 
 #### ALNINC WM5 P1
-RESEND
+RESAND
 **MISSING**
-#### ALNINC GR 11B P3_guides
+#### ALNINC GR11B P3_guides
 RESAND
 Microscope. Still not sure of outer ring.
 #### ALNINC GR11A P3 
 Sanding ok
-#### ALNINC_HF1_P1_guides
-sanding ok
 #### ALNINC_HF2_P1_guides
 sanding ok
 #### ALNINC HF3 P16

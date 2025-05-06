@@ -50,7 +50,7 @@ If it's SH9 P9, THEN BETALL SH9 P9 outer ring is 2023.
 No cookies.
 Very strange. It seems like one side of the core started growing while the other didnt... look patern to other cores and MICROSCOPE.
 ### BETALL WM 8 P12
-TO DO: change name to WM8B P12. 
+Changed name to WM8B P12.
 ALREADY changed years to correct ones (talking about the cookie of WM8B P13...). Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 ### BETALL_WM8A_P12_guides
 ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
@@ -58,10 +58,11 @@ ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is u
 Outer ring 2023. Confident. 
 ### BETALL_WM8B_P95_guides
 TO CHECK : the name because 95 doesnt exist. Most probably WM8D P5 BECAUSE WM8 P9 has already a core. To measure by comparing it at WM8D P5, which is not 8D, but 8B.
-TO DO:
-1. Change cookie name WM8D P5 --> WM8B P5
+Decision:
+1. Changed cookie name WM8D P5 --> WM8B P5
 2. Change core name WM8B P95 -->WM8B P5
 3. Years are changed on the cookie so nothing to do there. 
+
 ### Core BETALL WM9 P5
 Cookie most likely collected in the fall so last ring would be 2023. To confirm, but if it's the case, then ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 
@@ -119,5 +120,5 @@ ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is u
 It appears that for one of the guideline, the 2020 ring never grew.... For that one, I input it as 0 but to be more consistent I should input it as a false ring, but it would screw up the whole pattern. CHECK WITH NEIL
 It's in the excel, so I should check it. May be WM 8 PNA!
 ### BETPOP_XX_P3
- Outer ring 2023. Fit well the core.
+ Outer ring 2023. Fit well the core. TO CHANGE IN R
  
