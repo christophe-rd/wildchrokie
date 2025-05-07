@@ -6,7 +6,7 @@ Dont know verify with microscope.
 Measured, not super confident and missing knot and first growth years.
 Super confusing, the ring width patterns dont match, plus what appears to be 2023 growth is only present on one side of the cookie... Cannot add this to the data with confidence for now. Both cookie and core moved to not confident.
 
-### ALNINC HF8 P12
+### ALNINC HF8 P12 
 No cookies. Missing pit and first year growth. Measured and confident. 
 
 ### ALNINC HF9 P6
@@ -81,6 +81,7 @@ Outer ring 2023. Fit well the core. Missing the last bit of one of the 2022 ring
 TO DO: measure cookie and check with core. Desn't match the cookie at all. Waay smaller than cookie and ring patterns don't match. After looking at the cookie, maybe 2023 the tree grew a lot and core was taken much higher than normal. In any case, the tags match, its just the size for now. 
 ### BETPOP GR5 P1
 Outer ring 2022. Fit well the core.
+
 ### BETPOP GR5 P6
 MICROSCOPE: look the cookie last ring. It matches well the last ring of the core, but it could also mean that it started growing already in early 2023. However, at some places, the outer ring of the cookie is well defined, so it's hard to tell. 
 RESCAN

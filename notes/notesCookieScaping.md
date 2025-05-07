@@ -179,7 +179,7 @@ Confident
 Microscope: check the outer rings to make sure they are false. Looked up and will resand.
 Microscoped: no reason to exclude outer ring even though looking back it seems false, I did 2 whole rounds of it and it seems like real ring with thin but defined ring boundary.
 ####BETPOP GR3 P16
-Only 4 rings. They are well defined and the cookies is very symmetrical. 
+Only 4 rings. They are well defined and the cookies is very symmetrical. RESAND
 #### BETPOP_GR_5C_P12
 Confident but 2 knots.
 
