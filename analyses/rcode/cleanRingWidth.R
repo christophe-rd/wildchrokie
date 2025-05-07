@@ -91,6 +91,7 @@ dsub$core[which(dsub$idfull == "ALNINC_GR8B_P5")] <- "1"
 cookiesOG <- subset(dsub, cookie. == "1")
 
 coresOG <- subset(dsub, core %in% c("1","2"))
+
 ### === === === === === ###
 ##### Clean labels and years #####
 ### === === === === === ###
@@ -186,6 +187,18 @@ coresinOG <- listCoreNames[which(!listCoreNames%in%coresOG$idfull)]
 
 # BETALL_SH5_P6: look if its not SH6 P5 instead
 # ALNINC_HF9_P6: verify if it's the right tag.
+
+# compare if I have all the cores in the og dataset have been scanned
+Ogscanned <- coresOG$idfull[which(!coresOG$idfull%in%listCoreNames)]
+
+# BETALL_SH9_P6: verifiy if core exists
+# BETALL_WM8_P1: OK, core exists but poor quality so no csv
+# BETPAP_HF16_P2: will be rescanned 
+# BETPOP_GR3_P16: RESAND and find rings. It doesn't work!
+# BETPOP_GR5_P6: RESAND and RESCAN
+# BETPOP_GR5C_P12: look if it exists
+# BETPOP_HF3_P1: look if it exists
+# BETPOP_WM7_P1: look if it exists
 
 ### === === === === === ###
 # Start playing with the data #
