@@ -19,9 +19,6 @@
 \section*{15 April 2025}
 Quick notes after meeting with Victor where we talked about preliminary steps of building a model to answer the question of how juvenile trees respond to climate change. I would like to approach this as a recruitement capacity of tree saplings and how their growth varies across years and how it's impacted by temperature and growing season length (or maybe not length... more on that below)
 
-\newpage
-\textit{Below I will be stating the obvious because I want to make sure I understand the notations and stuff. The steps will be notes and thoughts that I have when I code my model in R.}
-
 \section{Come up with a model}
 
 \subsection*{What are my predictors?}
@@ -47,10 +44,25 @@ What kind of pooling? Partial pooling since they are all within the same family?
 I arbitrarily decided to sum up th GDD between 100 and 250 days for now in order to simplify data simulation. \\
 yhat: combine the effects that I generated from the grand mean, the year, species and individual effect deviation effect from the mean, + error returns my yhat. That returns the observed outcome which is composed of multiple nested effects. 
 
-\subsection*{Common Bayesian Notation} % found online
+\section{Set your priors}
+
+\section{Run model on empirical data}
+
+\section{Perform retrodictive checks using the model fit to your empirical data}
+
+\section{Mis}
+
+\newpage
+\textit{Below I will be stating the obvious because I want to make sure I understand the notations and stuff. The steps will be notes and thoughts that I have when I code my model in R.}
+
+\subsection*{Common Bayesian Notation and other definitions} % found online
 
 \begin{itemize}
   \item $\theta$ --- Parameters of the model (can be a vector of parameters)
+  \item Standard  -- How much the data are spread out. It quantifies the variation within a set of measurements
+  \item Standard errror -- How much the measurements are spread around their means. It is the standard deviations of the means of the different treatments/individuals/whatever. It quantifies the variationin the means from multiple sets of measurements.
+  \item $n_eff$ ---  N effective: Rhat denotes the split Rhat convergence diagnostic, which compares the results from different chains, reaching the value 1 at convergence and being higher than 1 for chains that have not fully mixed. $n_eff$ denotes the effective sample size of the Hamiltonian Monte Carlo run, which due to its iterative nature can be less or more than the efficiency of independent draws. Usually $n_eff$ > 400 is sufficient for reliable diagnostics and accurate parameter estimates.
+  \item $mcse$ -- mcse stands for Monte Carlo standard error, which is the additional uncertainty due to using stochastic algorithm (not to be confused with the uncertainty presented by the posterior distribution). Monte Carlo standard error is negligible in all the examples in this book.
   \item $y$ --- Observed data
   \item $x$ --- Predictor variables or covariates
   \item $p(\theta)$ --- Prior distribution over parameters
@@ -75,13 +87,6 @@ yhat: combine the effects that I generated from the grand mean, the year, specie
 
 
 
-
-
-\section{Set your priors}
-
-\section{Run model on empirical data}
-
-\section{Perform retrodictive checks using the model fit to your empirical data}
 %Where: 
 %\begin{itemize}
 %	\item 

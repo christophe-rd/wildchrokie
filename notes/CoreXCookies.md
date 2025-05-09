@@ -40,7 +40,9 @@ TO Double check, but cookie and core are similar in diameter, but the cookie has
 ### BETALL_SH4A_P9_guides
 No cookies. Measured and includes pit. Confident
 ### BETALL_SH5_P6
-TO DO: Look up in R the ring width. There is differences between the years when I compare core vs cookie. Its likely that last ring is 2023. 
+Problem fixed: it's not SH5, BUT SH9 P6. 
+TO DO: cross date with cookie. 
+
 ### BETALL WM 8 P1
 Confident that last ring is 2023. No csv in R because the rings are so weird and 2 knots!
 ### BETALL SH9 PNA

@@ -83,7 +83,8 @@ Microscoped: pretty confident
 RESAND 3RD ROUND
 Microscoped: pretty confident.
 #### ALNINC_WM8_P1
-Confident but  check outer ring year
+Confident but  check outer ring year. 
+WM8_P1 doesn't exist. It's a transcription error. It is actually WM5_P1.
 
 ## BETALL
 ####BETALL GR9 PNA
@@ -121,7 +122,9 @@ RESAND
 Outer ring may be false ring
 Confident
 ####BETALL SH5 P6
-Good
+Good.
+There are 2 cookies for this tree, the one that is currently scanned and measured seems to only have 2022 growth, but the bigger one might have 2023... Maybe 2 different branches and one that was collected in the fall?
+
 ####BETALL SH9 P6
 RESAND
 Really hard to tell the false rings. As of what I did now, there is 6 rings that go back to 2015 which would be hard to tell.  
