@@ -87,6 +87,19 @@ dsub$cookie.[which(dsub$idfull == "BETALL_GR_13_1")] <- "0"
 dsub$cookie.[which(dsub$idfull == "BETALL_GR9_P3")] <- "1"
 ### Change number of cookie for ALNINC_GR8B_P5
 dsub$core[which(dsub$idfull == "ALNINC_GR8B_P5")] <- "1"
+### ALNINC_SH5_P2
+dsub$cookie.[which(dsub$idfull == "ALNINC_SH5_P2")] <- "1"
+### BETPAP_GR5B_P2
+dsub$cookie.[which(dsub$idfull == "BETPAP_GR5B_P2")] <- "1"
+### BETPOP_GR5_P6
+dsub$cookie.[which(dsub$idfull == "BETPOP_GR5_P6")] <- "1"
+### ALNINC_HF9_P6
+dsub$cookie.[which(dsub$idfull == "ALNINC_HF9_P6")] <- "0"
+dsub$[which(dsub$idfull == "")] <- "1"
+dsub$[which(dsub$idfull == "")] <- "1"
+dsub$[which(dsub$idfull == "")] <- "1"
+
+
 
 cookiesOG <- subset(dsub, cookie. == "1")
 
@@ -134,7 +147,7 @@ d$Name[which(d$Name == "BETPAP_HF_16A_P6")] <- "BETPAP_HF16A_P6"
 d$Name[which(d$Name == "BETPOP_GR_5A_P3")] <- "BETPOP_GR5A_P3" 
 # BETPOP_GR_5B_P11
 d$Name[which(d$Name == "BETPOP_GR_5B_P11")] <- "BETPOP_GR5B_P11" 
-# BETPOP_GR_5C_P12: need to find what it is
+# BETPOP_GR_5C_P12
 d$Name[which(d$Name == "BETPOP_GR_5C_P12")] <- "BETPOP_GR5C_P12" 
 # BETPOP_HF__P6
 d$Name[which(d$Name == "BETPOP_HF__P6")] <- "BETPOP_HFNA_P6"
@@ -144,6 +157,10 @@ d$Name[which(d$Name == "BETAL_GR9_P3")] <- "BETALL_GR9_P3"
 d$Name[which(d$Name == "BETALL_SH9_PNA")] <- "BETALL_SH9_P9"
 # BETALL_WM8_P12: 
 d$Name[which(d$Name == "BETALL_WM8_P12")] <- "BETALL_WM8B_P12" 
+# ALNINC_WM8_P1: decision in cookie scraping. Not WM8, but WM5.
+d$Name[which(d$Name == "ALNINC_WM8_P1" & d$sourceFolder == "cookies")] <- "ALNINC_WM5_P1" 
+# BETALL_SH9_P6
+d$Name[which(d$Name == "BETALL_SH5_P6" & d$sourceFolder == "coresUnconfident")] <- "BETALL_SH9_P6" 
 
 ### === === === === === ###
 # Verification steps #
@@ -154,11 +171,7 @@ cookies <- subset(d, sourceFolder %in% vcook)
 listCookieNames <- unique(cookies$Name)
 cookieInOG <- listCookieNames[which(!listCookieNames%in%cookiesOG$idfull)]
 ### investigate the mistmatches
-# ALNINC_HF3_P16: not in table: to check if the cookie really exist
-# ALNINC_SH5_P2: not added in table : to check
-# ALNINC_WM8_P1: not in table: to check if the cookie really exist
-# BETPAP_GR5B_P2: not added in table : to check
-# BETPOP_GR5_P6: not added in table : to check
+# ALNINC_HF3_P16: not in table. The cookie does exist physically but it was never a tree in the original table so we probably don't have pheno data for that one
 
 # compare if I have scanned the cookies from the data from og dataset 
 OGtoCookies <- cookiesOG$idfull[which(!cookiesOG$idfull%in%listCookieNames)]
@@ -166,18 +179,16 @@ OGtoCookies <- cookiesOG$idfull[which(!cookiesOG$idfull%in%listCookieNames)]
 ### investigate the mistmatches
 # ALNINC_GR11B_P3: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
 # ALNINC_GR8_P3: scanned, but not sure and have to look under microscope
-# ALNINC_HF9_P6: look if cookie exists
 # ALNINC_SH4_P2: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
-# ALNINC_SH5_P3: could be the same as SH5_P2, TO LOOK at the core and at the cookie
+# ALNINC_SH5_P3: cookie was never scanned. TO SCAN
 # ALNINC_WM1_P1: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls. Also, entered as WM_P1 not WM1
 # ALNINC_WM2B_P1: need to add guidelines
-# ALNINC_WM5_P1: look for cookie
-# ALNINC_WM5A_P16: look for cookie
-# BETALL_GR13_P1: core without cookie
-# BETALL_SH9_P6: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls.
-# BETPAP_GR8_P6: look for cookie
-# BETPAP_HF16_P3: look for cookie
-# BETPOP_GR3_P6: look for cookie
+# ALNINC_WM5A_P16:cookie was never scanned. TO SCAN
+# BETALL_GR13_P1: cookie was never scanned. TO SCAN
+# BETALL_SH9_P6: scanned, but not sure and have to look under microscope or perhaps comparing with other BETall for which I am more certain of the calls.
+# BETPAP_GR8_P6: cookie was never scanned. TO SCAN
+# BETPAP_HF16_P3: cookie was never scanned. TO SCAN
+# BETPOP_GR3_P6: cookie was never scanned. TO SCAN
 
 # compare if I have the data from all cores in the og dataset
 vcores <- c("coresUnconfident", "coresWithCookies", "coresWithoutCookies")
@@ -185,26 +196,23 @@ cores <- subset(d, sourceFolder %in% vcores)
 listCoreNames <- unique(cores$Name)
 coresinOG <- listCoreNames[which(!listCoreNames%in%coresOG$idfull)]
 
-# BETALL_SH5_P6: look if its not SH6 P5 instead
-# ALNINC_HF9_P6: verify if it's the right tag.
+
+# ALNINC_HF9_P6: right tag, but written on it that it might be wrong
 
 # compare if I have all the cores in the og dataset have been scanned
 Ogscanned <- coresOG$idfull[which(!coresOG$idfull%in%listCoreNames)]
-
-# BETALL_SH9_P6: verifiy if core exists
-# BETALL_WM8_P1: OK, core exists but poor quality so no csv
+# BETALL_WM8_P1: OK, core exists but poor quality so no csv. Rescan
 # BETPAP_HF16_P2: will be rescanned 
 # BETPOP_GR3_P16: RESAND and find rings. It doesn't work!
 # BETPOP_GR5_P6: RESAND and RESCAN
-# BETPOP_GR5C_P12: look if it exists
-# BETPOP_HF3_P1: look if it exists
-# BETPOP_WM7_P1: look if it exists
+# BETPOP_HF3_P1: SCAN
+# BETPOP_WM7_P1: core but broken and it's weird so never scanned.
 
 ### === === === === === ###
 # Start playing with the data #
 ### === === === === === ###
 # Take the mean of each year and each tree replicate
-agg <- aggregate(d$LengthCM, by = list(d$Name, d$Year), FUN = mean)
+agg <- aggregate(d$LengthCM, by = list(d$Name, d$Year, d$sourceFolder), FUN = mean)
 # rename the columns
 colnames(agg) <- c("Name", "Year", "LengthCM")
 # select one replicate

@@ -8,6 +8,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 200) 
+
 # Load library 
 library(rstanarm)
 library(ggplot2)
@@ -30,8 +31,6 @@ gdd <- read.csv("output/gddData.csv")
 
 # Simulate ring width for each year, from 2017 to 2023 for 4 species
 
-# Start with Alnus incana. Let's go with a sample size of 100 cookies that have ring width data for each year
-
 ### assign more digestible names and years to help me understand what the hell im doing
 spp <- c("alninc","betpap","betpop","betall")
 plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
@@ -45,10 +44,10 @@ Nrep <- length(rep) # number of measurements per tree
 
 # First making a data frame for the growth ring data
 Nw <- Nplot*Nyr*Nrep*Nspp # number of measurements per species
-Nw
 
 #make a dataframe for ring width
-wdat <- data.frame(matrix(NA, Nw, 1))
+wdat <- data.frame(matrix(NA,Nw, 1))
+
 wdat$yr <- rep(c(yr), each=Nrep)
 wdat$plot <- rep(c(plot), each=Nyr*Nrep)
 wdat$spp <- rep(c(spp), each=Nyr*Nrep*Nplot)
@@ -56,7 +55,7 @@ wdat$spp <- rep(c(spp), each=Nyr*Nrep*Nplot)
 # paste plot and spp to give unique ids
 wdat$treeid <- paste(wdat$spp, wdat$plot, sep = "_")
 
-mu.grand <- 0.4 # the grand mean of ring width
+mu.grand <- 0.4 # the grand mean of ring width: baseline ring width when all other effects are zero.
 
 # now generating the year effect with data
 sigma.yr <- 0.05  # 
@@ -78,7 +77,16 @@ wdat$mu.spp <- rep(mu.spp, each=Nyr*Nrep*Nplot) # add width data for each specie
 w.var <- 0.5 #will have to change
 wdat$w.er <- rnorm(Nw, 1, w.var)
 
-# generate yhat aka (I guess) yhat?
+
+# round up decimals
+for (i in 6:ncol(wdat)) {
+  wdat[[i]] <- round(wdat[[i]], 3)
+}
+
+# remove first column 
+wdat <- wdat[, -1]
+
+# generate yhat aka (I guess)?
 wdat$ringwidth <- mu.grand + wdat$mu.yr +wdat$mu.tree + wdat$mu.spp + wdat$w.er
 wdat
 
@@ -98,20 +106,31 @@ fit <- stan_lmer(ringwidth ~ spp + # main effects
 
 print(fit, digits=2)
 
-mu_gdd <- 94000 # mean of GDD
-a <- 10 # a for alpha: intercept whatever, I have no clue what to set it at right now
-b <- 0.0001 # b for beta: slope whatever. Assuming, that for each DGG, growth ring rises by that value
-sigma_gdd <- 10 # standard deviation
+# start by looking at rhat and neffective and if i converge
+# shinystan::launch_shinystan(fit)
+summary(fit)
 
-# Find GDD. For now I'll set it as it starts on DOY 100 and ends on DOY 250. 
-x <- rnorm(n, mu_gdd, sigma_gdd)
-# hist(x)
-# get ring width
-y <- a +b*x + sigma_gdd*rnorm(n)
-hist(y)
-plot(y~x)
+# verify how well I am returning my parameters:
+# simulated data parameters:
+mu.grand
+sim_spp_effects <- unique(wdat[, c("spp", "mu.spp")])
+sim_tree_effects <- unique(wdat[, c("treeid", "mu.tree")])
+sim_yr_effects <- unique(wdat[, c("yr", "mu.yr")])
+sim_intercept <- mu.grand + sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
+sim_resid_sd <- sqrt(w.var)
 
-fake <- data.frame(x,y)
+
+# pull model parameters
+# sim coef relative to alninc
+true_spp_coefs <- sim_spp_effects$mu.spp - sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
+names(true_spp_coefs) <- paste0("spp", sim_spp_effects$spp)
+
+# Compare with model estimates
+data.frame(
+  Parameter = c("(Intercept)", names(sim_spp_effects)[-1]), 
+  Estimated = fit$coefficients[1:4],  # Assuming (Intercept), sppbetall, etc.
+  True = c(sim_intercept, sim_spp_effects[-1])
+)
 
 # === === === === === === === === === === === === === === === === 
 #### Step 2. Simulate data ####
