@@ -1,0 +1,78 @@
+\documentclass[12pt]{article}
+\usepackage{pgfgantt} % For Gantt charts
+\usepackage{geometry} % For custom page geometry
+\usepackage{xcolor}
+\title{Objectives timeline 2025}
+
+\geometry{%
+  paperheight=11in,
+  paperwidth=13in,
+  top=1in,
+  bottom=1in,
+  right=0.1in,
+  left=0.1in,}
+\begin{document}
+
+\begin{figure}[tbp]
+    \begin{center}
+    \begin{ganttchart}[y unit title=0.4cm,
+    y unit chart=0.5cm,
+    vgrid,hgrid, 
+    title label anchor/.style={below=-1.6ex},
+    title left shift=.05,
+    title right shift=-.05,
+    title height=1,
+    progress label text={},
+    bar height=0.7,
+    group right shift=0,
+    group top shift=.6,
+    group height=.3]{1}{32}
+    %labels
+    %sum of 44
+    \gantttitle{2025}{32}
+     \\
+    \gantttitle{May}{4} 
+    \gantttitle{June}{4} 
+    \gantttitle{July}{4}
+    \gantttitle{August}{4}
+    \gantttitle{September}{4}
+    \gantttitle{October}{4} 
+    \gantttitle{November}{4}
+    \gantttitle{December}{4} 
+\\
+    %tasks
+    \ganttbar[bar/.append style={fill=red}]{Wildchrokie: Finish WildChrokie cross dating}{1}{2}  \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: clean phenology data}{3}{4} \\
+    \ganttbar[bar/.append style={fill=red}]{Wildchrokie: Data simulation}{1}{2} \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: start simulating data}{3}{4} \\
+        \ganttbar[bar/.append style={fill=red}]{Wildchrokie: First model draft with simulated data to Lizzie}{5}{5} \\
+    \ganttbar[bar/.append style={fill=red}]{Wildchrokie: Rework model and test on empirical data}{6}{6} \\
+    \ganttbar[bar/.append style={fill=red}]{Wildchrokie: Second model draft to Lizzie}{6}{6} \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: First model draft to Lizzie}{6}{6} \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: Pickup cores in Boston}{7}{7} \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: core mounting (in Qc)}{8}{8} \\
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: core sanding (in Qc)}{8}{8} \\
+    \ganttbar[bar/.append style={fill=white}]{Timeoff}{9}{9} \\
+    \ganttbar[bar/.append style={fill=blue}]{Smithers}{10}{11} \\      
+    \ganttbar[bar/.append style={fill=blue}]{Egret retreat}{12}{12} \\    
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: core scanning}{13}{13} \\  
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: core crossdating and measuring}{14}{15} \\      
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: test model on empirical data}{16}{17} \\      
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: first model draft to Lizzie}{17}{18} \\ 
+    \ganttbar[bar/.append style={fill=yellow}]{Treespotters: Second model draft to Lizzie}{19}{20} \\   
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Write main results}{21}{22} \\  
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Outline paper}{23}{24} \\       
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Submit outline paper to Lizzie}{24}{25} \\   
+        \ganttbar[bar/.append style={fill=blue}]{EcoEvo: Present CookieSpotters project}{25}{25} \\ 
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Review outline and write methods and introduction}{26}{27} \\   
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Write discussion}{29}{31} \\ 
+    \ganttbar[bar/.append style={fill=orange}]{CookieSpotters: Submit first manuscript draft to Lizzie}{31}{31} \\ 
+    
+
+    
+    \end{ganttchart}
+    \end{center}
+    \caption{Chapter 2 Wildchrokie X Treespotters timeline}
+
+\end{figure}
+\end{document}
