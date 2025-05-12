@@ -50,7 +50,7 @@ Very likely to be P9. TO CHECK
 If it's SH9 P9, THEN BETALL SH9 P9 outer ring is 2023.
 ### BETALL WM8 P9
 No cookies.
-Very strange. It seems like one side of the core started growing while the other didnt... look patern to other cores and MICROSCOPE.
+Very strange. It seems like one side of the core started growing while the other didnt... look patern to other cores and MICROSCOPE. Hypothesis: missing bark+ 2022 growth on one side of the core. 
 ### BETALL WM 8 P12
 Changed name to WM8B P12.
 ALREADY changed years to correct ones (talking about the cookie of WM8B P13...). Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
