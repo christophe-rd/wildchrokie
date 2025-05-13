@@ -184,7 +184,7 @@ Microscoped: no reason to exclude outer ring even though looking back it seems f
 ####BETPOP GR3 P16
 Only 4 rings. They are well defined and the cookies is very symmetrical. RESAND
 #### BETPOP_GR_5C_P12
-Confident but 2 knots.
+Confident but 2 knots. Re-adjusted guidelines to avoid knots	
 
 #### BETPOP HF1 P2
 RESAND

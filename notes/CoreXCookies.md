@@ -41,7 +41,7 @@ TO Double check, but cookie and core are similar in diameter, but the cookie has
 No cookies. Measured and includes pit. Confident
 ### BETALL_SH5_P6
 Problem fixed: it's not SH5, BUT SH9 P6. 
-TO DO: cross date with cookie. 
+Crossdated with cookie SH9 P6
 
 ### BETALL WM 8 P1
 Confident that last ring is 2023. No csv in R because the rings are so weird and 2 knots!
