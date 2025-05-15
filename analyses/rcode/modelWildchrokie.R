@@ -17,6 +17,7 @@ library(dplyr)
 
 runmodels <- FALSE
 runoldcode <- FALSE
+codetofix <- FALSE
 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 
@@ -36,7 +37,6 @@ spp <- c("alninc","betpap","betpop","betall")
 plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
 yr <- 2016:2023
 rep <- 1:3
-
 
 # set species specific slopes to depend on gdd
 spp_slopes <- c(
@@ -94,31 +94,35 @@ if(runmodels){
 print(fit, digits=6)
 }
 
-# start by looking at rhat and neffective and if i converge
-# shinystan::launch_shinystan(fit)
-summary(fit)
 
-# verify how well I am returning my parameters:
-# simulated data parameters:
-mu.grand
-sim_spp_effects <- unique(wdat[, c("spp", "mu.spp")])
-sim_tree_effects <- unique(wdat[, c("treeid", "mu.tree")])
-sim_yr_effects <- unique(wdat[, c("yr", "mu.yr")])
-sim_intercept <- mu.grand + sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
-sim_resid_sd <- sqrt(w.var)
+# code I need to fix:
+if (codetofix){
+  
+  shinystan::launch_shinystan(fit)
+  
+  # verify how well I am returning my parameters:
+  # simulated data parameters:
+  mu.grand
+  sim_spp_effects <- unique(wdat[, c("spp", "mu.spp")])
+  sim_tree_effects <- unique(wdat[, c("treeid", "mu.tree")])
+  sim_yr_effects <- unique(wdat[, c("yr", "mu.yr")])
+  sim_intercept <- mu.grand + sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
+  sim_resid_sd <- sqrt(w.var)
+  
+  
+  # pull model parameters
+  # sim coef relative to alninc
+  true_spp_coefs <- sim_spp_effects$mu.spp - sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
+  names(true_spp_coefs) <- paste0("spp", sim_spp_effects$spp)
+  
+  # Compare with model estimates
+  data.frame(
+    Parameter = c("(Intercept)", names(sim_spp_effects)[-1]), 
+    Estimated = fit$coefficients[1:4],  # Assuming (Intercept), sppbetall, etc.
+    True = c(sim_intercept, sim_spp_effects[-1])
+  )
+}
 
-
-# pull model parameters
-# sim coef relative to alninc
-true_spp_coefs <- sim_spp_effects$mu.spp - sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
-names(true_spp_coefs) <- paste0("spp", sim_spp_effects$spp)
-
-# Compare with model estimates
-data.frame(
-  Parameter = c("(Intercept)", names(sim_spp_effects)[-1]), 
-  Estimated = fit$coefficients[1:4],  # Assuming (Intercept), sppbetall, etc.
-  True = c(sim_intercept, sim_spp_effects[-1])
-)
 
 # === === === === === === === === === === === === === === === === 
 #### Step 2. Simulate data ####
@@ -154,5 +158,4 @@ if (runoldcode) {
   Nrep <- length(rep) # number of measurements per tree
   # First making a data frame for the growth ring data
   Nw <- Nplot*Nyr*Nrep*Nspp # number of measurements per species
-}
 }
