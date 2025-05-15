@@ -172,3 +172,8 @@ Patterns match really well when last ring is 2022. Looked on the microscope and 
 Patterns match really well when last ring is 2023. Changed in R
 ### BETPOP_WM9_P15
 Patterns match really well when last ring is 2022
+
+# Core without cookie
+## ALNINC
+###ALNINC_HF8_P12
+###ALNINC_HF9_P6
