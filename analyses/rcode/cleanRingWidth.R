@@ -212,11 +212,10 @@ Ogscanned <- coresOG$idfull[which(!coresOG$idfull%in%listCoreNames)]
 ### === === === === === ###
 # Take the mean of each year and each tree replicate
 agg <- aggregate(d$LengthCM, by = list(d$Name, d$Year, d$sourceFolder), FUN = mean)
+
 # rename the columns
 colnames(agg) <- c("Name", "Year", "sourceFolder", "LengthCM")
-# select one replicate
-ALNINC_WM_2A_P1 <- subset(agg, Name == "ALNINC_WM_2A_P1")
-
+agg$Yearcor <- agg$Year
 ### === === === === === ###
 ##### Cross date cookie/core #####
 ### === === === === === ###
@@ -224,7 +223,7 @@ ALNINC_WM_2A_P1 <- subset(agg, Name == "ALNINC_WM_2A_P1")
 corewcookie <- subset(agg, sourceFolder == "coresWithCookies")
 corevec <- unique(corewcookie$Name)
 # Start by selecting cookies for which we have cores
-agg$Yearcor <- agg$Year
+# agg$Yearcor <- agg$Year
 cookiewcore <- subset(agg, Name %in% corevec)
 
 # histgrams of every cookie X core 
@@ -234,17 +233,7 @@ alninc <- subset(cookiewcore, grepl("ALNINC", Name))
 betall <- subset(cookiewcore, grepl("BETALL", Name))
 betpap <- subset(cookiewcore, grepl("BETPAP", Name))
 betpop <- subset(cookiewcore, grepl("BETPOP", Name))
-quartz()
-ggplot(alninc, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~ Name, scales = "fixed") +
-  theme_minimal() +
-  labs(
-    title = "Cookie Length by Year and Core Name",
-    x = "Year",
-    y = "Length (cm)"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
 
 ### === === === === === === === === === === ###
 ###### Change 2022 to 2023 when necessary for cookies with cores ######
@@ -287,14 +276,41 @@ agg$Yearcor[agg$Name == "BETPOP_XX_P3" & agg$sourceFolder == "cookies"] <-
 ### === === === === === === === === === === ###
 ######Change 2022 to 2023 when necessary for cookies without cores ######
 ### === === === === === === === === === === ###
+# BETALL_GR12_P1
+agg$Yearcor[agg$Name == "BETALL_WM8_P1" & agg$sourceFolder == "cookies"] <- 
+  agg$Year[agg$Name == "BETALL_WM8_P1" & agg$sourceFolder == "cookies"] + 1
+# BETPOP_HF16A_P2
+agg$Yearcor[agg$Name == "BETPOP_HF16A_P2" & agg$sourceFolder == "cookies"] <- 
+  agg$Year[agg$Name == "BETPOP_HF16A_P2" & agg$sourceFolder == "cookies"] + 1
+# BETPOP_HF3A_P6
+agg$Yearcor[agg$Name == "BETPOP_HF3A_P6" & agg$sourceFolder == "cookies"] <- 
+  agg$Year[agg$Name == "BETPOP_HF3A_P6" & agg$sourceFolder == "cookies"] + 1
+# BETPOP_WM8_PNA
+agg$Yearcor[agg$Name == "BETPOP_WM8_PNA" & agg$sourceFolder == "cookies"] <- 
+  agg$Year[agg$Name == "BETPOP_WM8_PNA" & agg$sourceFolder == "cookies"] + 1
+# BETPOP_GR5C_P12
+agg$Yearcor[agg$Name == "BETPOP_GR5C_P12" & agg$sourceFolder == "cookies"] <- 
+  agg$Year[agg$Name == "BETPOP_GR5C_P12" & agg$sourceFolder == "cookies"] + 1
+    
 # Start by selecting cookies for which we have cores
 cookienocore <- subset(agg, !(Name %in% unique(corewcookie$Name)))
 alninc <- subset(cookienocore, grepl("ALNINC", Name))
 betall <- subset(cookienocore, grepl("BETALL", Name))
 betpap <- subset(cookienocore, grepl("BETPAP", Name))
 betpop <- subset(cookienocore, grepl("BETPOP", Name))
-quartz()
-ggplot(betpop, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
+
+### === === === === === === === === === === ###
+###### Change 2022 to 2023 when necessary for cores without cookies ######
+### === === === === === === === === === === ###
+# Start by selecting cookies for which we have cores
+corenocookie <- subset(agg, sourceFolder == "coresWithoutCookies")
+alninc <- subset(corenocookie, grepl("ALNINC", Name))
+betall <- subset(corenocookie, grepl("BETALL", Name))
+betpap <- subset(corenocookie, grepl("BETPAP", Name))
+betpop <- subset(corenocookie, grepl("BETPOP", Name))
+
+# quartz()
+ggplot(alninc, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ Name, scales = "fixed") +
   theme_minimal() +
@@ -304,7 +320,4 @@ ggplot(betpop, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
     y = "Length (cm)"
   ) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-dev.off()
-# BETALL_GR12_P1
-agg$Yearcor[agg$Name == "BETALL_WM8_P1" & agg$sourceFolder == "cookies"] <- 
-  agg$Year[agg$Name == "BETALL_WM8_P1" & agg$sourceFolder == "cookies"] + 1
+# dev.off()
