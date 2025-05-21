@@ -14,7 +14,7 @@ options(max.print = 200)
 cg18 <-read.csv("fromMainRepo/2018_data/2018_CG_datasheet.csv", header=TRUE)
 
 ## Clean data
-cg18<-gather(cg18, "date","bbch", -Ind, -Plot) # what does bbch mean?
+cg18<-gather(cg18, "date","bbch", -Ind, -Plot) # bbch: international convention of dev stages of plants
 cg18<-na.omit(cg18)
 cg18$date<-substr(cg18$date, 2,8) # removes characters from position 2 and 8
 cg18$date<-as.character(as.Date(cg18$date,"%m.%d.%y"))
@@ -29,7 +29,7 @@ cg18$bbch<-gsub("-F", " ", cg18$bbch, fixed=TRUE)
 
 
 cg18<-cg18[!(cg18$bbch==""),]
-dx<-separate(cg18, bbch, into = c("first", "second"), sep = "\\,")
+dx<-separate(cg18, bbch, into = c("first", "second"), sep = "\\,") # why is 2 phenophases?
 dx<-separate(dx, first, into = c("first", "third"), sep = "\\,")
 
 #dx$first <- substr(dx$first, 0, 2)
@@ -38,7 +38,7 @@ dx<-separate(dx, first, into = c("first", "third"), sep = "\\,")
 
 dx$bb<-NA
 dx$bb<-ifelse(dx$first=="9" | dx$first=="9-" | dx$first=="11" | dx$second=="9" | dx$second=="9-" |
-                dx$second=="11" | dx$third=="9" | dx$third=="9-" | dx$third=="11", dx$doy, dx$bb)
+                dx$second=="11" | dx$third=="9" | dx$third=="9-" | dx$third=="11", dx$doy, dx$bb) # it checks whether the first,2nd or 3d column match the condition, and if it does, it assigns a date. 9 and 11 likely refers to early budburst
 dx$lo<-NA
 dx$lo<-ifelse(dx$first=="19" | dx$second=="19" | dx$third=="19", dx$doy, dx$lo)
 
@@ -86,7 +86,7 @@ drisk<-dx%>%dplyr::select(Ind, Plot, bb, lo, flobuds, flobudburst, flowers, frui
 #drisk<-drisk[!(is.na(drisk$bb) & is.na(drisk$lo)),]
 
 bb<-drisk[!is.na(drisk$bb),]
-bb$budburst<-ave(bb$bb, bb$Ind, bb$Plot, FUN=min)
+bb$budburst<-ave(bb$bb, bb$Ind, bb$Plot, FUN=min) # averaging the column bb for grouping variable ind and plot
 bb<-subset(bb, select=c("Ind", "Plot", "budburst"))
 bb<-bb[!duplicated(bb),]
 lo<-drisk[!is.na(drisk$lo),]
@@ -167,8 +167,8 @@ cg19leaves$year <- 2019
 
 cg19leaves<-cg19leaves[!duplicated(cg19leaves),]
 
-cg19leaves$bb <- ifelse(cg19leaves$bbch%in%c(9:11), cg19leaves$doy, NA)
-cg19leaves$lo <- ifelse(cg19leaves$bbch==19, cg19leaves$doy, NA)
+cg19leaves$bb <- ifelse(cg19leaves$bbch%in%c(9:11), cg19leaves$doy, NA) # bb likely stands for bud burst
+cg19leaves$lo <- ifelse(cg19leaves$bbch==19, cg19leaves$doy, NA) # lo stands for leaf out
 
 
 cg19leaves$spindplot <- paste(cg19leaves$spp, cg19leaves$site, cg19leaves$ind, cg19leaves$plot)
@@ -573,4 +573,31 @@ foo <- foo[complete.cases(foo),]
 #moddvr <- rstanarm::stan_glmer(dvr ~ as.factor(year) + (as.factor(year) | spp/site), data=foo)
 
 }
+
+#### Prepare toi join to source file ####
+dtemp <- cgclean 
+names(dtemp)[names(dtemp) == "year"] <- "Year"
+str(dtemp)
+
+# grab a vec of interested species
+vec <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
+# get only 4 species
+dtemp2 <- subset(dtemp, spp %in% vec)
+# remove dupplicated rows 
+dtemp2 <- dtemp2[!duplicated(dtemp2),]
+# select columns
+dtemp3 <- dtemp2[, c(1:2, 6:ncol(dtemp2))]
+# remove spp column because I will add it in the merge file
+dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
+
+col <- ncol(merged_df)
+# for{i in col}
+
+# rename df 
+obsdata <- dtemp4
+
+
+
+
+
 

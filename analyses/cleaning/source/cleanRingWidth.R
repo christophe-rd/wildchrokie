@@ -4,8 +4,8 @@
 # goal of this script is to import the cookie measurements, clean them and change unit from inches to cm
 
 ## housekeeping
-rm(list=ls()) 
-options(stringsAsFactors = FALSE)
+# rm(list=ls()) 
+# options(stringsAsFactors = FALSE)
 options(max.print = 200) 
 
 ## Load Libraries
@@ -93,11 +93,6 @@ dsub$cookie.[which(dsub$idfull == "BETPAP_GR5B_P2")] <- "1"
 dsub$cookie.[which(dsub$idfull == "BETPOP_GR5_P6")] <- "1"
 ### ALNINC_HF9_P6
 dsub$cookie.[which(dsub$idfull == "ALNINC_HF9_P6")] <- "0"
-# dsub$[which(dsub$idfull == "")] <- "1"
-# dsub$[which(dsub$idfull == "")] <- "1"
-# dsub$[which(dsub$idfull == "")] <- "1"
-# 
-
 
 cookiesOG <- subset(dsub, cookie. == "1")
 
@@ -163,7 +158,7 @@ d$Name[which(d$Name == "ALNINC_WM8_P1" & d$sourceFolder == "cookies")] <- "ALNIN
 d$Name[which(d$Name == "BETALL_SH5_P6" & d$sourceFolder == "coresUnconfident")] <- "BETALL_SH9_P6" 
 
 ### === === === === === ###
-# Verification steps #
+##### Verification steps #####
 ### === === === === === ###
 # compare if I have the data from all cookies in the og dataset
 vcook <- c("cookies", "cookiesUnconfident")
@@ -235,6 +230,21 @@ alninc <- subset(cookiewcore, grepl("ALNINC", Name))
 betall <- subset(cookiewcore, grepl("BETALL", Name))
 betpap <- subset(cookiewcore, grepl("BETPAP", Name))
 betpop <- subset(cookiewcore, grepl("BETPOP", Name))
+
+# quartz()
+ggplot(betpap, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Name, scales = "fixed") +
+  theme_minimal() +
+  labs(
+    title = "Cookie Length by Year and Core Name",
+    x = "Year",
+    y = "Length (cm)"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+# dev.off()
+
+
 
 
 ### === === === === === === === === === === ###
@@ -311,15 +321,3 @@ betall <- subset(corenocookie, grepl("BETALL", Name))
 betpap <- subset(corenocookie, grepl("BETPAP", Name))
 betpop <- subset(corenocookie, grepl("BETPOP", Name))
 
-# quartz()
-ggplot(betpop, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~ Name, scales = "fixed") +
-  theme_minimal() +
-  labs(
-    title = "Cookie Length by Year and Core Name",
-    x = "Year",
-    y = "Length (cm)"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-# dev.off()
