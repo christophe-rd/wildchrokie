@@ -221,9 +221,12 @@ Fairly confident
 ####BETPOP GR5B P3
 Outer ring probably 2022. Pretty confident of the calls made.
 I rescanned this guy, but I didn't remeasure it's rings because I was confident from the first round. 
+#### BETPOP GR3 P6
+Really not sure of the rings. 
 #### BETPOP GR5 P6
 Good
-
+#### BETPOP HF16 P3
+Really not sure of the rings. 
 #### BETPOP HF3 P1
 Pretty sure
 

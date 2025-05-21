@@ -176,4 +176,14 @@ Patterns match really well when last ring is 2022
 # Core without cookie
 ## ALNINC
 ###ALNINC_HF8_P12
+ok
 ###ALNINC_HF9_P6
+ok
+### BETALL_GR13_P1
+Ok
+### BETALL_SH4A_P9 
+Ok
+### BETALL_WM8_P1
+Ok
+### BETALL_WM8_P9
+Ok
