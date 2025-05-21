@@ -180,15 +180,15 @@ OGtoCookies <- cookiesOG$idfull[which(!cookiesOG$idfull%in%listCookieNames)]
 # ALNINC_GR11B_P3: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
 # ALNINC_GR8_P3: scanned, but not sure and have to look under microscope
 # ALNINC_SH4_P2: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls
-# ALNINC_SH5_P3: cookie was never scanned. TO SCAN
+# ALNINC_SH5_P3: cookie was never scanned. TO SCAN -- OK
 # ALNINC_WM1_P1: scanned, but not sure and have to look under microscope or perhaps comparing with other alninc for which I am more certain of the calls. Also, entered as WM_P1 not WM1
 # ALNINC_WM2B_P1: need to add guidelines
-# ALNINC_WM5A_P16:cookie was never scanned. TO SCAN
-# BETALL_GR13_P1: cookie was never scanned. TO SCAN
+# ALNINC_WM5A_P16:cookie was never scanned. TO SCAN TOMORROW
+# BETALL_GR13_P1: cookie was never scanned. TO SCAN -- OK
 # BETALL_SH9_P6: scanned, but not sure and have to look under microscope or perhaps comparing with other BETall for which I am more certain of the calls.
-# BETPAP_GR8_P6: cookie was never scanned. TO SCAN
-# BETPAP_HF16_P3: cookie was never scanned. TO SCAN
-# BETPOP_GR3_P6: cookie was never scanned. TO SCAN
+# BETPAP_GR8_P6: cookie was never scanned. TO SCAN -- OK
+# BETPAP_HF16_P3: cookie was never scanned. TO SCAN-- OK
+# BETPOP_GR3_P6: cookie was never scanned. TO SCAN-- OK
 
 # compare if I have the data from all cores in the og dataset
 vcores <- c("coresUnconfident", "coresWithCookies", "coresWithoutCookies")
@@ -201,11 +201,12 @@ coresinOG <- listCoreNames[which(!listCoreNames%in%coresOG$idfull)]
 
 # compare if I have all the cores in the og dataset have been scanned
 Ogscanned <- coresOG$idfull[which(!coresOG$idfull%in%listCoreNames)]
-# BETALL_WM8_P1: OK, core exists but poor quality so no csv. Rescan
-# BETPAP_HF16_P2: will be rescanned 
+
+# BETALL_WM8_P1: core exists and was added to core without cookies.
+# BETPAP_HF16_P2: will be rescanned -- OK
 # BETPOP_GR3_P16: RESAND and find rings. It doesn't work!
-# BETPOP_GR5_P6: RESAND and RESCAN
-# BETPOP_HF3_P1: SCAN
+# BETPOP_GR5_P6: RESAND and RESCAN -- OK
+# BETPOP_HF3_P1: never scanned, but cookie is obvious so no need
 # BETPOP_WM7_P1: core but broken and it's weird so never scanned.
 
 ### === === === === === ###
@@ -311,7 +312,7 @@ betpap <- subset(corenocookie, grepl("BETPAP", Name))
 betpop <- subset(corenocookie, grepl("BETPOP", Name))
 
 # quartz()
-ggplot(betall, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
+ggplot(betpop, aes(x = factor(Yearcor), y = LengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ Name, scales = "fixed") +
   theme_minimal() +

@@ -7,15 +7,16 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(lubridate)
+options(max.print = 200) 
 
 ### First start with 2018 data...
 # Set Working Directory
 cg18 <-read.csv("fromMainRepo/2018_data/2018_CG_datasheet.csv", header=TRUE)
 
 ## Clean data
-cg18<-gather(cg18, "date","bbch", -Ind, -Plot)
+cg18<-gather(cg18, "date","bbch", -Ind, -Plot) # what does bbch mean?
 cg18<-na.omit(cg18)
-cg18$date<-substr(cg18$date, 2,8)
+cg18$date<-substr(cg18$date, 2,8) # removes characters from position 2 and 8
 cg18$date<-as.character(as.Date(cg18$date,"%m.%d.%y"))
 cg18$doy<-yday(cg18$date)
 cg18$species<-substr(cg18$Ind, 0,6)
