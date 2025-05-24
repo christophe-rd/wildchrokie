@@ -8,10 +8,7 @@ options(stringsAsFactors=FALSE)
 options(mc.cores = parallel::detectCores())
 graphics.off()
 
-if(length(grep("deirdreloughnan", getwd())>0)) { 
-  setwd("~/Documents/github/wildhellgarden/analyses")
-} else if(length(grep("lizzie", getwd())>0)) {setwd("~/Documents/git/projects/") 
-} else setwd("~/Documents/git/wildhellgarden/analyses")
+setwd("/Users/christophe_rouleau-desrochers/github/wildhellgarden/analyses/")
 
 # Load libraries
 
