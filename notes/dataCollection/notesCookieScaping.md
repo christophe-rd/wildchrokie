@@ -30,7 +30,7 @@ Sanding ok
 #### ALNINC_HF2_P1_guides
 sanding ok
 #### ALNINC HF3 P16
-Confident
+Confident.  not in table from main wildhell repo. The cookie does exist physically but it was never a tree in the original table so we probably don't have pheno data for that one
 #### ALNINC_HF5_P6_guides
 sanding not great but ok
 #### ALNINC HF9 P2_guides
@@ -132,7 +132,7 @@ Microscope: check the commented part and verify if it's false. Check while compa
 ####BETALL SH9 P9
 RESAND
 ONLY two measurements for this cookie, as there is a huge knot that could be mistaken for the pit. I selected the "knot" that was the most centered. 
-Not sure of anything on this cookie. The bottom line measurements stops at 2018 because it's going through the second knot. Might not be possible to infer anything with this guy. 
+Confident that outer rign is 2023, but huge differences in ring measurements for this cookie. 
 Microscope
 ####BETALL WM8A P12
 RESAND

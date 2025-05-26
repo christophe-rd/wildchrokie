@@ -81,6 +81,8 @@ Outer ring 2023. Fit well the core. Missing the last bit of one of the 2022 ring
 ## BETPOP 
 ### BETPOP GR3 P16
 TO DO: measure cookie and check with core. Desn't match the cookie at all. Waay smaller than cookie and ring patterns don't match. After looking at the cookie, maybe 2023 the tree grew a lot and core was taken much higher than normal. In any case, the tags match, its just the size for now. 
+
+Match cookieXcore don't match, but confident beside that so I will let it like this for now
 ### BETPOP GR5 P1
 Outer ring 2022. Fit well the core.
 
@@ -99,11 +101,15 @@ Outer ring 2023 of cookie BETPOP GR_5B_P12. Fit well the core.
 ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 ### BETPOP HF1 P3
 Outer ring 2023. Fit well the core. Core is missing the pit (first year) and a little of 2022, but doesnt affect interpretation. 
+### BETPOP_HF3_P1
+Core not scanned, but cookie is obvious so so need
 ### BETPOP HF3B P6
 ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 The core has a very narrow outer ring that the cookie doesn't. It's usually the opposite. This would mean that the core was harvested below the cookie. 
 ### BETPOP hf5 p6
 No cookie. Not super confident, to check in R with the patterns of the other cookies/cores. For now, its in confident
+###BETPOP_WM7_P1
+core but broken and it's weird so never scanned.
 ### BETPOP WM7_P2 
 ALREADY changed years to correct ones. Outer is 2023. Pretty confident. Csv is updated so nothing to do with this cookie. 
 
