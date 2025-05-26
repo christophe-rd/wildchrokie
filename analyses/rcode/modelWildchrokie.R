@@ -35,66 +35,52 @@ gdd <- read.csv("output/gddData.csv")
 ### assign more digestible names and years to help me understand what the hell im doing
 # spp <- c("alninc","betpap","betpop","betall")
 # plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
-yr <- 2016:2023
-rep <- 1:3
+# yr <- 2016:2023
+
 
 # set number of years
-Nyr <- length(yr)
+# Nyr <- length(yr)
 # set species specific slopes to depend on gdd
 # let's first set it in mm and multiply by 10 to set the scale closer to gdd
-beta <- 4
+intercept <- 1.5
+beta <- 0.4
+sigma_width <- 0.3 # standard deviation
 
-rep <-
-#make a dataframe for ring width
-wdat <- data.frame(
-  yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
-  plot = rep(rep(plot, each = length(spp) * length(rep)), times = length(yr)),
-  spp = rep(rep(spp, each = length(rep)), times = length(yr) * length(plot)),
-  rep = rep(rep, times = length(yr) * length(plot) * length(spp))
-)
+n_ids <- 100
+rep <- 3
+N <- n_ids * rep
 
-#
-# simulate gdd 
+ids <- rep(paste0("t", 1:n_ids), each = rep)
+gdd <- round(rnorm(N, 180000, 10000))
+gddcons <- gdd / 20000
+
+error <- rnorm(N, 0, sigma_width)
+
+# calculate ring width
+ringwidth <- intercept + beta * gddcons + error
+
 gdd_sim <- data.frame(
-  year = yr,
-  gdd = round(rnorm(Nyr, 180000, 10000))  # setting a very approximate cumulative mean gdd between doy 100 and 300
+  ids = ids,
+  gdd = gdd,
+  gddcons = gddcons,
+  ringwidth = ringwidth
 )
 
-# divide gdd by a constant to set it to a similar scale than the slope.
-gdd_sim$gddcons <- gdd_sim$gdd/20000
-# merge wdat and gdd
-wdat <- merge(wdat, gdd_sim, by.x = "yr", by.y = "year", all.x = TRUE)
-
-# paste plot and spp to give unique ids
-wdat$treeid <- paste(wdat$spp, wdat$plot, sep = "_")
-
-# the grand mean of ring width: baseline ring width when all other effects are zero.
-mu_grand <- 0.04 
-
-# Simulate random effect to set unique intercepts for each parameter
-wdat$yr_effect <- rnorm(nrow(wdat), 0, 0.05)[match(wdat$yr, yr)] # with mean of 0 and SD of 0.05
-wdat$tree_effect <- rnorm(nrow(wdat), 0, 0.02)[match(wdat$plot, plot)] # SD of 0.02 across trees
-wdat$spp_effect <- rnorm(nrow(wdat), 0, 0.06)[match(wdat$spp, spp)]
-
-# Simulate ring width (including GDD effect) aka yhat?
-wdat$ringwidth <- mu_grand + 
-  wdat$yr_effect + 
-  wdat$tree_effect + 
-  wdat$spp_effect +
-  spp_slopes[wdat$spp] * wdat$gdd +  # gdd effect varies by spp
-  rnorm(nrow(wdat), 0, 0.5) #overall error
+plot(ringwidth~gdd, data=gdd_sim)
 
 # run models
+
 if(runmodels){
   fit <- stan_lmer(
-      ringwidth ~ spp * gdd + (1 | treeid)+ (1 | yr),  
-    data = wdat,
+    ringwidth ~ gddcons + (1 | ids),  
+    data = gdd_sim,
     chains = 4,
     iter = 2000,
     core=4
   )
-print(fit, digits=6)
+  print(fit, digits=3)
 }
+
 
 
 # code I need to fix:
@@ -123,6 +109,42 @@ if (codetofix){
     Estimated = fit$coefficients[1:4],  # Assuming (Intercept), sppbetall, etc.
     True = c(sim_intercept, sim_spp_effects[-1])
   )
+  
+  
+  #make a dataframe for ring width
+  wdat <- data.frame(
+    yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
+    plot = rep(rep(plot, each = length(spp) * length(rep)), times = length(yr)),
+    spp = rep(rep(spp, each = length(rep)), times = length(yr) * length(plot)),
+    rep = rep(rep, times = length(yr) * length(plot) * length(spp))
+  )
+  
+  #
+  
+  # merge wdat and gdd
+  wdat <- merge(wdat, gdd_sim, by.x = "yr", by.y = "year", all.x = TRUE)
+  
+  # paste plot and spp to give unique ids
+  wdat$treeid <- paste(wdat$spp, wdat$plot, sep = "_")
+  
+  # the grand mean of ring width: baseline ring width when all other effects are zero.
+  mu_grand <- 0.04 
+  
+  # Simulate random effect to set unique intercepts for each parameter
+  wdat$yr_effect <- rnorm(nrow(wdat), 0, 0.05)[match(wdat$yr, yr)] # with mean of 0 and SD of 0.05
+  wdat$tree_effect <- rnorm(nrow(wdat), 0, 0.02)[match(wdat$plot, plot)] # SD of 0.02 across trees
+  wdat$spp_effect <- rnorm(nrow(wdat), 0, 0.06)[match(wdat$spp, spp)]
+  
+  # Simulate ring width (including GDD effect) aka yhat?
+  wdat$ringwidth <- mu_grand + 
+    wdat$yr_effect + 
+    wdat$tree_effect + 
+    wdat$spp_effect +
+    spp_slopes[wdat$spp] * wdat$gdd +  # gdd effect varies by spp
+    rnorm(nrow(wdat), 0, 0.5) #overall error
+  
+  
+  
 }
 
 

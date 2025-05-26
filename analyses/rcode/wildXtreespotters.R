@@ -20,7 +20,7 @@ setwd("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/o
 
 # need to run getAll.R first
 # read phenology for wildchrokie
-wildphen <- obsdata 
+wildphen <- cgclean 
 wildphen$species<-substr(wildphen$Name, 0,6)
 
 # read phenology for treespotters
@@ -31,22 +31,27 @@ str(wildphen)
 col <- c("budburst", "leafout", "flowers", "fruits", "coloredLeaves")
 
 # select only species within betulacea because its the only thing I have in the common garden df
-spotphen_bet <- subset(spotphen, genus == "Betula")
-
-coltoselect <- c( phentomatch)
 # select only columns in treespotters for the observations that match the common garden
-spotphen_bet <- subset(spotphen_bet, select = c("plantNickname", "Common_Name", "year", col))
+spotphen_sub <- subset(spotphen, select = c("plantNickname", "Common_Name", "year", col))
 
 # same but for the common garden
 col <- c("budburst", "leafout", "flowers", "fruit", "leafcolor")
-wildphen <- subset(wildphen, select = c("Name", "species", "Year", col))
-
+wildphen <- subset(wildphen, select = c("Name", "spp", "year", col))
 
 
 # change colnames for them to match
-spotphen_bet_matched <- spotphen_bet %>%
+wildphen <- wildphen %>%
+  rename(
+    species = spp,
+    Year = year,
+  ) %>%
+  select(Name, species, Year, budburst, leafout, flowers, fruit, leafcolor)
+
+# change colnames for them to match
+spotphen_sub_matched <- spotphen_sub %>%
   rename(
     Name = plantNickname,
+    species = Common_Name,
     Year = year,
     leafcolor = coloredLeaves,
     fruit = fruits
@@ -54,64 +59,37 @@ spotphen_bet_matched <- spotphen_bet %>%
   select(Name, species, Year, budburst, leafout, flowers, fruit, leafcolor)
 
 wildphen$Source <- "WildHell"
-spotphen_bet_matched$Source <- "Treespotters"
+spotphen_sub_matched$Source <- "Treespotters"
 
-combined <- rbind(wildphen, spotphen_bet_matched)
+combined <- rbind(wildphen, spotphen_sub_matched)
 
-combined_long <- pivot_longer(
-  combined,
-  cols = c("budburst", "leafout", "flowers", "fruit", "leafcolor"),
-  names_to = "Phenophase",
-  values_to = "DOY"
-)
-combined_long$Year <- as.character(combined_long$Year)
-# open device
-quartz()
+# start with species that I have in both datasets
+### betall
+betall <- subset(combined, species %in% c("BETALL", "Yellow birch"))
 
-# all species within the betulacea family
-betulacea <- ggplot(combined_long, aes(x = Year, y = DOY, color = Source)) +
-  geom_point(alpha = 0.6, position = position_jitter(width = 0.2)) +
-  facet_wrap(~ Phenophase, scales = "free_y") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  scale_color_manual(values = c("WildHell" = "#1b9e77", "Treespotters" = "#d95f02")) +
-  labs(
-    title = "",
-    x = "Year",
-    y = "doy"
+# keep only years that we have data for wildhell
+betall <- subset(betall, Year %in% c(2018:2020))
+
+
+summary_stats <- betall %>%
+  group_by(species, Source, Year) %>%
+  summarise(
+    across(
+      c(budburst, leafout, leafcolor),
+      list(mean = ~mean(., na.rm = TRUE),
+           sd = ~sd(., na.rm = TRUE)),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
   )
-ggsave("figures/betulacea.png", plot = betulacea, width = 10, height = 8, dpi = 300)
 
-# all species within the betula genus
-betula <- subset(combined_long, species != "ALNINC")
-betulafig <- ggplot(betula, aes(x = Year, y = DOY, color = Source)) +
-  geom_point(alpha = 0.6, position = position_jitter(width = 0.2)) +
-  facet_wrap(~ Phenophase, scales = "free_y") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  scale_color_manual(values = c("WildHell" = "#1b9e77", "Treespotters" = "#d95f02")) +
-  labs(
-    title = "",
-    x = "Year",
-    y = "doy"
-  )
-ggsave("figures/betula.png", plot = betulafig, width = 10, height = 8, dpi = 300)
+wildhellsub <- subset(summary_stats, Source == "WildHell")[, c("Year", "budburst_mean","budburst_sd")]
+colnames(wildhellsub) <- c("Year", "wild_budburst_mean", "wild_budburst_sd")
 
-# the only overlapping species
-all <- c("alleghaniensis","BETALL")
-alleng <- subset(combined_long, species %in% all)
+treespotsub <- subset(summary_stats, Source == "Treespotters")[, c("Year", "budburst_mean", "budburst_sd")]
+colnames(treespotsub) <- c("Year", "treespot_budburst_mean", "treespot_budburst_sd")
 
-allengfig <- ggplot(alleng, aes(x = Year, y = DOY, color = Source)) +
-  geom_point(alpha = 0.6, position = position_jitter(width = 0.2)) +
-  facet_wrap(~ Phenophase, scales = "free_y") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_manual(values = c("WildHell" = "#1b9e77", "Treespotters" = "#d95f02")) +
-  labs(
-    title = "",
-    x = "Year",
-    y = "DOY"
-  )
-ggsave("figures/alleng.png", plot = allengfig, width = 10, height = 8, dpi = 300)
+binded <- cbind(wildhellsub, treespotsub)[, c(1:3,5:6)]
 
-dev.off()
+ggplot(binded)+
+  geom_point(aes(x=wild_budburst_mean, y=treespot_budburst_mean))

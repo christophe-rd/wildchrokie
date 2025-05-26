@@ -14,15 +14,12 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 ### === === === === === === === === === === ###
 # 1. Get the data from the cleaning ring width file
 source("cleaning/source/cleanRingWidth.R") 
-
-### === === === === === === === === === === ###
-# Get cleaned data from main repo #
-### === === === === === === === === === === ###
-setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
-# 1. Get observation data from main repo
-source("fromMainRepo/source/cleaning_obsdata.R")
+# 2. Get observation data from main repo
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses") # for now... its bad but i need to back down one folder in order for this code to work
+source("cleaning/source/cleaning_obsdata.R")
 # 3. Get GDD data from main wildhill repo
-source("fromMainRepo/source/combineWeather.R") # for that csv: gddData.csv
+# source("cleaning/source/combineWeather.R") # for that csv: gddData.csv.  ### right now it doesnt work as I need to fix climate data csv
+
 
 # 2. Grab climate data
 # source("fromMainRepo/climatedata.R") # commenting it out for now as there are only 4 years and might be an old script
@@ -31,7 +28,7 @@ source("fromMainRepo/source/combineWeather.R") # for that csv: gddData.csv
 
 
 # merge columns from cgclean and d by Name and drop all names that are not in d
-merged_df <- merge(d, obsdata, by = c("Name", "Year"), all.x = TRUE)
+# merged_df <- merge(d, obsdata, by = c("Name", "Year"), all.x = TRUE)
 # Add species column
-merged_df$species<-substr(merged_df$Name, 0,6)
+# merged_df$species<-substr(merged_df$Name, 0,6)
 

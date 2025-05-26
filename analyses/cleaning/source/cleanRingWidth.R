@@ -8,6 +8,9 @@
 # options(stringsAsFactors = FALSE)
 options(max.print = 200) 
 
+# verification steps
+crossverification <- FALSE
+
 ## Load Libraries
 library(ggplot2)
 library(xlsx)
@@ -157,13 +160,16 @@ d$Name[which(d$Name == "ALNINC_HF3_P16" & d$sourceFolder == "cookies")] <- "ALNI
 ##### Verification steps #####
 ### === === === === === ###
 # compare if I have the data from all cookies in the og dataset
-vcook <- c("cookies", "cookiesUnconfident", "coresUnconfident", "coresWithoutCookies")
-coresandcookies <- subset(d, sourceFolder %in% vcook)
-listCookieNames <- unique(coresandcookies$Name)
-cookieInOG <- listCookieNames[which(!listCookieNames%in%obsdata$Name)]
+if(crossverification) {
+  vcook <- c("cookies", "cookiesUnconfident", "coresUnconfident", "coresWithoutCookies")
+  coresandcookies <- subset(d, sourceFolder %in% vcook)
+  listCookieNames <- unique(coresandcookies$Name)
+  cookieInOG <- listCookieNames[which(!listCookieNames%in%obsdata$Name)]
+  # compare if I have scanned the cookies from the data from og dataset 
+  OGtoCookies <- unique(obsdata$Name[which(!obsdata$Name%in%listCookieNames)])
+}
 
-# compare if I have scanned the cookies from the data from og dataset 
-OGtoCookies <- unique(obsdata$Name[which(!obsdata$Name%in%listCookieNames)])
+
 
 ### === === === === === ###
 # Start playing with the data #

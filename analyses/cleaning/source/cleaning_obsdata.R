@@ -9,6 +9,8 @@ library(ggplot2)
 library(lubridate)
 options(max.print = 200) 
 
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+
 ### First start with 2018 data...
 # Set Working Directory
 cg18 <-read.csv("fromMainRepo/2018_data/2018_CG_datasheet.csv", header=TRUE)
@@ -589,8 +591,6 @@ dtemp2 <- dtemp2[!duplicated(dtemp2),]
 dtemp3 <- dtemp2[, c(1:2, 6:ncol(dtemp2))]
 # remove spp column because I will add it in the merge file
 dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
-
-# for{i in col}
 
 # rename df 
 obsdata <- dtemp4
