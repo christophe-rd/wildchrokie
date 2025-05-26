@@ -33,19 +33,18 @@ gdd <- read.csv("output/gddData.csv")
 # Simulate ring width for each year, from 2017 to 2023 for 4 species
 
 ### assign more digestible names and years to help me understand what the hell im doing
-spp <- c("alninc","betpap","betpop","betall")
-plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
+# spp <- c("alninc","betpap","betpop","betall")
+# plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
 yr <- 2016:2023
 rep <- 1:3
 
+# set number of years
+Nyr <- length(yr)
 # set species specific slopes to depend on gdd
-spp_slopes <- c(
-  alninc = 0.00002, 
-  betpap = 0.00005, 
-  betpop = 0.00008, 
-  betall = 0.00004
-  )
+# let's first set it in mm and multiply by 10 to set the scale closer to gdd
+beta <- 4
 
+rep <-
 #make a dataframe for ring width
 wdat <- data.frame(
   yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
@@ -54,12 +53,15 @@ wdat <- data.frame(
   rep = rep(rep, times = length(yr) * length(plot) * length(spp))
 )
 
+#
 # simulate gdd 
 gdd_sim <- data.frame(
   year = yr,
   gdd = round(rnorm(Nyr, 180000, 10000))  # setting a very approximate cumulative mean gdd between doy 100 and 300
 )
 
+# divide gdd by a constant to set it to a similar scale than the slope.
+gdd_sim$gddcons <- gdd_sim$gdd/20000
 # merge wdat and gdd
 wdat <- merge(wdat, gdd_sim, by.x = "yr", by.y = "year", all.x = TRUE)
 
@@ -158,4 +160,11 @@ if (runoldcode) {
   Nrep <- length(rep) # number of measurements per tree
   # First making a data frame for the growth ring data
   Nw <- Nplot*Nyr*Nrep*Nspp # number of measurements per species
+  
+  wdat <- data.frame(
+    yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
+    plot = rep(rep(plot, each = length(spp) * length(rep)), times = length(yr)),
+    spp = rep(rep(spp, each = length(rep)), times = length(yr) * length(plot)),
+    rep = rep(rep, times = length(yr) * length(plot) * length(spp))
+  )
 }
