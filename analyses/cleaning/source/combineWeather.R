@@ -7,8 +7,10 @@ library(tidyverse)
 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 
+weldhill <- FALSE
+if(weldhill) {
 
-weather<-read.csv("input/_notcookies/weldhill.csv") #from https://labs.arboretum.harvard.edu/weather/
+y<-read.csv("input/_notcookies/weldhill.csv") #from https://labs.arboretum.harvard.edu/weather/
 
 weather<-filter(weather,grepl("2015|2016|2017|2018|2019|2020|2021|2022|2023",weather$Eastern.daylight.time)) ## pull the years we need
 
@@ -17,43 +19,49 @@ goo<-weather %>% separate(Eastern.daylight.time, into = c('date', 'time'), sep =
 
 goo<-goo%>% group_by(date) %>% summarise(maxTf=max(Temp..F ),minTf=min(Temp..F )) ###make daily mins and maxT
 
+}
+
 ### whoops, The weld hill temperature data ends, use the closest weather station
-more20<-read.csv("input/Daily Data for Boston (Weld Hill), MA - [id=ma_weld nwon, lat=42.2953, lon=-71.1337].csv")
+bostonairport<-read.csv("input/_notcookies/bostonAirportClimate.csv")
 
 ###get ready to mush them together
-goo2<-goo # make new copy df
-goo2$date<-as.Date(goo2$date,"%m/%d/%Y") # make dates dates again
-more20$date<-as.Date(more20$date,"%m/%d/%Y")
+str(bostonairport)
+bostonairport$date<-as.Date(bostonairport$DATE) # make dates dates again
 
-goo2$doy<-yday(goo2$date) ##convert to doy
-more20$doy<-yday(more20$date) ##convert to doy
-###put it in order
-goo2<-goo2[order(goo2$date), ]
-more20<-more20[order(more20$date), ]
-colnames(more20)
-more20<-dplyr::select(more20,date,Max.Air.Temp...F.,Min.Air.Temp...F.,doy)
-colnames(goo2)
-colnames(more20)<-colnames(goo2)
-goo2<-rbind(goo2,more20)
+bostonairport$doy<-yday(bostonairport$date) ##convert to doy
 
-goo2$maxTc<-(goo2$maxTf-32)*(5/9) ##convert to  C
-goo2$minTc<-(goo2$minTf-32)*(5/9)
-
-# remove farenheit columns
-goo2 <- goo2[, c("date", "doy", "maxTc", "minTc")]
+# grab columns of interest
+bostonairportsub <- bostonairport[, c("date", "doy", "TAVG", "TMAX", "TMIN")]
+# rename to something less CRAZY
+colnames(bostonairportsub) <- c("date", "doy", "aveT", "maxT", "minT")
 
 #new column for year
-goo2$year<-substr(goo2$date, 1, 4)
+bostonairportsub$year<-substr(bostonairportsub$date, 1, 4)
 ###give each year a seperate data frame
-goo18<-filter(goo2,year=="2018")
-goo19<-filter(goo2,year=="2019")
-goo20<-filter(goo2,year=="2020")
-
+y15<-filter(bostonairportsub,year=="2015")
+y16<-filter(bostonairportsub,year=="2016")
+y17<-filter(bostonairportsub,year=="2017")
+y18<-filter(bostonairportsub,year=="2018")
+y19<-filter(bostonairportsub,year=="2019")
+y20<-filter(bostonairportsub,year=="2020")
+y21<-filter(bostonairportsub,year=="2021")
+y22<-filter(bostonairportsub,year=="2022")
+y23<-filter(bostonairportsub,year=="2023")
+y24<-filter(bostonairportsub,year=="2024")
 ###Calculate gdd
-goo18$GDD_10<- pollen::gdd(tmax = goo18$maxTc,tmin = goo18$minTc,tbase = 10,type = "B")
-goo19$GDD_10<- pollen::gdd(tmax = goo19$maxTc,tmin = goo19$minTc,tbase = 10,type = "B")
-goo20$GDD_10<- pollen::gdd(tmax = goo20$maxTc,tmin = goo20$minTc,tbase = 10,type = "B")
-goober<-rbind(goo18,goo19,goo20)
- 
-write.csv(goober, "output/gddData.csv", row.names = F)
+y15$GDD_10<- pollen::gdd(tmax = y15$maxT,tmin = y15$minT,tbase = 10,type = "B")
+y16$GDD_10<- pollen::gdd(tmax = y16$maxT,tmin = y16$minT,tbase = 10,type = "B")
+y17$GDD_10<- pollen::gdd(tmax = y17$maxT,tmin = y17$minT,tbase = 10,type = "B")
+y18$GDD_10<- pollen::gdd(tmax = y18$maxT,tmin = y18$minT,tbase = 10,type = "B")
+y19$GDD_10<- pollen::gdd(tmax = y19$maxT,tmin = y19$minT,tbase = 10,type = "B")
+y20$GDD_10<- pollen::gdd(tmax = y20$maxT,tmin = y20$minT,tbase = 10,type = "B")
+y21$GDD_10<- pollen::gdd(tmax = y21$maxT,tmin = y21$minT,tbase = 10,type = "B")
+y22$GDD_10<- pollen::gdd(tmax = y22$maxT,tmin = y22$minT,tbase = 10,type = "B")
+y23$GDD_10<- pollen::gdd(tmax = y23$maxT,tmin = y23$minT,tbase = 10,type = "B")
+y24$GDD_10<- pollen::gdd(tmax = y24$maxT,tmin = y24$minT,tbase = 10,type = "B")
+
+
+allyr<-rbind(y15, y16, y17, y18, y19, y20, y21, y22, y23, y24)
+
+write.csv(allyr, "output/gddData.csv", row.names = F)
 

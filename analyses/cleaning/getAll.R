@@ -1,5 +1,5 @@
 # Started 16 May 2025
-# ÇRD
+# CRD
 
 # write out a raw data file for phenology and ring width measurements
 

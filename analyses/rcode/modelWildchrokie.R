@@ -42,22 +42,24 @@ gdd <- read.csv("output/gddData.csv")
 # Nyr <- length(yr)
 # set species specific slopes to depend on gdd
 # let's first set it in mm and multiply by 10 to set the scale closer to gdd
-intercept <- 1.5
-beta <- 0.4
-sigma_width <- 0.3 # standard deviation
+a <- 1.5
+b <- 0.4
+sigma_y <- 0.3 # standard deviation
 
 n_ids <- 100
 rep <- 3
 N <- n_ids * rep
 
 ids <- rep(paste0("t", 1:n_ids), each = rep)
+# sigma_id <- 0.2
+# u_id     <- rnorm(n_ids, 0, sigma_id)[ids] 
 gdd <- round(rnorm(N, 180000, 10000))
 gddcons <- gdd / 20000
 
-error <- rnorm(N, 0, sigma_width)
+error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
-ringwidth <- intercept + beta * gddcons + error
+ringwidth <- a + beta * gddcons + error
 
 gdd_sim <- data.frame(
   ids = ids,
@@ -69,18 +71,37 @@ gdd_sim <- data.frame(
 plot(ringwidth~gdd, data=gdd_sim)
 
 # run models
-
+runmodels <- TRUE
 if(runmodels){
   fit <- stan_lmer(
     ringwidth ~ gddcons + (1 | ids),  
     data = gdd_sim,
     chains = 4,
-    iter = 2000,
+    iter = 4000,
     core=4
   )
-  print(fit, digits=3)
 }
+print(fit, digits=3)
+summary(fit)
 
+# get posterior mean using ranef (random effects...). I guess it shows how much each tree's intercept deviates from the overall mean
+ranef_estimates <- ranef(fit)$ids
+ranef_estimates
+# overall intercept and slope 
+fixef(fit)
+
+# sum up fixed and random intercept
+tree_estimates <- data.frame(
+  ids = rownames(ranef_estimates),
+  intercept_estimate = fixef(fit)["(Intercept)"] + ranef_estimates[, "(Intercept)"]
+)
+# add estimated slope
+tree_estimates$beta <- 0.3400255
+modeloutput <- merge(tree_estimates, gdd_sim, by="ids")[,c(1:3,5)]
+#estimate ring width from model output
+modeloutput$ringwidth <- modeloutput$intercept_estimate + modeloutput$beta*modeloutput$gddcons + error
+
+hist(tree_estimates$intercept_estimate)
 
 
 # code I need to fix:
