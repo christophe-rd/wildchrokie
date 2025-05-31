@@ -37,11 +37,7 @@ gdd <- read.csv("output/gddData.csv")
 # plot <- c("wm1","wm2","wm3","hf1","hf2","hf3","pg1","pg2","pg3","sh1","sh2","shg3")
 # yr <- 2016:2023
 
-
-# set number of years
-# Nyr <- length(yr)
-# set species specific slopes to depend on gdd
-# let's first set it in mm and multiply by 10 to set the scale closer to gdd
+# set parameters
 a <- 1.5
 b <- 0.4
 sigma_y <- 0.3 # standard deviation
@@ -50,10 +46,12 @@ n_ids <- 100
 rep <- 3
 N <- n_ids * rep
 
+# set ids
 ids <- rep(paste0("t", 1:n_ids), each = rep)
-# sigma_id <- 0.2
-# u_id     <- rnorm(n_ids, 0, sigma_id)[ids] 
+
+# growing degree days
 gdd <- round(rnorm(N, 180000, 10000))
+# divide by a constant to adjust the scale
 gddcons <- gdd / 20000
 
 error <- rnorm(N, 0, sigma_y)
