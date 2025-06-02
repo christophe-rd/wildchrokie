@@ -46,27 +46,34 @@ n_ids <- 100
 rep <- 3
 N <- n_ids * rep
 
+# partial pool for each tree id
+sigma_ids <- 1.5/2.57 # I specify how much the data varies across individuals. 1.96, j'aurais 95% de mes valeurs qui seraient entre 1.5 et -1.5. Quantile de la loi normale
+a_ids <- rnorm(n_ids, 0, sigma_ids)
+hist(a_ids)
+
 # set ids
 ids <- rep(paste0("t", 1:n_ids), each = rep)
 
 # growing degree days
-gdd <- round(rnorm(N, 180000, 10000))
+gdd <- round(rnorm(N, 1800, 100))
 # divide by a constant to adjust the scale
-gddcons <- gdd / 20000
+gddcons <- gdd / 200
 
-error <- rnorm(N, 0, sigma_y)
+error <- rnorm(N, 0, sigma_y) # overall error
 
+#overall intercept + each ids intercept
 # calculate ring width
-ringwidth <- a + beta * gddcons + error
+ringwidth <- a + a_ids[match(ids, trees)] +  b * gddcons + error
 
 gdd_sim <- data.frame(
   ids = ids,
-  gdd = gdd,
   gddcons = gddcons,
   ringwidth = ringwidth
 )
-
 plot(ringwidth~gdd, data=gdd_sim)
+
+# keep parameters in the following vector
+sim_param <- c(b,a, sigma_y, sigma_ids)
 
 # run models
 runmodels <- TRUE
@@ -88,19 +95,50 @@ ranef_estimates
 # overall intercept and slope 
 fixef(fit)
 
-# sum up fixed and random intercept
-tree_estimates <- data.frame(
-  ids = rownames(ranef_estimates),
-  intercept_estimate = fixef(fit)["(Intercept)"] + ranef_estimates[, "(Intercept)"]
+# get a df with my 4 parameters estimated from the model
+param <- c("slope", "intercept", "sigma_y", "sigma_ids" )
+# slope
+fit_b <- fixef(fit)["gddcons"]
+fit_b_uncer <- 0.044
+# sigma_y
+fit_sigma_y <- 0.310
+fit_sigma_y_uncer <- 0.015
+# sigma_ids
+fit_sigma_ids <- 0.500
+fit_sigma_ids_uncer <- NA
+# a 
+fit_a <- 1.277
+fit_a_uncer <- 0.399
+
+# model ouput means
+fit_means <- c(fit_b, fit_a, fit_sigma_y, fit_sigma_ids)
+# model output sd
+fit_sd <- c(fit_b_uncer, fit_a_uncer, fit_sigma_y_uncer, fit_sigma_ids_uncer)
+
+fit_estimate <- data.frame(
+  parameter= param,
+  assumed_value = sim_param,
+  estimate = fit_means,
+  uncertainty = fit_sd
 )
-# add estimated slope
-tree_estimates$beta <- 0.3400255
-modeloutput <- merge(tree_estimates, gdd_sim, by="ids")[,c(1:3,5)]
-#estimate ring width from model output
-modeloutput$ringwidth <- modeloutput$intercept_estimate + modeloutput$beta*modeloutput$gddcons + error
 
-hist(tree_estimates$intercept_estimate)
-
+recovery <- ggplot(fit_estimate) +
+  geom_point(aes(x = parameter, y = estimate, color = "Model estimate"), size = 3) +
+  geom_errorbar(aes(x = parameter,
+                    ymin = estimate - uncertainty,
+                    ymax = estimate + uncertainty,
+                    color = "Model estimate"),
+                width = 0,
+                na.rm = TRUE) +
+  geom_point(aes(x = parameter, y = assumed_value, color = "Simulated"), size = 3, shape = 17) +
+  labs(title = "",
+       x = "Parameter",
+       y = "Model estimate",
+       color = "Type") +  # Legend title
+  scale_color_manual(values = c("Model estimate" = "blue", "Simulated" = "orange")) +
+  theme_minimal(base_size = 14)
+recovery
+ggsave("figures/model_parameter_recovery.jpeg", recovery, width = 8, height = 6)
 
 # code I need to fix:
 if (codetofix){
