@@ -17,6 +17,8 @@ library(arm)
 runmodels <- FALSE
 runoldcode <- FALSE
 
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
+
 # === === === === === === === === === === === === === === === === 
 #### Step 1. Come up with a model ####
 # === === === === === === === === === === === === === === === === 
@@ -118,10 +120,18 @@ merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,4)], fitcoef[,c(1,4)], b
 colnames(merged) <- c("ids", "sim_a_ids", "fit_a_ids")
 
 # xy plot with 0,1 abline
+jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
+
+# Create the plot
 plot(merged$fit_a_ids, merged$sim_a_ids,
      xlab = "Model a_ids", ylab = "Simulated a_ids",
      main = "Model vs Simulated a_ids", pch = 19, col = "blue")
-abline(0, 1, col = "red", lty = 2, lwd = 2)  
+
+# Add 1:1 reference line
+abline(0, 1, col = "red", lty = 2, lwd = 2)
+
+# Close the device to save the file
+dev.off()
 
 #figures
 makeplot <- FALSE
