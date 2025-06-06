@@ -28,7 +28,7 @@ source("cleaning/source/cleaning_obsdata.R")
 
 
 # merge columns from cgclean and d by Name and drop all names that are not in d
-# merged_df <- merge(d, obsdata, by = c("Name", "Year"), all.x = TRUE)
+merged_df <- merge(d, obsdata, by = c("Name", "Year"), all.x = TRUE)
 # Add species column
 # merged_df$species<-substr(merged_df$Name, 0,6)
 
