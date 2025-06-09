@@ -87,9 +87,12 @@ if(runmodels){
   )
 }
 print(fit, digits=3)
-
-# recover model coef
+summary(fit)
+# recover model coefs
 fitcoef <- as.data.frame(coef(fit)$ids)
+fitcoef$a_ids <- fitcoef$`(Intercept)`- fixef(fit)[1]
+# remove column that is overall intercept + a_ids
+fitcoef <- fitcoef[,-1]
 fitcoef$ids <- row.names(fitcoef)
 fitcoef$a <- fixef(fit)[1]
 fitcoef$b <-  fixef(fit)[2]
@@ -98,7 +101,7 @@ sigma_draws <- posterior$sigma
 fitcoef$sigma_y <- mean(sigma_draws)
 
 # rename and reorganize!
-colnames(fitcoef) <- c("a_ids", "gddcons", "ids", "a", "b", "sigma_y")
+colnames(fitcoef) <- c("gddcons", "a_ids", "ids", "a", "b", "sigma_y")
 fitcoef <- fitcoef[, c("ids", "b", "a", "a_ids", "sigma_y" )]
 fitcoef$coefsource <- "model"
 
@@ -121,7 +124,6 @@ colnames(merged) <- c("ids", "sim_a_ids", "fit_a_ids")
 
 # xy plot with 0,1 abline
 jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
-
 # Create the plot
 plot(merged$fit_a_ids, merged$sim_a_ids,
      xlab = "Model a_ids", ylab = "Simulated a_ids",
