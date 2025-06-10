@@ -32,19 +32,26 @@ a <- 1.5
 b <- 0.4
 sigma_y <- 0.3 # standard deviation
 
-n_ids <- 100
+n_perspp <- 25
+n_spp <- 4
+n_ids <- n_perspp*n_spp
 rep <- 3
-N <- n_ids * rep
+N <- n_perspp * n_spp * rep
 
 # partial pool for each tree id
-sigma_ids <- 1.5/2.57 # I specify how much the data varies across individuals. 1.96, j'aurais 95% de mes valeurs qui seraient entre 1.5 et -1.5. Quantile de la loi normale
+sigma_ids <- 0.8/2.57 # I specify how much the data varies across individuals. 1.96, j'aurais 95% de mes valeurs qui seraient entre 1.5 et -1.5. Quantile de la loi normale
 a_ids <- rnorm(n_ids, 0, sigma_ids)
 
-# set ids
-ids <- rep(paste0("t", 1:n_ids), each = rep)
+# partial pool by species
+sigma_spp <- 1/2.57
+a_spp <- rnorm(n_spp, 0, sigma_spp)
 
-# just trees
-trees <- paste0("t", 1:n_ids)
+# set ids
+spp <- c("alninc", "betall", "betpap", "betpop")
+ids <- rep(paste0(rep(spp, each = n_perspp), 1:n_perspp), each = rep)
+
+# just trees with replication
+trees <- rep(paste0(rep(spp, each = n_perspp), 1:n_perspp))
 
 # growing degree days
 gdd <- round(rnorm(N, 1800, 100))
@@ -58,8 +65,15 @@ error <- rnorm(N, 0, sigma_y)
 # match a_ids to tree so its the same for each ids replicate
 a_ids <- a_ids[match(ids, trees)] 
 
+# match a_spp for each species
+tree_spp <- sapply(ids, function(tr) {
+  matched <- spp[startsWith(tr, spp)]
+  if (length(matched) == 1) matched else NA
+})
+a_spp <- a_spp[match(tree_spp, spp)]
+
 # calculate ring width
-ringwidth <- a + a_ids +  b * gddcons + error
+ringwidth <- a + a_ids + a_spp + b * gddcons + error
 
 # create df
 simcoef <- data.frame(
@@ -68,13 +82,11 @@ simcoef <- data.frame(
   b = b,
   a = a,
   a_ids = a_ids,
+  a_spp = a_spp,
   sigma_y = sigma_y,
   ringwidth = ringwidth
 )
 plot(ringwidth~gddcons, data=simcoef)
-
-# keep parameters in the following vector
-sim_param <- c(b,a, sigma_y, sigma_ids)
 
 # run models
 if(runmodels){
