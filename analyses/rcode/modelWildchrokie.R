@@ -30,54 +30,44 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 # set parameters
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.3 # standard deviation
+sigma_y <- 0.3
 
 n_perspp <- 25
 n_spp <- 4
-n_ids <- n_perspp*n_spp
+n_ids <- n_perspp * n_spp
 rep <- 3
-N <- n_perspp * n_spp * rep
+N <- n_ids * rep
 
-# partial pool for each tree id
-sigma_ids <- 0.8/2.57 # I specify how much the data varies across individuals. 1.96, j'aurais 95% de mes valeurs qui seraient entre 1.5 et -1.5. Quantile de la loi normale
-a_ids <- rnorm(n_ids, 0, sigma_ids)
-
-# partial pool by species
-sigma_spp <- 1/2.57
-a_spp <- rnorm(n_spp, 0, sigma_spp)
-
-# set ids
+# set spp names and ids 
 spp <- c("alninc", "betall", "betpap", "betpop")
-ids <- rep(paste0(rep(spp, each = n_perspp), 1:n_perspp), each = rep)
+tree_ids <- paste0(rep(spp, each = n_perspp), 1:n_perspp)  # 100 unique tree IDs
+ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times
+tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for each ID
 
-# just trees with replication
-trees <- rep(paste0(rep(spp, each = n_perspp), 1:n_perspp))
+# partial pooling
+sigma_ids <- 0.8 / 2.57
+sigma_spp <- 1 / 2.57
+a_ids_values <- rnorm(n_ids, 0, sigma_ids)
+a_spp_values <- rnorm(n_spp, 0, sigma_spp)
 
-# growing degree days
+# match to observations
+a_ids <- rep(a_ids_values, each = rep)  # repeat each a_ids 3 times
+a_spp <- rep(a_spp_values, each = n_perspp * rep)  # repeat each a_spp 75 times
+
+# gdd and devide by constant
 gdd <- round(rnorm(N, 1800, 100))
-
-# divide by a constant to adjust the scale
 gddcons <- gdd / 200
 
-# overall error
-error <- rnorm(N, 0, sigma_y) 
-
-# match a_ids to tree so its the same for each ids replicate
-a_ids <- a_ids[match(ids, trees)] 
-
-# match a_spp for each species
-tree_spp <- sapply(ids, function(tr) {
-  matched <- spp[startsWith(tr, spp)]
-  if (length(matched) == 1) matched else NA
-})
-a_spp <- a_spp[match(tree_spp, spp)]
+# error
+error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
 ringwidth <- a + a_ids + a_spp + b * gddcons + error
 
-# create df
+# set df
 simcoef <- data.frame(
   ids = ids,
+  spp = tree_spp,
   gddcons = gddcons,
   b = b,
   a = a,
@@ -89,53 +79,63 @@ simcoef <- data.frame(
 plot(ringwidth~gddcons, data=simcoef)
 
 # run models
-if(runmodels){
   fit <- stan_lmer(
-    ringwidth ~ gddcons + (1 | ids),  
+    ringwidth ~ gddcons + (1 | ids) + (1 | spp),  
     data = simcoef,
     chains = 4,
     iter = 4000,
     core=4
   )
-}
+
 print(fit, digits=3)
 summary(fit)
 # recover model coefs
-fitcoef <- as.data.frame(coef(fit)$ids)
-fitcoef$a_ids <- fitcoef$`(Intercept)`- fixef(fit)[1]
+coef_ids <- as.data.frame(coef(fit)$ids)
+coef_ids$a_ids <- coef_ids$`(Intercept)`- fixef(fit)[1]
+# fitcoef$a_spp <- fitcoef
+
 # remove column that is overall intercept + a_ids
-fitcoef <- fitcoef[,-1]
-fitcoef$ids <- row.names(fitcoef)
-fitcoef$a <- fixef(fit)[1]
-fitcoef$b <-  fixef(fit)[2]
+coef_ids <- coef_ids[,-1]
+coef_ids$ids <- row.names(coef_ids)
+coef_ids$a <- fixef(fit)[1]
+coef_ids$b <-  fixef(fit)[2]
 posterior <- as.data.frame(fit)
 sigma_draws <- posterior$sigma
-fitcoef$sigma_y <- mean(sigma_draws)
+coef_ids$sigma_y <- mean(sigma_draws)
 
 # rename and reorganize!
-colnames(fitcoef) <- c("gddcons", "a_ids", "ids", "a", "b", "sigma_y")
-fitcoef <- fitcoef[, c("ids", "b", "a", "a_ids", "sigma_y" )]
-fitcoef$coefsource <- "model"
+# add species colum by grep ids
+coef_ids$spp <- sub("\\d+", "", coef_ids$ids)  # extract species from ids
+
+sppoutput <- as.data.frame(coef(fit)$spp)
+sppoutput$a_spp <- sppoutput$`(Intercept)`-fixef(fit)
+sppoutput$spp <- rownames(sppoutput)
+
+coef_ids$a_spp <- sppoutput[match(coef_ids$spp, sppoutput$spp), "a_spp"]
+
+colnames(coef_ids) <- c("gddcons", "a_ids", "ids", "a", "b", "sigma_y", "spp", "a_spp")
+coef_ids <- coef_ids[, c("ids", "b", "a", "a_ids", "a_spp", "sigma_y")]
+coef_ids$coefsource <- "model"
 
 # prep sim for merge!
-simcoef <- simcoef[, c("ids", "b", "a", "a_ids", "sigma_y")]
+simcoef <- simcoef[, c("ids", "b", "a", "a_ids", "a_spp", "sigma_y")]
 simcoef$coefsource <- "simulated"
 
 # bind by row
-coefbind <- rbind(fitcoef, simcoef)
+coefbind <- rbind(coef_ids, simcoef)
 
 #double check length of a_ids
-length(unique(fitcoef$a_ids))
+length(unique(coef_ids$a_ids))
 length(unique(simcoef$a_ids))
 
 # reorganize to make a xy plot
 simcoef[!duplicated(simcoef$a_ids), c(1,4)]
-fitcoef[,c(1,4)]
-merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,4)], fitcoef[,c(1,4)], by="ids")
+coef_ids[,c(1,4)]
+merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,4)], coef_ids[,c(1,4)], by="ids")
 colnames(merged) <- c("ids", "sim_a_ids", "fit_a_ids")
 
 # xy plot with 0,1 abline
-jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
+# jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
 # Create the plot
 plot(merged$fit_a_ids, merged$sim_a_ids,
      xlab = "Model a_ids", ylab = "Simulated a_ids",

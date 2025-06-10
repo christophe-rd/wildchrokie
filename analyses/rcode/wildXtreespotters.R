@@ -1,7 +1,6 @@
 # Wildchrokie model
 # CRD 23 April 2025
-# Goal is to figure out whether treespotters phenology data matches the one for the common garden in the objective of building a predictive model that woul estimate phenological dates for the missing years in the commmon garden.
-
+# Goal is to figure out whether treespotters phenology data matches the one for the common garden in the objective of building a predictive model that woul estimate phenological dates for the missing years in the commmon garden
 
 # Goal: build a model to understand the relationship between growth and growing degree days using the tree cookies collected in the wildhell common garden in spring of 2023
 
