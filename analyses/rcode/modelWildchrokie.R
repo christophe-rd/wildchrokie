@@ -28,6 +28,7 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 #### Step 2. Simulate data ####
 # === === === === === === === === === === === === === === === === 
 # set parameters
+set.seed(123)
 a <- 1.5
 b <- 0.4
 sigma_y <- 0.3
@@ -88,64 +89,140 @@ plot(ringwidth~gddcons, data=simcoef)
   )
 
 print(fit, digits=3)
-summary(fit)
-# recover model coefs
-coef_ids <- as.data.frame(coef(fit)$ids)
-coef_ids$a_ids <- coef_ids$`(Intercept)`- fixef(fit)[1]
+
+#### Recover model coef using the coef function probably recovering the median #####
+fitcoef <- as.data.frame(coef(fit)$ids)
+fitcoef$a_ids <- fitcoef$`(Intercept)`- fixef(fit)[1] 
 # fitcoef$a_spp <- fitcoef
 
 # remove column that is overall intercept + a_ids
-coef_ids <- coef_ids[,-1]
-coef_ids$ids <- row.names(coef_ids)
-coef_ids$a <- fixef(fit)[1]
-coef_ids$b <-  fixef(fit)[2]
+fitcoef <- fitcoef[,-1]
+fitcoef$ids <- row.names(fitcoef)
+fitcoef$a <- fixef(fit)[1]
+fitcoef$b <-  fixef(fit)[2]
 posterior <- as.data.frame(fit)
 sigma_draws <- posterior$sigma
-coef_ids$sigma_y <- mean(sigma_draws)
+fitcoef$sigma_y <- mean(sigma_draws)
 
 # rename and reorganize!
 # add species colum by grep ids
-coef_ids$spp <- sub("\\d+", "", coef_ids$ids)  # extract species from ids
+fitcoef$spp <- sub("\\d+", "", fitcoef$ids)  # extract species from ids
 
+# now work to grab intercept estimates for spp!
 sppoutput <- as.data.frame(coef(fit)$spp)
 sppoutput$a_spp <- sppoutput$`(Intercept)`-fixef(fit)
 sppoutput$spp <- rownames(sppoutput)
 
-coef_ids$a_spp <- sppoutput[match(coef_ids$spp, sppoutput$spp), "a_spp"]
+fitcoef$a_spp <- sppoutput[match(fitcoef$spp, sppoutput$spp), "a_spp"]
 
-colnames(coef_ids) <- c("gddcons", "a_ids", "ids", "a", "b", "sigma_y", "spp", "a_spp")
-coef_ids <- coef_ids[, c("ids", "b", "a", "a_ids", "a_spp", "sigma_y")]
-coef_ids$coefsource <- "model"
+colnames(fitcoef) <- c("gddcons", "a_ids", "ids", "a", "b", "sigma_y", "spp", "a_spp")
+fitcoef <- fitcoef[, c("ids", "spp", "b", "a", "a_ids", "a_spp", "sigma_y")]
+fitcoef$coefsource <- "model"
 
 # prep sim for merge!
-simcoef <- simcoef[, c("ids", "b", "a", "a_ids", "a_spp", "sigma_y")]
+simcoef <- simcoef[, c("ids", "spp", "b", "a", "a_ids", "a_spp", "sigma_y")]
 simcoef$coefsource <- "simulated"
 
 # bind by row
-coefbind <- rbind(coef_ids, simcoef)
+coefbind <- rbind(fitcoef, simcoef)
 
 #double check length of a_ids
-length(unique(coef_ids$a_ids))
+length(unique(fitcoef$a_ids))
 length(unique(simcoef$a_ids))
 
 # reorganize to make a xy plot
-simcoef[!duplicated(simcoef$a_ids), c(1,4)]
-coef_ids[,c(1,4)]
-merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,4)], coef_ids[,c(1,4)], by="ids")
+simcoef[!duplicated(simcoef$a_ids), c(1,5)]
+fitcoef[,c(1,4)]
+merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,5)], fitcoef[,c(1,5)], by="ids")
 colnames(merged) <- c("ids", "sim_a_ids", "fit_a_ids")
 
 # xy plot with 0,1 abline
 # jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
 # Create the plot
+# quartz()
 plot(merged$fit_a_ids, merged$sim_a_ids,
      xlab = "Model a_ids", ylab = "Simulated a_ids",
      main = "Model vs Simulated a_ids", pch = 19, col = "blue")
+# add error bar. ou quantiles 95% montré par barres d'erreur
 
 # Add 1:1 reference line
 abline(0, 1, col = "red", lty = 2, lwd = 2)
 
 # Close the device to save the file
 dev.off()
+
+
+#### Try with the summary function -- using mean ####
+fitsum <- as.data.frame(summary(fit)) 
+fitsum$interceptType <- rownames(fitsum)
+rownames(fitsum) <- NULL
+##### Recover a_ids #####
+# Subset for ids by using grep from the $interceptType
+a_ids <- subset(fitsum, grepl("ids", interceptType))
+a_ids$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids$interceptType)
+a_ids <- a_ids[, c(ncol(a_ids), 1:c(ncol(a_ids)-2))]
+a_ids$spp <- sub("\\d+", "", a_ids$ids)  
+
+## select columns that wil be in the plot
+a_idstoplot <- a_ids[,c("ids", "mean", "10%", "90%")]
+colnames(a_idstoplot) <- c("ids", "a_ids", "per10", "per90")
+simcoeftoplot <- simcoef[, c("ids", "a_ids")]
+simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
+mergedtoplot <- merge(simcoeftoplot, a_idstoplot, by = "ids")
+colnames(mergedtoplot) <- c("ids", "sim_a_ids", "fit_a_ids", "per10", "per90")
+
+# Plot: model on y-axis, simulated on x-axis
+quartz()
+plot(mergedtoplot$sim_a_ids, mergedtoplot$fit_a_ids,
+     xlab = "Simulated a_ids", ylab = "Model a_ids",
+     main = "Simulated vs Model a_ids", pch = 19, col = "blue")
+
+# Add 1:1 reference line
+abline(0, 1, col = "red", lty = 2, lwd = 2)
+
+# Add vertical error bars (model uncertainty: per10%–per90%)
+segments(x0 = mergedtoplot$sim_a_ids,
+         y0 = mergedtoplot$per10,
+         x1 = mergedtoplot$sim_a_ids,
+         y1 = mergedtoplot$per90,
+         col = "darkgray", lwd = 1)
+
+ggplot(mergedtoplot, aes(x = sim_a_ids, y = fit_a_ids)) +
+  geom_point(color = "blue", size = 2) +
+  geom_errorbar(aes(ymin = per10, ymax = per90), width = 0, color = "darkgray", alpha=0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_ids", y = "Model a_ids", title = "Simulated vs Model a_ids") +
+  theme_minimal()
+
+##### Recover a_spp #####
+# Subset for spp by using grep from the $interceptType
+a_spp <- subset(fitsum, grepl("spp", interceptType))
+a_spp$spp <- sub(".*spp:([^]]+)]", "\\1", a_spp$interceptType)
+a_spp <- a_spp[, c(ncol(a_spp), 1:c(ncol(a_spp)-2))]
+
+## select columns that wil be in the plot
+a_spptoplot <- a_spp[1:4,c("spp", "mean", "10%", "90%")] # for now I don't select the sigma row
+colnames(a_spptoplot) <- c("spp", "fit_a_spp", "fit_per10", "fit_per90%")
+simcoeftoplot <- simcoef[, c("ids", "spp", "a_spp")]
+colnames(simcoeftoplot) <- c("ids", "spp", "sim_a_spp")
+simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot$ids),]
+
+#make copy
+sppcoeftoplot <- simcoeftoplot
+sppcoeftoplot
+sppcoeftoplot$fit_a_spp <- a_spptoplot$fit_a_spp[match(sppcoeftoplot$spp, a_spptoplot$spp)]
+sppcoeftoplot$fit_per10 <- a_spptoplot$fit_per10[match(sppcoeftoplot$spp, a_spptoplot$spp)]
+sppcoeftoplot$fit_per90 <- a_spptoplot$fit_per90[match(sppcoeftoplot$spp, a_spptoplot$spp)]
+
+sppcoeftoplot <- sppcoeftoplot[!duplicated(sppcoeftoplot$spp),]
+
+
+ggplot(sppcoeftoplot, aes(x = sim_a_spp, y = fit_a_spp)) +
+  geom_point(color = "blue", size = 2) +
+  geom_errorbar(aes(ymin = fit_per10, ymax = fit_per90), width = 0, color = "darkgray", alpha=0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_spp", y = "Model a_spp", title = "Simulated vs Model a_spp") +
+  theme_minimal()
 
 #figures
 makeplot <- FALSE
