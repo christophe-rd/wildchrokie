@@ -561,7 +561,7 @@ cgclean$provenance.long <- ifelse(cgclean$site == "SH", -74.025070, cgclean$prov
 
 
 # Match the style of Names I am using:
-cgclean$Name <- paste0(cgclean$spp, "_", cgclean$site, cgclean$ind, "_P", cgclean$plot)
+cgclean$name <- paste0(cgclean$spp, "_", cgclean$site, cgclean$ind, "_P", cgclean$plot)
 
 #write.csv(cgclean, file="~/Documents/git/wildhellgarden/analyses/output/clean_obs_allyrs.csv", row.names=FALSE)
 
@@ -578,7 +578,6 @@ foo <- foo[complete.cases(foo),]
 
 #### Prepare toi join to source file ####
 dtemp <- cgclean 
-names(dtemp)[names(dtemp) == "year"] <- "Year"
 str(dtemp)
 
 # grab a vec of interested species
@@ -594,7 +593,10 @@ dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
 
 # rename df 
 obsdata <- dtemp4
+# add spp name
+obsdata$spp <- sub("_.*", "", obsdata$name)
 
+write.csv(obsdata, file="output/obsData.csv", row.names=FALSE)
 
 
 

@@ -1,28 +1,21 @@
-## Loking at each major phase individually running stan
-## Look at inter vs intra specific variation, is there local adaptation??
 ### Dan May 2022
+## Updated by CRD for Wildchrokie on 13 June 2025. changing the goal of this script, as it's only to calculate GDD
 
 # Clear workspace
 rm(list=ls()) # remove everything currently held in the R memory
 options(stringsAsFactors=FALSE)
-options(mc.cores = parallel::detectCores())
 graphics.off()
 
+# wd
 setwd("/Users/christophe_rouleau-desrochers/github/wildhellgarden/analyses/")
 
-# Load libraries
-
-#library(rstan)
+# libraries
 library(dplyr)
-library(brms)
-library(tidybayes)
 library(tidyr)
 
-# source("source/combineWeather.R")
-# source("source/conceptualFigure.R")
-load("cgseasonmods.Rda")
-goober <- read.csv("output/gddData.csv")
-cg <- read.csv("output/clean_obs_allyrs.csv")### this is the updated data with leaf color
+# read csv
+gdddata <- read.csv("output/gddData.csv")
+cg <- read.csv("output/obsData.csv")
 
 ###calculate primary growth season and full growing season in days
 cg$pgs<-cg$budset-cg$leafout
@@ -42,7 +35,7 @@ myvec<-c()
 
 ##this calculates the thermal growing season of primary growth for each individual
 for(j in 1:length(cg1$pgs)){
-temp<-filter(goober,year==cg1$year[j])
+temp<-filter(gdddata,year==cg1$year[j])
 tempS<-filter(temp,doy==cg1$leafout[j])
 tempE<-filter(temp,doy==cg1$budset[j])
 
@@ -53,14 +46,16 @@ GDD <- tempE$GDD_10-tempS$GDD_10
 
 cg1$pgsGDD<-myvec ### add this to main dataframe
 
-cg1$indy<-paste(cg1$spp,cg1$site,cg1$ind,cg1$plot)### give and unique identifier
+# cg1$indy<-paste(cg1$spp,cg1$site,cg1$ind,cg1$plot)### give and unique identifier
+######## replaced with Name as it's already in my df
+
 
 ### now to the same thing for the full growing season
 ref2<-data.frame(year=cg2$year,start=cg2$leafout,end=cg2$leafcolor)
 myvec2<-c()
 
 for(j in 1:length(cg2$fgs)){
-  temp<-filter(goober,year==cg2$year[j])
+  temp<-filter(gdddata,year==cg2$year[j])
   tempS<-filter(temp,doy==cg2$leafout[j])
   tempE<-filter(temp,doy==cg2$leafcolor[j])
   GDD<-tempE$GDD_10-tempS$GDD_10
@@ -74,8 +69,28 @@ cg2$fgsGDD<-myvec2
 cg1$pgsGDD_cent<-cg1$pgsGDD-mean(cg1$pgsGDD)
 cg1$leafout_cent<-cg1$leafout-mean(cg1$leafout)
 
-cg_wgdd <- merge(cg2, cg1, by = c("spp", "year", "site", "ind", "plot"), all = TRUE)
+nrow(cg1)
+nrow(cg2)
+length(unique(cg1$name))
+length(unique(cg2$name))
+colsforcg2 <- names(cg2)[!names(cg2) %in% c("name", "spp", "year")]
+colsforcg1 <- cg1[, c("name", "spp", "year",)]
+cg_wgdd <- merge(cg1, cg2, by = c("spp", "year", "name"), all = TRUE)
+cg_wgdd
+#### write csv
+# add columns i just created in the main df:
+cg1_subset <- cg1[, c("name", "year", "pgsGDD", "pgsGDD_cent", "leafout_cent")]
+cg2_subset <- cg2[, c("name", "year", "fgsGDD")]
+# Merge with main cg dataframe by name and year
+cg <- merge(cg, cg1_subset, by = c("name", "year"), all.x = TRUE)
+cg <- merge(cg, cg2_subset, by = c("name", "year"), all.x = TRUE)
+cg 
 
+# === === === === === === === === === === === === === === === ===
+runmodels <- FALSE
+# === === === === === === === === === === === === === === === ===
+
+if(runmodels){
 #ggplot(cg_wgdd,aes(leafcolor,budset))+geom_point()+geom_abline()
 
 ####par II models
@@ -510,31 +525,34 @@ dev.off()
 ggplot(bspred,aes(site,.epred))+stat_pointinterval(.width = c(.5,.9))+facet_wrap(~spp,scales="free")
 
 ### quesiton, does indiviudal variation cahnge things?
-use.data$indy<-paste(use.data$spp,use.data$site,use.data$ind,use.data$plot)### give and unique identifier
+use.data$Name<-paste(use.data$spp,use.data$site,use.data$ind,use.data$plot)### give and unique identifier
 
-mod.bs.2<-brm(budset~(1|indy)+(1|spp)+(1|site)+(1|year),data=use.data,
+mod.bs.2<-brm(budset~(1|Name)+(1|spp)+(1|site)+(1|year),data=use.data,
             warmup=4000,iter=5000, control=list(adapt_delta=.99)) 
 
-mod.lo.2<-brm(leafout~(1|indy)+(1|spp)+(1|site)+(1|year),data=use.data,
+mod.lo.2<-brm(leafout~(1|Name)+(1|spp)+(1|site)+(1|year),data=use.data,
               warmup=4000,iter=5000, control=list(adapt_delta=.99)) 
 summary(mod.lo.2)
 summary(mod.bs.2)
 
 #some plots to try and understand how much buset varies across years for individuals. it seems like alot
 bp<-filter(use.data,spp=="BETPOP")
-ggplot(bp,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(bp,aes(budset,Name,shape=as.factor(year)))+geom_point()
 
 aln<-filter(use.data,spp=="ALNINC")
-ggplot(aln,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(aln,aes(budset,Name,shape=as.factor(year)))+geom_point()
 
 pap<-filter(use.data,spp=="BETPAP")
-ggplot(pap,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(pap,aes(budset,Name,shape=as.factor(year)))+geom_point()
 
 all<-filter(use.data,spp=="BETALL")
-ggplot(all,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(all,aes(budset,Name,shape=as.factor(year)))+geom_point()
 
 ron<-filter(use.data,spp=="AROMEL")
-ggplot(ron,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(ron,aes(budset,Name,shape=as.factor(year)))+geom_point()
 
 sam<-filter(use.data,spp=="SAMRAC")
-ggplot(sam,aes(budset,indy,shape=as.factor(year)))+geom_point()
+ggplot(sam,aes(budset,Name,shape=as.factor(year)))+geom_point()
+
+}
+

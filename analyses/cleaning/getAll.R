@@ -18,7 +18,7 @@ source("cleaning/source/cleanRingWidth.R")
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses") # for now... its bad but i need to back down one folder in order for this code to work
 source("cleaning/source/cleaning_obsdata.R")
 # 3. Get GDD data from main wildhill repo
-# source("cleaning/source/combineWeather.R") # for that csv: gddData.csv.  ### right now it doesnt work as I need to fix climate data csv
+# source("cleaning/source/combineWeather.R") # may be not needed 
 
 
 # 2. Grab climate data
