@@ -5,8 +5,8 @@
 # Goal: build a model to understand the relationship between growth and growing degree days using the tree cookies collected in the wildhell common garden in spring of 2023
 
 # housekeeping
-rm(list=ls()) 
-options(stringsAsFactors = FALSE)
+# rm(list=ls()) 
+# options(stringsAsFactors = FALSE)
 options(max.print = 200) 
 
 # Load library 
@@ -34,14 +34,14 @@ b <- 0.4
 sigma_y <- 0.3
 
 n_perspp <- 25
-n_spp <- 4
+n_spp <- 20
 n_ids <- n_perspp * n_spp
 rep <- 3
 N <- n_ids * rep
 
 # set spp names and ids 
-spp <- c("alninc", "betall", "betpap", "betpop")
-tree_ids <- paste0(rep(spp, each = n_perspp), 1:n_perspp)  # 100 unique tree IDs
+spp <- paste0(rep("spp", each = n_spp), 1:n_spp)
+tree_ids <- paste0(rep(spp, each = n_perspp), "_", 1:n_perspp)  # 100 unique tree IDs
 ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times
 tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for each ID
 
@@ -80,6 +80,8 @@ simcoef <- data.frame(
 plot(ringwidth~gddcons, data=simcoef)
 
 # run models
+runmodels <- TRUE
+if(runmodels) {
   fit <- stan_lmer(
     ringwidth ~ gddcons + (1 | ids) + (1 | spp),  
     data = simcoef,
@@ -87,10 +89,17 @@ plot(ringwidth~gddcons, data=simcoef)
     iter = 4000,
     core=4
   )
+}
 
 print(fit, digits=3)
 
+# === === === === === === === === === === === === === === === === === === === === == 
 #### Recover model coef using the coef function probably recovering the median #####
+# === === === === === === === === === === === === === === === === === === === === == 
+
+# === === === === === === #
+##### start with IDS #####
+# === === === === === === #
 fitcoef <- as.data.frame(coef(fit)$ids)
 fitcoef$a_ids <- fitcoef$`(Intercept)`- fixef(fit)[1] 
 # fitcoef$a_spp <- fitcoef
@@ -123,40 +132,49 @@ fitcoef$coefsource <- "model"
 simcoef <- simcoef[, c("ids", "spp", "b", "a", "a_ids", "a_spp", "sigma_y")]
 simcoef$coefsource <- "simulated"
 
-# bind by row
-coefbind <- rbind(fitcoef, simcoef)
-
-#double check length of a_ids
-length(unique(fitcoef$a_ids))
-length(unique(simcoef$a_ids))
-
 # reorganize to make a xy plot
 simcoef[!duplicated(simcoef$a_ids), c(1,5)]
 fitcoef[,c(1,4)]
-merged <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,5)], fitcoef[,c(1,5)], by="ids")
-colnames(merged) <- c("ids", "sim_a_ids", "fit_a_ids")
+merged_a_idswithcoef <- merge(simcoef[!duplicated(simcoef$a_ids), c(1,5)], fitcoef[,c(1,5)], by="ids")
+colnames(merged_a_idswithcoef) <- c("ids", "sim_a_ids", "fit_a_ids")
 
-# xy plot with 0,1 abline
-# jpeg("figures/xyplot_intercept.jpeg", width = 1600, height = 1200,  quality = 95,res = 150)
-# Create the plot
-# quartz()
-plot(merged$fit_a_ids, merged$sim_a_ids,
-     xlab = "Model a_ids", ylab = "Simulated a_ids",
-     main = "Model vs Simulated a_ids", pch = 19, col = "blue")
-# add error bar. ou quantiles 95% montré par barres d'erreur
+plot_merged_a_idswithcoef <- ggplot(merged_a_idswithcoef, aes(x = fit_a_ids, y = sim_a_ids)) +
+  geom_point(color = "blue", size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
+  theme_minimal()
+plot_merged_a_idswithcoef
+ggsave("figures/a_ids_with_coef.jpeg", plot_merged_a_idswithcoef, width = 8, height = 6)
 
-# Add 1:1 reference line
-abline(0, 1, col = "red", lty = 2, lwd = 2)
+# === === === === === === #
+##### now for spp #####
+# === === === === === === #
+a_sppwithcoef <- as.data.frame(coef(fit)$spp)
+a_sppwithcoef$a_spp_subtracted <- a_sppwithcoef$`(Intercept)`-fixef(fit)[1]
+a_sppwithcoef$spp <- row.names(a_sppwithcoef)
+# bring simcoef and remove duplicated cols
+sppsimcoef <- simcoef[!duplicated(simcoef$spp), c(2,6)]
+colnames(sppsimcoef) <- c("spp", "sim_a_spp")
+merged_a_sppwithcoef <- merge(sppsimcoef[, c("spp", "sim_a_spp")], a_sppwithcoef[, c("spp", "a_spp_subtracted")], by = "spp")
 
-# Close the device to save the file
-dev.off()
+plot_merged_a_sppwithcoef <- ggplot(merged_a_sppwithcoef, aes(x = sim_a_spp, y = a_spp_subtracted)) +
+  geom_point(color = "blue", size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_spp", y = "Model a_spp", title = "") +
+  theme_minimal()
+ggsave("figures/a_spp_with_coef.jpeg", plot_merged_a_sppwithcoef, width = 8, height = 6)
+plot_merged_a_sppwithcoef
 
-
+# === === === === === === === === === === === === === === === === === === === === == 
 #### Try with the summary function -- using mean ####
+# === === === === === === === === === === === === === === === === === === === === == 
 fitsum <- as.data.frame(summary(fit)) 
 fitsum$interceptType <- rownames(fitsum)
 rownames(fitsum) <- NULL
+
+# === === === === === === #
 ##### Recover a_ids #####
+# === === === === === === #
 # Subset for ids by using grep from the $interceptType
 a_ids <- subset(fitsum, grepl("ids", interceptType))
 a_ids$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids$interceptType)
@@ -168,61 +186,51 @@ a_idstoplot <- a_ids[,c("ids", "mean", "10%", "90%")]
 colnames(a_idstoplot) <- c("ids", "a_ids", "per10", "per90")
 simcoeftoplot <- simcoef[, c("ids", "a_ids")]
 simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
-mergedtoplot <- merge(simcoeftoplot, a_idstoplot, by = "ids")
-colnames(mergedtoplot) <- c("ids", "sim_a_ids", "fit_a_ids", "per10", "per90")
+a_ids_mergedwithsum <- merge(simcoeftoplot, a_idstoplot, by = "ids")
+colnames(a_ids_mergedwithsum) <- c("ids", "sim_a_ids", "fit_a_ids", "per10", "per90")
 
-# Plot: model on y-axis, simulated on x-axis
-quartz()
-plot(mergedtoplot$sim_a_ids, mergedtoplot$fit_a_ids,
-     xlab = "Simulated a_ids", ylab = "Model a_ids",
-     main = "Simulated vs Model a_ids", pch = 19, col = "blue")
-
-# Add 1:1 reference line
-abline(0, 1, col = "red", lty = 2, lwd = 2)
-
-# Add vertical error bars (model uncertainty: per10%–per90%)
-segments(x0 = mergedtoplot$sim_a_ids,
-         y0 = mergedtoplot$per10,
-         x1 = mergedtoplot$sim_a_ids,
-         y1 = mergedtoplot$per90,
-         col = "darkgray", lwd = 1)
-
-ggplot(mergedtoplot, aes(x = sim_a_ids, y = fit_a_ids)) +
+plot_a_ids_mergedwithsum <- ggplot(a_ids_mergedwithsum, aes(x = sim_a_ids, y = fit_a_ids)) +
   geom_point(color = "blue", size = 2) +
   geom_errorbar(aes(ymin = per10, ymax = per90), width = 0, color = "darkgray", alpha=0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "Simulated a_ids", y = "Model a_ids", title = "Simulated vs Model a_ids") +
+  labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
   theme_minimal()
+plot_a_ids_mergedwithsum
+ggsave("figures/a_ids_mergedwithsum.jpeg", plot_a_ids_mergedwithsum, width = 8, height = 6)
 
+# === === === === === === #
 ##### Recover a_spp #####
+# === === === === === === #
 # Subset for spp by using grep from the $interceptType
-a_spp <- subset(fitsum, grepl("spp", interceptType))
-a_spp$spp <- sub(".*spp:([^]]+)]", "\\1", a_spp$interceptType)
+a_spp <- subset(fitsum, grepl("spp:", interceptType))
+a_spp$spp <- sub(".*spp:(spp[0-9]+)]", "\\1", a_spp$interceptType)
 a_spp <- a_spp[, c(ncol(a_spp), 1:c(ncol(a_spp)-2))]
 
 ## select columns that wil be in the plot
-a_spptoplot <- a_spp[1:4,c("spp", "mean", "10%", "90%")] # for now I don't select the sigma row
+a_spptoplot <- a_spp[1:20,c("spp", "mean", "10%", "90%")] # for now I don't select the sigma row
 colnames(a_spptoplot) <- c("spp", "fit_a_spp", "fit_per10", "fit_per90%")
 simcoeftoplot <- simcoef[, c("ids", "spp", "a_spp")]
 colnames(simcoeftoplot) <- c("ids", "spp", "sim_a_spp")
 simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot$ids),]
 
 #make copy
-sppcoeftoplot <- simcoeftoplot
-sppcoeftoplot
-sppcoeftoplot$fit_a_spp <- a_spptoplot$fit_a_spp[match(sppcoeftoplot$spp, a_spptoplot$spp)]
-sppcoeftoplot$fit_per10 <- a_spptoplot$fit_per10[match(sppcoeftoplot$spp, a_spptoplot$spp)]
-sppcoeftoplot$fit_per90 <- a_spptoplot$fit_per90[match(sppcoeftoplot$spp, a_spptoplot$spp)]
+sppcoefwithsumm <- simcoeftoplot
 
-sppcoeftoplot <- sppcoeftoplot[!duplicated(sppcoeftoplot$spp),]
+sppcoefwithsumm$fit_a_spp <- a_spptoplot$fit_a_spp[match(sppcoefwithsumm$spp, a_spptoplot$spp)]
+sppcoefwithsumm$fit_per10 <- a_spptoplot$fit_per10[match(sppcoefwithsumm$spp, a_spptoplot$spp)]
+sppcoefwithsumm$fit_per90 <- a_spptoplot$fit_per90[match(sppcoefwithsumm$spp, a_spptoplot$spp)]
+
+sppcoefwithsumm <- sppcoefwithsumm[!duplicated(sppcoefwithsumm$spp),]
 
 
-ggplot(sppcoeftoplot, aes(x = sim_a_spp, y = fit_a_spp)) +
+plot_sppcoefwithsumm <- ggplot(sppcoefwithsumm, aes(x = sim_a_spp, y = fit_a_spp)) +
   geom_point(color = "blue", size = 2) +
   geom_errorbar(aes(ymin = fit_per10, ymax = fit_per90), width = 0, color = "darkgray", alpha=0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "Simulated a_spp", y = "Model a_spp", title = "Simulated vs Model a_spp") +
+  labs(x = "Simulated a_spp", y = "Model a_spp", title = "") +
   theme_minimal()
+plot_sppcoefwithsumm
+ggsave("figures/a_spp_mergedwithsum.jpeg", plot_sppcoefwithsumm, width = 8, height = 6)
 
 #figures
 makeplot <- FALSE
