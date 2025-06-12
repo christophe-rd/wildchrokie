@@ -5,8 +5,6 @@ library("pollen")
 library(lubridate)
 library(tidyverse)
 
-setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
-
 weldhill <- FALSE
 if(weldhill) {
 
@@ -48,6 +46,7 @@ y21<-filter(bostonairportsub,year=="2021")
 y22<-filter(bostonairportsub,year=="2022")
 y23<-filter(bostonairportsub,year=="2023")
 y24<-filter(bostonairportsub,year=="2024")
+
 ###Calculate gdd
 y15$GDD_10<- pollen::gdd(tmax = y15$maxT,tmin = y15$minT,tbase = 10,type = "B")
 y16$GDD_10<- pollen::gdd(tmax = y16$maxT,tmin = y16$minT,tbase = 10,type = "B")
@@ -61,7 +60,9 @@ y23$GDD_10<- pollen::gdd(tmax = y23$maxT,tmin = y23$minT,tbase = 10,type = "B")
 y24$GDD_10<- pollen::gdd(tmax = y24$maxT,tmin = y24$minT,tbase = 10,type = "B")
 
 
-allyr<-rbind(y15, y16, y17, y18, y19, y20, y21, y22, y23, y24)
+allyr <- rbind(y15, y16, y17, y18, y19, y20, y21, y22, y23, y24)
 
+# rename
+gdd <- allyr
 write.csv(allyr, "output/gddData.csv", row.names = F)
 
