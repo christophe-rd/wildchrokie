@@ -5,9 +5,9 @@
 # Goal: build a model to understand the relationship between growth and growing degree days using the tree cookies collected in the wildhell common garden in spring of 2023
 
 # housekeeping
-# rm(list=ls()) 
-# options(stringsAsFactors = FALSE)
-options(max.print = 200) 
+rm(list=ls())
+options(stringsAsFactors = FALSE)
+options(max.print = 150) 
 
 # Load library 
 library(rstanarm)
@@ -93,6 +93,31 @@ if(runmodels) {
 
 print(fit, digits=3)
 
+#### Trying different functions for parameter recovery ####
+rsq <- bayes_R2(fit)  # bayes version of r square
+print(median(rsq)) 
+hist(rsq)
+print(median(rsq))
+
+loo_rsq <- loo_R2(fit)
+
+nd <- data.frame(treatment = factor(rep(1,3)), outcome = factor(1:3)) 
+ytilde <- posterior_predict(fit) 
+prior_summary(fit)
+posterior_interval(fit) # nice!
+coefficients(fit)
+ses(fit)
+fitted.values(fit)
+summary(fit, pars = "alpha")
+
+plot(fit)
+as.data.frame(fit)
+
+ranef(fit)$spp[, "(Intercept)"] 
+
+# coef: medians are used for point estimates. the sum of the random and fixed effects coefficients for each explanatory variable for each level of each grouping factor.
+# se:  The se function returns standard errors based on mad. See the Uncertainty estimates section in print.stanmvreg for more details.
+# Uncertainty estimates (MAD_SD): The standard deviations reported (labeled MAD_SD in the print output) are computed from the same set of draws described above and are proportional to the median absolute deviation (mad) from the median. Compared to the raw posterior standard deviation, the MAD_SD will be more robust for long-tailed distributions. These are the same as the values returned by se.
 # === === === === === === === === === === === === === === === === === === === === == 
 #### Recover model coef using the coef function probably recovering the median #####
 # === === === === === === === === === === === === === === === === === === === === == 
@@ -231,6 +256,80 @@ plot_sppcoefwithsumm <- ggplot(sppcoefwithsumm, aes(x = sim_a_spp, y = fit_a_spp
   theme_minimal()
 plot_sppcoefwithsumm
 ggsave("figures/a_spp_mergedwithsum.jpeg", plot_sppcoefwithsumm, width = 8, height = 6)
+
+# === === === === === === #
+#### Using ranef and fixef ####
+# === === === === === === #
+fitef <- ranef(fit)
+# === === === === === === #
+##### Recover a_ids #####
+# === === === === === === #
+# Access the 'ids' data frame
+ids_df <- fitef$ids
+
+# Now extract the tree IDs and intercepts
+a_idswithranef <- data.frame(
+  ids = rownames(ids_df),
+  fit_a_ids = ids_df[["(Intercept)"]]
+)
+messyinter <- as.data.frame(posterior_interval(fit))
+messyinter$messyids <- rownames(messyinter)
+a_ids_messyinter <- subset(messyinter, grepl("ids", messyids))
+a_ids_messyinter$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids$messyids)
+# remove non necessary columns
+a_ids_messyinter <- a_ids_messyinter[, c("ids", "5%", "95%")]
+# renames 5% and 95%
+colnames(a_ids_messyinter) <- c("ids", "per5", "per95")
+# merge both df by ids
+a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_messyinter, by = "ids")
+# add simulation data and merge!
+colnames(simcoeftoplot) <- c("ids", "sim_a_ids")
+a_ids_mergedwithranef <- merge(simcoeftoplot, a_ids_mergedwithranef, by = "ids")
+
+plot_a_ids_mergedwithranef<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y = fit_a_ids)) +
+  geom_point(color = "blue", size = 2) +
+  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
+  theme_minimal()
+plot_a_ids_mergedwithranef
+ggsave("figures/a_ids_mergedwithsum.jpeg", plot_a_ids_mergedwithsum, width = 8, height = 6)
+
+# === === === === === === #
+##### Recover a_spp #####
+# === === === === === === #
+spp_df <- fitef$spp
+
+# Now extract the tree IDs and intercepts
+a_sppwithranef <- data.frame(
+  spp = rownames(spp_df),
+  fit_a_spp = spp_df[["(Intercept)"]]
+)
+# recover only conf intervals spp from previously created df
+a_spp_messyinter <- subset(messyinter, grepl("spp:", messyids))
+
+a_spp_messyinter$spp <- sub(".*spp:(spp[0-9]+)]", "\\1", a_spp_messyinter$messyids)
+# remove unecessary columns
+a_spp_messyinter <- a_spp_messyinter[, c("spp", "5%", "95%")]
+# change 5 and 95% names
+colnames(a_spp_messyinter) <- c("spp", "per5", "per95")
+# merge!
+a_spp_mergedwithranef <- merge(a_sppwithranef, a_spp_messyinter, by = "spp")
+# get sim data ready to merge
+simcoeftoplot <- simcoef[, c("spp", "a_spp")]
+colnames(simcoeftoplot) <- c("spp", "sim_a_spp")
+simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
+# now merge
+a_spp_mergedwithranef <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
+
+
+plot_a_ids_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y = fit_a_spp)) +
+  geom_point(color = "blue", size = 2) +
+  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
+  theme_minimal()
+plot_a_ids_mergedwithranef
 
 #figures
 makeplot <- FALSE
