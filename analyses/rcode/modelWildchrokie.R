@@ -28,7 +28,7 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 #### Step 2. Simulate data ####
 # === === === === === === === === === === === === === === === === 
 # set parameters
-set.seed(123)
+set.seed(124)
 a <- 1.5
 b <- 0.4
 sigma_y <- 0.3
@@ -94,19 +94,8 @@ if(runmodels) {
 print(fit, digits=3)
 
 #### Trying different functions for parameter recovery ####
-rsq <- bayes_R2(fit)  # bayes version of r square
-print(median(rsq)) 
-hist(rsq)
-print(median(rsq))
-
-loo_rsq <- loo_R2(fit)
-
-nd <- data.frame(treatment = factor(rep(1,3)), outcome = factor(1:3)) 
-ytilde <- posterior_predict(fit) 
-prior_summary(fit)
 posterior_interval(fit) # nice!
 coefficients(fit)
-ses(fit)
 fitted.values(fit)
 summary(fit, pars = "alpha")
 
@@ -275,7 +264,7 @@ a_idswithranef <- data.frame(
 messyinter <- as.data.frame(posterior_interval(fit))
 messyinter$messyids <- rownames(messyinter)
 a_ids_messyinter <- subset(messyinter, grepl("ids", messyids))
-a_ids_messyinter$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids$messyids)
+a_ids_messyinter$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids_messyinter$messyids)
 # remove non necessary columns
 a_ids_messyinter <- a_ids_messyinter[, c("ids", "5%", "95%")]
 # renames 5% and 95%
@@ -283,17 +272,18 @@ colnames(a_ids_messyinter) <- c("ids", "per5", "per95")
 # merge both df by ids
 a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_messyinter, by = "ids")
 # add simulation data and merge!
-colnames(simcoeftoplot) <- c("ids", "sim_a_ids")
-a_ids_mergedwithranef <- merge(simcoeftoplot, a_ids_mergedwithranef, by = "ids")
+simcoeftoplot2 <- simcoef[, c("ids", "a_ids")]
+colnames(simcoeftoplot2) <- c("ids", "sim_a_ids")
+a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = "ids")
 
 plot_a_ids_mergedwithranef<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y = fit_a_ids)) +
   geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
+  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.2) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
   labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
   theme_minimal()
 plot_a_ids_mergedwithranef
-ggsave("figures/a_ids_mergedwithsum.jpeg", plot_a_ids_mergedwithsum, width = 8, height = 6)
+ggsave("figures/a_ids_mergedwithranef.jpeg", plot_a_ids_mergedwithsum, width = 8, height = 6)
 
 # === === === === === === #
 ##### Recover a_spp #####
@@ -323,36 +313,29 @@ simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
 a_spp_mergedwithranef <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
 
 
-plot_a_ids_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y = fit_a_spp)) +
+plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y = fit_a_spp)) +
   geom_point(color = "blue", size = 2) +
   geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
   labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
   theme_minimal()
-plot_a_ids_mergedwithranef
+plot_a_spp_mergedwithranef
+ggsave("figures/a_spp_mergedwithranef.jpeg", plot_a_spp_mergedwithranef, width = 8, height = 6)
 
-#figures
-makeplot <- FALSE
-if (makeplot) {
-  # make long
-  coef_long <- coefbind %>%
-    select(ids, a_ids, a, coefsource) %>%
-    pivot_longer(cols = c(a_ids, a), names_to = "type", values_to = "value")
-  
-  box <- ggplot(coef_long, aes(x = type, y = value, color = type)) +
-    geom_boxplot(alpha = 1, outlier.shape = NA) +
-    geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +
-    facet_wrap(~coefsource)+ 
-    scale_color_manual(values = c("a_ids" = "#1b9e77",  
-                                  "a" = "#d95f02")) +   
-    labs(title = "sim vs model intercept",
-         x = "tntercept type",
-         y = "Value") +
-    theme_minimal() +
-    theme(legend.position = "none")
-  ggsave("figures/paramrecovery_box.jpeg", box, width = 8, height = 6)
-  
-}
+# === === === === === === #
+#### Compare methods ####
+# === === === === === === #
+a_spp_mergedwithranef
+sppcoefwithsumm
+# merge by ids, but keep only both df fit_a_spp
+a_spp_mergedwithcoef <- merge(sppcoefwithsumm[, c("spp", "fit_a_spp")], a_spp_mergedwithranef[, c("spp", "fit_a_spp")], by = "spp")
+
+plottocompare <- ggplot(a_spp_mergedwithcoef, aes(x = fit_a_spp.x, y = fit_a_spp.y)) +
+  geom_point(color = "blue", size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) 
+plottocompare
+# save plot to compare summary vs ranef functions
+ggsave("figures/compare_spp_coef.jpeg", plottocompare, width = 8, height = 6)
 
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
@@ -372,128 +355,3 @@ sumgdd <- sum(test2$GDD_10)
 #### Step 5. Perform retrodictive checks using the model fit to your empiral data ####
 # === === === === === === === === === === === === === === === ===
 
-
-# old code
-if (runoldcode) {
-  Nspp <- length(spp) # number of species
-  Nplot <- length(plot) # number of plot per species
-  Nyr <- length(yr) # number of growth years per tree
-  Nrep <- length(rep) # number of measurements per tree
-  # First making a data frame for the growth ring data
-  Nw <- Nplot*Nyr*Nrep*Nspp # number of measurements per species
-  
-  wdat <- data.frame(
-    yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
-    plot = rep(rep(plot, each = length(spp) * length(rep)), times = length(yr)),
-    spp = rep(rep(spp, each = length(rep)), times = length(yr) * length(plot)),
-    rep = rep(rep, times = length(yr) * length(plot) * length(spp))
-  )
-  
-  # get posterior mean using ranef (random effects...). I guess it shows how much each tree's intercept deviates from the overall mean
-  ranef_estimates <- ranef(fit)$ids
-  ranef_estimates
-  # overall intercept and slope 
-  fixef(fit)
-  
-  # get a df with my 4 parameters estimated from the model
-  param <- c("slope", "intercept", "sigma_y", "sigma_ids" )
-  # slope
-  fit_b <- fixef(fit)["gddcons"]
-  fit_b_uncer <- 0.044
-  # sigma_y
-  fit_sigma_y <- 0.310
-  fit_sigma_y_uncer <- 0.015
-  # sigma_ids
-  fit_sigma_ids <- 0.500
-  fit_sigma_ids_uncer <- NA
-  # a 
-  fit_a <- 1.277
-  fit_a_uncer <- 0.399
-  
-  # model ouput means
-  fit_means <- c(fit_b, fit_a, fit_sigma_y, fit_sigma_ids)
-  # model output sd
-  fit_sd <- c(fit_b_uncer, fit_a_uncer, fit_sigma_y_uncer, fit_sigma_ids_uncer)
-  
-  fit_estimate <- data.frame(
-    parameter= param,
-    assumed_value = sim_param,
-    estimate = fit_means,
-    uncertainty = fit_sd
-  )
-  
-  recovery <- ggplot(fit_estimate) +
-    geom_point(aes(x = parameter, y = estimate, color = "Model estimate"), size = 3) +
-    geom_errorbar(aes(x = parameter,
-                      ymin = estimate - uncertainty,
-                      ymax = estimate + uncertainty,
-                      color = "Model estimate"),
-                  width = 0,
-                  na.rm = TRUE) +
-    geom_point(aes(x = parameter, y = assumed_value, color = "Simulated"), size = 3, shape = 17) +
-    labs(title = "",
-         x = "Parameter",
-         y = "Model estimate",
-         color = "Type") +  # Legend title
-    scale_color_manual(values = c("Model estimate" = "blue", "Simulated" = "orange")) +
-    theme_minimal(base_size = 14)
-  recovery
-  ggsave("figures/model_parameter_recovery.jpeg", recovery, width = 8, height = 6)
-  
-  shinystan::launch_shinystan(fit)
-  
-  # verify how well I am returning my parameters:
-  # simulated data parameters:
-  mu.grand
-  sim_spp_effects <- unique(wdat[, c("spp", "mu.spp")])
-  sim_tree_effects <- unique(wdat[, c("treeid", "mu.tree")])
-  sim_yr_effects <- unique(wdat[, c("yr", "mu.yr")])
-  sim_intercept <- mu.grand + sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
-  sim_resid_sd <- sqrt(w.var)
-  
-  
-  # pull model parameters
-  # sim coef relative to alninc
-  true_spp_coefs <- sim_spp_effects$mu.spp - sim_spp_effects$mu.spp[sim_spp_effects$spp == "alninc"]
-  names(true_spp_coefs) <- paste0("spp", sim_spp_effects$spp)
-  
-  # Compare with model estimates
-  data.frame(
-    Parameter = c("(Intercept)", names(sim_spp_effects)[-1]), 
-    Estimated = fit$coefficients[1:4],  # Assuming (Intercept), sppbetall, etc.
-    True = c(sim_intercept, sim_spp_effects[-1])
-  )
-  
-  
-  #make a dataframe for ring width
-  wdat <- data.frame(
-    yr = rep(yr, each = length(plot) * length(spp) * length(rep)),
-    plot = rep(rep(plot, each = length(spp) * length(rep)), times = length(yr)),
-    spp = rep(rep(spp, each = length(rep)), times = length(yr) * length(plot)),
-    rep = rep(rep, times = length(yr) * length(plot) * length(spp))
-  )
-  
-  #
-  
-  # merge wdat and gdd
-  wdat <- merge(wdat, gdd_sim, by.x = "yr", by.y = "year", all.x = TRUE)
-  
-  # paste plot and spp to give unique ids
-  wdat$treeid <- paste(wdat$spp, wdat$plot, sep = "_")
-  
-  # the grand mean of ring width: baseline ring width when all other effects are zero.
-  mu_grand <- 0.04 
-  
-  # Simulate random effect to set unique intercepts for each parameter
-  wdat$yr_effect <- rnorm(nrow(wdat), 0, 0.05)[match(wdat$yr, yr)] # with mean of 0 and SD of 0.05
-  wdat$tree_effect <- rnorm(nrow(wdat), 0, 0.02)[match(wdat$plot, plot)] # SD of 0.02 across trees
-  wdat$spp_effect <- rnorm(nrow(wdat), 0, 0.06)[match(wdat$spp, spp)]
-  
-  # Simulate ring width (including GDD effect) aka yhat?
-  wdat$ringwidth <- mu_grand + 
-    wdat$yr_effect + 
-    wdat$tree_effect + 
-    wdat$spp_effect +
-    spp_slopes[wdat$spp] * wdat$gdd +  # gdd effect varies by spp
-    rnorm(nrow(wdat), 0, 0.5) #overall error
-}
