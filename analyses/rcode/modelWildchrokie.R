@@ -33,7 +33,7 @@ a <- 1.5
 b <- 0.4
 sigma_y <- 0.3
 
-n_perspp <- 25
+n_perspp <- 10
 n_spp <- 50
 n_ids <- n_perspp * n_spp
 rep <- 3
@@ -64,7 +64,6 @@ error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
 ringwidth <- a + a_ids + a_spp + b * gddcons + error
-ringwidth2 <- a + a_ids + a_spp + b * gddcons
 # set df
 simcoef <- data.frame(
   ids = ids,
@@ -75,56 +74,34 @@ simcoef <- data.frame(
   a_ids = a_ids,
   a_spp = a_spp,
   sigma_y = sigma_y,
-  ringwidth = ringwidth,
-  ringwidth2 = ringwidth2
+  ringwidth = ringwidth
 )
 # === === === === === === === === #
 ##### Check simulated data ######
 # === === === === === === === === #
-# Example: "Set3" or "Paired" stretched to 20 colors
-my_colors <- colorRampPalette(brewer.pal(12, "Paired"))(length(unique(simcoef$spp)))
 
-scatter_by_spp <- ggplot(simcoef, aes(x = gddcons)) +
-  geom_point(aes(x=gddcons, y=ringwidth, colour = spp), size=0.1) +
-  scale_color_manual(values = my_colors)+
+# select 15 spp randomly out of the spp column
+spp_to_plot <- sample(unique(simcoef$spp), 12)
+
+subtoplot <- subset(simcoef, spp %in% spp_to_plot)
+
+my_colors <- colorRampPalette(brewer.pal(12, "Set3"))(length(unique(subtoplot$spp)))
+
+scatter_by_spp <- ggplot(subtoplot, aes(x = gddcons)) +
+  geom_point(aes(x=gddcons, y=ringwidth), size=1) +
+  # scale_color_manual(values = my_colors)+
   geom_abline(intercept = a, slope = b)+
   facet_wrap(~spp)+
   # Optional: plot actual points if available 
   labs(y = "Response", x = "gddcons") +
   theme_minimal()
 scatter_by_spp
+
 # save figure 
 ggsave("figures/scatter_by_spp.jpeg", scatter_by_spp, width = 8, height = 6)
 
-
-
-# slopes by spp
-lm_spp <- ggplot(simcoef, aes(x = gddcons, y = ringwidth, colour = spp)) +
-# geom_point(aes(alpha = 0.1)) +
-geom_smooth(method = "lm", se = FALSE, size = 1) +
-labs(
-  x = "GDD Cons",
-  y = "Ring Width",
-  title = ""
-  ) +
-  scale_color_manual(values = my_colors)+
-  theme_minimal()
-
-ggplot(simcoef, aes(x = gddcons, y = ringwidth2, colour = spp)) +
-# geom_point(aes(alpha = 0.2)) +
-geom_smooth(method = "lm", se = FALSE, size = 1) +
-  labs(
-    x = "GDD Cons",
-    y = "Ring Width",
-    title = ""
-  ) +
-  scale_color_manual(values = my_colors)+
-  theme_minimal()
-
-
-
 # run models
-runmodels <- TRUE
+runmodels <- FALSE
 if(runmodels) {
   fit <- stan_lmer(
     ringwidth ~ gddcons + (1 | ids) + (1 | spp),  
@@ -136,6 +113,7 @@ if(runmodels) {
 }
 
 print(fit, digits=3)
+
 
 # coef: medians are used for point estimates. the sum of the random and fixed effects coefficients for each explanatory variable for each level of each grouping factor.
 # se:  The se function returns standard errors based on mad. See the Uncertainty estimates section in print.stanmvreg for more details.
