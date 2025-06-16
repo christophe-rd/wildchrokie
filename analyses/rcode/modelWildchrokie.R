@@ -173,7 +173,7 @@ a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = "ids"
 
 plot_a_ids_mergedwithranef<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y = fit_a_ids)) +
   geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.2) +
+  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
   labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
   theme_minimal()
@@ -216,21 +216,6 @@ plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y
   theme_minimal()
 plot_a_spp_mergedwithranef
 ggsave("figures/a_spp_mergedwithranef.jpeg", plot_a_spp_mergedwithranef, width = 8, height = 6)
-
-# === === === === === === #
-#### Compare methods ####
-# === === === === === === #
-a_spp_mergedwithranef
-sppcoefwithsumm
-# merge by ids, but keep only both df fit_a_spp
-a_spp_mergedwithcoef <- merge(sppcoefwithsumm[, c("spp", "fit_a_spp")], a_spp_mergedwithranef[, c("spp", "fit_a_spp")], by = "spp")
-
-plottocompare <- ggplot(a_spp_mergedwithcoef, aes(x = fit_a_spp.x, y = fit_a_spp.y)) +
-  geom_point(color = "blue", size = 2) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) 
-plottocompare
-# save plot to compare summary vs ranef functions
-ggsave("figures/compare_spp_coef.jpeg", plottocompare, width = 8, height = 6)
 
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
