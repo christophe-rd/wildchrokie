@@ -64,7 +64,7 @@ error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
 ringwidth <- a + a_ids + a_spp + b * gddcons + error
-
+ringwidth2 <- a + a_ids + a_spp + b * gddcons
 # set df
 simcoef <- data.frame(
   ids = ids,
@@ -75,9 +75,50 @@ simcoef <- data.frame(
   a_ids = a_ids,
   a_spp = a_spp,
   sigma_y = sigma_y,
-  ringwidth = ringwidth
+  ringwidth = ringwidth,
+  ringwidth2 = ringwidth2
 )
-plot(ringwidth~gddcons, data=simcoef)
+
+simcoef2 <- simcoef %>%
+  mutate(intercept =a + a_ids + a_spp)
+
+ggplot(simcoef2, aes(x = gddcons)) +
+  geom_line(aes(y = intercept + b * gddcons, group = ids, colour = spp), linewidth = 0.5) +
+  scale_color_manual(values = my_colors)+
+  # Optional: plot actual points if available
+  # geom_point(aes(y = a), color = "blue", alpha = 0.5) +
+  labs(y = "Response", x = "gddcons") +
+  theme_minimal()
+
+
+library(RColorBrewer)
+
+# Example: "Set3" or "Paired" stretched to 20 colors
+my_colors <- colorRampPalette(brewer.pal(12, "Paired"))(20)
+
+ggplot(simcoef, aes(x = gddcons, y = ringwidth, colour = spp)) +
+  # geom_point(aes(alpha = 0.2)) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  labs(
+    x = "GDD Cons",
+    y = "Ring Width",
+    title = ""
+  ) +
+  scale_color_manual(values = my_colors)+
+  theme_minimal()
+
+ggplot(simcoef, aes(x = gddcons, y = ringwidth2, colour = spp)) +
+# geom_point(aes(alpha = 0.2)) +
+geom_smooth(method = "lm", se = FALSE, size = 1) +
+  labs(
+    x = "GDD Cons",
+    y = "Ring Width",
+    title = ""
+  ) +
+  scale_color_manual(values = my_colors)+
+  theme_minimal()
+
+
 
 # run models
 runmodels <- TRUE
@@ -92,6 +133,9 @@ if(runmodels) {
 }
 
 print(fit, digits=3)
+
+
+
 
 #### Trying different functions for parameter recovery ####
 posterior_interval(fit) # nice!
