@@ -5,7 +5,7 @@
 # Goal: build a model to understand the relationship between growth and growing degree days using the tree cookies collected in the wildhell common garden in spring of 2023
 
 # housekeeping
-rm(list=ls())
+rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 
@@ -81,24 +81,44 @@ simcoef <- data.frame(
 # === === === === === === === === #
 
 # select 15 spp randomly out of the spp column
-spp_to_plot <- sample(unique(simcoef$spp), 12)
+spp_to_plot <- sample(unique(simcoef$spp), 16)
 
 subtoplot <- subset(simcoef, spp %in% spp_to_plot)
+subtoplot$intercepttemp <- subtoplot$a_ids+subtoplot$a_spp+a
 
-my_colors <- colorRampPalette(brewer.pal(12, "Set3"))(length(unique(subtoplot$spp)))
+# ring width X gdd cons by spp with intercept
+ringXgddcons <- ggplot(subtoplot, aes(gddcons, ringwidth)) +
+  geom_point() +
+  geom_abline(
+    aes(intercept = intercepttemp, slope = 0.4),
+    data = subtoplot,
+    color = "red", linetype = "solid", alpha =0.5
+  ) +
+  facet_wrap(~ spp) +
+  theme_minimal()
+# save gg plot
+ringXgddcons
+ggsave("figures/ringXgddcons.jpeg", ringXgddcons, width = 8, height = 6)
 
-scatter_by_spp <- ggplot(subtoplot, aes(x = gddcons)) +
-  geom_point(aes(x=gddcons, y=ringwidth), size=1) +
-  # scale_color_manual(values = my_colors)+
-  geom_abline(intercept = a, slope = b)+
+#a_ids X a_spp
+a_idsXa_spp <- ggplot(subtoplot) +
+  geom_point(aes(a_spp, a_ids)) +
+  geom_abline(
+    aes(intercept = a_ids, slope = 0.4),
+    data = subtoplot,
+    color = "red", linetype = "dashed", alpha =0.5
+  ) +
+  geom_abline(aes(intercept = a_spp, slope = 0.4),
+              data = subtoplot,
+              color = "blue", linetype = "solid", alpha = 0.5
+              )+
   facet_wrap(~spp)+
   # Optional: plot actual points if available 
-  labs(y = "Response", x = "gddcons") +
+  # labs(y = "", x = "") +
   theme_minimal()
-scatter_by_spp
-
-# save figure 
-ggsave("figures/scatter_by_spp.jpeg", scatter_by_spp, width = 8, height = 6)
+a_idsXa_spp
+# save 
+ggsave("figures/a_idsXa_spp.jpeg", a_idsXa_spp, width = 8, height = 6)
 
 # run models
 runmodels <- FALSE
