@@ -8,6 +8,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
+graphics.off()
 
 # Load library 
 library(rstanarm)
