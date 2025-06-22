@@ -296,3 +296,18 @@ rw <- d[, !(names(d) %in% "year")]
 names(rw)[names(rw) == "Yearcor"] <- "year"
 names(rw)[names(rw) == "sourceFolder"] <- "sampleType"
 rw$spp <- sub("_.*", "", rw$name)
+
+library(dplyr)
+library(stringr)
+# remove duplicates 
+rwnodup <- rw[!duplicated(rw$name),]
+rwnodup %>%
+  count(spp)
+
+rwnodup2 <- rwnodup %>%
+  mutate(
+    provenance = str_extract(name, "_([A-Z]{2})") %>% str_remove("_")
+  )
+
+rwnodup2 %>%
+  count(spp, provenance)

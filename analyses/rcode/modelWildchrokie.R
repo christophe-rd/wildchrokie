@@ -80,13 +80,11 @@ simcoef <- data.frame(
 # === === === === === === === === #
 ##### Check simulated data ######
 # === === === === === === === === #
-
+simcoef$intercepttemp <- simcoef$a_ids+simcoef$a_spp+a
+simcoef$asppfull <- simcoef$a + simcoef$a_spp
 # select 15 spp randomly out of the spp column
 spp_to_plot <- sample(unique(simcoef$spp), 16)
-
 subtoplot <- subset(simcoef, spp %in% spp_to_plot)
-subtoplot$intercepttemp <- subtoplot$a_ids+subtoplot$a_spp+a
-
 # ring width X gdd cons by spp with intercept
 ringXgddcons <- ggplot(subtoplot, aes(gddcons, ringwidth)) +
   geom_point() +
@@ -120,6 +118,26 @@ a_idsXa_spp <- ggplot(subtoplot) +
 a_idsXa_spp
 # save 
 ggsave("figures/a_idsXa_spp.jpeg", a_idsXa_spp, width = 8, height = 6)
+
+# check species level intercept:
+# ok so that's one option
+ggplot(simcoef, aes(x = spp)) +
+  geom_point(aes(y = asppfull, color = "a_spp")) +
+  geom_hline(aes(yintercept = a, color = "a")) +
+  scale_color_manual(name = "", 
+                     values = c("a_spp" = "black", 
+                                "a" = "red")) +
+  scale_linetype_manual(name = "", 
+                        values = c("a" = "dashed")) +
+  labs(
+    title = "",
+    x = "spp",
+    y = "a + a_spp"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5),
+    legend.position = "top"
+  )
 
 # run models
 runmodels <- FALSE
