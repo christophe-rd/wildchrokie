@@ -36,12 +36,13 @@ spotphen_sub <- subset(spotphen, select = c("plantNickname", "Common_Name", "yea
 
 # same but for the common garden
 col <- c("budburst", "leafout", "flowers", "fruit", "leafcolor")
-wildphen <- subset(wildphen, select = c("Name", "spp", "year", col))
+wildphen <- subset(wildphen, select = c("name", "spp", "year", col))
 
 
 # change colnames for them to match
 wildphen <- wildphen %>%
   rename(
+    Name = name,
     species = spp,
     Year = year,
   ) 
@@ -105,13 +106,15 @@ betall <- ggplot(merged, aes(x = mean_budburst_ts, y = mean_budburst_wh, color =
   
   # 1:1 reference line
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+#set manual y axis limits
+  ylim(100, 130) +
   
   labs(x = "Budburst DOY (Treespotters)",
        y = "Budburst DOY (WildHell)",
        title = "yellow birch",
        color = "Year") +
   theme_minimal()
-
+betall
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 ggsave("figures/buburst_yellow_birch.jpeg", plot = betall, width = 8, height = 6)
 
@@ -161,7 +164,7 @@ betula <- ggplot(merged, aes(x = mean_budburst_ts, y = mean_budburst_wh, color =
   
   # 1:1 reference line
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  
+  ylim(100, 130) +
   labs(x = "Budburst DOY (Treespotters)",
        y = "Budburst DOY (WildHell)",
        title = "betula",
