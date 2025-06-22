@@ -80,7 +80,7 @@ simcoef <- data.frame(
 # === === === === === === === === #
 ##### Check simulated data ######
 # === === === === === === === === #
-simcoef$intercepttemp <- simcoef$a_ids+simcoef$a_spp+a
+simcoef$intercepttemp <- simcoef$a_ids+simcoef$a_spp+ simcoef$a
 simcoef$asppfull <- simcoef$a + simcoef$a_spp
 # select 15 spp randomly out of the spp column
 spp_to_plot <- sample(unique(simcoef$spp), 16)
@@ -121,23 +121,29 @@ ggsave("figures/a_idsXa_spp.jpeg", a_idsXa_spp, width = 8, height = 6)
 
 # check species level intercept:
 # ok so that's one option
-ggplot(simcoef, aes(x = spp)) +
-  geom_point(aes(y = asppfull, color = "a_spp")) +
+diff_intercept_comparison <- ggplot(simcoef, aes(x = spp)) +
+  geom_point(aes(y = intercepttemp, color = "a + a_spp + a_ids"), alpha = 0.7) +
+  geom_point(aes(y = asppfull, color = "a + a_spp"), size = 2) +
   geom_hline(aes(yintercept = a, color = "a")) +
-  scale_color_manual(name = "", 
-                     values = c("a_spp" = "black", 
-                                "a" = "red")) +
-  scale_linetype_manual(name = "", 
-                        values = c("a" = "dashed")) +
+  scale_color_manual(
+    name = "",
+    values = c(
+      "a + a_spp" = "black",
+      "a" = "red",
+      "a + a_spp + a_ids" = "darkgrey"
+    )
+  ) +
   labs(
     title = "",
     x = "spp",
-    y = "a + a_spp"
+    y = "values"
   ) +
+  theme_minimal() +  # apply minimal theme first
   theme(
-    axis.text.x = element_text(angle = 90, vjust = 0.5),
-    legend.position = "top"
+    axis.text.x = element_text(angle = 45, hjust = 1)
   )
+diff_intercept_comparison 
+ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, width = 10, height = 6)
 
 # run models
 runmodels <- FALSE
