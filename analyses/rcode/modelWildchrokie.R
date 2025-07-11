@@ -80,22 +80,31 @@ simcoef <- data.frame(
 # === === === === === === === === #
 ##### Check simulated data ######
 # === === === === === === === === #
-simcoef$intercepttemp <- simcoef$a_ids+simcoef$a_spp+ simcoef$a
+simcoef$intercepttemp <- simcoef$a_ids + simcoef$a_spp + simcoef$a
 simcoef$asppfull <- simcoef$a + simcoef$a_spp
 # select 15 spp randomly out of the spp column
 spp_to_plot <- sample(unique(simcoef$spp), 16)
 subtoplot <- subset(simcoef, spp %in% spp_to_plot)
 # ring width X gdd cons by spp with intercept
 ringXgddcons <- ggplot(subtoplot, aes(gddcons, ringwidth)) +
-  geom_point() +
+  geom_point(aes(color = "sim data")) +
+  
   geom_abline(
-    aes(intercept = intercepttemp, slope = 0.4),
+    aes(intercept = asppfull, slope = 0.4, color = "sim a + a_spp"),
     data = subtoplot,
-    color = "red", linetype = "solid", alpha =0.5
+    linetype = "solid", alpha = 0.5
   ) +
+  
   facet_wrap(~ spp) +
+  
+  scale_color_manual(
+    name = "Legend",
+    values = c(
+      "sim data" = "black",
+      "sim a + a_spp" = "red"
+    )
+  ) +
   theme_minimal()
-# save gg plot
 ringXgddcons
 ggsave("figures/ringXgddcons.jpeg", ringXgddcons, width = 8, height = 6)
 
@@ -146,7 +155,7 @@ diff_intercept_comparison
 ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, width = 10, height = 6)
 
 # run models
-runmodels <- FALSE
+runmodels <- TRUE
 if(runmodels) {
   fit <- stan_lmer(
     ringwidth ~ gddcons + (1 | ids) + (1 | spp),  
@@ -228,10 +237,10 @@ simcoeftoplot <- simcoef[, c("spp", "a_spp")]
 colnames(simcoeftoplot) <- c("spp", "sim_a_spp")
 simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
 # now merge
-a_spp_mergedwithranef <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
+a_spp_mergedwithranef2 <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
 
 
-plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y = fit_a_spp)) +
+plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef2, aes(x = sim_a_spp, y = fit_a_spp)) +
   geom_point(color = "blue", size = 2) +
   geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
@@ -239,6 +248,57 @@ plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef, aes(x = sim_a_spp, y
   theme_minimal()
 plot_a_spp_mergedwithranef
 ggsave("figures/a_spp_mergedwithranef.jpeg", plot_a_spp_mergedwithranef, width = 8, height = 6)
+
+# === === === === === === === === === === #
+#### Add model intercept to sim data ####
+# === === === === === === === === === === #
+simcoef$asppfull <- simcoef$a + simcoef$a_spp
+# add fit data for that one
+a_spp_mergedwithranef$asppfull_fit <- a_spp_mergedwithranef$fit_a_spp+fixef(fit)[1]
+# merge with simcoef
+intercept_fit_sim <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "asppfull_fit")], by = "spp")
+
+# select 15 spp randomly out of the spp column
+spp_to_plot <- sample(unique(intercept_fit_sim$spp), 16)
+subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
+# ring width X gdd cons by spp with intercept
+ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
+  # Add black dots with a legend
+  geom_point(aes(color = "sim data")) +
+  
+  # Red line with custom label
+  geom_abline(
+    aes(intercept = asppfull, slope = 0.4, color = "sim a + a_spp"),
+    data = subtoplot2,
+    linetype = "solid", alpha = 0.5
+  ) +
+  
+  # Blue line with custom label
+  geom_abline(
+    aes(intercept = asppfull_fit, slope = 0.4, color = "fit a + a_spp"),
+    data = subtoplot2,
+    linetype = "solid", alpha = 0.5
+  ) +
+  
+  scale_color_manual(
+    name = "Legend",
+    values = c(
+      "sim data" = "black",
+      "sim a + a_spp" = "red",
+      "fit a + a_spp" = "blue"
+    )
+  ) +
+  
+  facet_wrap(~ spp) +
+  theme_minimal()
+
+# Show plot
+ringXgddcons2
+
+ggsave("figures/ringXgddcons_simANDfit.jpeg", ringXgddcons2, width = 8, height = 6)
+
+
+
 
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
