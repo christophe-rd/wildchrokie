@@ -259,7 +259,7 @@ a_spp_mergedwithranef$asppfull_fit <- a_spp_mergedwithranef$fit_a_spp+fixef(fit)
 intercept_fit_sim <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "asppfull_fit")], by = "spp")
 
 # select 15 spp randomly out of the spp column
-spp_to_plot <- sample(unique(intercept_fit_sim$spp), 16)
+spp_to_plot <- sample(unique(intercept_fit_sim$spp), 50)
 subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
 # ring width X gdd cons by spp with intercept
 ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
@@ -295,7 +295,7 @@ ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
 # Show plot
 ringXgddcons2
 
-ggsave("figures/ringXgddcons_simANDfit.jpeg", ringXgddcons2, width = 8, height = 6)
+ggsave("figures/ringXgddcons_simANDfit.jpeg", ringXgddcons2, width = 12, height = 8)
 
 
 
