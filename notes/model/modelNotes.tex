@@ -40,6 +40,63 @@ We discussed which of the following would be the most relevant variable that rel
 \end{align} 
 What kind of pooling? Partial pooling since they are all within the same family?\\
 
+
+\subsection*{Model update after simulating the data}
+
+\subsection*{Model Specification}
+
+\textbf{Data:}
+\begin{itemize}
+    \item $i = 1, \dots, N$ (observations)
+    \item $j[i] = 1, \dots, J$ (site indices for each observation)
+    \item $y_i$: Tree ring width measurement
+    \item $x_i$: Growing Degree Days (GDD) covariate
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item Site-level intercepts: $\alpha_j$ ($j = 1, \dots, J$)
+    \item Site-level slopes: $\beta_j$ ($j = 1, \dots, J$)
+    \item Population means: $\mu_\alpha$, $\mu_\beta$
+    \item Population variances: $\sigma_\alpha$, $\sigma_\beta$
+    \item Measurement error: $\sigma_y$
+\end{itemize}
+
+\subsection*{Model Structure}
+
+\begin{align*}
+&\text{Measurement model:} \\
+&y_i \sim \mathcal{N}(\hat{y}_i, \sigma_y^2) \\
+&\hat{y}_i = \alpha_{j[i]} + \beta_{j[i]} \cdot x_i \\[2ex]
+%
+&\text{Site-level parameters:} \\
+&\alpha_j \sim \mathcal{N}(\mu_\alpha, \sigma_\alpha^2) \\
+&\beta_j \sim \mathcal{N}(\mu_\beta, \sigma_\beta^2) \\[2ex]
+%
+&\text{Hyperpriors:} \\
+&\sigma_y \sim \text{Uniform}(0, 100) \\
+&\sigma_\alpha \sim \text{Uniform}(0, 100) \\
+&\sigma_\beta \sim \text{Uniform}(0, 100) \\
+&\mu_\alpha \sim \mathcal{N}(0, 100) \quad \text{(weakly informative)} \\
+&\mu_\beta \sim \mathcal{N}(0, 100) \quad \text{(weakly informative)}
+\end{align*}
+
+\subsection*{Key Features}
+
+\begin{itemize}
+    \item \textbf{Partially pooled slopes:} Each site $j$ has its own GDD response $\beta_j$, drawn from a shared normal distribution
+    \item \textbf{Adaptive shrinkage:} The estimated $\sigma_\beta$ controls pooling strength (smaller values $\Rightarrow$ stronger pooling toward $\mu_\beta$)
+    \item \textbf{Interpretation:}
+    \begin{itemize}
+        \item $\mu_\beta$: Overall average effect of GDD on tree growth
+        \item $\sigma_\beta$: Between-site variability in GDD sensitivity
+        \item $\beta_j$: Site-specific growth response to GDD
+    \end{itemize}
+\end{itemize}
+
+
+
+
 \section{Simulate data}
 I arbitrarily decided to sum up the GDD between DOY 100 and 300 for data simulation. \\
 yhat: combine the effects that I generated from the grand mean, the year effect (other than variation of GDD), individual effect, species response to GDD and the overall error, which returns my yhat i.e. ring width in mm.
