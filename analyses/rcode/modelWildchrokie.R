@@ -49,7 +49,7 @@ tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for e
 # partial pooling
 sigma_ids <- 0.8 / 2.57
 sigma_spp <- 1 / 2.57
-a_ids_values <- rnorm(n_ids, 0, sigma_ids)
+a_ids_values <- rnorm(n_ids, 0, sigma_ids) # to nest it, should be something like id wave N(sppid, alpha id)
 a_spp_values <- rnorm(n_spp, 0, sigma_spp)
 
 # match to observations
@@ -153,18 +153,21 @@ diff_intercept_comparison <- ggplot(simcoef, aes(x = spp)) +
   )
 diff_intercept_comparison 
 ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, width = 10, height = 6)
-
-# run models
+# === === === === === === === === #
+##### Run model #####
+# === === === === === === === === #
 runmodels <- TRUE
 if(runmodels) {
   fit <- stan_lmer(
-    ringwidth ~ gddcons + (1 | ids) + (1 | spp),  
+    ringwidth ~ 1 + gddcons + (1 | ids) + (1 | spp),  #(1 | spp) means that I am partial pooling for the spp interecept
+    # to confirm: to partial pool on both the intercept AND the slope : (1 + gddcons|spp)
     data = simcoef,
     chains = 4,
     iter = 4000,
     core=4
   )
 }
+
 
 print(fit, digits=3)
 
@@ -174,11 +177,11 @@ print(fit, digits=3)
 # Uncertainty estimates (MAD_SD): The standard deviations reported (labeled MAD_SD in the print output) are computed from the same set of draws described above and are proportional to the median absolute deviation (mad) from the median. Compared to the raw posterior standard deviation, the MAD_SD will be more robust for long-tailed distributions. These are the same as the values returned by se.
 
 # === === === === === === #
-#### Using ranef and fixef ####
+##### Parameter recoverty #####
 # === === === === === === #
 fitef <- ranef(fit)
 # === === === === === === #
-##### Recover a_ids #####
+###### Recover a_ids ######
 # === === === === === === #
 # Access the 'ids' data frame
 ids_df <- fitef$ids
@@ -210,10 +213,10 @@ plot_a_ids_mergedwithranef<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y 
   labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
   theme_minimal()
 plot_a_ids_mergedwithranef
-ggsave("figures/a_ids_mergedwithranef.jpeg", plot_a_ids_mergedwithsum, width = 8, height = 6)
+ggsave("figures/a_ids_mergedwithranef.jpeg", plot_a_ids_mergedwithranef, width = 8, height = 6)
 
 # === === === === === === #
-##### Recover a_spp #####
+###### Recover a_spp ######
 # === === === === === === #
 spp_df <- fitef$spp
 
@@ -261,25 +264,23 @@ intercept_fit_sim <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "asppfull_f
 # select 15 spp randomly out of the spp column
 spp_to_plot <- sample(unique(intercept_fit_sim$spp), 50)
 subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
+
 # ring width X gdd cons by spp with intercept
 ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
   # Add black dots with a legend
   geom_point(aes(color = "sim data")) +
-  
   # Red line with custom label
   geom_abline(
     aes(intercept = asppfull, slope = 0.4, color = "sim a + a_spp"),
     data = subtoplot2,
     linetype = "solid", alpha = 0.5
   ) +
-  
   # Blue line with custom label
   geom_abline(
     aes(intercept = asppfull_fit, slope = 0.4, color = "fit a + a_spp"),
     data = subtoplot2,
     linetype = "solid", alpha = 0.5
   ) +
-  
   scale_color_manual(
     name = "Legend",
     values = c(
@@ -288,16 +289,44 @@ ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
       "fit a + a_spp" = "blue"
     )
   ) +
-  
   facet_wrap(~ spp) +
   theme_minimal()
-
 # Show plot
 ringXgddcons2
 
-ggsave("figures/ringXgddcons_simANDfit.jpeg", ringXgddcons2, width = 12, height = 8)
+ggsave("figures/ringXgddcons_simANDfit2.jpeg", ringXgddcons2, width = 12, height = 8)
 
 
+# do the same graph, but only for a_spp to check if the overall intecept recovery is the problem.
+intercept_fit_sim2 <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "fit_a_spp")], by = "spp")
+
+ringXgddcons3 <- ggplot(intercept_fit_sim2, aes(gddcons, ringwidth)) +
+  geom_point(aes(color = "sim data")) +
+  geom_abline(
+    aes(intercept = a_spp, slope = 0.4, color = "sim a + a_spp"),
+    data = intercept_fit_sim2,
+    linetype = "solid", alpha = 0.5
+  ) +
+  geom_abline(
+    aes(intercept = fit_a_spp, slope = 0.4, color = "fit a + a_spp"),
+    data = intercept_fit_sim2,
+    linetype = "solid", alpha = 0.5
+  ) +
+  scale_color_manual(
+    name = "Legend",
+    values = c(
+      "sim data" = "black",
+      "sim a + a_spp" = "red",
+      "fit a + a_spp" = "blue"
+    )
+  ) +
+  facet_wrap(~ spp) +
+  theme_minimal()
+# Show plot
+ringXgddcons3
+ggsave("figures/ringXgddcons_simANDfit3.jpeg", ringXgddcons3, width = 12, height = 8)
+# I can visually see that 15 fit are > sim
+# vs 11 sim > fit
 
 
 # === === === === === === === === === === === === === === === === 
