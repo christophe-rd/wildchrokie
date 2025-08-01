@@ -15,6 +15,8 @@ library(rstanarm)
 library(ggplot2)
 library(arm)
 library(RColorBrewer)
+library(shinystan)
+
 runmodels <- FALSE
 runoldcode <- FALSE
 
@@ -46,16 +48,25 @@ tree_ids <- paste0(rep(spp, each = n_perspp), "_", 1:n_perspp)  # 100 unique tre
 ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times
 tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for each ID
 
+# === === === === #
 # partial pooling
-sigma_ids <- 0.8 / 2.57
-sigma_spp <- 1 / 2.57
+sigma_a_ids <- 0.8 / 2.57
+sigma_a_spp <- 1 / 2.57
+
+sigma_b_spp <- 0.6 / 2.57
+
 a_ids_values <- rnorm(n_ids, 0, sigma_ids) # to nest it, should be something like id wave N(sppid, alpha id)
 a_spp_values <- rnorm(n_spp, 0, sigma_spp)
+
+b_spp_values <- rnorm(n_spp, 0, sigma_b_spp)
 
 # match to observations
 a_ids <- rep(a_ids_values, each = rep)  # repeat each a_ids 3 times
 a_spp <- rep(a_spp_values, each = n_perspp * rep)  # repeat each a_spp 75 times
 
+b_spp <- rep(b_spp_values, each = n_perspp * rep)
+
+# === === === === === === #
 # gdd and devide by constant
 gdd <- round(rnorm(N, 1800, 100))
 gddcons <- gdd / 200
@@ -64,7 +75,9 @@ gddcons <- gdd / 200
 error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
-ringwidth <- a + a_ids + a_spp + b * gddcons + error
+ringwidth <- a + a_ids + a_spp + (b) * gddcons + error
+ringwidthnooverall_a <- a_ids + a_spp + (b) * gddcons + error # temporary
+
 # set df
 simcoef <- data.frame(
   ids = ids,
@@ -74,27 +87,35 @@ simcoef <- data.frame(
   a = a,
   a_ids = a_ids,
   a_spp = a_spp,
+  # b_spp = b_spp,
   sigma_y = sigma_y,
   ringwidth = ringwidth
+  # ringwidthnooverall_a <- ringwidthnooverall_a# temporary
 )
+
+# loop through cols and round to 3 decimal points
+for (i in 3:ncol(simcoef)) {
+  simcoef[, i] <- round(simcoef[, i], 3)
+}
+
 # === === === === === === === === #
 ##### Check simulated data ######
 # === === === === === === === === #
 simcoef$intercepttemp <- simcoef$a_ids + simcoef$a_spp + simcoef$a
 simcoef$asppfull <- simcoef$a + simcoef$a_spp
+
 # select 15 spp randomly out of the spp column
 spp_to_plot <- sample(unique(simcoef$spp), 16)
 subtoplot <- subset(simcoef, spp %in% spp_to_plot)
+
 # ring width X gdd cons by spp with intercept
 ringXgddcons <- ggplot(subtoplot, aes(gddcons, ringwidth)) +
   geom_point(aes(color = "sim data")) +
-  
   geom_abline(
     aes(intercept = asppfull, slope = 0.4, color = "sim a + a_spp"),
     data = subtoplot,
     linetype = "solid", alpha = 0.5
   ) +
-  
   facet_wrap(~ spp) +
   
   scale_color_manual(
@@ -159,7 +180,10 @@ ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, widt
 runmodels <- TRUE
 if(runmodels) {
   fit <- stan_lmer(
-    ringwidth ~ 1 + gddcons + (1 | ids) + (1 | spp),  #(1 | spp) means that I am partial pooling for the spp interecept
+    ringwidth ~ 1 + gddcons + 
+      # (1 | ids) + 
+      # (1 | spp) + 
+      (1|spp/ids),  #(1 | spp) means that I am partial pooling for the spp interecept
     # to confirm: to partial pool on both the intercept AND the slope : (1 + gddcons|spp)
     data = simcoef,
     chains = 4,
@@ -227,22 +251,26 @@ a_sppwithranef <- data.frame(
 )
 # recover only conf intervals spp from previously created df
 a_spp_messyinter <- subset(messyinter, grepl("spp:", messyids))
-
 a_spp_messyinter$spp <- sub(".*spp:(spp[0-9]+)]", "\\1", a_spp_messyinter$messyids)
+
 # remove unecessary columns
 a_spp_messyinter <- a_spp_messyinter[, c("spp", "5%", "95%")]
+
 # change 5 and 95% names
 colnames(a_spp_messyinter) <- c("spp", "per5", "per95")
+
 # merge!
 a_spp_mergedwithranef <- merge(a_sppwithranef, a_spp_messyinter, by = "spp")
+
 # get sim data ready to merge
 simcoeftoplot <- simcoef[, c("spp", "a_spp")]
 colnames(simcoeftoplot) <- c("spp", "sim_a_spp")
 simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
+
 # now merge
 a_spp_mergedwithranef2 <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
 
-
+# plot!
 plot_a_spp_mergedwithranef <- ggplot(a_spp_mergedwithranef2, aes(x = sim_a_spp, y = fit_a_spp)) +
   geom_point(color = "blue", size = 2) +
   geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
@@ -293,14 +321,13 @@ ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
   theme_minimal()
 # Show plot
 ringXgddcons2
-
 ggsave("figures/ringXgddcons_simANDfit2.jpeg", ringXgddcons2, width = 12, height = 8)
 
 
 # do the same graph, but only for a_spp to check if the overall intecept recovery is the problem.
 intercept_fit_sim2 <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "fit_a_spp")], by = "spp")
 
-ringXgddcons3 <- ggplot(intercept_fit_sim2, aes(gddcons, ringwidth)) +
+ringXgddcons3 <- ggplot(intercept_fit_sim2, aes(gddcons, ringwidthnooverall_a)) +
   geom_point(aes(color = "sim data")) +
   geom_abline(
     aes(intercept = a_spp, slope = 0.4, color = "sim a + a_spp"),
@@ -327,6 +354,9 @@ ringXgddcons3
 ggsave("figures/ringXgddcons_simANDfit3.jpeg", ringXgddcons3, width = 12, height = 8)
 # I can visually see that 15 fit are > sim
 # vs 11 sim > fit
+
+# trying to understand why my model underestimates my overall interecept
+launch shinystan(fit)
 
 
 # === === === === === === === === === === === === === === === === 
