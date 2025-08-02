@@ -47,23 +47,35 @@ spp <- paste0(rep("spp", each = n_spp), 1:n_spp)
 tree_ids <- paste0(rep(spp, each = n_perspp), "_", 1:n_perspp)  # 100 unique tree IDs
 ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times
 tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for each ID
+tree_spp_num <-rep(1:n_spp, each = 10)
 
 # === === === === #
 # partial pooling
 sigma_a_ids <- 0.8 / 2.57
-sigma_a_spp <- 1 / 2.57
+sigma_a_spp1 <- 1 / 2.57
+sigma_a_spp2 <- 0.9/2.57
 
+sigma_b_ids <- 0.2 / 2.57
 sigma_b_spp <- 0.6 / 2.57
 
-a_ids_values <- rnorm(n_ids, 0, sigma_ids) # to nest it, should be something like id wave N(sppid, alpha id)
-a_spp_values <- rnorm(n_spp, 0, sigma_spp)
+a_spp_values <- rnorm(n_spp, 0, sigma_a_spp1)
 
+
+# next step: get a single sigma_a_spp_values per species 
+sigma_spp_values <- abs(rnorm(n_spp, 0, sigma_a_spp2))
+
+a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_num], sigma_spp_values[tree_spp_num])
+
+
+
+b_ids_values <- rnorm(n_ids, 0, sigma_b_ids)
 b_spp_values <- rnorm(n_spp, 0, sigma_b_spp)
 
 # match to observations
 a_ids <- rep(a_ids_values, each = rep)  # repeat each a_ids 3 times
 a_spp <- rep(a_spp_values, each = n_perspp * rep)  # repeat each a_spp 75 times
 
+b_ids <- rep(b_ids_values, each = rep)
 b_spp <- rep(b_spp_values, each = n_perspp * rep)
 
 # === === === === === === #
@@ -177,8 +189,22 @@ ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, widt
 # === === === === === === === === #
 ##### Run model #####
 # === === === === === === === === #
-runmodels <- TRUE
+runmodels <- TRUE # this is only for the intercepts, so I need to re-create old df
 if(runmodels) {
+  
+  # set df
+  simcoef <- data.frame(
+    ids = ids,
+    spp = tree_spp,
+    gddcons = gddcons,
+    b = b,
+    a = a,
+    a_ids = a_ids,
+    a_spp = a_spp,
+    sigma_y = sigma_y,
+    ringwidth = ringwidth
+  )
+  
   fit <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
       # (1 | ids) + 
@@ -192,6 +218,20 @@ if(runmodels) {
   )
 }
 
+runmodeWithPartialPooledBeta <- FALSE
+if(runmodeWithPartialPooledBeta) {
+  fit <- stan_lmer(
+    ringwidth ~ 1 + gddcons + 
+      (1 | ids) +
+      (1 | spp) +
+      (1|spp/ids),  #(1 | spp) means that I am partial pooling for the spp interecept
+    # to confirm: to partial pool on both the intercept AND the slope : (1 + gddcons|spp)
+    data = simcoef,
+    chains = 4,
+    iter = 4000,
+    core=4
+  )
+}
 
 print(fit, digits=3)
 
