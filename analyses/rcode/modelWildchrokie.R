@@ -60,23 +60,21 @@ sigma_b_spp <- 0.6 / 2.57
 
 a_spp_values <- rnorm(n_spp, 0, sigma_a_spp1)
 
-
 # next step: get a single sigma_a_spp_values per species 
 sigma_spp_values <- abs(rnorm(n_spp, 0, sigma_a_spp2))
 
+# get nested ids into spp
 a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_num], sigma_spp_values[tree_spp_num])
 
-
-
-b_ids_values <- rnorm(n_ids, 0, sigma_b_ids)
-b_spp_values <- rnorm(n_spp, 0, sigma_b_spp)
+# b_ids_values <- rnorm(n_ids, 0, sigma_b_ids)
+# b_spp_values <- rnorm(n_spp, 0, sigma_b_spp)
 
 # match to observations
-a_ids <- rep(a_ids_values, each = rep)  # repeat each a_ids 3 times
+a_ids <- rep(a_ids_spp_values, each = rep)  # repeat each a_ids 3 times
 a_spp <- rep(a_spp_values, each = n_perspp * rep)  # repeat each a_spp 75 times
 
-b_ids <- rep(b_ids_values, each = rep)
-b_spp <- rep(b_spp_values, each = n_perspp * rep)
+# b_ids <- rep(b_ids_values, each = rep)
+# b_spp <- rep(b_spp_values, each = n_perspp * rep)
 
 # === === === === === === #
 # gdd and devide by constant
@@ -87,7 +85,7 @@ gddcons <- gdd / 200
 error <- rnorm(N, 0, sigma_y)
 
 # calculate ring width
-ringwidth <- a + a_ids + a_spp + (b) * gddcons + error
+ringwidth <- a + a_ids + a_spp + b * gddcons + error
 ringwidthnooverall_a <- a_ids + a_spp + (b) * gddcons + error # temporary
 
 # set df
@@ -189,9 +187,9 @@ ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, widt
 # === === === === === === === === #
 ##### Run model #####
 # === === === === === === === === #
-runmodels <- TRUE # this is only for the intercepts, so I need to re-create old df
-if(runmodels) {
-  
+###### Model non nested ######
+runmodelnonested <- TRUE # this is only for the intercepts, so I need to re-create old df
+if(runmodelnonested) {
   # set df
   simcoef <- data.frame(
     ids = ids,
@@ -205,11 +203,11 @@ if(runmodels) {
     ringwidth = ringwidth
   )
   
-  fit <- stan_lmer(
+  fitnonested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
-      # (1 | ids) + 
-      # (1 | spp) + 
-      (1|spp/ids),  #(1 | spp) means that I am partial pooling for the spp interecept
+      (1 | ids) +
+      (1 | spp),
+      # (1|spp/ids),  #(1 | spp) means that I am partial pooling for the spp interecept
     # to confirm: to partial pool on both the intercept AND the slope : (1 + gddcons|spp)
     data = simcoef,
     chains = 4,
@@ -218,6 +216,20 @@ if(runmodels) {
   )
 }
 
+###### Model nested on the intercept #######
+runmodelnested_a <- FALSE # this is only for the intercepts, so I need to re-create old df
+if(runmodelnested_a) {
+  fitnested <- stan_lmer(
+    ringwidth ~ 1 + gddcons + 
+      (1|spp/ids), # this estimates a spp level intercept AND ids nested within spp
+    data = simcoef,
+    chains = 4,
+    iter = 4000,
+    core=4
+  )
+}
+
+###### Model partial pooled on b ######
 runmodeWithPartialPooledBeta <- FALSE
 if(runmodeWithPartialPooledBeta) {
   fit <- stan_lmer(
@@ -243,19 +255,21 @@ print(fit, digits=3)
 # === === === === === === #
 ##### Parameter recoverty #####
 # === === === === === === #
-fitef <- ranef(fit)
+if(runmodelnonested) {
+  fitnonested_ranef <- ranef(fitnonested)
+
 # === === === === === === #
 ###### Recover a_ids ######
 # === === === === === === #
 # Access the 'ids' data frame
-ids_df <- fitef$ids
+ids_df <- fitnonested_ranef$ids
 
 # Now extract the tree IDs and intercepts
 a_idswithranef <- data.frame(
   ids = rownames(ids_df),
   fit_a_ids = ids_df[["(Intercept)"]]
 )
-messyinter <- as.data.frame(posterior_interval(fit))
+messyinter <- as.data.frame(posterior_interval(fitnonested))
 messyinter$messyids <- rownames(messyinter)
 a_ids_messyinter <- subset(messyinter, grepl("ids", messyids))
 a_ids_messyinter$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids_messyinter$messyids)
@@ -282,7 +296,7 @@ ggsave("figures/a_ids_mergedwithranef.jpeg", plot_a_ids_mergedwithranef, width =
 # === === === === === === #
 ###### Recover a_spp ######
 # === === === === === === #
-spp_df <- fitef$spp
+spp_df <- fitnonested_ranef$spp
 
 # Now extract the tree IDs and intercepts
 a_sppwithranef <- data.frame(
@@ -324,8 +338,8 @@ ggsave("figures/a_spp_mergedwithranef.jpeg", plot_a_spp_mergedwithranef, width =
 #### Add model intercept to sim data ####
 # === === === === === === === === === === #
 simcoef$asppfull <- simcoef$a + simcoef$a_spp
-# add fit data for that one
-a_spp_mergedwithranef$asppfull_fit <- a_spp_mergedwithranef$fit_a_spp+fixef(fit)[1]
+# add fitnonested data for that one
+a_spp_mergedwithranef$asppfull_fit <- a_spp_mergedwithranef$fit_a_spp+fixef(fitnonested)[1]
 # merge with simcoef
 intercept_fit_sim <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "asppfull_fit")], by = "spp")
 
@@ -345,7 +359,7 @@ ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
   ) +
   # Blue line with custom label
   geom_abline(
-    aes(intercept = asppfull_fit, slope = 0.4, color = "fit a + a_spp"),
+    aes(intercept = asppfull_fit, slope = 0.4, color = "fitnonested a + a_spp"),
     data = subtoplot2,
     linetype = "solid", alpha = 0.5
   ) +
@@ -354,7 +368,7 @@ ringXgddcons2 <- ggplot(subtoplot2, aes(gddcons, ringwidth)) +
     values = c(
       "sim data" = "black",
       "sim a + a_spp" = "red",
-      "fit a + a_spp" = "blue"
+      "fitnonested a + a_spp" = "blue"
     )
   ) +
   facet_wrap(~ spp) +
@@ -375,7 +389,7 @@ ringXgddcons3 <- ggplot(intercept_fit_sim2, aes(gddcons, ringwidthnooverall_a)) 
     linetype = "solid", alpha = 0.5
   ) +
   geom_abline(
-    aes(intercept = fit_a_spp, slope = 0.4, color = "fit a + a_spp"),
+    aes(intercept = fit_a_spp, slope = 0.4, color = "fitnonested a + a_spp"),
     data = intercept_fit_sim2,
     linetype = "solid", alpha = 0.5
   ) +
@@ -384,7 +398,7 @@ ringXgddcons3 <- ggplot(intercept_fit_sim2, aes(gddcons, ringwidthnooverall_a)) 
     values = c(
       "sim data" = "black",
       "sim a + a_spp" = "red",
-      "fit a + a_spp" = "blue"
+      "fitnonested a + a_spp" = "blue"
     )
   ) +
   facet_wrap(~ spp) +
@@ -394,9 +408,106 @@ ringXgddcons3
 ggsave("figures/ringXgddcons_simANDfit3.jpeg", ringXgddcons3, width = 12, height = 8)
 # I can visually see that 15 fit are > sim
 # vs 11 sim > fit
-
 # trying to understand why my model underestimates my overall interecept
-launch shinystan(fit)
+}
+
+if(runmodelnested_a) {
+  # === === === === === === #
+  ###### Recover a_ids ######
+  # === === === === === === #
+  # Access the 'ids' data frame
+  fitnested_ranef <- ranef(fitnested)
+  ids_df <- fitnested_ranef$ids
+  
+  # Now extract the tree IDs and intercepts
+  a_idswithranef <- data.frame(
+    ids = rownames(ids_df),
+    fit_a_ids = ids_df[["(Intercept)"]]
+  )
+  # clean ids col
+  a_idswithranef$ids <- sub("([^:]+):.*", "\\1", a_idswithranef$ids)
+  
+  messyinter <- as.data.frame(posterior_interval(fitnonested))
+  messyinter$messyids <- rownames(messyinter)
+  a_ids_messyinter <- subset(messyinter, grepl("ids:spp", messyids))
+  a_ids_messyinter$ids <- sub(".*ids:([^]]+)]", "\\1", a_ids_messyinter$messyids)
+  # remove non necessary columns
+  a_ids_messyinter <- a_ids_messyinter[, c("ids", "5%", "95%")]
+  # renames 5% and 95%
+  colnames(a_ids_messyinter) <- c("ids", "per5", "per95")
+  # merge both df by ids
+  a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_messyinter, by = "ids")
+  # add simulation data and merge!
+  simcoeftoplot2 <- simcoef[, c("ids", "a_ids")]
+  colnames(simcoeftoplot2) <- c("ids", "sim_a_ids")
+  a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = "ids")
+  
+  # plot!
+  plot_a_ids_mergedwithranef_nested_a<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y = fit_a_ids)) +
+    geom_point(color = "blue", size = 2) +
+    geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.1) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+    labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
+    theme_minimal()
+  plot_a_ids_mergedwithranef_nested_a
+  ggsave("figures/a_ids_mergedwithranef_nested_a.jpeg", plot_a_ids_mergedwithranef_nested_a, width = 8, height = 6)
+  
+  # === === === === === === #
+  ###### Recover a_spp ######
+  # === === === === === === #
+  spp_df <- fitnested_ranef$spp
+  
+  # Now extract the tree IDs and intercepts
+  a_sppwithranef <- data.frame(
+    spp = rownames(spp_df),
+    fit_a_spp = spp_df[["(Intercept)"]]
+  )
+  # recover only conf intervals spp from previously created df
+  a_spp_messyinter <- subset(messyinter, grepl("spp:", messyids))
+  a_spp_messyinter$spp <- sub(".*spp:(spp[0-9]+)]", "\\1", a_spp_messyinter$messyids)
+  
+  # remove unecessary columns
+  a_spp_messyinter <- a_spp_messyinter[, c("spp", "5%", "95%")]
+  
+  # change 5 and 95% names
+  colnames(a_spp_messyinter) <- c("spp", "per5", "per95")
+  
+  # merge!
+  a_spp_mergedwithranef <- merge(a_sppwithranef, a_spp_messyinter, by = "spp")
+  
+  # get sim data ready to merge
+  simcoeftoplot <- simcoef[, c("spp", "a_spp")]
+  colnames(simcoeftoplot) <- c("spp", "sim_a_spp")
+  simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
+  
+  # now merge
+  a_spp_mergedwithranef2 <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
+  
+  # plot!
+  plot_a_spp_mergedwithranef_nested_a <- ggplot(a_spp_mergedwithranef2, aes(x = sim_a_spp, y = fit_a_spp)) +
+    geom_point(color = "blue", size = 2) +
+    geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
+    labs(x = "Simulated a_spp", y = "Model a_spp", title = "") +
+    theme_minimal()
+  plot_a_spp_mergedwithranef_nested_a
+  ggsave("figures/plot_a_spp_mergedwithranef_nested_a.jpeg", plot_a_spp_mergedwithranef_nested_a, width = 8, height = 6)
+  
+   # === === === === === === === === === === #
+  #### Add model intercept to sim data ####
+  # === === === === === === === === === === #
+  simcoef$asppfull <- simcoef$a + simcoef$a_spp
+  # add fitnonested data for that one
+  a_spp_mergedwithranef$asppfull_fit <- a_spp_mergedwithranef$fit_a_spp+fixef(fitnonested)[1]
+  # merge with simcoef
+  intercept_fit_sim <- merge(simcoef, a_spp_mergedwithranef[, c("spp", "asppfull_fit")], by = "spp")
+  
+  # select 15 spp randomly out of the spp column
+  spp_to_plot <- sample(unique(intercept_fit_sim$spp), 50)
+  subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
+  
+
+
 
 
 # === === === === === === === === === === === === === === === === 
