@@ -8,7 +8,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
-graphics.off()
+quartz()
 
 # Load library 
 library(rstanarm)
@@ -16,6 +16,7 @@ library(ggplot2)
 library(arm)
 library(RColorBrewer)
 library(shinystan)
+library(rethinking)
 
 runmodels <- FALSE
 runoldcode <- FALSE
@@ -44,10 +45,11 @@ N <- n_ids * rep
 
 # set spp names and ids 
 spp <- paste0(rep("spp", each = n_spp), 1:n_spp)
-tree_ids <- paste0(rep(spp, each = n_perspp), "_", 1:n_perspp)  # 100 unique tree IDs
-ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times
+tree_ids <- paste0(rep(spp, each = n_perspp), "_", 1:n_perspp)  # 500 unique tree IDs
+ids <- rep(tree_ids, each = rep)  # repeat each tree ID 3 times for 3 observations
 tree_spp <- rep(rep(spp, each = n_perspp), each = rep)  # matching species for each ID
-tree_spp_num <-rep(1:n_spp, each = 10)
+tree_spp_num <-rep(1:n_spp, each = n_perspp*rep)
+ids_num <-rep(rep(1:n_perspp, each = rep), each = n_spp)
 
 # === === === === #
 # partial pooling
@@ -58,13 +60,100 @@ sigma_a_spp2 <- 0.9/2.57
 sigma_b_ids <- 0.2 / 2.57
 sigma_b_spp <- 0.6 / 2.57
 
+# get 50 intercept values for each species
 a_spp_values <- rnorm(n_spp, 0, sigma_a_spp1)
+# ------------------------------------------------------------------------------
+# Plot spp intecept values 
+x_vals <- seq(-1.5, 1.5, length.out = 1000)
+y_vals <- dnorm(x_vals, mean = 0, sd = 0.35)
+df <- data.frame(x = x_vals, y = y_vals)
+
+plot(x_vals, y_vals, type = "l", lwd = 2, col = "black",
+     xlab = "Value", ylab = "Density",
+     main = "a_spp_values")
+abline(v = a_spp_values, col = "red", lwd = 1)
+# ------------------------------------------------------------------------------
 
 # next step: get a single sigma_a_spp_values per species 
 sigma_spp_values <- abs(rnorm(n_spp, 0, sigma_a_spp2))
+# ------------------------------------------------------------------------------
+# Plot sigma values for each species
+plot(x_vals, y_vals, type = "l", lwd = 2, col = "black",
+     xlab = "Value", ylab = "Density",
+     main = "a_spp_values")
+dens(sigma_spp_values)
+abline(v = sigma_spp_values, col = "red", lwd = 1)
+# ------------------------------------------------------------------------------
 
-# get nested ids into spp
+# get nested ids into spp with sigma varying across species
 a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_num], sigma_spp_values[tree_spp_num])
+
+# ------------------------------------------------------------------------------
+# open jpeg device
+jpeg(filename = "figures/a_ids_spp_values_sigbyspp.jpg", width = 8, height = 6, units = "in", res = 300)
+plot(x_vals, y_vals, type = "l", lwd = 2, col = "black",
+     xlab = "Value", ylab = "Density",
+     main = "a_spp_values with sigma unique per spp")
+abline(v = a_ids_spp_values, col = "red", lwd = 0.2)
+abline(v = a_spp_values, col = "blue", lwd = 1)
+dev.off()
+
+
+simcoefvisal <- expand.grid(
+  ids = unique(ids_num),
+  spp = unique(tree_spp_num)
+)
+
+# attach your 500 values
+simcoefvisal$a_ids_spp_values <- a_ids_spp_values
+simcoefvisal$a_spp_values <- a_spp_values[simcoefvisal$spp]
+
+simcoefvisal$spp <- as.factor(simcoefvisal$spp)
+
+nestedbyspp_sigmaperspp <- ggplot(simcoefvisal) +
+  geom_vline(aes(xintercept = a_ids_spp_values), 
+             color = "red", alpha = 0.3) +
+  geom_vline(aes(xintercept = a_spp_values), 
+             color = "blue", alpha = 0.8) +
+  facet_wrap(~spp) +
+  theme_minimal()
+ggsave("figures/nestedbyspp_sigmaperspp.jpeg", nestedbyspp_sigmaperspp, width = 8, height = 6)
+
+# GeomLinerange# ------------------------------------------------------------------------------
+
+# try with only one sigma
+a_ids_spp_values2 <- rnorm(n_ids, a_spp_values[tree_spp_num], sigma_a_spp1)
+
+# ------------------------------------------------------------------------------
+jpeg(filename = "figures/a_ids_spp_values_uniquesig.jpg", width = 8, height = 6, units = "in", res = 300)
+plot(x_vals, y_vals, type = "l", lwd = 2, col = "black",
+     xlab = "Value", ylab = "Density",
+     main = "a_spp_values with a unique sigma value")
+abline(v = a_ids_spp_values2, col = "red", lwd = 0.2)
+abline(v = a_spp_values, col = "blue", lwd = 1)
+dev.off()
+
+simcoefvisal2 <- expand.grid(
+  ids = unique(ids_num),
+  spp = unique(tree_spp_num)
+)
+
+# attach your 500 values
+simcoefvisal2$a_ids_spp_values <- a_ids_spp_values2
+simcoefvisal2$a_spp_values <- a_spp_values[simcoefvisal2$spp]
+
+simcoefvisal2$spp <- as.factor(simcoefvisal2$spp)
+
+nestedbyspp_uniquesigma <- ggplot(simcoefvisal2) +
+  geom_vline(aes(xintercept = a_ids_spp_values2), 
+             color = "red", alpha = 0.3) +
+  geom_vline(aes(xintercept = a_spp_values), 
+             color = "blue", alpha = 0.8) +
+  facet_wrap(~spp) +
+  theme_minimal()
+# save!
+ggsave("figures/nestedbyspp_uniquesigma.jpeg", nestedbyspp_uniquesigma, width = 8, height = 6)
+# ------------------------------------------------------------------------------
 
 # b_ids_values <- rnorm(n_ids, 0, sigma_b_ids)
 # b_spp_values <- rnorm(n_spp, 0, sigma_b_spp)
@@ -118,11 +207,17 @@ simcoef$asppfull <- simcoef$a + simcoef$a_spp
 spp_to_plot <- sample(unique(simcoef$spp), 16)
 subtoplot <- subset(simcoef, spp %in% spp_to_plot)
 
+# try to plot the values exclusively of a_ids_spp
+ggplot(simcoef)+
+  geom_point(aes(x=gddcons, y=a_ids, color = spp)) +
+  facet_wrap(~spp)
+
+
 # ring width X gdd cons by spp with intercept
 ringXgddcons <- ggplot(subtoplot, aes(gddcons, ringwidth)) +
   geom_point(aes(color = "sim data")) +
   geom_abline(
-    aes(intercept = asppfull, slope = 0.4, color = "sim a + a_spp"),
+    aes(intercept = intercepttemp, slope = 0.4, color = "sim a + a_spp"),
     data = subtoplot,
     linetype = "solid", alpha = 0.5
   ) +

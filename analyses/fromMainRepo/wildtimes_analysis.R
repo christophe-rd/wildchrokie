@@ -7,12 +7,13 @@ options(stringsAsFactors=FALSE)
 graphics.off()
 
 # wd
-setwd("/Users/christophe_rouleau-desrochers/github/wildhellgarden/analyses/")
-
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+list.files()
 # libraries
 library(dplyr)
 library(tidyr)
-
+library(ggdist)
+library(brms)
 # read csv
 gdddata <- read.csv("output/gddData.csv")
 cg <- read.csv("output/obsData.csv")
@@ -87,7 +88,7 @@ cg <- merge(cg, cg2_subset, by = c("name", "year"), all.x = TRUE)
 cg 
 
 # === === === === === === === === === === === === === === === ===
-runmodels <- FALSE
+runmodels <- TRUE
 # === === === === === === === === === === === === === === === ===
 
 if(runmodels){
