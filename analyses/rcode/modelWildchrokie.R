@@ -51,46 +51,58 @@ tree_spp_nonrep <- rep(rep(1:n_spp, each = n_perspp)) # 500 obs
 
 # === === === === #
 # partial pooling
-# sigma_a_ids <- 0.8 / 2.57
-sigma_a_spp <- 1 / 2.57
-
-sigma_b_ids <- 0.2 / 2.57
-sigma_b_spp <- 0.6 / 2.57
+sigma_a_spp <- 0.3
+sigma_a_ids <- 0.2
 
 # get 50 intercept values for each species
 a_spp_values <- rnorm(n_spp, 0, sigma_a_spp)
 
-# get nested ids into spp with sigma NOT varying across species
-a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_nonrep], sigma_a_spp)
+# combine species-level mean + id deviation at the non-repeated id level
+a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_nonrep], sigma_a_ids)
+a_ids_spp_values <- a_ids_spp_values[tree_spp_nonrep] - a_spp_values[tree_spp_nonrep]
 
-# match intercepts to observations
-a_ids <- a_ids_spp_values[ids]
-# match a_ids_spp_values to ids and spp
-a_spp <- a_spp_values[tree_spp] 
+a_ids_obs <- rep(a_ids_spp_values, each = n_meas)
 
-# === === === === === === #
 # gdd and devide by constant
 gdd <- round(rnorm(N, 1800, 100))
 gddcons <- gdd / 200
+# centering (optional)
+# gddcons <- gddcons - mean(gddcons)
 
 # error
 error <- rnorm(N, 0, sigma_y)
 
-# calculate ring width
-ringwidth <- a + a_ids + a_spp + b * gddcons + error
-
-# set df
-simcoef <- data.frame(
-  spp = tree_spp,
-  ids = ids,
-  gddcons = gddcons,
-  b = b,
-  a = a,
-  # a_ids = a_ids,
-  a_spp = a_spp,
-  sigma_y = sigma_y,
-  ringwidth = ringwidth
+# match a_ids to ids and spp (keeps your merge structure)
+df1 <- data.frame(
+  ids_nonrep  = rep(1:n_perspp, times = n_spp),
+  spp = tree_spp_nonrep,
+  a_spp = a_spp_values[tree_spp_nonrep],
+  a_ids_spp_values = a_ids_spp_values
 )
+
+df2 <- data.frame(
+  ids = ids,
+  spp = tree_spp
+)
+
+simcoef <- merge(df2, df1, by.x = c("ids", "spp"), by.y = c("ids_nonrep", "spp"), all.x = TRUE)
+simcoef <- simcoef[order(simcoef$spp, simcoef$ids), ]
+
+simcoef$a <- a
+simcoef$b <- b
+simcoef$gddcons <- gddcons
+simcoef$sigma_y <- sigma_y
+
+# calculate ring width
+simcoef$ringwidth <- simcoef$a + 
+  simcoef$a_ids_spp_values + 
+  (simcoef$b * simcoef$gddcons) + 
+  error
+
+# prepare grouping factors for stan_lmer (ensure ids are unique within spp)
+simcoef$spp <- factor(simcoef$spp)
+simcoef$ids <- factor(paste0(simcoef$spp, "_", as.character(simcoef$ids)))
+
 
 # loop through cols and round to 3 decimal points
 for (i in 3:ncol(simcoef)) {
@@ -130,8 +142,8 @@ if(runmodelnonested) {
 }
 
 ###### Model nested on the intercept #######
-runmodelnested_a <- TRUE
-if(runmodelnested_a) {
+fitnested <- TRUE
+if(fitnested) {
   fitnested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
       (1|spp/ids), # this estimates a spp level intercept AND ids nested within spp
@@ -165,12 +177,13 @@ print(fit, digits=3)
 # coef: medians are used for point estimates. the sum of the random and fixed effects coefficients for each explanatory variable for each level of each grouping factor.
 # se:  The se function returns standard errors based on mad. See the Uncertainty estimates section in print.stanmvreg for more details.
 # Uncertainty estimates (MAD_SD): The standard deviations reported (labeled MAD_SD in the print output) are computed from the same set of draws described above and are proportional to the median absolute deviation (mad) from the median. Compared to the raw posterior standard deviation, the MAD_SD will be more robust for long-tailed distributions. These are the same as the values returned by se.
+# random efects (ranef): ceofficients that vary by group (see gelman and hill p.259)
 
 # === === === === === === #
-##### Parameter recoverty #####
+##### Parameter recovery #####
 # === === === === === === #
 
-if(runmodelnested_a) {
+if(fitnested) {
   # === === === === === === #
   ###### Recover a_ids ######
   # === === === === === === #
@@ -190,22 +203,24 @@ if(runmodelnested_a) {
   messyinter <- as.data.frame(posterior_interval(fitnested))
   messyinter$messyids <- rownames(messyinter)
   a_ids_spp_messyinter <- subset(messyinter, grepl("ids:spp", messyids))
-  a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
-  a_ids_spp_messyinter$spp <- sub(".*ids:spp:[0-9]+:([0-9]+)]", "\\1", a_ids_spp_messyinter$messyids)
+  # extract the "1_1" part
+  a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+_[0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
+  a_ids_spp_messyinter$spp <- sub(".*ids:spp:([0-9]+)_.*", "\\1", a_ids_spp_messyinter$messyids)
 
   # remove non necessary columns
-  a_ids_spp_messyinter <- a_ids_spp_messyinter[, c("ids", "spp", "5%", "95%")]
+  a_ids_spp_messyinter <- a_ids_spp_messyinter[, c("ids", "5%", "95%")]
   # renames 5% and 95%
-  colnames(a_ids_spp_messyinter) <- c("ids", "spp", "per5", "per95")
+  colnames(a_ids_spp_messyinter) <- c("ids", "per5", "per95")
   # merge both df by ids
-  a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_spp_messyinter, by = c("ids", "spp"))
+  a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_spp_messyinter, by = c("ids"))
   # add simulation data and merge!
-  simcoeftoplot2 <- simcoef[, c("ids", "spp", "a_ids")]
-  colnames(simcoeftoplot2) <- c("ids", "spp", "sim_a_ids_spp")
-  a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = c("ids", "spp"))
+  simcoeftoplot2 <- simcoef[, c("ids", "a_ids_spp_values")]
+  colnames(simcoeftoplot2) <- c("ids", "sim_a_ids_spp")
+  a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = c("ids"))
   
   # plot!
-  plot_a_ids_mergedwithranef_nested_a<- ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids, y = fit_a_ids)) +
+  plot_a_ids_mergedwithranef_nested_a <- ggplot(a_ids_mergedwithranef, 
+                                                aes(x = sim_a_ids_spp, y = fit_a_ids_spp)) +
     geom_point(color = "blue", size = 2) +
     geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.1) +
     geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
@@ -225,9 +240,9 @@ if(runmodelnested_a) {
     fit_a_spp = spp_df[["(Intercept)"]]
   )
   # recover only conf intervals spp from previously created df
-  a_spp_messyinter <- subset(messyinter, grepl("spp:", messyids))
-  a_spp_messyinter$spp <- sub(".*spp:(spp[0-9]+)]", "\\1", a_spp_messyinter$messyids)
-  
+  a_spp_messyinter <- subset(messyinter, grepl("Intercept) spp:", messyids))
+  a_spp_messyinter$spp <- sub(".*spp:([0-9]+)]", "\\1", a_spp_messyinter$messyids)
+
   # remove unecessary columns
   a_spp_messyinter <- a_spp_messyinter[, c("spp", "5%", "95%")]
   
@@ -268,7 +283,7 @@ if(runmodelnested_a) {
   spp_to_plot <- sample(unique(intercept_fit_sim$spp), 50)
   subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
   
-
+}
 
 
 
