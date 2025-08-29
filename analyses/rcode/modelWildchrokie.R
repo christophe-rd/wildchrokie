@@ -105,7 +105,7 @@ simcoef$ringwidth <- simcoef$a +
 
 # prepare grouping factors for stan_lmer (ensure ids are unique within spp)
 simcoef$spp <- factor(simcoef$spp)
-simcoef$ids <- factor(paste0(simcoef$spp, "_", as.character(simcoef$ids)))
+# simcoef$ids <- factor(paste0(simcoef$spp, "_", as.character(simcoef$ids)))
 
 
 # loop through cols and round to 3 decimal points
@@ -162,7 +162,8 @@ fitnested
 ###### Model nested NO GDD ######
 fitnestednnogdd <- TRUE
 if(fitnestednnogdd) {
-  simcoef$ringwidth <- simcoef$a + 
+  simcoef$ringwidth <- simcoef$a +
+    simcoef$a_spp +
     simcoef$a_ids_spp_values + 
     simcoef$error
   fitnestednnogdd <- stan_lmer(
@@ -479,13 +480,10 @@ a_ids_mergedwithranef <- merge(a_idswithranef, simcoef, by = c("ids", "spp"))
 
 a_ids_mergedwithranef$spp <- as.numeric(as.character(a_ids_mergedwithranef$spp))
 
-a_ids_mergedwithranef$meanringwidth <- ave(a_ids_mergedwithranef$ringwidth, 
-                                           a_ids_mergedwithranef$ids, a_ids_mergedwithranef$spp, 
-                                           FUN = function(x) mean(x, na.rm = TRUE))
+subforplot <- subset(simcoef, spp %in% 
+                       sample(unique(simcoef$spp), 11) )
 
-subforplot <- subset(a_ids_mergedwithranef, spp %in% 
-                       sample(unique(a_ids_mergedwithranef$spp), 11) )
-subforplot$testintercept <- subforplot$a+subforplot$a_spp
+subforplot$testintercept <- subforplot$a+subforplot$a_spp+subforplot$a_ids_spp_values
 histgridsim <- ggplot(subforplot, aes(x = ringwidth, fill = factor(spp))) +
   geom_histogram(bins = 30) +
   geom_vline(aes(xintercept = testintercept), linetype = "solid", size = 0.5)+ 
