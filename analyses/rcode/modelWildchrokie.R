@@ -17,11 +17,13 @@ library(arm)
 library(RColorBrewer)
 library(shinystan)
 library(rethinking)
+library("wesanderson")
 
 runmodels <- FALSE
 runoldcode <- FALSE
 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
+
 
 # === === === === === === === === === === === === === === === === 
 #### Step 1. Come up with a model ####
@@ -35,12 +37,12 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.3
+sigma_y <- 0.2
 
 n_perspp <- 10
 n_spp <- 50
 n_ids <- n_perspp * n_spp
-n_meas <- 3
+n_meas <- 15
 N <- n_ids * n_meas
 
 # set spp names and ids 
@@ -52,7 +54,7 @@ tree_spp_nonrep <- rep(rep(1:n_spp, each = n_perspp)) # 500 obs
 # === === === === #
 # partial pooling
 sigma_a_spp <- 0.3
-sigma_a_ids <- 0.2
+sigma_a_ids <- 0.15
 
 # get 50 intercept values for each species
 a_spp_values <- rnorm(n_spp, 0, sigma_a_spp)
@@ -92,11 +94,12 @@ simcoef$a <- a
 simcoef$b <- b
 simcoef$gddcons <- gddcons
 simcoef$sigma_y <- sigma_y
+simcoef$error <- error
 
 # calculate ring width
 simcoef$ringwidth <- simcoef$a + 
   simcoef$a_ids_spp_values + 
-  simcoef$a_spp + 
+  # simcoef$a_spp + 
   (simcoef$b * simcoef$gddcons) + 
   error
 
@@ -143,7 +146,7 @@ if(runmodelnonested) {
 }
 
 ###### Model nested on the intercept #######
-fitnested <- TRUE
+fitnested <- FALSE
 if(fitnested) {
   fitnested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
@@ -155,6 +158,22 @@ if(fitnested) {
   )
 }
 fitnested
+
+###### Model nested NO GDD ######
+fitnestednnogdd <- TRUE
+if(fitnestednnogdd) {
+  simcoef$ringwidth <- simcoef$a + 
+    simcoef$a_ids_spp_values + 
+    simcoef$error
+  fitnestednnogdd <- stan_lmer(
+    ringwidth ~ 1 + (1|spp/ids), 
+    data = simcoef,
+    chains = 4,
+    iter = 4000,
+    core=4
+  )
+}
+fitnestednnogdd
 
 ###### Model partial pooled on b ######
 runmodeWithPartialPooledBeta <- FALSE
@@ -184,6 +203,7 @@ print(fit, digits=3)
 # === === === === === === #
 ##### Parameter recovery #####
 # === === === === === === #
+
 # === === === === === === #
 ###### Recover a_ids ######
 # === === === === === === #
@@ -203,6 +223,7 @@ a_idswithranef$spp <- sub(".*:(.*)", "\\1", a_idswithranef$ids_spp)
 messyinter <- as.data.frame(posterior_interval(fitnested))
 messyinter$messyids <- rownames(messyinter)
 a_ids_spp_messyinter <- subset(messyinter, grepl("ids:spp", messyids))
+
 # extract the "1_1" part
 a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+_[0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
 a_ids_spp_messyinter$spp <- sub(".*ids:spp:([0-9]+)_.*", "\\1", a_ids_spp_messyinter$messyids)
@@ -427,6 +448,62 @@ diff_intercept_comparison <- ggplot(simcoef, aes(x = spp)) +
   )
 diff_intercept_comparison 
 ggsave("figures/diff_intercept_comparison.jpeg", diff_intercept_comparison, width = 10, height = 6)
+
+##### Plot sim data --hist facet spp ~ ids #####
+# Now extract the tree IDs and intercepts
+fitnested_ranef <- ranef(fitnestednnogdd)
+
+ids_df <- fitnested_ranef$ids
+
+a_idswithranef <- data.frame(
+  ids = rownames(ids_df),
+  fit_a_ids = ids_df[["(Intercept)"]]
+)
+
+# overall intercept 
+a_idswithranef$fit_a <- fitnestednnogdd$coefficients["(Intercept)"]
+
+# clean ids col
+a_idswithranef$spp <- sub(".*:([0-9]+).*", "\\1", a_idswithranef$ids)
+a_idswithranef$ids <- sub("^([0-9]+):.*", "\\1", a_idswithranef$ids)
+
+
+# use both unique ids
+# simcoef$ids_spp <- paste(simcoef$ids, simcoef$spp, sep="_")
+# a_idswithranef$ids_spp <- paste(a_idswithranef$ids, a_idswithranef$spp, sep="_")
+
+# sum both intercepts 
+# simcoef$row <- rownames(simcoef)
+a_idswithranef$fit_ringwidth <- a_idswithranef$fit_a + a_idswithranef$fit_a_ids
+a_ids_mergedwithranef <- merge(a_idswithranef, simcoef, by = c("ids", "spp"))
+
+a_ids_mergedwithranef$spp <- as.numeric(as.character(a_ids_mergedwithranef$spp))
+
+a_ids_mergedwithranef$meanringwidth <- ave(a_ids_mergedwithranef$ringwidth, 
+                                           a_ids_mergedwithranef$ids, a_ids_mergedwithranef$spp, 
+                                           FUN = function(x) mean(x, na.rm = TRUE))
+
+subforplot <- subset(a_ids_mergedwithranef, spp %in% 
+                       sample(unique(a_ids_mergedwithranef$spp), 11) )
+subforplot$testintercept <- subforplot$a+subforplot$a_spp
+histgridsim <- ggplot(subforplot, aes(x = ringwidth, fill = factor(spp))) +
+  geom_histogram(bins = 30) +
+  geom_vline(aes(xintercept = testintercept), linetype = "solid", size = 0.5)+ 
+  facet_grid(ids ~ spp) +
+  scale_fill_manual(values = wes_palettes$Zissou1Continuous) +
+  theme_minimal()
+histgridsim
+ggsave("figures/histgridsim.jpeg", histgridsim, width = 14, height = 7, dpi=300)
+
+histgridsimfit <- ggplot(subforplot, aes(x = ringwidth, fill = factor(spp))) +
+  geom_histogram(bins = 30) +
+  geom_vline(aes(xintercept = testintercept), linetype = "solid", size = 0.5)+ 
+  geom_vline(aes(xintercept = fit_ringwidth), linetype = "dashed", size = 0.5)+ 
+  facet_grid(ids ~ spp) +
+  scale_fill_manual(values = wes_palettes$Zissou1Continuous) +
+  theme_minimal()
+histgridsimfit
+ ggsave("figures/histgridsimfit.jpeg", histgridsimfit, width = 14, height = 7)
 
 # OLD CODE ####
 # Non nested model #####
