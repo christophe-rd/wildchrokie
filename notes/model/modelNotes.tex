@@ -32,13 +32,30 @@ We discussed which of the following would be the most relevant variable that rel
 	\end{enumerate}
 \end{enumerate}
 
-\par
-\textbf{Preliminary model} \\ 
-\begin{align}	
-	\log (w_{i,t}) \sim \text{normal}(\text{X}, \sigma) \\
-	\alpha + \alpha_{sp[i]} + \beta_{sp[i]} X_{i,t} + \cdots
-\end{align} 
-What kind of pooling? Partial pooling since they are all within the same family?\\
+\[
+\begin{aligned}
+&\textbf{Likelihood:} \\
+y_{ijk} &\sim \mathcal{N}(\mu_{ijk}, \sigma_y^2), \\
+\mu_{ijk} &= \alpha + \alpha_{\text{spp}, j} + \alpha_{\text{ids}, i(j)} + \beta \cdot gdd_{ijk}, \\[1em]
+&\textbf{Simulated coefficients:} \\
+\alpha & = 1.5, \\
+\alpha_{\text{spp}, j} &\sim \mathcal{N}(0, \sigma_{\text{spp}}), \quad j = 1, \dots, n_{\text{spp}}, \\
+\alpha_{\text{ids}, i(j)} &\sim \mathcal{N}(\alpha_{\text{spp}}, \sigma_{\text{ids}}), \quad i = 1, \dots, n_{\text{ids}}, \; j=1,\dots,n_{\text{spp}}, \\
+\beta & = 0.4, \\
+\sigma_{y} &= 0.2 \\
+\sigma_{\text{spp}} & = 0.3\\
+\sigma_{\text{ids}} & = 0.15 \\
+gdd_{ijk} & \sim \mathcal{N}(1800, 200) 
+\end{aligned}
+\]
+
+
+\textbf{Where:} \\ 
+$\alpha$: overall intercept \\ 
+$\alpha_{\text{spp}, j}$: each species intercept deviation from the overall intercept\\ 
+$\alpha_{\text{ids}, i(j)}$: each ids interecept deviation from the overall intercept, nested within each species\\
+$\beta$: overall slope
+$gdd$: growing degree days. Measured from budburst to budset (theoretical start and end of tree primary growth)
 
 
 \subsection*{Model update after simulating the data}
