@@ -306,7 +306,21 @@ spp_to_plot <- sample(unique(intercept_fit_sim$spp), 50)
 subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
 
 
+# === === === === === === === === === === #
+##### New way to recover parameters #####
+# === === === === === === === === === === #
+as.matrix(fit2)
+dffit <- as.data.frame(fit2)
+dim(dffit)
 
+# empty dataframe
+vec <- colnames(dffit)
+idsdataframe <- dffit[,which(grepl("ids:spp:", vec))]
+dim(test)
+
+vec2 <- colnames(idsdataframe)
+vec3 <- sub("([^:]+):.*", "\\1", vec2)
+a_idswithranef$spp <- sub(".*:(.*)", "\\1", a_idswithranef$ids_spp)
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
 # === === === === === === === === === === === === === === === === 
