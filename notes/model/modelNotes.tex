@@ -35,17 +35,17 @@ We discussed which of the following would be the most relevant variable that rel
 \[
 \begin{aligned}
 &\textbf{Likelihood:} \\
-y_{ijk} &\sim \mathcal{N}(\mu_{ijk}, \sigma_y^2), \\
-\mu_{ijk} &= \alpha + \alpha_{\text{spp}, j} + \alpha_{\text{ids}, i(j)} + \beta \cdot gdd_{ijk}, \\[1em]
+y_{i} &\sim \mathcal{N}(\mu_{i}, \sigma_y^2), \\
+\mu_{i} &= \alpha + \alpha_{\text{spp}} + \alpha_{\text{spp[ids]}} + \beta \cdot gdd \\[1em]
 &\textbf{Simulated coefficients:} \\
-\alpha & = 1.5, \\
-\alpha_{\text{spp}, j} &\sim \mathcal{N}(0, \sigma_{\text{spp}}), \quad j = 1, \dots, n_{\text{spp}}, \\
-\alpha_{\text{ids}, i(j)} &\sim \mathcal{N}(\alpha_{\text{spp}}, \sigma_{\text{ids}}), \quad i = 1, \dots, n_{\text{ids}}, \; j=1,\dots,n_{\text{spp}}, \\
+\alpha & = 1.5 \\
+\alpha_{\text{spp}} &\sim \mathcal{N}(0, \sigma_{\text{spp}}) \\
+\alpha_{\text{spp[ids]}} &\sim \mathcal{N}(\alpha_{\text{spp}}, \sigma_{\text{ids}}) \\
 \beta & = 0.4, \\
 \sigma_{y} &= 0.2 \\
 \sigma_{\text{spp}} & = 0.3\\
 \sigma_{\text{ids}} & = 0.15 \\
-gdd_{ijk} & \sim \mathcal{N}(1800, 200) 
+gdd & \sim \mathcal{N}(1800, 200) 
 \end{aligned}
 \]
 

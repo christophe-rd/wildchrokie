@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.27)  1 SEP 2025 13:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.27)  2 SEP 2025 14:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -795,7 +795,7 @@ Package rerunfilecheck Info: File `modelNotes.out' has not changed.
 Here is how much of TeX's memory you used:
  12853 strings out of 474116
  195707 string characters out of 5743681
- 1940187 words of memory out of 5000000
+ 1939187 words of memory out of 5000000
  35060 multiletter control sequences out of 15000+600000
  568137 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -810,7 +810,7 @@ al/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
 l/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/
 texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/t
 exlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on modelNotes.pdf (5 pages, 124162 bytes).
+Output written on modelNotes.pdf (5 pages, 123561 bytes).
 PDF statistics:
  119 PDF objects out of 1000 (max. 8388607)
  91 compressed objects within 1 object stream
