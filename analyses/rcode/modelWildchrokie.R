@@ -39,10 +39,10 @@ a <- 1.5
 b <- 0.4
 sigma_y <- 0.2
 
-n_perspp <- 10
-n_spp <- 50
+n_perspp <- 4
+n_spp <- 5
 n_ids <- n_perspp * n_spp
-n_meas <- 15
+n_meas <- 3
 N <- n_ids * n_meas
 
 # set spp names and ids 
@@ -146,7 +146,7 @@ if(runmodelnonested) {
 }
 
 ###### Model nested on the intercept #######
-fitnested <- FALSE
+fitnested <- TRUE
 if(fitnested) {
   fitnested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
@@ -160,7 +160,7 @@ if(fitnested) {
 fitnested
 
 ###### Model nested NO GDD ######
-fitnestednnogdd <- TRUE
+fitnestednnogdd <- FALSE
 if(fitnestednnogdd) {
   simcoef$ringwidth <- simcoef$a +
     simcoef$a_spp +
@@ -309,18 +309,38 @@ subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
 # === === === === === === === === === === #
 ##### New way to recover parameters #####
 # === === === === === === === === === === #
-as.matrix(fit2)
-dffit <- as.data.frame(fit2)
+as.matrix(fitnested)
+dffit <- as.data.frame(fitnested)
 dim(dffit)
 
 # empty dataframe
-vec <- colnames(dffit)
-idsdataframe <- dffit[,which(grepl("ids:spp:", vec))]
-dim(test)
+ids_cols <- colnames(dffit)[grepl("ids:spp:", colnames(dffit))]
+ids_cols <- ids_cols[1:length(ids_cols)-1]
 
-vec2 <- colnames(idsdataframe)
-vec3 <- sub("([^:]+):.*", "\\1", vec2)
-a_idswithranef$spp <- sub(".*:(.*)", "\\1", a_idswithranef$ids_spp)
+ids_df <- dffit[, colnames(dffit) %in% ids_cols]
+
+# change their names
+colnames(ids_df) <- sub(".*ids:spp:(.*)\\]$", "\\1", colnames(ids_df))
+
+# empty dataframe
+df <- data.frame(
+  ids = character(ncol(ids_df)),
+  mean = numeric(ncol(ids_df)),  
+  per5 = NA, 
+  per95 = NA,
+  sd = NA
+)
+
+for (i in 1:ncol(ids_df)) { # i = 1
+  df$ids[i] <- colnames(ids_df)[i]         
+  df$mean[i] <- mean(ids_df[[i]])  
+  df$per5[i] <- quantile(ids_df[[i]], probs = 0.05)
+  df$per95[i] <- quantile(ids_df[[i]], probs = 0.95)
+  df$sd[i] <- sd(ids_df[[i]])
+}
+df
+
+df$ids[i] <- colnames(ids_df)[i]
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
 # === === === === === === === === === === === === === === === === 
@@ -331,6 +351,7 @@ a_idswithranef$spp <- sub(".*:(.*)", "\\1", a_idswithranef$ids_spp)
 # read GDD data
 gdd <- read.csv("output/gddData.csv")
 gdd18 <- subset(gdd, year == "2018")
+
 # sum from DOY 100 to DOY 250
 test <- subset(gdd18, doy>100)
 test2 <- subset(test, doy<250)
