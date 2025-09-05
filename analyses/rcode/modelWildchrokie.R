@@ -226,15 +226,15 @@ messyinter$messyids <- rownames(messyinter)
 a_ids_spp_messyinter <- subset(messyinter, grepl("ids:spp", messyids))
 
 # extract the "1_1" part
-a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+_[0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
-a_ids_spp_messyinter$spp <- sub(".*ids:spp:([0-9]+)_.*", "\\1", a_ids_spp_messyinter$messyids)
+a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+:[0-9]+).*", "\\1", a_ids_spp_messyinter$messyids)
+a_ids_spp_messyinter$spp <- sub(".*ids:spp:([0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
 
 # remove non necessary columns
 a_ids_spp_messyinter <- a_ids_spp_messyinter[, c("ids", "5%", "95%")]
 # renames 5% and 95%
-colnames(a_ids_spp_messyinter) <- c("ids", "per5", "per95")
+colnames(a_ids_spp_messyinter) <- c("ids_spp", "per5", "per95")
 # merge both df by ids
-a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_spp_messyinter, by = c("ids"))
+a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_spp_messyinter, by = c("ids_spp"))
 # add simulation data and merge!
 simcoeftoplot2 <- simcoef[, c("ids", "a_ids_spp_values")]
 colnames(simcoeftoplot2) <- c("ids", "sim_a_ids_spp")
@@ -309,38 +309,57 @@ subtoplot2 <- subset(intercept_fit_sim, spp %in% spp_to_plot)
 # === === === === === === === === === === #
 ##### New way to recover parameters #####
 # === === === === === === === === === === #
-as.matrix(fitnested)
-dffit <- as.data.frame(fitnested)
-dim(dffit)
+df_fit <- as.data.frame(fitnested)
 
-# empty dataframe
-ids_cols <- colnames(dffit)[grepl("ids:spp:", colnames(dffit))]
+# recover slope
+colnames(df_fit)
+# grab ids nested in spp
+ids_cols <- colnames(df_fit)[grepl("ids:spp:", colnames(df_fit))]
 ids_cols <- ids_cols[1:length(ids_cols)-1]
-
-ids_df <- dffit[, colnames(dffit) %in% ids_cols]
-
+ids_df <- df_fit[, colnames(df_fit) %in% ids_cols]
 # change their names
 colnames(ids_df) <- sub(".*ids:spp:(.*)\\]$", "\\1", colnames(ids_df))
-
-# empty dataframe
-df <- data.frame(
-  ids = character(ncol(ids_df)),
-  mean = numeric(ncol(ids_df)),  
-  per5 = NA, 
-  per95 = NA,
-  sd = NA
+# empty ids dataframe
+ids_df2 <- data.frame(
+  ids_spp = character(ncol(ids_df)),
+  fit_a_ids_spp = numeric(ncol(ids_df)),  
+  fit_per5 = NA, 
+  fit_per95 = NA,
+  fit_sd = NA
 )
-
 for (i in 1:ncol(ids_df)) { # i = 1
-  df$ids[i] <- colnames(ids_df)[i]         
-  df$mean[i] <- mean(ids_df[[i]])  
-  df$per5[i] <- quantile(ids_df[[i]], probs = 0.05)
-  df$per95[i] <- quantile(ids_df[[i]], probs = 0.95)
-  df$sd[i] <- sd(ids_df[[i]])
+  ids_df2$ids_spp[i] <- colnames(ids_df)[i]         
+  ids_df2$fit_a_ids_spp[i] <- round(mean(ids_df[[i]]),3)  
+  ids_df2$fit_per5[i] <- round(quantile(ids_df[[i]], probs = 0.055), 3)
+  ids_df2$fit_per95[i] <- round(quantile(ids_df[[i]], probs = 0.945), 3)
+  ids_df2$fit_sd[i] <- round(sd(ids_df[[i]]), 3)
 }
-df
+ids_df2
 
-df$ids[i] <- colnames(ids_df)[i]
+# grab spp 
+spp_cols <- colnames(df_fit)[grepl(" spp:", colnames(df_fit))]
+spp_df <- df_fit[, colnames(df_fit) %in% spp_cols]
+# change their names
+colnames(spp_df) <- sub(".*spp:([0-9]+).*", "\\1", colnames(spp_df))
+#empty spp df
+spp_df2 <- data.frame(
+  spp = character(ncol(spp_df)),
+  fit_a_spp = numeric(ncol(spp_df)),  
+  fit_per5 = NA, 
+  fit_per95 = NA,
+  fit_sd = NA,
+  sim_a_spp = 
+)
+for (i in 1:ncol(spp_df)) { # i = 1
+  spp_df2$spp[i] <- colnames(spp_df)[i]         
+  spp_df2$fit_a_spp[i] <- round(mean(spp_df[[i]]),3)  
+  spp_df2$fit_per5[i] <- round(quantile(spp_df[[i]], probs = 0.055), 3)
+  spp_df2$fit_per95[i] <- round(quantile(spp_df[[i]], probs = 0.945), 3)
+  spp_df2$fit_sd[i] <- round(sd(spp_df[[i]]), 3)
+}
+spp_df2
+# merge with 
+
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
 # === === === === === === === === === === === === === === === === 
