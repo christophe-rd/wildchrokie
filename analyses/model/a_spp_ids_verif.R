@@ -23,11 +23,11 @@ runoldcode <- FALSE
 set.seed(124)
 a <- 1.5
 sigma_y <- 0.2
-sigma_a_spp <- 0.3
-sigma_a_ids <- 0.02
+sigma_a_spp <- 0.6
+sigma_a_ids <- 0.1
 
-n_spp <- 50 # number of species
-n_perspp <- 10 # number of individuals per species
+n_spp <- 10 # number of species
+n_perspp <- 50 # number of individuals per species
 n_ids <- n_perspp * n_spp # number of ids
 n_meas <- 15 # repeated measurements per id
 N <- n_ids * n_meas # total number of measurements
@@ -62,18 +62,22 @@ testdf <- data.frame(
 )
 testdf
 
-ggplot(testdf) +
-  geom_vline(aes(xintercept = a_ids_spp_values), 
-             color = "red", alpha = 0.3) +
-  geom_vline(aes(xintercept = a_spp_values), 
-             color = "blue", alpha = 0.8) +
-  facet_wrap(~tree_spp_nonrep) +
-  theme_minimal()
 
-ggplot(testdf) +
-  geom_vline(aes(xintercept = a_ids_spp_values2), 
-             color = "red", alpha = 0.3) +
+a_ids_spp1 <- ggplot(testdf) +
+  geom_vline(aes(xintercept = a_ids_spp_values), 
+             color = "red", alpha = 0.2) +
   geom_vline(aes(xintercept = a_spp_values), 
              color = "blue", alpha = 0.8) +
   facet_wrap(~tree_spp_nonrep) +
   theme_minimal()
+ggsave("figures/a_ids_spp1.jpeg", a_ids_spp1, width = 8, height = 6)
+
+a_ids_spp2 <- ggplot(testdf) +
+  geom_vline(aes(xintercept = a_ids_spp_values2), 
+             color = "red", alpha = 0.2) +
+  geom_vline(aes(xintercept = a_spp_values), 
+             color = "blue", alpha = 0.8) +
+  facet_wrap(~tree_spp_nonrep) +
+  theme_minimal()
+ggsave("figures/a_ids_spp2.jpeg", a_ids_spp2, width = 8, height = 6)
+
