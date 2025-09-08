@@ -57,6 +57,28 @@ $\alpha_{\text{ids}, i(j)}$: each ids interecept deviation from the overall inte
 $\beta$: overall slope
 $gdd$: growing degree days. Measured from budburst to budset (theoretical start and end of tree primary growth)
 
+\subsection*{Lizzie's notation after bayesian working group:}
+\textbf{Nested on the intercept without provenance}\\
+$ y_i \sim \text{normal}(\mu, \sigma_y)$\\
+$ \mu =  \alpha + \alpha_{sp[id]} + \beta*gdd$\\
+$ \alpha_{sp} \sim \text{normal}(0, \sigma_{\alpha sp})$\\
+$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha sp})$ \\
+
+\textbf{Nested on the intercept with provenance---Option 1}\\
+$ y_i \sim \text{normal}(\mu, \sigma_y)$\\
+$ \mu =  \alpha + \alpha_{sp[id]} + \alpha_{prov} + \beta*gdd$\\
+$ \alpha_{sp} \sim \text{normal}(0, \sigma_{\alpha sp})$\\
+$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha sp})$\\
+$ \alpha_{prov} \sim \text{normal}(0, \sigma_{\alpha prov})$ \\
+
+\textbf{Nested on the intercept without provenance---Option 2}\\
+$ y_i \sim \text{normal}(\mu, \sigma_y)$\\
+$ \mu =  \alpha + \alpha_{sp} + \alpha_{prov} + \alpha_{id} +  \beta*gdd$\\
+$ \alpha_{sp} \sim \text{normal}(0, \sigma_{\alpha sp})$\\
+$ \alpha_{prov} \sim \text{normal}(0, \sigma_{\alpha prov})$\\
+$ \alpha_{id} \sim \text{normal}(0, \sigma_{\alpha id})$
+
+\textit{Notes on option 1 vs option 2}: Charles pointed out during the working group that opt 1 and 2 were actually the same thing. After chatting with Lizzie on 8-09-2025, we concluded that he was right and to simplify the code, we will use option 2.
 
 \subsection*{Model update after simulating the data}
 
