@@ -62,13 +62,13 @@ $gdd$: growing degree days. Measured from budburst to budset (theoretical start 
 $ y_i \sim \text{normal}(\mu, \sigma_y)$\\
 $ \mu =  \alpha + \alpha_{sp[id]} + \beta*gdd$\\
 $ \alpha_{sp} \sim \text{normal}(0, \sigma_{\alpha sp})$\\
-$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha sp})$ \\
+$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha id})$ \\
 
 \textbf{Nested on the intercept with provenance---Option 1}\\
 $ y_i \sim \text{normal}(\mu, \sigma_y)$\\
 $ \mu =  \alpha + \alpha_{sp[id]} + \alpha_{prov} + \beta*gdd$\\
 $ \alpha_{sp} \sim \text{normal}(0, \sigma_{\alpha sp})$\\
-$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha sp})$\\
+$ \alpha_{sp[id]} \sim \text{normal}(\alpha_{sp}, \sigma_{\alpha id})$\\
 $ \alpha_{prov} \sim \text{normal}(0, \sigma_{\alpha prov})$ \\
 
 \textbf{Nested on the intercept without provenance---Option 2}\\
