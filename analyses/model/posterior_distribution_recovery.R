@@ -14,7 +14,7 @@ if(length(grep("deirdre", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } 
 
-readRDS("output/fitnested")
+fitnested <- readRDS("output/fitnested")
 
 df_fit <- as.data.frame(fitnested)
 
@@ -42,3 +42,4 @@ for (i in 1:ncol(ids_df)) { # i = 1
   ids_df2$fit_sd[i] <- round(sd(ids_df[[i]]), 3)
 }
 ids_df2
+
