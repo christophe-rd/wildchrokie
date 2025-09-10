@@ -8,6 +8,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
+options(digits = 3)
 quartz()
 
 # Load library 
@@ -34,101 +35,99 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 #### Step 2. Simulate data ####
 # === === === === === === === === === === === === === === === === 
 # set parameters
+
+# set parameters
 set.seed(124)
 a <- 1.5
-b <- 0.4
 sigma_y <- 0.2
-
-n_perspp <- 10
-n_spp <- 50
-n_ids <- n_perspp * n_spp
-n_meas <- 3
-N <- n_ids * n_meas
-
-# set spp names and ids 
-spp <- 1:n_spp
-ids <- rep(rep(1:n_perspp, times = n_spp), each = n_meas)
-tree_spp <- rep(rep(1:n_spp, each = n_perspp), each = n_meas) # 1500 obs
-tree_spp_nonrep <- rep(rep(1:n_spp, each = n_perspp)) # 500 obs
-
-# === === === === #
-# partial pooling
 sigma_a_spp <- 0.3
 sigma_a_ids <- 0.15
+sigma_a_site <- 0.1
+
+n_site <- 4 # number of sites
+n_spp <- 10 # number of species
+n_perspp <- 50 # number of individuals per species
+n_ids <- n_perspp * n_spp * n_site # number of ids
+n_meas <- 5 # repeated measurements per id
+N <- n_ids * n_meas # total number of measurements
+
+
+# get replicated ids
+ids <- rep(rep(rep(1:n_perspp, times = n_spp), times = n_site), each = n_meas)
+# non replicated ids
+idsnonrep <- rep(rep(1:n_perspp, times = n_spp), times = n_site)
+# replicated spp
+spp <- rep(rep(rep(1:n_spp, each = n_perspp), times = n_site), each = n_meas) 
+# non replicated spp
+spp_nonrep <- rep(rep(1:n_spp, each = n_perspp), each = n_site) 
+# replicated site
+site <- rep(rep(rep(1:n_site, each = n_spp), each = n_perspp), each = n_meas)
+# non replicated site
+site_nonrep <- rep(rep(1:n_site, each = n_spp), each = n_perspp)
+
+simcoef <- data.frame(
+  site = site,
+  spp = spp,
+  ids = ids
+)
 
 # get 50 intercept values for each species
-a_spp_values <- rnorm(n_spp, 0, sigma_a_spp)
+a_spp <- rnorm(n_spp, 0, sigma_a_spp)
 
-# combine species-level mean + id deviation at the non-repeated id level
-a_ids_spp_values <- rnorm(n_ids, a_spp_values[tree_spp_nonrep], sigma_a_ids)
-# a_ids_spp_values <- a_ids_spp_values[tree_spp_nonrep] - a_spp_values[tree_spp_nonrep]
+a_site <- rnorm(n_site, 0, sigma_a_site)
 
-a_ids_obs <- rep(a_ids_spp_values, each = n_meas)
+# Option 2
+a_ids <- rnorm(n_ids, 0, sigma_a_ids)
 
-# gdd and devide by constant
-gdd <- round(rnorm(N, 1800, 100))
-gddcons <- gdd / 200
-# centering (optional)
-# gddcons <- gddcons - mean(gddcons)
+# Add my parameters to the df
+simcoef$a_site <- a_site[simcoef$site]
+simcoef$a_spp <- a_spp[simcoef$spp]
 
-# error
-error <- rnorm(N, 0, sigma_y)
+### add index to allow ids to be input at the right place
+id_index <- rep(1:n_ids, each = n_meas)
 
-# match a_ids to ids and spp (keeps your merge structure)
-df1 <- data.frame(
-  ids_nonrep  = rep(1:n_perspp, times = n_spp),
-  spp = tree_spp_nonrep,
-  a_spp = a_spp_values[tree_spp_nonrep],
-  a_ids_spp_values = a_ids_spp_values
-)
+simcoef$a_ids <- a_ids[id_index]
 
-df2 <- data.frame(
-  ids = ids,
-  spp = tree_spp
-)
-
-simcoef <- merge(df2, df1, by.x = c("ids", "spp"), by.y = c("ids_nonrep", "spp"), all.x = TRUE)
-simcoef <- simcoef[order(simcoef$spp, simcoef$ids), ]
-
-simcoef$a <- a
-simcoef$b <- b
-simcoef$gddcons <- gddcons
+# add the rest of the boring stuff 
+simcoef$a <- 1.5
+simcoef$b <- 0.4
 simcoef$sigma_y <- sigma_y
-simcoef$error <- error
+simcoef$error <- rnorm(N, 0, sigma_y)
+simcoef$gddcons <- rnorm(N, 1800, 100)/200
 
-# calculate ring width
-simcoef$ringwidth <- simcoef$a + 
-  simcoef$a_ids_spp_values + 
-  # simcoef$a_spp + 
-  (simcoef$b * simcoef$gddcons) + 
-  error
+# adding both options of tree rings
+simcoef$ringwidth <- 
+  simcoef$a_site + 
+  simcoef$a_spp + 
+  simcoef$a_ids + 
+  simcoef$a + 
+  (simcoef$b*simcoef$gddcons) + 
+  simcoef$error
 
 # prepare grouping factors for stan_lmer (ensure ids are unique within spp)
+simcoef$site <- factor(simcoef$site) 
 simcoef$spp <- factor(simcoef$spp)
-# simcoef$ids <- factor(paste0(simcoef$spp, "_", as.character(simcoef$ids)))
+simcoef$ids <- factor(simcoef$ids)
+simcoef$ids_unique <- paste(simcoef$site, simcoef$spp, simcoef$ids, sep = "_")
 
-
-# loop through cols and round to 3 decimal points
-for (i in 3:ncol(simcoef)) {
-  simcoef[, i] <- round(simcoef[, i], 3)
-}
-
-# === === === === === === === === #
-##### Run model #####
-# === === === === === === === === #
+# === === === === === #
+##### Run models #####
+# === === === === === #
 
 ###### Model nested on the intercept #######
-fitnested <- TRUE
-if(fitnested) {
+fitnestedrun <- TRUE
+if(fitnestedrun) {
   fitnested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
-      (1|spp/ids), # this estimates a spp level intercept AND ids nested within spp
+      (1|site) +
+      (1|spp) +
+      (1|ids_unique),
     data = simcoef,
     chains = 4,
     iter = 4000,
     core=4
   )
-  # saveRDS(fitnested, "output/fitnested")
+  saveRDS(fitnested, "output/fitnested")
 }
 fitnested
 
@@ -155,107 +154,20 @@ print(fit, digits=3)
 ##### Parameter recovery #####
 # === === === === === === #
 
-# === === === === === === #
-###### Recover a_ids ######
-# === === === === === === #
-# Access the 'ids' data frame
-fitnested_ranef <- ranef(fitnested)
-ids_df <- fitnested_ranef$ids
-
-# Now extract the tree IDs and intercepts
-a_idswithranef <- data.frame(
-  ids_spp = rownames(ids_df),
-  fit_a_ids_spp = ids_df[["(Intercept)"]]
-)
-# clean ids col
-a_idswithranef$ids <- sub("([^:]+):.*", "\\1", a_idswithranef$ids_spp)
-a_idswithranef$spp <- sub(".*:(.*)", "\\1", a_idswithranef$ids_spp)
-
-messyinter <- as.data.frame(posterior_interval(fitnested))
-messyinter$messyids <- rownames(messyinter)
-a_ids_spp_messyinter <- subset(messyinter, grepl("ids:spp", messyids))
-
-# extract spp and ids names
-a_ids_spp_messyinter$ids <- sub(".*ids:spp:([0-9]+):.*", "\\1", a_ids_spp_messyinter$messyids)
-a_ids_spp_messyinter$spp <- sub(".*:([0-9]+)\\]$", "\\1", a_ids_spp_messyinter$messyids)
-
-# remove non necessary columns
-a_ids_spp_messyinter <- a_ids_spp_messyinter[, c("ids", "spp", "5%", "95%")]
-# renames 5% and 95%
-colnames(a_ids_spp_messyinter) <- c("ids", "spp", "per5", "per95")
-# merge both df by ids
-a_ids_mergedwithranef <- merge(a_idswithranef, a_ids_spp_messyinter, by = c("ids", "spp"))
-# add simulation data and merge!
-simcoeftoplot2 <- simcoef[, c("ids", "spp", "a_ids_spp_values", "a_spp")]
-colnames(simcoeftoplot2) <- c("ids", "spp", "sim_a_ids_spp", "a_spp")
-
-a_ids_mergedwithranef <- merge(simcoeftoplot2, a_ids_mergedwithranef, by = c("ids", "spp"))
-
-
-# plot!
-plot_a_ids_mergedwithranef_nested_a <- 
-  ggplot(a_ids_mergedwithranef, aes(x = sim_a_ids_spp, y = fit_a_ids_spp)) +
-  geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.05) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "Simulated a_ids", y = "Model a_ids", title = "") +
-  theme_minimal()
-plot_a_ids_mergedwithranef_nested_a
-
-# === === === === === === #
-###### Recover a_spp ######
-# === === === === === === #
-spp_df <- fitnested_ranef$spp
-
-# Now extract the tree IDs and intercepts
-a_sppwithranef <- data.frame(
-  spp = rownames(spp_df),
-  fit_a_spp = spp_df[["(Intercept)"]]
-)
-# recover only conf intervals spp from previously created df
-a_spp_messyinter <- subset(messyinter, grepl("Intercept) spp:", messyids))
-a_spp_messyinter$spp <- sub(".*spp:([0-9]+)]", "\\1", a_spp_messyinter$messyids)
-
-# remove unecessary columns
-a_spp_messyinter <- a_spp_messyinter[, c("spp", "5%", "95%")]
-
-# change 5 and 95% names
-colnames(a_spp_messyinter) <- c("spp", "per5", "per95")
-
-# merge!
-a_spp_mergedwithranef <- merge(a_sppwithranef, a_spp_messyinter, by = "spp")
-
-# get sim data ready to merge
-simcoeftoplot <- simcoef[, c("spp", "a_spp")]
-colnames(simcoeftoplot) <- c("spp", "sim_a_spp")
-simcoeftoplot <- simcoeftoplot[!duplicated(simcoeftoplot),]
-
-# now merge
-a_spp_mergedwithranef2 <- merge(simcoeftoplot, a_spp_mergedwithranef, by = "spp")
-
-# plot!
-plot_a_spp_mergedwithranef_nested_a <- ggplot(a_spp_mergedwithranef2, aes(x = sim_a_spp, y = fit_a_spp)) +
-  geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(ymin = per5, ymax = per95), width = 0, color = "darkgray", alpha=0.5) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "Simulated a_spp", y = "Model a_spp", title = "") +
-  theme_minimal()
-plot_a_spp_mergedwithranef_nested_a
-
-
 # === === === === === === === === === === #
-##### New way to recover parameters #####
+##### Recover parameters from the posterior #####
 # === === === === === === === === === === #
+fitnested <- readRDS("output/fitnested")
 df_fit <- as.data.frame(fitnested)
 
 # recover slope
 colnames(df_fit)
 # grab ids nested in spp
-ids_cols <- colnames(df_fit)[grepl("ids:spp:", colnames(df_fit))]
+ids_cols <- colnames(df_fit)[grepl("ids_unique", colnames(df_fit))]
 ids_cols <- ids_cols[1:length(ids_cols)-1]
 ids_df <- df_fit[, colnames(df_fit) %in% ids_cols]
 # change their names
-colnames(ids_df) <- sub(".*ids:spp:(.*)\\]$", "\\1", colnames(ids_df))
+colnames(ids_df) <- sub(".*ids_unique(.*)\\]$", "\\1", colnames(ids_df))
 # empty ids dataframe
 ids_df2 <- data.frame(
   ids_spp = character(ncol(ids_df)),
