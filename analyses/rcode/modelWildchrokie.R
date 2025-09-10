@@ -14,9 +14,6 @@ quartz()
 # Load library 
 library(rstanarm)
 library(ggplot2)
-library(arm)
-library(RColorBrewer)
-library(shinystan)
 library(rethinking)
 library("wesanderson")
 
@@ -41,12 +38,12 @@ set.seed(124)
 a <- 1.5
 sigma_y <- 0.2
 sigma_a_spp <- 0.3
-sigma_a_ids <- 0.15
+sigma_a_ids <- 0.8
 sigma_a_site <- 0.1
 
 n_site <- 4 # number of sites
 n_spp <- 10 # number of species
-n_perspp <- 50 # number of individuals per species
+n_perspp <- 5 # number of individuals per species
 n_ids <- n_perspp * n_spp * n_site # number of ids
 n_meas <- 5 # repeated measurements per id
 N <- n_ids * n_meas # total number of measurements
@@ -108,20 +105,20 @@ simcoef$ringwidth <-
 simcoef$site <- factor(simcoef$site) 
 simcoef$spp <- factor(simcoef$spp)
 simcoef$ids <- factor(simcoef$ids)
-simcoef$ids_unique <- paste(simcoef$site, simcoef$spp, simcoef$ids, sep = "_")
+simcoef$ids_uni <- paste(simcoef$site, simcoef$spp, simcoef$ids, sep = "_")
 
 # === === === === === #
 ##### Run models #####
 # === === === === === #
 
 ###### Model nested on the intercept #######
-fitnestedrun <- TRUE
+fitnestedrun <- FALSE
 if(fitnestedrun) {
   fitnested <- stan_lmer(
     ringwidth ~ 1 + gddcons + 
       (1|site) +
       (1|spp) +
-      (1|ids_unique),
+      (1|ids_uni),
     data = simcoef,
     chains = 4,
     iter = 4000,
@@ -131,28 +128,6 @@ if(fitnestedrun) {
 }
 fitnested
 
-###### Model partial pooled on b ######
-runmodeWithPartialPooledBeta <- FALSE
-if(runmodeWithPartialPooledBeta) {
-  fit <- stan_lmer(
-    ringwidth ~ 1 + gddcons + 
-      (1 | ids) +
-      (1 | spp) +
-      (1|spp/ids),  #(1 | spp) means that I am partial pooling for the spp interecept
-    # to confirm: to partial pool on both the intercept AND the slope : (1 + gddcons|spp)
-    data = simcoef,
-    chains = 4,
-    iter = 4000,
-    core=4
-  )
-}
-
-
-print(fit, digits=3)
-
-# === === === === === === #
-##### Parameter recovery #####
-# === === === === === === #
 
 # === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
@@ -163,25 +138,23 @@ df_fit <- as.data.frame(fitnested)
 # recover slope
 colnames(df_fit)
 # grab ids nested in spp
-ids_cols <- colnames(df_fit)[grepl("ids_unique", colnames(df_fit))]
+ids_cols <- colnames(df_fit)[grepl("ids_uni", colnames(df_fit))]
 ids_cols <- ids_cols[1:length(ids_cols)-1]
 ids_df <- df_fit[, colnames(df_fit) %in% ids_cols]
 # change their names
-colnames(ids_df) <- sub(".*ids_unique(.*)\\]$", "\\1", colnames(ids_df))
+colnames(ids_df) <- sub(".*ids_uni:([^]]+)\\]$", "\\1", colnames(ids_df))
 # empty ids dataframe
 ids_df2 <- data.frame(
-  ids_spp = character(ncol(ids_df)),
-  fit_a_ids_spp = numeric(ncol(ids_df)),  
-  fit_per5 = NA, 
-  fit_per95 = NA,
-  fit_sd = NA
+  ids_uni = character(ncol(ids_df)),
+  fit_a_ids = numeric(ncol(ids_df)),  
+  fit_a_ids_per5 = NA, 
+  fit_a_ids_per95 = NA
 )
 for (i in 1:ncol(ids_df)) { # i = 1
-  ids_df2$ids_spp[i] <- colnames(ids_df)[i]         
-  ids_df2$fit_a_ids_spp[i] <- round(mean(ids_df[[i]]),3)  
-  ids_df2$fit_per5[i] <- round(quantile(ids_df[[i]], probs = 0.055), 3)
-  ids_df2$fit_per95[i] <- round(quantile(ids_df[[i]], probs = 0.945), 3)
-  ids_df2$fit_sd[i] <- round(sd(ids_df[[i]]), 3)
+  ids_df2$ids_uni[i] <- colnames(ids_df)[i]         
+  ids_df2$fit_a_ids[i] <- round(mean(ids_df[[i]]),3)  
+  ids_df2$fit_a_ids_per5[i] <- round(quantile(ids_df[[i]], probs = 0.055), 3)
+  ids_df2$fit_a_ids_per95[i] <- round(quantile(ids_df[[i]], probs = 0.945), 3)
 }
 ids_df2
 
@@ -194,48 +167,118 @@ colnames(spp_df) <- sub(".*spp:([0-9]+).*", "\\1", colnames(spp_df))
 spp_df2 <- data.frame(
   spp = character(ncol(spp_df)),
   fit_a_spp = numeric(ncol(spp_df)),  
-  fit_per5 = NA, 
-  fit_per95 = NA,
-  fit_sd = NA
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per95 = NA
 )
 for (i in 1:ncol(spp_df)) { # i = 1
   spp_df2$spp[i] <- colnames(spp_df)[i]         
   spp_df2$fit_a_spp[i] <- round(mean(spp_df[[i]]),3)  
-  spp_df2$fit_per5[i] <- round(quantile(spp_df[[i]], probs = 0.055), 3)
-  spp_df2$fit_per95[i] <- round(quantile(spp_df[[i]], probs = 0.945), 3)
-  spp_df2$fit_sd[i] <- round(sd(spp_df[[i]]), 3)
+  spp_df2$fit_a_spp_per5[i] <- round(quantile(spp_df[[i]], probs = 0.055), 3)
+  spp_df2$fit_a_spp_per95[i] <- round(quantile(spp_df[[i]], probs = 0.945), 3)
 }
 spp_df2
 
-# === === === === === === === === === === === === === === === === 
-# Plot old vs new way tp recover parameters #####
-# === === === === === === === === === === === === === === === === 
-colnames(a_spp_mergedwithranef) <- c("spp", "a_spp_lme4", "per5_lme4", "per95_lme4")
-colnames(spp_df2) <- c("spp", "a_spp_loop", "per5_loop", "per95_loop")
-recovComparison <- merge(a_spp_mergedwithranef, spp_df2, by = "spp")
+# grab site
+site_cols <- colnames(df_fit)[grepl(" site:", colnames(df_fit))]
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+# change their names
+colnames(site_df) <- sub(".*site:([0-9]+).*", "\\1", colnames(site_df))
+# empty site df
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2$site[i] <- colnames(site_df)[i]         
+  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.055), 3)
+  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.945), 3)
+}
+site_df2
 
-recovComparison_plot <- ggplot(recovComparison, aes(x = a_spp_lme4, y = a_spp_loop)) +
-  geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(xmin = per5_lme4, xmax = per95_lme4), width = 0, color = "darkgray", alpha=0.5) +
-  geom_errorbar(aes(ymin = per5_loop, ymax = per95_loop), width = 0, color = "darkgray", alpha=0.5) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "a_spp lme4 functions", y = "a_spp manual posterior recovery", title = "") +
+# clean and re-arrange in a single df!
+# create ids, spp and site cols
+tmp <- do.call(rbind, strsplit(ids_df2$ids_uni, "_"))
+# re-add the new cols
+ids_df2$site <- as.numeric(tmp[,1])
+ids_df2$spp  <- as.numeric(tmp[,2])
+ids_df2$ids  <- as.numeric(tmp[,3])
+
+# merge spp and ids
+merge1 <- merge(spp_df2, ids_df2, by = "spp")
+merge2 <- merge(merge1, site_df2, by = "site")
+
+
+# === === === === === === === #
+# Plot parameter recovery #####
+# === === === === === === === #
+
+# Start with ids ######
+# merge simcoef and model
+idstoplot <- merge(
+  simcoef[!duplicated(simcoef$ids_uni), 
+          c("ids_uni", "a_ids")], 
+                   
+  merge2[!duplicated(merge2$ids_uni), 
+         c("ids_uni", "fit_a_ids", "fit_a_ids_per5", "fit_a_ids_per95")], 
+  by = "ids_uni"
+  )
+
+# plot ids
+a_ids_simXfit_plot <- ggplot(idstoplot, aes(x = a_ids, y = fit_a_ids)) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_errorbar(aes(ymin = fit_a_ids_per5, ymax = fit_a_ids_per95), width = 0, color = "darkgray", alpha=0.3) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim a_ids", y = "fit a_ids", title = "") +
   theme_minimal()
-# save ggplot!
-ggsave("figures/recovComparison_plot.jpeg", recovComparison_plot, width = 6, height = 6, units = "in", dpi = 300)
+a_ids_simXfit_plot
+# ggsave!
+ggsave("figures/a_ids_simXfit_plot.jpeg", a_ids_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
+# === === === === === === === === === === === === === === === === === === === ===
 
+# plot spp
+spptoplot <- merge(
+  simcoef[!duplicated(simcoef$spp), 
+          c("spp", "a_spp")], 
+  merge2[!duplicated(merge2$spp), 
+         c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
+  by = "spp"
+  )
+spptoplot
 
-simVSfit <- merge(simcoeftoplot, spp_df2, by = "spp")
-simVSfit_plot <- ggplot(simVSfit, aes(x = sim_a_spp, y = a_spp_loop)) +
-  geom_point(color = "blue", size = 2) +
-  geom_errorbar(aes(ymin = per5_loop, ymax = per95_loop), width = 0, color = "darkgray", alpha=0.5) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red", linewidth = 1) +
-  labs(x = "a_spp sim", y = "a_spp fit", title = "") +
+a_spp_simXfit_plot <- ggplot(spptoplot, aes(x = a_spp, y = fit_a_spp)) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), width = 0, color = "darkgray", alpha=0.3) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim a_spp", y = "fit a_spp", title = "") +
   theme_minimal()
-# save ggplot!
-simVSfit_plot
-ggsave("figures/simVSfit_plot.jpeg", simVSfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+a_spp_simXfit_plot
+# ggsave!
+ggsave("figures/a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+
+# === === === === === === === === === === === === === === === === === === === ===
+sitetoplot <- merge(
+  simcoef[!duplicated(simcoef$site), 
+          c("site", "a_site")], 
+  merge2[!duplicated(merge2$site), 
+         c("site", "fit_a_site", "fit_a_site_per5", "fit_a_site_per95")], 
+  by = "site"
+)
+sitetoplot
+
+a_site_simXfit_plot <- ggplot(sitetoplot, aes(x = a_site, y = fit_a_site)) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_errorbar(aes(ymin = fit_a_site_per5, ymax = fit_a_site_per95), width = 0, color = "darkgray", alpha=0.3) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim a_site", y = "fit a_site", title = "") +
+  theme_minimal()
+a_site_simXfit_plot
+# ggsave!
+ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+
 
 # === === === === === === === === === === === === === === === === 
 #### Step 3. Set your priors ####
@@ -244,14 +287,7 @@ ggsave("figures/simVSfit_plot.jpeg", simVSfit_plot, width = 6, height = 6, units
 # === === === === === === === === === === === === === === === === 
 #### Step 4. Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
-# read GDD data
-gdd <- read.csv("output/gddData.csv")
-gdd18 <- subset(gdd, year == "2018")
 
-# sum from DOY 100 to DOY 250
-test <- subset(gdd18, doy>100)
-test2 <- subset(test, doy<250)
-sumgdd <- sum(test2$GDD_10)
 # === === === === === === === === === === === === === === === === 
 #### Step 5. Perform retrodictive checks using the model fit to your empiral data ####
 # === === === === === === === === === === === === === === === ===
