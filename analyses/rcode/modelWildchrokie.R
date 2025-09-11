@@ -21,6 +21,7 @@ runmodels <- FALSE
 runoldcode <- FALSE
 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
+setwd("/Users/lizzie/Documents/git/projects/others/christophe/wildchrokie/analyses")
 
 
 # === === === === === === === === === === === === === === === === 
@@ -37,13 +38,13 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 set.seed(124)
 a <- 1.5
 sigma_y <- 0.2
-sigma_a_spp <- 0.3
+sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_ids <- 0.8
 sigma_a_site <- 0.1
 
 n_site <- 4 # number of sites
 n_spp <- 10 # number of species
-n_perspp <- 5 # number of individuals per species
+n_perspp <- 10 # number of individuals per species
 n_ids <- n_perspp * n_spp * n_site # number of ids
 n_meas <- 5 # repeated measurements per id
 N <- n_ids * n_meas # total number of measurements
@@ -61,6 +62,8 @@ spp_nonrep <- rep(rep(1:n_spp, each = n_perspp), each = n_site)
 site <- rep(rep(rep(1:n_site, each = n_spp), each = n_perspp), each = n_meas)
 # non replicated site
 site_nonrep <- rep(rep(1:n_site, each = n_spp), each = n_perspp)
+# quick check 
+table(idsnonrep, site_nonrep)
 
 simcoef <- data.frame(
   site = site,
@@ -128,6 +131,23 @@ if(fitnestedrun) {
 }
 fitnested
 
+y <- simcoef$ringwidth
+N <- nrow(simcoef)
+gdd <- simcoef$gddcons
+Nspp <- length(unique(simcoef$spp))
+Nsite <- length(unique(simcoef$site))
+site <- as.numeric(as.character(simcoef$site))
+species <- as.numeric(as.character(simcoef$sp))
+treeid <- rep(1:length(unique(simcoef$ids_uni)), each=5)
+Ntreeid <- length(unique(treeid))
+table(treeid)
+
+library(rstan)
+fit <- stan("stan/twolevelhierint.stan", 
+  data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"), 
+  iter=4000, chains=4, cores=4)
+summary(fit)$summary
+fitpost <- extract(fit)
 
 # === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
