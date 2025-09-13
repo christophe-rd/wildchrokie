@@ -14,7 +14,7 @@ quartz()
 # Load library 
 library(rstanarm)
 library(ggplot2)
-library(rethinking)
+# library(rethinking)
 library("wesanderson")
 
 runmodels <- FALSE
@@ -24,7 +24,7 @@ if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if(length(grep("lizzie", getwd())) > 0){
   setwd("/Users/lizzie/Documents/git/projects/wildchrokie/analyses")
-} 
+}
 
 # === === === === === === === === === === === === === === === === 
 #### Step 1. Come up with a model ####
@@ -41,14 +41,14 @@ set.seed(124)
 a <- 1.5
 sigma_y <- 0.2
 sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
-sigma_a_treeid <- 0.8
+sigma_a_treeid <- 0.5
 sigma_a_site <- 0.1
 
-n_site <- 4 # number of sites
+n_site <- 15 # number of sites
 n_spp <- 10 # number of species
-n_perspp <- 10 # number of individuals per species
+n_perspp <- 15 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 5 # repeated measurements per id
+n_meas <- 10 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 
@@ -128,7 +128,6 @@ if(fitnestedrun) {
   )
   saveRDS(fitnested, "output/fitnested")
 }
-fitnested
 
 y <- simcoef$ringwidth
 N <- nrow(simcoef)
@@ -142,7 +141,7 @@ Ntreeid <- length(unique(treeid))
 table(treeid)
 
 library(rstan)
-fit <- stan("stan/twolevelhierint.stan", 
+fit <- rstan::stan("stan/twolevelhierint.stan", 
   data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"), 
   iter=4000, chains=4, cores=4)
 summary(fit)$summary

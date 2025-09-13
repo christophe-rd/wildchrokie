@@ -200,7 +200,7 @@ betpap <- subset(cookiewcore, grepl("BETPAP", name))
 betpop <- subset(cookiewcore, grepl("BETPOP", name))
 
 # quartz()
-ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ name, scales = "fixed") +
   theme_minimal() +
@@ -288,6 +288,20 @@ betpap <- subset(corenocookie, grepl("BETPAP", name))
 betpop <- subset(corenocookie, grepl("BETPOP", name))
 
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# look at all the betpop
+betpap <- subset(cookiewcore, grepl("BETPAP", name))
+
+ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ name, scales = "fixed") +
+  theme_minimal() +
+  labs(
+    title = "Cookie Length by year and Core name",
+    x = "year",
+    y = "Length (cm)"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 # rename df and remove old year col
 rw <- d[, !(names(d) %in% "year")]
@@ -311,3 +325,4 @@ rwnodup2 <- rwnodup %>%
 
 rwnodup2 %>%
   count(spp, provenance)
+
