@@ -44,11 +44,11 @@ sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are 
 sigma_a_treeid <- 0.5
 sigma_a_site <- 0.1
 
-n_site <- 15 # number of sites
+n_site <- 4 # number of sites
 n_spp <- 10 # number of species
-n_perspp <- 15 # number of individuals per species
+n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 10 # repeated measurements per id
+n_meas <- 5 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 
@@ -73,10 +73,13 @@ simcoef <- data.frame(
   treeid = treeid
 )
 
-# get 50 intercept values for each species
+# get intercept values for each species
 a_spp <- rnorm(n_spp, 0, sigma_a_spp)
 a_site <- rnorm(n_site, 0, sigma_a_site)
 a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
+
+# get slope values for each species
+b_site <- rnorm(n_site, 0, sigma_a_site)
 
 # Add my parameters to the df
 simcoef$a_site <- a_site[simcoef$site]
@@ -91,6 +94,9 @@ simcoef$a_treeid <- a_treeid[treeid]
 simcoef$a <- 1.5
 simcoef$b <- 0.4
 simcoef$sigma_y <- sigma_y
+simcoef$sigma_a_treeid <- sigma_a_treeid
+simcoef$sigma_a_spp <- sigma_a_spp
+simcoef$sigma_a_site <- sigma_a_site
 simcoef$error <- rnorm(N, 0, sigma_y)
 simcoef$gddcons <- rnorm(N, 1800, 100)/200
 
@@ -112,23 +118,6 @@ simcoef$treeid <- factor(simcoef$treeid)
 # === === === === === #
 ##### Run models #####
 # === === === === === #
-
-###### Model nested on the intercept #######
-fitnestedrun <- FALSE
-if(fitnestedrun) {
-  fitnested <- stan_lmer(
-    ringwidth ~ 1 + gddcons + 
-      (1|site) +
-      (1|spp) +
-      (1|treeid),
-    data = simcoef,
-    chains = 4,
-    iter = 4000,
-    core=4
-  )
-  saveRDS(fitnested, "output/fitnested")
-}
-
 y <- simcoef$ringwidth
 N <- nrow(simcoef)
 gdd <- simcoef$gddcons
@@ -147,18 +136,40 @@ fit <- rstan::stan("stan/twolevelhierint.stan",
 summary(fit)$summary
 fitpost <- extract(fit)
 
-# === === === === === === === === === === #
+# === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
-# === === === === === === === === === === #
-# fitnested <- readRDS("output/fitnested")
+# === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
-dim(df_fit)
-summary(fit)
 
-# recover spp
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover sigmas ######
+unique(colnames(df_fit))
+sigma_cols <- colnames(df_fit)[grepl("sigma", colnames(df_fit))]
+
+sigma_df <- df_fit[, colnames(df_fit) %in% sigma_cols]
+
+sigma_df2 <- data.frame(
+  sigma = character(ncol(sigma_df)),
+  fit_a_sigma = numeric(ncol(sigma_df)),  
+  fit_a_sigma_per5 = NA, 
+  fit_a_sigma_per95 = NA
+)
+
+for (i in 1:ncol(sigma_df)) { # i = 1
+  sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
+  sigma_df2$fit_a_sigma[i] <- round(mean(sigma_df[[i]]),3)  
+  sigma_df2$fit_a_sigma_per5[i] <- round(quantile(sigma_df[[i]], probs = 0.055), 3)
+  sigma_df2$fit_a_sigma_per95[i] <- round(quantile(sigma_df[[i]], probs = 0.945), 3)
+}
+
+sigma_df2$sim_sigma <- c(sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
+
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover treeid ######
 unique(colnames(df_fit))
 
-# grab treeid nested in spp
+# grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
 # remove sigma_asp for now
 treeid_cols <- treeid_cols[2:length(treeid_cols)]
@@ -181,7 +192,8 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 }
 treeid_df2
 
-# grab spp 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover spp  ######
 spp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
 # remove sigma_asp for now
 spp_cols <- spp_cols[2:length(spp_cols)]
@@ -205,7 +217,8 @@ for (i in 1:ncol(spp_df)) { # i = 1
 }
 spp_df2
 
-# grab site
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
 # remove sigma_asp for now
 site_cols <- site_cols[2:length(site_cols)]
@@ -228,24 +241,27 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df2
 
-# clean and re-arrange in a single df!
-# create treeid, spp and site cols
-# tmp <- do.call(rbind, strsplit(treeid_df2$treeid, "_"))
-# # re-add the new cols
-# treeid_df2$site <- as.numeric(tmp[,1])
-# treeid_df2$spp  <- as.numeric(tmp[,2])
-# treeid_df2$treeid  <- as.numeric(tmp[,3])
-# 
-# # merge spp and treeid
-# merge1 <- merge(spp_df2, treeid_df2, by = "spp")
-# merge2 <- merge(merge1, site_df2, by = "site")
-# 
-
 # === === === === === === === #
 # Plot parameter recovery #####
 # === === === === === === === #
 
-# Start with treeid ######
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot sigmas ######
+sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = fit_a_sigma)) +
+  geom_point(color = "#046C9A", size = 3) +
+  geom_errorbar(aes(ymin = fit_a_sigma_per5, ymax = fit_a_sigma_per95),
+                width = 0, color = "darkgray", alpha = 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+              color = "#B40F20", linewidth = 1) +
+  ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
+  labs(x = "Simulated sigma", y = "Fitted sigma",
+       title = "Fit vs sim sigmas") +
+  theme_minimal()
+sigma_simXfit_plot
+ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot treeid ######
 # add sim to fit treeid df
 treeidtoplot <- merge(
   simcoef[!duplicated(simcoef$treeid), 
@@ -266,9 +282,8 @@ a_treeid_simXfit_plot
 # ggsave!
 ggsave("figures/a_treeid_simXfit_plot.jpeg", a_treeid_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
-# === === === === === === === === === === === === === === === === === === === ===
-
-# plot spp
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot spp ######
 spptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
           c("spp", "a_spp")], 
@@ -288,7 +303,8 @@ a_spp_simXfit_plot
 # ggsave!
 ggsave("figures/a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
-# === === === === === === === === === === === === === === === === === === === ===
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot site ######
 sitetoplot <- merge(
   simcoef[!duplicated(simcoef$site), 
           c("site", "a_site")], 
