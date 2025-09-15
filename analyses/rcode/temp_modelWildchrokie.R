@@ -138,7 +138,7 @@ fit <- rstan::stan("stan/twolevelhierint.stan",
 
 fitbeta = FALSE
 if (fitbeta) {
-  fit2 <- rstan::stan("stan/twolevelhierint2.stan", 
+  fit2 <- rstan::stan("stan/temp_twolevelhierint.stan", 
                       data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                       iter=200, chains=4, cores=4)  
 }
