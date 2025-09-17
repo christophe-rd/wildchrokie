@@ -23,7 +23,7 @@ runoldcode <- FALSE
 if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if(length(grep("lizzie", getwd())) > 0){
-  setwd("/Users/lizzie/Documents/git/projects/wildchrokie/analyses")
+  setwd("/Users/lizzie/Documents/git/projects/others/christophe/wildchrokie/analyses")
 }
 
 # === === === === === === === === === === === === === === === === 
