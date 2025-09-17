@@ -18,6 +18,7 @@ parameters{
 real b;        // slope
 real a;		// mean intercept across everything
 // real <lower=0> sigma_bsp; // I guess variation of slope across species
+real<lower=0> sigma_bsp;
 real<lower=0> sigma_asp;	// variation of intercept across species	
 real<lower=0> sigma_asite;    // variation of intercept across sites
 real<lower=0> sigma_atreeid;    // variation of intercept across tree ids
@@ -42,7 +43,7 @@ for (i in 1:N){
 }
 
 model{	
-bsp ~ normal(0, 0.1); // I guess partial pooling on slopes for species
+bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
 asp ~ normal(0, sigma_asp); // this creates the partial pooling on intercepts for species
 asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
 atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
@@ -50,6 +51,8 @@ atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on inter
 // Priors ...
   a ~ normal(2, 4);
   b ~ normal(0, 2);
+  
+  sigma_bsp ~ normal(0, 0.05);
   
   sigma_asp ~ normal(0, 0.1);
   
