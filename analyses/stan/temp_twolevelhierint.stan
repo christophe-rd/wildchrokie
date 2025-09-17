@@ -50,9 +50,9 @@ atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on inter
 
 // Priors ...
   a ~ normal(2, 4);
-  b ~ normal(0, 2);
+  b ~ normal(0, 0.2);
   
-  sigma_bsp ~ normal(0, 0.05);
+  sigma_bsp ~ normal(0, 0.1);
   
   sigma_asp ~ normal(0, 0.1);
   
