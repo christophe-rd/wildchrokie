@@ -129,28 +129,18 @@ treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
 
-
-if (fitalpha) {
-  fit <- rstan::stan("stan/twolevelhierint.stan", 
-                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"), 
-                     iter=4000, chains=4, cores=4)
-}
-
-if (fitbeta) {
-  fit2 <- rstan::stan("stan/temp_twolevelhierint.stan", 
+fit <- rstan::stan("stan/twolevelhierint.stan", 
                       data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                       iter=4000, chains=4, cores=4)  
-}
 
 summary(fit)$summary
-fitpost <- extract(fit)
-pairs(fit2)
-launch_shinystan(fit2)
+
+# launch_shinystan(fit2)
 
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
-df_fit <- as.data.frame(fit2)
+df_fit <- as.data.frame(fit)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
@@ -165,7 +155,7 @@ sigma_df2 <- data.frame(
   per5 = NA, 
   per95 = NA
 )
-
+sigma_df2
 for (i in 1:ncol(sigma_df)) { # i = 1
   sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
   sigma_df2$mean[i] <- round(mean(sigma_df[[i]]),3)  
@@ -205,7 +195,6 @@ if(fitbeta){
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover treeid ######
-unique(colnames(df_fit))
 
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
@@ -286,15 +275,15 @@ site_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot sigmas ######
-sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = fit_a_sigma)) +
+sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
   geom_point(color = "#046C9A", size = 3) +
-  geom_errorbar(aes(ymin = fit_a_sigma_per5, ymax = fit_a_sigma_per95),
+  geom_errorbar(aes(ymin = per5, ymax = per95),
                 width = 0, color = "darkgray", alpha = 1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
               color = "#B40F20", linewidth = 1) +
   ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
-  labs(x = "Simulated sigma", y = "Fitted sigma",
-       title = "Fit vs sim sigmas") +
+  labs(x = "sim sigma", y = "fit sigma",
+       title = "fit vs sim sigmas") +
   theme_minimal()
 sigma_simXfit_plot
 ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
@@ -318,7 +307,7 @@ b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
   theme_minimal()
 b_spp_simXfit_plot
 # ggsave!
-# ggsave("figures/b_spp_simXfit_plot.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)    
+ggsave("figures/b_spp_simXfit_plot.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot treeid ######
