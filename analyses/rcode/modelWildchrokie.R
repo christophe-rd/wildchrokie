@@ -14,11 +14,12 @@ quartz()
 # Load library 
 library(rstanarm)
 library(ggplot2)
-# library(rethinking)
+library(rstan)
+library(shinystan)
 library("wesanderson")
 
-runmodels <- FALSE
-runoldcode <- FALSE
+fitalpha = FALSE
+fitbeta = TRUE
 
 if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -39,10 +40,12 @@ if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
 # set parameters
 set.seed(124)
 a <- 1.5
+b <- 0.4
 sigma_y <- 0.2
 sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.5
 sigma_a_site <- 0.1
+sigma_b_spp <- 0.2
 
 n_site <- 4 # number of sites
 n_spp <- 10 # number of species
@@ -79,20 +82,17 @@ a_site <- rnorm(n_site, 0, sigma_a_site)
 a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
 
 # get slope values for each species
-b_site <- rnorm(n_site, 0, sigma_a_site)
+b_spp <- rnorm(n_spp, 0, sigma_b_spp)
 
 # Add my parameters to the df
+simcoef$a_treeid <- a_treeid[treeid]
 simcoef$a_site <- a_site[simcoef$site]
 simcoef$a_spp <- a_spp[simcoef$spp]
-
-### add index to allow treeid to be input at the right place
-# id_index <- rep(1:n_treeid, each = n_meas)
-
-simcoef$a_treeid <- a_treeid[treeid]
+simcoef$b_spp <- b_spp[simcoef$spp]
 
 # add the rest of the boring stuff 
-simcoef$a <- 1.5
-simcoef$b <- 0.4
+simcoef$a <- a
+simcoef$b <- b
 simcoef$sigma_y <- sigma_y
 simcoef$sigma_a_treeid <- sigma_a_treeid
 simcoef$sigma_a_spp <- sigma_a_spp
@@ -107,13 +107,13 @@ simcoef$ringwidth <-
   simcoef$a_treeid + 
   simcoef$a + 
   (simcoef$b*simcoef$gddcons) + 
+  (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
-# prepare grouping factors for stan_lmer (ensure treeid are unique within spp)
+# prepare grouping factors
 simcoef$site <- factor(simcoef$site) 
 simcoef$spp <- factor(simcoef$spp)
 simcoef$treeid <- factor(simcoef$treeid)
-# simcoef$treeid <- paste(simcoef$site, simcoef$spp, simcoef$treeid, sep = "_")
 
 # === === === === === #
 ##### Run models #####
@@ -129,17 +129,28 @@ treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
 
-library(rstan)
-fit <- rstan::stan("stan/twolevelhierint.stan", 
-  data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"), 
-  iter=4000, chains=4, cores=4)
+
+if (fitalpha) {
+  fit <- rstan::stan("stan/twolevelhierint.stan", 
+                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"), 
+                     iter=4000, chains=4, cores=4)
+}
+
+if (fitbeta) {
+  fit2 <- rstan::stan("stan/temp_twolevelhierint.stan", 
+                      data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
+                      iter=4000, chains=4, cores=4)  
+}
+
 summary(fit)$summary
 fitpost <- extract(fit)
+pairs(fit2)
+launch_shinystan(fit2)
 
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
-df_fit <- as.data.frame(fit)
+df_fit <- as.data.frame(fit2)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
@@ -150,20 +161,47 @@ sigma_df <- df_fit[, colnames(df_fit) %in% sigma_cols]
 
 sigma_df2 <- data.frame(
   sigma = character(ncol(sigma_df)),
-  fit_a_sigma = numeric(ncol(sigma_df)),  
-  fit_a_sigma_per5 = NA, 
-  fit_a_sigma_per95 = NA
+  mean = numeric(ncol(sigma_df)),  
+  per5 = NA, 
+  per95 = NA
 )
 
 for (i in 1:ncol(sigma_df)) { # i = 1
   sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
-  sigma_df2$fit_a_sigma[i] <- round(mean(sigma_df[[i]]),3)  
-  sigma_df2$fit_a_sigma_per5[i] <- round(quantile(sigma_df[[i]], probs = 0.055), 3)
-  sigma_df2$fit_a_sigma_per95[i] <- round(quantile(sigma_df[[i]], probs = 0.945), 3)
+  sigma_df2$mean[i] <- round(mean(sigma_df[[i]]),3)  
+  sigma_df2$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.055), 3)
+  sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.945), 3)
 }
 
-sigma_df2$sim_sigma <- c(sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
+sigma_df2$sim_sigma <- c(sigma_b_spp, sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
 
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+if(fitbeta){
+  ###### Recover b spp ######
+  bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
+  # remove sigma_aspp for now
+  bspp_cols <- bspp_cols[2:length(bspp_cols)]
+  
+  bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+  # change their names
+  colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
+  #empty spp df
+  bspp_df2 <- data.frame(
+    spp = character(ncol(bspp_df)),
+    fit_b_spp = numeric(ncol(bspp_df)),  
+    fit_b_spp_per5 = NA, 
+    fit_b_spp_per95 = NA
+  )
+  bspp_df2
+  for (i in 1:ncol(bspp_df)) { # i = 1
+    bspp_df2$spp[i] <- colnames(bspp_df)[i]         
+    bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
+    bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.055), 3)
+    bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.945), 3)
+  }
+  bspp_df2
+}
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover treeid ######
@@ -217,6 +255,7 @@ for (i in 1:ncol(spp_df)) { # i = 1
 }
 spp_df2
 
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
@@ -259,6 +298,27 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = fit_a_sigma)) +
   theme_minimal()
 sigma_simXfit_plot
 ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot b spp ######
+bspptoplot <- merge(
+  simcoef[!duplicated(simcoef$spp), 
+          c("spp", "b_spp")], 
+  bspp_df2[!duplicated(bspp_df2$spp), 
+           c("spp", "fit_b_spp", "fit_b_spp_per5", "fit_b_spp_per95")], 
+  by = "spp"
+)
+bspptoplot
+
+b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), width = 0, color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim b_spp", y = "fit b_spp", title = "") +
+  theme_minimal()
+b_spp_simXfit_plot
+# ggsave!
+# ggsave("figures/b_spp_simXfit_plot.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)    
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot treeid ######
