@@ -44,5 +44,14 @@ asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercept
 atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
 y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 // Priors ...
-/* Should be here!*/
+  a ~ normal(2, 4);
+  b ~ normal(0, 2);
+  
+  sigma_asp ~ normal(0, 0.1);
+  
+  sigma_asite ~ normal(0, 0.1);
+  
+  sigma_atreeid ~ normal(0, 0.1);
+  
+  y ~ normal(ypred, sigma_y);
 }	
