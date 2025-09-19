@@ -45,7 +45,7 @@ sigma_y <- 0.2
 sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.5
 sigma_a_site <- 0.1
-sigma_b_spp <- 0.2
+sigma_b_spp <- 0.25
 
 n_site <- 4 # number of sites
 n_spp <- 10 # number of species
