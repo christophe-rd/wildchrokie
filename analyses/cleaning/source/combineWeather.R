@@ -8,7 +8,7 @@ library(tidyverse)
 
 weldhillclimate <- read.csv("input/_notcookies/weldhill.csv") #from https://labs.arboretum.harvard.edu/weather/
 
-weldhillclimate <- filter(weldhillclimate,grepl("2018|2019|2020",weather$Eastern.daylight.time)) ## pull the years we need
+weldhillclimate <- filter(weldhillclimate,grepl("2018|2019|2020",weldhillclimate$Eastern.daylight.time)) ## pull the years we need
 
 ##get max and min T
 weldhillclimate2 <- weldhillclimate %>% 
@@ -23,16 +23,19 @@ weldhillclimate3 <- weldhillclimate2 %>%
   summarise(maxT=max(tempCelcius ),
             meanT=mean(tempCelcius ), 
             minT=min(tempCelcius ))
+weldhillclimate3 <- as.data.frame(weldhillclimate3)
 
-weldhillclimate3$date <- as.Date(weldhillclimate3$date, format = "%d/%m/%Y") # make dates dates again
+weldhillclimate3$date <- as.Date(weldhillclimate3$date, format = "%m/%d/%Y") # make dates dates again
 
 weldhillclimate3$year<-substr(weldhillclimate3$date, 1, 4)
 weldhillclimate3$doy <- yday(weldhillclimate3$date)
 
+weldhillclimate3 <- weldhillclimate3[order(weldhillclimate3$year, weldhillclimate3$doy), ]
+
 ###give each year a seperate data frame
-y18<-filter(weldhillclimate3,year=="2018")
-y19<-filter(weldhillclimate3,year=="2019")
-y20<-filter(weldhillclimate3,year=="2020")
+y18 <- subset(weldhillclimate3, year=="2018")
+y19 <- subset(weldhillclimate3, year=="2019")
+y20 <- subset(weldhillclimate3, year=="2020")
 
 ###Calculate gdd
 y18$GDD_10 <- gdd(tmax = y18$maxT, tmin = y18$minT, tbase = 10, type = "B")

@@ -15,19 +15,23 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 # 1. Get the data from the cleaning ring width file: wildchrokie_rw
 source("cleaning/source/cleanRingWidth.R") 
 # 2. Get observation data from main repo: obsdata
-source("cleaning/source/cleaning_obsdata.R")
+source("cleaning/source/cleanObsData.R")
 
 temp <- merge(wildchrokie_rw, obsdata, by = c("id", "spp", "year"))
-
 # get only the years we have data for
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
 
 # 3. Get GDD data from main wildhill repo
 source("cleaning/source/combineWeather.R") # may be not needed
 
+# 4. Calculate primary and full growing season GDD
+source("cleaning/source/growingSeasonGDD.R")
 
-# 2. Grab climate data
-source("fromMainRepo/climatedata.R") # commenting it out for now as there are only 4 years and might be an old script
+temp3 <- merge(temp2,
+               obsdataWithGDD[, c("id", "year", "pgsGDD", "fgsGDD")],
+               by = c("id", "year")
+               )
+
 # 3. Get male and female flowering time
 # source("fromMainRepo/dichogamy.R")
 
