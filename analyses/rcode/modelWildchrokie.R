@@ -182,20 +182,20 @@ bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
 colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
 #empty spp df
 bspp_df2 <- data.frame(
-  bspp = character(ncol(bspp_df)),
-  fit_a_bspp = numeric(ncol(bspp_df)),  
-  fit_a_bspp_per5 = NA, 
-  fit_a_bspp_per25 = NA,
-  fit_a_bspp_per75 = NA,
-  fit_a_bspp_per95 = NA
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),  
+  fit_b_spp_per5 = NA, 
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
 )
 for (i in 1:ncol(bspp_df)) { # i = 1
-  bspp_df2$bspp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_a_bspp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_a_bspp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_a_bspp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_a_bspp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_a_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
+  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 bspp_df2
 
@@ -241,20 +241,20 @@ aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
-  aspp = character(ncol(aspp_df)),
-  fit_a_aspp = numeric(ncol(aspp_df)),  
-  fit_a_aspp_per5 = NA, 
-  fit_a_aspp_per25 = NA,
-  fit_a_aspp_per75 = NA,
-  fit_a_aspp_per95 = NA
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
-  aspp_df2$aspp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_aspp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 aspp_df2
 
@@ -354,7 +354,7 @@ ggsave("figures/a_treeid_simXfit_plot.jpeg", a_treeid_simXfit_plot, width = 6, h
 spptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
           c("spp", "a_spp")], 
-  spp_df2[!duplicated(spp_df2$spp), 
+  aspp_df2[!duplicated(aspp_df2$spp), 
          c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
   by = "spp"
   )
