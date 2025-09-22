@@ -154,7 +154,8 @@ d$name[which(d$name == "ALNINC_SH3_P3" & d$sourceFolder == "cookies")] <- "ALNIN
 d$name[which(d$name == "BETPAP_HF16_B2" & d$sourceFolder == "coresWithoutCookies")] <- "BETPAP_HF16_P2" 
 # ALNINC_HF1_P16: ALNINC_HF3_P16 on cookie, but likely a transcription mistake as we have HF1 in wildhell, but not HF3
 d$name[which(d$name == "ALNINC_HF3_P16" & d$sourceFolder == "cookies")] <- "ALNINC_HF1_P16" 
-
+# BETPOP_GR5_P6: change core without cookies to core with cookies
+d$sourceFolder[which(d$name == "BETPOP_GR5_P6" & d$sourceFolder == "coresWithoutCookies")] <- "coresWithCookies"
 
 ### === === === === === ###
 ##### Verification steps #####
@@ -289,8 +290,17 @@ betpop <- subset(corenocookie, grepl("BETPOP", name))
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Visualize final results
+agg2 <- aggregate(d$lengthCM, by = list(d$name, d$Yearcor, d$sourceFolder), FUN = mean)
+
+# rename the columns
+colnames(agg2) <- c("name", "Yearcor", "sourceFolder", "lengthCM")
+
 # look at all the betpop
-betpap <- subset(cookiewcore, grepl("BETPAP", name))
+betpap <- subset(agg2, grepl("BETPAP", name))
+betpop <- subset(agg2, grepl("BETPOP", name))
+betall <- subset(agg2, grepl("BETALL", name))
+alninc <- subset(agg2, grepl("ALNINC", name))
 
 ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
@@ -303,26 +313,56 @@ ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
   ) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-# rename df and remove old year col
-rw <- d[, !(names(d) %in% "year")]
-# rename year column using base r code
+ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ name, scales = "fixed") +
+  theme_minimal() +
+  labs(
+    title = "Cookie Length by year and Core name",
+    x = "year",
+    y = "Length (cm)"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+# clean df and make it ready for analyses!
 # add species col
-names(rw)[names(rw) == "Yearcor"] <- "year"
-names(rw)[names(rw) == "sourceFolder"] <- "sampleType"
-rw$spp <- sub("_.*", "", rw$name)
+names(d)[names(d) == "Yearcor"] <- "year"
+names(d)[names(d) == "sourceFolder"] <- "sampleType"
+d$spp <- sub("_.*", "", d$name)
+d$prov <- sub("^[^_]*_(.*?)_.*$", "\\1", d$name)
+d$replicate <- sub(".*_", "", d$name)
 
-library(dplyr)
-library(stringr)
-# remove duplicates 
-rwnodup <- rw[!duplicated(rw$name),]
-rwnodup %>%
-  count(spp)
+# reorganize and create a new csv
+wildchrokie_rw <- d[c(
+  "name",
+  "spp",
+  "prov", 
+  "replicate",
+  "year",
+  "lengthCM",
+  "sampleType"
+  )]
 
-rwnodup2 <- rwnodup %>%
-  mutate(
-    provenance = str_extract(name, "_([A-Z]{2})") %>% str_remove("_")
-  )
+colnames(wildchrokie_rw) <- c(
+  "id",
+  "spp",
+  "prov", 
+  "replicate",
+  "year",
+  "lengthCM",
+  "sampleType"
+)
 
-rwnodup2 %>%
-  count(spp, provenance)
+wildchrokie_rw <- wildchrokie_rw[order(
+  wildchrokie_rw$spp,
+  wildchrokie_rw$prov,
+  wildchrokie_rw$replicate,
+  wildchrokie_rw$year
+), ]
 
+wildchrokie_rw
+
+
+# write csv!
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
