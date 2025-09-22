@@ -16,7 +16,7 @@ library(rstanarm)
 library(ggplot2)
 library(rstan)
 library(shinystan)
-library("wesanderson")
+library(wesanderson)
 
 fitalpha = FALSE
 fitbeta = TRUE
