@@ -12,23 +12,30 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 ### === === === === === === === === === === ###
 # Get cleaned data from this repo #
 ### === === === === === === === === === === ###
-# 1. Get the data from the cleaning ring width file
+# 1. Get the data from the cleaning ring width file: wildchrokie_rw
 source("cleaning/source/cleanRingWidth.R") 
-# 2. Get observation data from main repo
-setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses") # for now... its bad but i need to back down one folder in order for this code to work
+# 2. Get observation data from main repo: obsdata
 source("cleaning/source/cleaning_obsdata.R")
+
+temp <- merge(wildchrokie_rw, obsdata, by = c("id", "spp", "year"))
+
+# get only the years we have data for
+temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
+
 # 3. Get GDD data from main wildhill repo
-# source("cleaning/source/combineWeather.R") # may be not needed 
+source("cleaning/source/combineWeather.R") # may be not needed
 
 
 # 2. Grab climate data
-# source("fromMainRepo/climatedata.R") # commenting it out for now as there are only 4 years and might be an old script
+source("fromMainRepo/climatedata.R") # commenting it out for now as there are only 4 years and might be an old script
 # 3. Get male and female flowering time
 # source("fromMainRepo/dichogamy.R")
 
 
 # merge columns from cgclean and d by Name and drop all names that are not in d
 merged_df <- merge(rw, obsdata, by = c("name", "year"), all.x = TRUE)
+
+
 # Add species column
 # merged_df$species<-substr(merged_df$Name, 0,6)
 

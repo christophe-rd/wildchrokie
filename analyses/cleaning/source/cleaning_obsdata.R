@@ -576,7 +576,7 @@ foo <- foo[complete.cases(foo),]
 
 }
 
-#### Prepare toi join to source file ####
+#### Prepare to join to source file ####
 dtemp <- cgclean 
 str(dtemp)
 
@@ -595,6 +595,7 @@ dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
 obsdata <- dtemp4
 # add spp name
 obsdata$spp <- sub("_.*", "", obsdata$name)
+names(obsdata)[names(obsdata) == "name"] <- "id"
 
 write.csv(obsdata, file="output/obsData.csv", row.names=FALSE)
 
