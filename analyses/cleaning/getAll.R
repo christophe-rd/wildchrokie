@@ -32,14 +32,12 @@ temp3 <- merge(temp2,
                by = c("id", "year")
                )
 
-# 3. Get male and female flowering time
-# source("fromMainRepo/dichogamy.R")
-
-
-# merge columns from cgclean and d by Name and drop all names that are not in d
-merged_df <- merge(rw, obsdata, by = c("name", "year"), all.x = TRUE)
-
-
-# Add species column
+# make some checks
+unique(temp3$sampleType)
+temp4 <- subset(temp3, sampleType != "coresWithCookies")
+temp5 <- temp4[!is.na(temp4$pgsGDD),]
+temp5$idyear <- paste(temp5$id, temp5$year, sep = "_")
+temp6 <- temp5[!duplicated(temp5$idyear),] 
+hist(temp6$year)
 # merged_df$species<-substr(merged_df$Name, 0,6)
 
