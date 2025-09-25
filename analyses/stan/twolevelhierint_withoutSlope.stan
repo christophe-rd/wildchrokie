@@ -17,33 +17,29 @@ array[N] real y; 		// day of year of phenological event (response)
 parameters{
 real b;        // slope
 real a;		// mean intercept across everything
-real<lower=0> sigma_bsp;
+// real <lower=0> sigma_bsp; // I guess variation of slope across species
 real<lower=0> sigma_asp;	// variation of intercept across species	
 real<lower=0> sigma_asite;    // variation of intercept across sites
 real<lower=0> sigma_atreeid;    // variation of intercept across tree ids
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
-vector[Nspp] bsp;
-vector[Nspp] asp_raw; 		//the intercept for each species
+vector[Nspp] asp; 		//the intercept for each species
 vector[Nsite] asite;       //the intercept for each sites
 vector[Ntreeid] atreeid;       //the intercept for each tree id
 
 }
 
 transformed parameters{
-vector[Nspp] asp;
 array[N] real ypred;
 for (i in 1:N){
     ypred[i]=a + 
-        asp_raw[species[i]] + 
+        asp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
-        b*gdd[i] +
-        bsp[species[i]]*gdd[i];
+        b*gdd[i];
     }
 }
 
 model{	
-bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
 asp ~ normal(0, sigma_asp); // this creates the partial pooling on intercepts for species
 asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
 atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
@@ -52,11 +48,7 @@ atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on inter
   a ~ normal(2, 4);
   b ~ normal(0, 0.2);
   
-  sigma_bsp ~ normal(0, 1);
-  
   sigma_asp ~ normal(0, 1);
-  
-  asp_raw ~ normal(0,1);
   
   sigma_asite ~ normal(0, 1);
   
