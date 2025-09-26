@@ -147,6 +147,8 @@ fit <- rstan::stan("stan/twolevelhierint.stan",
 # summary(fit)$summary
 # launch_shinystan(fit)
 
+if (FALSE) {
+  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # TEMPORARY FOR MODEL COMPARISON #
 y <- simcoef$ringwidth
@@ -342,6 +344,7 @@ launch_shinystan(fit_withoutslope)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 
+}
 
 
 
