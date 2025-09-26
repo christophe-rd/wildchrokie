@@ -356,7 +356,7 @@ wildchrokie_rw <- wildchrokie_rw[c(
   )]
 
 colnames(wildchrokie_rw) <- c(
-  "id",
+  "treeid",
   "spp",
   "prov", 
   "plot",
