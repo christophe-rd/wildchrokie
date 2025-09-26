@@ -180,7 +180,7 @@ agg <- aggregate(d$lengthCM, by = list(d$name, d$year, d$sourceFolder), FUN = me
 
 # rename the columns
 colnames(agg) <- c("name", "year", "sourceFolder", "lengthCM")
-agg$Yearcor <- agg$year
+agg$yearCor <- agg$year
 
 ### === === === === === ###
 ##### Cross date cookie/core #####
@@ -189,7 +189,7 @@ agg$Yearcor <- agg$year
 corewcookie <- subset(agg, sourceFolder == "coresWithCookies")
 corevec <- unique(corewcookie$name)
 # Start by selecting cookies for which we have cores
-# agg$Yearcor <- agg$year
+# agg$yearCor <- agg$year
 cookiewcore <- subset(agg, name %in% corevec)
 
 # histograms of every cookie X core 
@@ -201,7 +201,7 @@ betpap <- subset(cookiewcore, grepl("BETPAP", name))
 betpop <- subset(cookiewcore, grepl("BETPOP", name))
 
 # quartz()
-ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+ggplot(betpop, aes(x = factor(yearCor), y = lengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ name, scales = "fixed") +
   theme_minimal() +
@@ -217,58 +217,58 @@ ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
 ###### Change 2022 to 2023 when necessary for cookies with cores ######
 ### === === === === === === === === === === ###
 # add yearCor column to fix year patterns after verification 
-d$Yearcor <- d$year
+d$yearCor <- d$year
 # BETALL_GR12_P1
-d$Yearcor[d$name == "BETALL_GR12_P1" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETALL_GR12_P1" & d$sourceFolder == "cookies"] <- 
   agg$year[agg$name == "BETALL_GR12_P1" & agg$sourceFolder == "cookies"] + 1
 # BETALL_GR12_P1
-d$Yearcor[d$name == "BETALL_GR12_P1" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETALL_GR12_P1" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETALL_GR12_P1" & d$sourceFolder == "cookies"] + 1
 # BETALL_WM8A_P5
-d$Yearcor[d$name == "BETALL_WM8A_P5" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETALL_WM8A_P5" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETALL_WM8A_P5" & d$sourceFolder == "cookies"] + 1
 # BETPAP_HF16_P12
-d$Yearcor[d$name == "BETPAP_HF16_P12" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPAP_HF16_P12" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPAP_HF16_P12" & d$sourceFolder == "cookies"] + 1
 # BETPAP_HF16A_P6
-d$Yearcor[d$name == "BETPAP_HF16A_P6" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPAP_HF16A_P6" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPAP_HF16A_P6" & d$sourceFolder == "cookies"] + 1
 # BETPAP_SH1A_P1
-d$Yearcor[d$name == "BETPAP_SH1A_P1" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPAP_SH1A_P1" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPAP_SH1A_P1" & d$sourceFolder == "cookies"] + 1
 # BETPOP_GR5A_P12
-d$Yearcor[d$name == "BETPOP_GR5A_P12" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_GR5A_P12" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_GR5A_P12" & d$sourceFolder == "cookies"] + 1
 # BETPOP_GR5B_P12
-d$Yearcor[d$name == "BETPOP_GR5B_P12" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_GR5B_P12" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_GR5B_P12" & d$sourceFolder == "cookies"] + 1
 # BETPOP_HF1_P3
-d$Yearcor[d$name == "BETPOP_HF1_P3" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_HF1_P3" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_HF1_P3" & d$sourceFolder == "cookies"] + 1
 # BETPOP_WM7_P6
-d$Yearcor[d$name == "BETPOP_WM7_P6" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_WM7_P6" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_WM7_P6" & d$sourceFolder == "cookies"] + 1
 # BETPOP_XX_P3
-d$Yearcor[d$name == "BETPOP_XX_P3" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_XX_P3" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_XX_P3" & d$sourceFolder == "cookies"] + 1
 
 ### === === === === === === === === === === ###
 ######Change 2022 to 2023 when necessary for cookies without cores ######
 ### === === === === === === === === === === ###
 # BETALL_GR12_P1
-d$Yearcor[d$name == "BETALL_WM8_P1" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETALL_WM8_P1" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETALL_WM8_P1" & d$sourceFolder == "cookies"] + 1
 # BETPOP_HF16A_P2
-d$Yearcor[d$name == "BETPOP_HF16A_P2" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_HF16A_P2" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_HF16A_P2" & d$sourceFolder == "cookies"] + 1
 # BETPOP_HF3A_P6
-d$Yearcor[d$name == "BETPOP_HF3A_P6" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_HF3A_P6" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_HF3A_P6" & d$sourceFolder == "cookies"] + 1
 # BETPOP_WM8_PNA
-d$Yearcor[d$name == "BETPOP_WM8_PNA" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_WM8_PNA" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_WM8_PNA" & d$sourceFolder == "cookies"] + 1
 # BETPOP_GR5C_P12
-d$Yearcor[d$name == "BETPOP_GR5C_P12" & d$sourceFolder == "cookies"] <- 
+d$yearCor[d$name == "BETPOP_GR5C_P12" & d$sourceFolder == "cookies"] <- 
   d$year[d$name == "BETPOP_GR5C_P12" & d$sourceFolder == "cookies"] + 1
     
 # select cookies for which we have cores
@@ -291,10 +291,10 @@ betpop <- subset(corenocookie, grepl("BETPOP", name))
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Visualize final results
-agg2 <- aggregate(d$lengthCM, by = list(d$name, d$Yearcor, d$sourceFolder), FUN = mean)
+agg2 <- aggregate(d$lengthCM, by = list(d$name, d$yearCor, d$sourceFolder), FUN = mean)
 
 # rename the columns
-colnames(agg2) <- c("name", "Yearcor", "sourceFolder", "lengthCM")
+colnames(agg2) <- c("name", "yearCor", "sourceFolder", "lengthCM")
 
 # look at all the betpop
 betpap <- subset(agg2, grepl("BETPAP", name))
@@ -302,7 +302,7 @@ betpop <- subset(agg2, grepl("BETPOP", name))
 betall <- subset(agg2, grepl("BETALL", name))
 alninc <- subset(agg2, grepl("ALNINC", name))
 
-ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+ggplot(betpap, aes(x = factor(yearCor), y = lengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ name, scales = "fixed") +
   theme_minimal() +
@@ -313,7 +313,7 @@ ggplot(betpap, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
   ) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
+ggplot(betpop, aes(x = factor(yearCor), y = lengthCM, fill = sourceFolder)) +
   geom_bar(stat = "identity", position = "dodge") +
   facet_wrap(~ name, scales = "fixed") +
   theme_minimal() +
@@ -326,20 +326,32 @@ ggplot(betpop, aes(x = factor(Yearcor), y = lengthCM, fill = sourceFolder)) +
 
 # clean df and make it ready for analyses!
 # add species col
-names(d)[names(d) == "Yearcor"] <- "year"
+# names(d)[names(d) == "yearCor"] <- "year"
 names(d)[names(d) == "sourceFolder"] <- "sampleType"
 d$spp <- sub("_.*", "", d$name)
-d$prov <- sub("^[^_]*_(.*?)_.*$", "\\1", d$name)
+d$provplot <- sub("^[^_]*_(.*?)_.*$", "\\1", d$name)
+d$prov <- substr(d$provplot, 0,2)
+d$plot <- substr(d$provplot, 3,4)
 d$replicate <- sub(".*_", "", d$name)
 
+averagedlengths <- aggregate(d$lengthCM, by = list(d$name, d$yearCor), FUN = mean )
+colnames(averagedlengths) <- c("name", "yearCor", "avLengthCM")
+
+# merge with averagelengths
+wildchrokie_rw <- merge(d, averagedlengths, by = c("name", "yearCor"), all.x = TRUE)
+wildchrokie_rw$temp <- paste(wildchrokie_rw$name, wildchrokie_rw$year)
+# one row per id and year
+wildchrokie_rw <- wildchrokie_rw[!duplicated(wildchrokie_rw$temp),]
+
 # reorganize and create a new csv
-wildchrokie_rw <- d[c(
+wildchrokie_rw <- wildchrokie_rw[c(
   "name",
   "spp",
   "prov", 
+  "plot",
   "replicate",
-  "year",
-  "lengthCM",
+  "yearCor",
+  "avLengthCM",
   "sampleType"
   )]
 
@@ -347,6 +359,7 @@ colnames(wildchrokie_rw) <- c(
   "id",
   "spp",
   "prov", 
+  "plot",
   "replicate",
   "year",
   "lengthCM",
@@ -363,6 +376,8 @@ wildchrokie_rw <- wildchrokie_rw[order(
 wildchrokie_rw
 
 
+
 # write csv!
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
+
