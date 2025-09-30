@@ -1,4 +1,4 @@
-"year","budburst","flowers","leafout","flobuds","flobudburst","fruit","ripefruit","budset","leafcolor","provenance.lat","provenance.long","id","spp"
+"year","budburst","flowers","leafout","flobuds","flobudburst","fruit","ripefruit","budset","leafcolor","provenance.lat","provenance.long","treeid","spp"
 2018,107,NA,124,NA,NA,NA,NA,274,NA,44.794942,-71.146683,"ALNINC_GR1_P3","ALNINC"
 2018,103,NA,128,NA,NA,NA,NA,268,NA,44.794942,-71.146683,"ALNINC_GR1_P5","ALNINC"
 2018,107,NA,124,NA,NA,NA,NA,274,297,44.794942,-71.146683,"ALNINC_GR11_P1","ALNINC"
