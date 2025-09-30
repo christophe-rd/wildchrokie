@@ -146,10 +146,10 @@ cg18clean$year <- 2018
 cg19 <-read.csv("fromMainRepo/2019_data/2019_CG_dataupdated.csv", header=TRUE) 
 
 ## Now let's clean 2019 data
-cg19$id <- paste(cg19$ID, cg19$Plot, sep="_")
+cg19$treeid <- paste(cg19$ID, cg19$Plot, sep="_")
 cg19$Ind<-NULL
 cg19$Plot<-NULL
-cg19 <- gather(cg19, "date", "bbch", -id, -Phase)
+cg19 <- gather(cg19, "date", "bbch", -treeid, -Phase)
 cg19 <- cg19[!(cg19$date=="ID"),]
 cg19 <- na.omit(cg19)
 cg19 <- cg19[!(cg19$bbch==""),]
@@ -160,8 +160,8 @@ cg19$doy <- yday(cg19$date)
 
 cg19leaves <- cg19[(cg19$Phase=="Leaves"),]
 
-cg19leaves <- subset(cg19leaves, select=c("id", "doy", "bbch"))
-cg19leaves <- separate(data = cg19leaves, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg19leaves <- subset(cg19leaves, select=c("treeid", "doy", "bbch"))
+cg19leaves <- separate(data = cg19leaves, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg19leaves$ind <- ifelse(is.na(cg19leaves$ind), substr(cg19leaves$spp, 7,8), cg19leaves$ind)
 cg19leaves$ind <- ifelse(cg19leaves$ind=="", "XX", cg19leaves$ind)
 cg19leaves$spp <- substr(cg19leaves$spp, 0, 6)
@@ -188,8 +188,8 @@ cg19leaves$plot <- as.character(cg19leaves$plot)
 
 cg19budset <- cg19[(cg19$Phase=="Budset"),]
 
-cg19budset <- subset(cg19budset, select=c("id", "doy", "bbch"))
-cg19budset <- separate(data = cg19budset, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg19budset <- subset(cg19budset, select=c("treeid", "doy", "bbch"))
+cg19budset <- separate(data = cg19budset, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg19budset$ind <- ifelse(is.na(cg19budset$ind), substr(cg19budset$spp, 7,8), cg19budset$ind)
 cg19budset$ind <- ifelse(cg19budset$ind=="", "XX", cg19budset$ind)
 cg19budset$spp <- substr(cg19budset$spp, 0, 6)
@@ -218,8 +218,8 @@ cg19clean <- full_join(cg19leaves, cg19budset)
 
 cg19flowers <- cg19[(cg19$Phase=="Flowers"),]
 
-cg19flowers <- subset(cg19flowers, select=c("id", "doy", "bbch"))
-cg19flowers <- separate(data = cg19flowers, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg19flowers <- subset(cg19flowers, select=c("treeid", "doy", "bbch"))
+cg19flowers <- separate(data = cg19flowers, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg19flowers$ind <- ifelse(is.na(cg19flowers$ind), substr(cg19flowers$spp, 7,8), cg19flowers$ind)
 cg19flowers$ind <- ifelse(cg19flowers$ind=="", "XX", cg19flowers$ind)
 cg19flowers$spp <- substr(cg19flowers$spp, 0, 6)
@@ -260,8 +260,8 @@ cg19clean <- full_join(cg19clean, cg19flowers)
 
 cg19fruits <- cg19[(cg19$Phase=="Fruits"),]
 
-cg19fruits <- subset(cg19fruits, select=c("id", "doy", "bbch"))
-cg19fruits <- separate(data = cg19fruits, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg19fruits <- subset(cg19fruits, select=c("treeid", "doy", "bbch"))
+cg19fruits <- separate(data = cg19fruits, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg19fruits$ind <- ifelse(is.na(cg19fruits$ind), substr(cg19fruits$spp, 7,8), cg19fruits$ind)
 cg19fruits$ind <- ifelse(cg19fruits$ind=="", "XX", cg19fruits$ind)
 cg19fruits$spp <- substr(cg19fruits$spp, 0, 6)
@@ -294,8 +294,8 @@ cg19clean <- full_join(cg19clean, cg19fruits)
 
 cg19fall <- cg19[(cg19$Phase=="Fall Colors"),]
 
-cg19fall <- subset(cg19fall, select=c("id", "doy", "bbch"))
-cg19fall <- separate(data = cg19fall, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg19fall <- subset(cg19fall, select=c("treeid", "doy", "bbch"))
+cg19fall <- separate(data = cg19fall, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg19fall$ind <- ifelse(is.na(cg19fall$ind), substr(cg19fall$spp, 7,8), cg19fall$ind)
 cg19fall$ind <- ifelse(cg19fall$ind=="", "XX", cg19fall$ind)
 cg19fall$spp <- substr(cg19fall$spp, 0, 6)
@@ -336,10 +336,10 @@ cg <- full_join(cg19clean, cg18clean)
 cg20 <-read.csv("fromMainRepo/2020_data/2020_CG_datasheet.csv", header=TRUE) 
 
 ## Now let's clean 2019 data
-cg20$id <- paste(cg20$ID, cg20$Plot, sep="_")
+cg20$treeid <- paste(cg20$ID, cg20$Plot, sep="_")
 cg20$Ind<-NULL
 cg20$Plot<-NULL
-cg20 <- gather(cg20, "date", "bbch", -id, -Phase)
+cg20 <- gather(cg20, "date", "bbch", -treeid, -Phase)
 cg20 <- na.omit(cg20)
 cg20 <- cg20[!(cg20$bbch==""),]
 
@@ -349,8 +349,8 @@ cg20$doy <- yday(cg20$date)
 
 cg20leaves <- cg20[(cg20$Phase=="Leaves"),]
 
-cg20leaves <- subset(cg20leaves, select=c("id", "doy", "bbch"))
-cg20leaves <- separate(data = cg20leaves, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg20leaves <- subset(cg20leaves, select=c("treeid", "doy", "bbch"))
+cg20leaves <- separate(data = cg20leaves, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg20leaves$ind <- ifelse(is.na(cg20leaves$ind), substr(cg20leaves$spp, 7,8), cg20leaves$ind)
 cg20leaves$ind <- ifelse(cg20leaves$ind=="", "XX", cg20leaves$ind)
 cg20leaves$spp <- substr(cg20leaves$spp, 0, 6)
@@ -378,8 +378,8 @@ cg20leaves$plot <- as.character(cg20leaves$plot)
 
 cg20budset <- cg20[(cg20$Phase%in%c("Leaves", "Flowers")),]
 
-cg20budset <- subset(cg20budset, select=c("id", "doy", "bbch"))
-cg20budset <- separate(data = cg20budset, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg20budset <- subset(cg20budset, select=c("treeid", "doy", "bbch"))
+cg20budset <- separate(data = cg20budset, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg20budset$ind <- ifelse(is.na(cg20budset$ind), substr(cg20budset$spp, 7,8), cg20budset$ind)
 cg20budset$ind <- ifelse(cg20budset$ind=="", "XX", cg20budset$ind)
 cg20budset$spp <- substr(cg20budset$spp, 0, 6)
@@ -408,8 +408,8 @@ cg20clean <- full_join(cg20leaves, cg20budset)
 
 cg20flowers <- cg20[(cg20$Phase%in%c("Leaves", "Flowers")),]
 
-cg20flowers <- subset(cg20flowers, select=c("id", "doy", "bbch"))
-cg20flowers <- separate(data = cg20flowers, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg20flowers <- subset(cg20flowers, select=c("treeid", "doy", "bbch"))
+cg20flowers <- separate(data = cg20flowers, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg20flowers$ind <- ifelse(is.na(cg20flowers$ind), substr(cg20flowers$spp, 7,8), cg20flowers$ind)
 cg20flowers$ind <- ifelse(cg20flowers$ind=="", "XX", cg20flowers$ind)
 cg20flowers$spp <- substr(cg20flowers$spp, 0, 6)
@@ -452,8 +452,8 @@ cg20clean <- full_join(cg20clean, cg20flowers)
 
 cg20fruits <- cg20[(cg20$Phase%in%c("Leaves", "Flowers")),]
 
-cg20fruits <- subset(cg20fruits, select=c("id", "doy", "bbch"))
-cg20fruits <- separate(data = cg20fruits, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg20fruits <- subset(cg20fruits, select=c("treeid", "doy", "bbch"))
+cg20fruits <- separate(data = cg20fruits, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg20fruits$ind <- ifelse(is.na(cg20fruits$ind), substr(cg20fruits$spp, 7,8), cg20fruits$ind)
 cg20fruits$ind <- ifelse(cg20fruits$ind=="", "XX", cg20fruits$ind)
 cg20fruits$spp <- substr(cg20fruits$spp, 0, 6)
@@ -488,8 +488,8 @@ cg20clean <- full_join(cg20clean, cg20fruits)
 
 cg20fall <- cg20[(cg20$Phase%in%c("Leaves", "Flowers")),]
 
-cg20fall <- subset(cg20fall, select=c("id", "doy", "bbch"))
-cg20fall <- separate(data = cg20fall, col = id, into = c("spp", "site", "ind", "plot"), sep = "\\_")
+cg20fall <- subset(cg20fall, select=c("treeid", "doy", "bbch"))
+cg20fall <- separate(data = cg20fall, col = treeid, into = c("spp", "site", "ind", "plot"), sep = "\\_")
 cg20fall$ind <- ifelse(is.na(cg20fall$ind), substr(cg20fall$spp, 7,8), cg20fall$ind)
 cg20fall$ind <- ifelse(cg20fall$ind=="", "XX", cg20fall$ind)
 cg20fall$spp <- substr(cg20fall$spp, 0, 6)
@@ -595,7 +595,7 @@ dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
 obsdata <- dtemp4
 # add spp name
 obsdata$spp <- sub("_.*", "", obsdata$name)
-names(obsdata)[names(obsdata) == "name"] <- "id"
+names(obsdata)[names(obsdata) == "name"] <- "treeid"
 
 write.csv(obsdata, file="output/obsData.csv", row.names=FALSE)
 
