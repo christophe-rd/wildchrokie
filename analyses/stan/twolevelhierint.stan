@@ -31,6 +31,7 @@ vector[Ntreeid] atreeid;       //the intercept for each tree id
 
 transformed parameters{
 vector[Nspp] asp;
+asp = asp_raw
 array[N] real ypred;
 for (i in 1:N){
     ypred[i]=a + 
