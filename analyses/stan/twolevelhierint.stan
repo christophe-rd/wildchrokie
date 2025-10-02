@@ -57,7 +57,11 @@ atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on inter
   
   sigma_asp ~ normal(0, 1);
   
+<<<<<<< HEAD
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
+=======
+  zasp ~ normal(0,1); // here i put the standard centered prior on zasp
+>>>>>>> 17aa2ac31f76dc0c611b91be8133929e257caf56
   
   sigma_asite ~ normal(0, 1);
   
