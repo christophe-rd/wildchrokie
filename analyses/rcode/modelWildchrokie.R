@@ -142,211 +142,12 @@ table(treeid)
 
 fit <- rstan::stan("stan/twolevelhierint.stan", 
                       data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                      iter=4000, chains=4, cores=4)  
+                      iter=4000, chains=4, cores=4,
+                   control = list(max_treedepth = 12))  
 
-# summary(fit)$summary
-# launch_shinystan(fit)
-
-if (FALSE) {
-  
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# TEMPORARY FOR MODEL COMPARISON #
-y <- simcoef$ringwidth
-fit_withslope <- rstan::stan("stan/temp_twolevelhierint_withslope.stan", 
-                   data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                   iter=4000, chains=4, cores=4)
-
-
-y <- simcoef$ringwidth_noPPslope
-fit_withoutslope <- rstan::stan("stan/twolevelhierint_withoutSlope.stan", 
-                             data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                             iter=4000, chains=4, cores=4)
-
-# fit_withslope
-df_fit_withslope <- as.data.frame(fit_withslope)
-
-sigma_cols <- colnames(df_fit_withslope)[grepl("sigma", colnames(df_fit_withslope))]
-
-sigma_df <- df_fit_withslope[, colnames(df_fit_withslope) %in% sigma_cols]
-
-sigma_df2_withslope <- data.frame(
-  sigma = character(ncol(sigma_df)),
-  mean = numeric(ncol(sigma_df)),  
-  per5 = NA, 
-  per25 = NA,
-  per75 = NA,
-  per95 = NA
-)
-sigma_df2_withslope
-
-for (i in 1:ncol(sigma_df)) { # i = 1
-  sigma_df2_withslope$sigma[i] <- colnames(sigma_df)[i]         
-  sigma_df2_withslope$mean[i] <- round(mean(sigma_df[[i]]),3)  
-  sigma_df2_withslope$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.05), 3)
-  sigma_df2_withslope$per25[i] <- round(quantile(sigma_df[[i]], probs = 0.25), 3)
-  sigma_df2_withslope$per75[i] <- round(quantile(sigma_df[[i]], probs = 0.75), 3)
-  sigma_df2_withslope$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
-}
-
-sigma_df2_withslope$sim_sigma <- c(sigma_b_spp, sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
-sigma_df2_withslope
-
-# A SPP
-aspp_cols <- colnames(df_fit_withslope)[grepl("asp", colnames(df_fit_withslope))]
-# remove sigma_asp for now
-aspp_cols <- aspp_cols[2:length(aspp_cols)]
-
-aspp_df <- df_fit_withslope[, colnames(df_fit_withslope) %in% aspp_cols]
-# change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
-#empty aspp df
-aspp_df2_withslope <- data.frame(
-  spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
-)
-for (i in 1:ncol(aspp_df)) { # i = 1
-  aspp_df2_withslope$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2_withslope$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2_withslope$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2_withslope$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2_withslope$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2_withslope$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
-}
-aspp_df2_withslope
-
-
-# PLOT
-sigma_simXfit_plot_withslope <- ggplot(sigma_df2_withslope, aes(x = sim_sigma, y = mean)) +
-  geom_point(color = "#046C9A", size = 3) +
-  geom_errorbar(aes(ymin = per5, ymax = per95),
-                width = 0, color = "darkgray", alpha = 1) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
-              color = "#B40F20", linewidth = 1) +
-  ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
-  labs(x = "sim sigma", y = "fit sigma",
-       title = "fit vs sim sigmas") +
-  theme_minimal()
-sigma_simXfit_plot_withslope
-ggsave("figures/sigma_simXfit_plot_withslope.jpeg", sigma_simXfit_plot_withslope, width = 6, height = 6, units = "in", dpi = 300)
-
-aspptoplot_withslope <- merge(
-  simcoef[!duplicated(simcoef$spp), 
-          c("spp", "a_spp")], 
-  aspp_df2_withslope[!duplicated(aspp_df2_withslope$spp), 
-           c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
-  by = "spp"
-)
-aspptoplot_withslope
-
-a_spp_simXfit_plot_withslope <- ggplot(aspptoplot_withslope, aes(x = a_spp, y = fit_a_spp)) +
-  geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), width = 0, color = "darkgray", alpha=0.9) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_spp", y = "fit a_spp", title = "") +
-  theme_minimal()
-a_spp_simXfit_plot_withslope
-# ggsave!
-ggsave("figures/a_spp_simXfit_plot_withslope.jpeg", a_spp_simXfit_plot_withslope, width = 6, height = 6, units = "in", dpi = 300)
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
-# fit_withoutslope
-df_fit_withoutslope <- as.data.frame(fit_withoutslope)
-
-sigma_cols <- colnames(df_fit_withoutslope)[grepl("sigma", colnames(df_fit_withoutslope))]
-
-sigma_df <- df_fit_withoutslope[, colnames(df_fit_withoutslope) %in% sigma_cols]
-
-sigma_df2_withoutslope <- data.frame(
-  sigma = character(ncol(sigma_df)),
-  mean = numeric(ncol(sigma_df)),  
-  per5 = NA, 
-  per25 = NA,
-  per75 = NA,
-  per95 = NA
-)
-sigma_df2_withoutslope
-
-for (i in 1:ncol(sigma_df)) { # i = 1
-  sigma_df2_withoutslope$sigma[i] <- colnames(sigma_df)[i]         
-  sigma_df2_withoutslope$mean[i] <- round(mean(sigma_df[[i]]),3)  
-  sigma_df2_withoutslope$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.05), 3)
-  sigma_df2_withoutslope$per25[i] <- round(quantile(sigma_df[[i]], probs = 0.25), 3)
-  sigma_df2_withoutslope$per75[i] <- round(quantile(sigma_df[[i]], probs = 0.75), 3)
-  sigma_df2_withoutslope$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
-}
-sigma_df2_withoutslope$sim_sigma <- c(sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
-
-
-aspp_cols <- colnames(df_fit_withoutslope)[grepl("asp", colnames(df_fit_withoutslope))]
-# remove sigma_asp for now
-aspp_cols <- aspp_cols[2:length(aspp_cols)]
-
-aspp_df <- df_fit_withoutslope[, colnames(df_fit_withoutslope) %in% aspp_cols]
-# change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
-#empty aspp df
-aspp_df2_withoutslope <- data.frame(
-  spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
-)
-for (i in 1:ncol(aspp_df)) { # i = 1
-  aspp_df2_withoutslope$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2_withoutslope$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2_withoutslope$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2_withoutslope$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2_withoutslope$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2_withoutslope$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
-}
-aspp_df2_withoutslope
-
-sigma_simXfit_plot_withoutslope <- ggplot(sigma_df2_withoutslope, aes(x = sim_sigma, y = mean)) +
-  geom_point(color = "#046C9A", size = 3) +
-  geom_errorbar(aes(ymin = per5, ymax = per95),
-                width = 0, color = "darkgray", alpha = 1) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
-              color = "#B40F20", linewidth = 1) +
-  ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
-  labs(x = "sim sigma", y = "fit sigma",
-       title = "fit vs sim sigmas") +
-  theme_minimal()
-sigma_simXfit_plot_withoutslope
-ggsave("figures/sigma_simXfit_plot_withoutslope.jpeg", sigma_simXfit_plot_withoutslope, width = 6, height = 6, units = "in", dpi = 300)
-
-aspptoplot_withoutslope <- merge(
-  simcoef[!duplicated(simcoef$spp), 
-          c("spp", "a_spp")], 
-  aspp_df2_withoutslope[!duplicated(aspp_df2_withoutslope$spp), 
-                     c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
-  by = "spp"
-)
-aspptoplot_withoutslope
-
-a_spp_simXfit_plot_withoutslope <- ggplot(aspptoplot_withoutslope, aes(x = a_spp, y = fit_a_spp)) +
-  geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), width = 0, color = "darkgray", alpha=0.9) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_spp", y = "fit a_spp", title = "") +
-  theme_minimal()
-a_spp_simXfit_plot_withoutslope
-# ggsave!
-ggsave("figures/a_spp_simXfit_plot_withoutslope.jpeg", a_spp_simXfit_plot_withoutslope, width = 6, height = 6, units = "in", dpi = 300)
-
-launch_shinystan(fit_withslope)
-launch_shinystan(fit_withoutslope)
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
-
-}
-
-
+summary(fit)$summary
+saveRDS(fit, "output/fit")
+launch_shinystan(fit)
 
 
 # === === === === === === === === === === === === #
@@ -444,7 +245,7 @@ treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- colnames(df_fit)[grepl("zasp", colnames(df_fit))]
 # remove sigma_asp for now
 aspp_cols <- aspp_cols[2:length(aspp_cols)]
 
@@ -468,7 +269,9 @@ for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
   aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
-aspp_df2
+# remove z
+aspp_df2$spp <- substr(aspp_df2$spp, 2,2)
+
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -605,8 +408,42 @@ ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, heigh
 
 
 # === === === === === === === === === === === === === === === === 
-#### Step 3. Set your priors ####
+#### Step 3. Prior predictive checks ####
 # === === === === === === === === === === === === === === === === 
+
+# Bayesplot tutorial
+
+posterior2 <- rstan::extract(fit, inc_warmup = TRUE, permuted = FALSE)
+
+color_scheme_set("mix-blue-pink")
+p <- mcmc_trace(posterior2,  pars = c("sigma_asp", "sigma_asite"), n_warmup = 300,
+                facet_args = list(nrow = 2, labeller = label_parsed))
+p + facet_text(size = 15)
+
+posterior <- as.matrix(fit)
+
+str(posterior$parameters) 
+summary(posterior)
+
+plot_title <- ggtitle("Posterior distributions",
+                      "with medians and 80% intervals")
+mcmc_areas(posterior,
+           pars = c("zasp"),
+           prob = 0.8) + plot_title
+
+color_scheme_set("red")
+ppc_dens_overlay(y = fit$y,
+                 yrep = posterior_predict(fit, draws = 50))
+
+
+posterior_array <- as.array(fit)
+posterior_vs_prior(fit, pars = "sigma_asp")
+mcmc_areas(posterior_array, pars = "zasp")
+
+# other checks from: https://cran.r-project.org/web/packages/bennu/vignettes/Introduction.html
+plot_kit_use(model = fit, data = d)
+
+stan_hist(fit)
 
 # === === === === === === === === === === === === === === === === 
 #### Step 4. Run model on empirical data ####
