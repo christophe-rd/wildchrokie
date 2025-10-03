@@ -143,11 +143,11 @@ table(treeid)
 fit <- rstan::stan("stan/twolevelhierint.stan", 
                       data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                       iter=4000, chains=4, cores=4,
-                   control = list(max_treedepth = 12))  
+                   control = list(max_treedepth = 15))  
 
-summary(fit)$summary
-saveRDS(fit, "output/fit")
-launch_shinystan(fit)
+# summary(fit)$summary
+# saveRDS(fit, "output/fit")
+# launch_shinystan(fit)
 
 
 # === === === === === === === === === === === === #
@@ -408,8 +408,27 @@ ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, heigh
 
 
 # === === === === === === === === === === === === === === === === 
-#### Step 3. Prior predictive checks ####
+#### Step 3. Look at my priors####
 # === === === === === === === === === === === === === === === === 
+n <- 1e4
+prior_a <- rnorm(n, 1.5, 1)
+hist(prior_a)
+prior_b <- rnorm(n, 0.4, 1)
+hist(prior_b)
+prior_bsp <- rnorm(n, 0, 0.1)
+hist(prior_bsp)
+prior_zasp <-  rnorm(n, 0, 1)
+hist(prior_zasp)
+prior_asite <-  rnorm(n, 0, 0.5)
+hist(prior_asite)
+prior_sigma_bsp <-  rnorm(n, 0, 0.2)
+hist(prior_sigma_bsp)
+prior_sigma_asp <-  rnorm(n, 0, 0.5)
+hist(prior_sigma_asp)
+prior_sigma_asite <-  rnorm(n, 0, 0.06 )
+hist(prior_sigma_asite)
+prior_sigma_atreeid <-  rnorm(n, 0, 0.05)
+hist(prior_sigma_atreeid)
 
 # Bayesplot tutorial
 
@@ -445,6 +464,71 @@ plot_kit_use(model = fit, data = d)
 
 stan_hist(fit)
 
+##### Priors VS Posterior #####
+# Start with sigma_bsp
+colnames(sigma_df) <- paste("post", colnames(sigma_df), sep = "_")
+
+# Define priors as stated in the stan code
+sigma_df$prior_sigma_bsp <- rnorm(nrow(sigma_df), 0, 0.2)
+sigma_df$prior_sigma_asp <- rnorm(nrow(sigma_df), 0, 0.5)
+sigma_df$prior_sigma_asite <- rnorm(nrow(sigma_df), 0, 0.5)
+sigma_df$prior_sigma_atreeid <- rnorm(nrow(sigma_df), 0, 0.5)
+
+# convert each parameter to long format
+sigma_long_bsp <- data.frame(
+  value  = c(sigma_df$post_sigma_bsp, sigma_df$prior_sigma_bsp),
+  source = rep(c("post_sigma_bsp", "prior_sigma_bsp"), 
+               each = nrow(sigma_df))
+)
+
+ggplot(sigma_long_bsp, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
+
+# Sigma asp
+sigma_long_asp <- data.frame(
+  value  = c(sigma_df$post_sigma_asp, sigma_df$prior_sigma_asp),
+  source = rep(c("post_sigma_asp", "prior_sigma_asp"), 
+               each = nrow(sigma_df))
+)
+
+ggplot(sigma_long_asp, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
+
+# Sigma asite
+sigma_long_asite <- data.frame(
+  value  = c(sigma_df$post_sigma_asite, sigma_df$prior_sigma_asite),
+  source = rep(c("post_sigma_asite", "prior_sigma_asite"), 
+               each = nrow(sigma_df))
+)
+
+ggplot(sigma_long_asite, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
+
+# Sigma atreeid
+sigma_long_atreeid <- data.frame(
+  value  = c(sigma_df$post_sigma_atreeid, sigma_df$prior_sigma_atreeid),
+  source = rep(c("post_sigma_atreeid", "prior_sigma_atreeid"), 
+               each = nrow(sigma_df))
+)
+
+ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
 # === === === === === === === === === === === === === === === === 
 #### Step 4. Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 

@@ -45,27 +45,22 @@ for (i in 1:N){ // don't change this for reparameterization
 
 model{	
 bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
-// asp ~ normal(0, sigma_asp); // removing as it conflicts with zasp?
 asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
 atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
 
 // Priors ...
   a ~ normal(2, 4);
-  b ~ normal(0, 0.2);
+  b ~ normal(0, 0.25);
   
-  sigma_bsp ~ normal(0, 1);
+  sigma_bsp ~ normal(0, 0.2);
   
-  sigma_asp ~ normal(0, 1);
+  sigma_asp ~ normal(0, 0.5);
   
-<<<<<<< HEAD
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
-=======
-  zasp ~ normal(0,1); // here i put the standard centered prior on zasp
->>>>>>> 17aa2ac31f76dc0c611b91be8133929e257caf56
   
-  sigma_asite ~ normal(0, 1);
+  sigma_asite ~ normal(0, 0.5);
   
-  sigma_atreeid ~ normal(0, 1);
+  sigma_atreeid ~ normal(0, 0.05);
   
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
