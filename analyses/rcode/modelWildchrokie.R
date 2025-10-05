@@ -473,6 +473,7 @@ sigma_df$prior_sigma_bsp <- rnorm(nrow(sigma_df), 0, 0.2)
 sigma_df$prior_sigma_asp <- rnorm(nrow(sigma_df), 0, 0.5)
 sigma_df$prior_sigma_asite <- rnorm(nrow(sigma_df), 0, 0.5)
 sigma_df$prior_sigma_atreeid <- rnorm(nrow(sigma_df), 0, 0.5)
+sigma_df$prior_sigma_y <- rnorm(nrow(sigma_df), 0, 0.5)
 
 # convert each parameter to long format
 sigma_long_bsp <- data.frame(
@@ -529,6 +530,21 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
+
+# sigma_y
+sigma_long_atreeid <- data.frame(
+  value  = c(sigma_df$post_sigma_atreeid, sigma_df$prior_sigma_y),
+  source = rep(c("post_sigma_atreeid", "prior_sigma_atreeid"), 
+               each = nrow(sigma_df))
+)
+
+ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
+
 # === === === === === === === === === === === === === === === === 
 #### Step 4. Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
