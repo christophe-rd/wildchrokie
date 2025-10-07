@@ -126,6 +126,7 @@ ggplot(df_wide, aes(x = meanTempC.weldhillsite, y = meanTempC.newa)) +
 ggsave("figures/climate/climateComparison2020_abline.jpeg", width = 8, height = 5, dpi = 300)
  
 weldhillcomp2 <- subset(weldhillcomp, year %in% c(2016:2019, 2021:2024))
+
 ggplot(weldhillcomp2, aes(x = doy, y = meanTempC, color = source, fill = source)) +
   geom_ribbon(aes(ymin = minTempC, ymax = maxTempC), alpha = 0.2, color = NA) +
   geom_smooth() +

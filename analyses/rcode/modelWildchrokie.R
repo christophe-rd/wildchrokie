@@ -12,7 +12,6 @@ options(digits = 3)
 quartz()
 
 # Load library 
-library(rstanarm)
 library(ggplot2)
 library(rstan)
 library(shinystan)
