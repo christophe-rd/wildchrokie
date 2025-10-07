@@ -109,17 +109,6 @@ simcoef$ringwidth <-
   (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# TEMPORARY FOR MODEL COMPARISON #
-simcoef$ringwidth_noPPslope <- 
-  simcoef$a_site + 
-  simcoef$a_spp + 
-  simcoef$a_treeid + 
-  simcoef$a + 
-  (simcoef$b*simcoef$gddcons) + 
-  simcoef$error
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
 # prepare grouping factors
 simcoef$site <- factor(simcoef$site) 
 simcoef$spp <- factor(simcoef$spp)
@@ -146,7 +135,7 @@ fit <- rstan::stan("stan/twolevelhierint.stan",
 
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
-# launch_shinystan(fit)
+launch_shinystan(fit)
 
 
 # === === === === === === === === === === === === #
@@ -209,7 +198,7 @@ for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
   bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
-bspp_df2
+
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -244,7 +233,9 @@ treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("zasp", colnames(df_fit))]
+aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
 # remove sigma_asp for now
 aspp_cols <- aspp_cols[2:length(aspp_cols)]
 

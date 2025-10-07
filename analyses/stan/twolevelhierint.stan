@@ -26,7 +26,6 @@ vector[Nspp] bsp;
 vector[Nspp] zasp; 		// defining transformed asp
 vector[Nsite] asite;       //the intercept for each sites
 vector[Ntreeid] atreeid;       //the intercept for each tree id
-
 }
 
 transformed parameters{
