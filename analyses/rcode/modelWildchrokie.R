@@ -47,7 +47,7 @@ sigma_a_site <- 0.1
 sigma_b_spp <- 0.25
 
 n_site <- 4 # number of sites
-n_spp <- 10 # number of species
+n_spp <- 50 # number of species
 n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
 n_meas <- 5 # repeated measurements per id
@@ -97,7 +97,8 @@ simcoef$sigma_a_treeid <- sigma_a_treeid
 simcoef$sigma_a_spp <- sigma_a_spp
 simcoef$sigma_a_site <- sigma_a_site
 simcoef$error <- rnorm(N, 0, sigma_y)
-simcoef$gddcons <- rnorm(N, 1800, 100)/200
+simcoef$gdd <- rnorm(N, 1800, 100)
+simcoef$gddcons <- simcoef$gdd - mean(simcoef$gdd)
 
 # adding both options of tree rings
 simcoef$ringwidth <- 
@@ -128,7 +129,7 @@ treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
 
-fit <- rstan::stan("stan/twolevelhierint.stan", 
+fit2 <- rstan::stan("stan/twolevelhierint.stan", 
                       data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                       iter=4000, chains=4, cores=4,
                    control = list(max_treedepth = 15))  
@@ -236,8 +237,6 @@ treeid_df2
 aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
 aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
 aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
-# remove sigma_asp for now
-aspp_cols <- aspp_cols[2:length(aspp_cols)]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
@@ -259,10 +258,6 @@ for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
   aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
-# remove z
-aspp_df2$spp <- substr(aspp_df2$spp, 2,2)
-
-
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover site ######
@@ -401,7 +396,7 @@ ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, heigh
 #### Step 3. Look at my priors####
 # === === === === === === === === === === === === === === === === 
 n <- 1e4
-prior_a <- rnorm(n, 1.5, 1)
+prior_a <- rnorm(n, 2, 4)
 hist(prior_a)
 prior_b <- rnorm(n, 0.4, 1)
 hist(prior_b)
@@ -420,50 +415,54 @@ hist(prior_sigma_asite)
 prior_sigma_atreeid <-  rnorm(n, 0, 0.05)
 hist(prior_sigma_atreeid)
 
-# Bayesplot tutorial
-
-posterior2 <- rstan::extract(fit, inc_warmup = TRUE, permuted = FALSE)
-
-color_scheme_set("mix-blue-pink")
-p <- mcmc_trace(posterior2,  pars = c("sigma_asp", "sigma_asite"), n_warmup = 300,
-                facet_args = list(nrow = 2, labeller = label_parsed))
-p + facet_text(size = 15)
-
-posterior <- as.matrix(fit)
-
-str(posterior$parameters) 
-summary(posterior)
-
-plot_title <- ggtitle("Posterior distributions",
-                      "with medians and 80% intervals")
-mcmc_areas(posterior,
-           pars = c("zasp"),
-           prob = 0.8) + plot_title
-
-color_scheme_set("red")
-ppc_dens_overlay(y = fit$y,
-                 yrep = posterior_predict(fit, draws = 50))
-
-
-posterior_array <- as.array(fit)
-posterior_vs_prior(fit, pars = "sigma_asp")
-mcmc_areas(posterior_array, pars = "zasp")
-
-# other checks from: https://cran.r-project.org/web/packages/bennu/vignettes/Introduction.html
-plot_kit_use(model = fit, data = d)
-
-stan_hist(fit)
-
 ##### Priors VS Posterior #####
-# Start with sigma_bsp
+# prior predictive checks. Simulating prior values from the values set in the model block
+Ndraws <- 1000
 colnames(sigma_df) <- paste("post", colnames(sigma_df), sep = "_")
 
-# Define priors as stated in the stan code
-sigma_df$prior_sigma_bsp <- rnorm(nrow(sigma_df), 0, 0.2)
-sigma_df$prior_sigma_asp <- rnorm(nrow(sigma_df), 0, 0.5)
-sigma_df$prior_sigma_asite <- rnorm(nrow(sigma_df), 0, 0.5)
-sigma_df$prior_sigma_atreeid <- rnorm(nrow(sigma_df), 0, 0.5)
-sigma_df$prior_sigma_y <- rnorm(nrow(sigma_df), 0, 0.5)
+###### sigmas ######
+sigma_bsp_draw     <- abs(rnorm(Ndraws, 0, 0.2))   
+sigma_asp_draw     <- abs(rnorm(Ndraws, 0, 0.5))
+sigma_asite_draw   <- abs(rnorm(Ndraws, 0, 0.5))
+sigma_atree_draw   <- abs(rnorm(Ndraws, 0, 0.05))
+sigma_y_draw       <- abs(rnorm(Ndraws, 0, 5))
+
+inds <- 1:Ndraws
+
+bsp_list <- vector("list", Nsub)   
+asp_list <- vector("list", Nsub)  
+asite_list <- vector("list", Nsub)
+atree_list <- vector("list", Nsub)
+
+for (i in seq_along(inds)) {
+  idx <- inds[i]
+  bsp_list[[i]]   <- rnorm(Nspp, 0, sigma_bsp_draw[idx])
+  asp_list[[i]]   <- rnorm(Nspp, 0, sigma_asp_draw[idx]) 
+  asite_list[[i]] <- rnorm(Nsite, 0, sigma_asite_draw[idx])
+  atree_list[[i]] <- rnorm(Ntree, 0, sigma_atree_draw[idx])
+}
+
+# Flatten bsp/asp into data.frames for plotting
+bsp_df <- do.call(rbind, lapply(1:Nsub, function(i) {
+  data.frame(draw = i, sigma_bsp = sigma_bsp_draw[inds[i]],
+             species = 1:Nspp, bsp = bsp_list[[i]])
+}))
+asp_df <- do.call(rbind, lapply(1:Nsub, function(i) {
+  data.frame(draw = i, sigma_asp = sigma_asp_draw[inds[i]],
+             species = 1:Nspp, asp = asp_list[[i]])
+}))
+
+ggplot(sigma_long_bsp, aes(x = value, color = source, fill = source)) +
+  geom_density(alpha = 0.3) +
+  labs(color = "Parameter", fill = "Parameter") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
+  theme_minimal()
+
+
+
+# now add row for prior_bsp
+prior_bsp <- rnorm(nrow(sigma_df), 0, sigma_df$prior_sigma_bsp)
 
 # convert each parameter to long format
 sigma_long_bsp <- data.frame(
@@ -535,12 +534,25 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
 
-# === === === === === === === === === === === === === === === === 
-#### Step 4. Run model on empirical data ####
+#  === === === === === === === === === === === === === === === === 
+#### Diagnostics ####
 # === === === === === === === === === === === === === === === === 
 
+# Non-centered parameterization #####
+
+# bspp
+# y: log sigma for all my partial pooled parameters 
+# x: sigma of every parameter (e.g. spp1, spp2), need to check all of them individually.
+# tree id 
+
+sigma_df
+sim_df
+# aspp
+
+# site
+
 # === === === === === === === === === === === === === === === === 
-#### Step 5. Perform retrodictive checks using the model fit to your empiral data ####
-# === === === === === === === === === === === === === === === ===
+#### Run model on empirical data ####
+# === === === === === === === === === === === === === === === === 
 
 
