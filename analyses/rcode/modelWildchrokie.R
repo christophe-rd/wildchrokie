@@ -1,3 +1,4 @@
+
 # Wildchrokie model
 # CRD 23 April 2025
 # Started in Boston shortly after completing field work for the tree spotters
@@ -130,9 +131,9 @@ Ntreeid <- length(unique(treeid))
 table(treeid)
 
 fit2 <- rstan::stan("stan/twolevelhierint.stan", 
-                      data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                      iter=4000, chains=4, cores=4,
-                   control = list(max_treedepth = 15))  
+                    data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
+                    iter=4000, chains=4, cores=4,
+                    control = list(max_treedepth = 15))  
 
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
@@ -325,7 +326,7 @@ b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
   theme_minimal()
 b_spp_simXfit_plot
 # ggsave!
-ggsave("figures/b_spp_simXfit_plot.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/b_spp_simXfit_plot2.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot treeid ######
@@ -334,7 +335,7 @@ treeidtoplot <- merge(
   simcoef[!duplicated(simcoef$treeid), 
           c("treeid", "a_treeid")], 
   treeid_df2[!duplicated(treeid_df2$treeid), 
-         c("treeid", "fit_a_treeid", "fit_a_treeid_per5", "fit_a_treeid_per95")], 
+             c("treeid", "fit_a_treeid", "fit_a_treeid_per5", "fit_a_treeid_per95")], 
   by = "treeid"
 )
 treeidtoplot
@@ -355,9 +356,9 @@ aspptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
           c("spp", "a_spp")], 
   aspp_df2[!duplicated(aspp_df2$spp), 
-         c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
+           c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
   by = "spp"
-  )
+)
 aspptoplot
 
 a_spp_simXfit_plot <- ggplot(aspptoplot, aes(x = a_spp, y = fit_a_spp)) +
@@ -376,7 +377,7 @@ sitetoplot <- merge(
   simcoef[!duplicated(simcoef$site), 
           c("site", "a_site")], 
   site_df2[!duplicated(site_df2$site), 
-         c("site", "fit_a_site", "fit_a_site_per5", "fit_a_site_per95")], 
+           c("site", "fit_a_site", "fit_a_site_per5", "fit_a_site_per95")], 
   by = "site"
 )
 sitetoplot
@@ -421,33 +422,33 @@ Ndraws <- 1000
 colnames(sigma_df) <- paste("post", colnames(sigma_df), sep = "_")
 
 ###### sigmas ######
-sigma_bsp_draw     <- abs(rnorm(Ndraws, 0, 0.2))   
-sigma_asp_draw     <- abs(rnorm(Ndraws, 0, 0.5))
-sigma_asite_draw   <- abs(rnorm(Ndraws, 0, 0.5))
-sigma_atree_draw   <- abs(rnorm(Ndraws, 0, 0.05))
-sigma_y_draw       <- abs(rnorm(Ndraws, 0, 5))
+sigma_bsp_draw <- abs(rnorm(Ndraws, 0, 0.2))   
+sigma_asp_draw <- abs(rnorm(Ndraws, 0, 0.5))
+sigma_asite_draw <- abs(rnorm(Ndraws, 0, 0.5))
+sigma_atree_draw <- abs(rnorm(Ndraws, 0, 0.05))
+sigma_y_draw <- abs(rnorm(Ndraws, 0, 5))
 
 inds <- 1:Ndraws
 
-bsp_list <- vector("list", Nsub)   
-asp_list <- vector("list", Nsub)  
-asite_list <- vector("list", Nsub)
-atree_list <- vector("list", Nsub)
+bsp_list <- vector("list", Ndraws)   
+asp_list <- vector("list", Ndraws)  
+asite_list <- vector("list", Ndraws)
+atree_list <- vector("list", Ndraws)
 
 for (i in seq_along(inds)) {
   idx <- inds[i]
-  bsp_list[[i]]   <- rnorm(Nspp, 0, sigma_bsp_draw[idx])
-  asp_list[[i]]   <- rnorm(Nspp, 0, sigma_asp_draw[idx]) 
-  asite_list[[i]] <- rnorm(Nsite, 0, sigma_asite_draw[idx])
-  atree_list[[i]] <- rnorm(Ntree, 0, sigma_atree_draw[idx])
+  bsp_list[[i]]   <- rnorm(n_spp, 0, sigma_bsp_draw[idx])
+  asp_list[[i]]   <- rnorm(n_spp, 0, sigma_asp_draw[idx]) 
+  asite_list[[i]] <- rnorm(n_site, 0, sigma_asite_draw[idx])
+  atree_list[[i]] <- rnorm(n_treeid, 0, sigma_atree_draw[idx])
 }
 
 # Flatten bsp/asp into data.frames for plotting
-bsp_df <- do.call(rbind, lapply(1:Nsub, function(i) {
+bsp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_bsp = sigma_bsp_draw[inds[i]],
              species = 1:Nspp, bsp = bsp_list[[i]])
 }))
-asp_df <- do.call(rbind, lapply(1:Nsub, function(i) {
+asp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_asp = sigma_asp_draw[inds[i]],
              species = 1:Nspp, asp = asp_list[[i]])
 }))
@@ -554,5 +555,3 @@ sim_df
 # === === === === === === === === === === === === === === === === 
 #### Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
-
-
