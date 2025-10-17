@@ -10,13 +10,14 @@ rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(digits = 3)
-quartz()
+# quartz()
 
 # Load library 
 library(ggplot2)
 library(rstan)
 library(shinystan)
 library(wesanderson)
+library(patchwork)
 
 if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -78,7 +79,7 @@ a_spp <- rnorm(n_spp, 0, sigma_a_spp)
 a_site <- rnorm(n_site, 0, sigma_a_site)
 a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
 
-# get slope values for each species
+# get slope values for each speciess
 b_spp <- rnorm(n_spp, 0, sigma_b_spp)
 
 # Add my parameters to the df
@@ -141,6 +142,8 @@ launch_shinystan(fit)
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
+
+write.csv(df_fit, "output/df_fit.csv")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
@@ -441,10 +444,14 @@ for (i in seq_along(inds)) {
 }
 
 # Flatten bsp/asp into data.frames for plotting
-bsp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
+prior_bsp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_bsp = sigma_bsp_draw[inds[i]],
              species = 1:Nspp, bsp = bsp_list[[i]])
 }))
+
+# join in the posterior estimates
+joined_bsp <- bspp_df
+
 asp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_asp = sigma_asp_draw[inds[i]],
              species = 1:Nspp, asp = asp_list[[i]])
@@ -536,6 +543,7 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
 #### Diagnostics ####
 # === === === === === === === === === === === === === === === === 
 
+
 # Non-centered parameterization #####
 
 # bspp
@@ -543,11 +551,94 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
 # x: sigma of every parameter (e.g. spp1, spp2), need to check all of them individually.
 # tree id 
 
-sigma_df
-sim_df
-# aspp
+# get asp df and add prefix to spp
+colnames(aspp_df) <- paste("asp", colnames(aspp_df), sep = "")
+
+sigmaXasp <- cbind(sigma_df, aspp_df)
+
+plot(log(sigmaXasp$sigma_asp) ~ sigmaXasp$asp1)
+
+asp1 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp1, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp2 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp2, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp3 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp3, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp4 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp4, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp5 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp5, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp6 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp6, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp7 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp7, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp8 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp8, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp9 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp9, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp10 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp10, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+
+combined_plot <- (asp1 + asp2 + asp3 + asp4 + asp5) /
+  (asp6 + asp7 + asp8 + asp9 + asp10)
+
+combined_plot
+
+# save combined plot
+ggsave("figures/asp_parameterization.jpeg", combined_plot, width = 12, height = 6, units = "in", dpi = 300)
+ggsave("figures/asp_parameterization.jpeg", combined_plot,
+       width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
 
 # site
+
+# get asp df and add prefix to spp
+colnames(site_df) <- paste("site", colnames(site_df), sep = "")
+
+sigmaXasite <- cbind(sigma_df, aspp_df)
+
+site1 <- ggplot(sigmaXasite) + 
+  geom_point(aes(site1, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
+  theme_minimal()
+
+site2 <- ggplot(sigmaXasite) + 
+  geom_point(aes(site2, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
+  theme_minimal()
+
+site3 <- ggplot(sigmaXasite) + 
+  geom_point(aes(site3, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
+  theme_minimal()
+
+site4 <- ggplot(sigmaXasite) + 
+  geom_point(aes(site4, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
+  theme_minimal()
+
+combined_plot <- (site1 + site2 + site3 + site4)
+
+combined_plot
+
+# save combined plot
+ggsave("figures/asite_parameterization.jpeg", combined_plot,
+       width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
 
 # === === === === === === === === === === === === === === === === 
 #### Run model on empirical data ####
