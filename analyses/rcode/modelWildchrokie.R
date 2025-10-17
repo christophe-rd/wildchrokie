@@ -18,9 +18,6 @@ library(rstan)
 library(shinystan)
 library(wesanderson)
 
-fitalpha = FALSE
-fitbeta = TRUE
-
 if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if(length(grep("lizzie", getwd())) > 0){
@@ -48,7 +45,7 @@ sigma_a_site <- 0.1
 sigma_b_spp <- 0.25
 
 n_site <- 4 # number of sites
-n_spp <- 50 # number of species
+n_spp <- 10 # number of species
 n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
 n_meas <- 5 # repeated measurements per id
@@ -130,7 +127,7 @@ treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
 
-fit2 <- rstan::stan("stan/twolevelhierint.stan", 
+fit <- rstan::stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4,
                     control = list(max_treedepth = 15))  
