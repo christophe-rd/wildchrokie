@@ -54,7 +54,7 @@ atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on inter
   sigma_asp ~ normal(0, 0.3);
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
   sigma_asite ~ normal(0, 0.5);
-  sigma_atreeid ~ normal(0, 0.05);
+  sigma_atreeid ~ normal(0, 0.1);
   sigma_y ~ normal(0, 1);
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	

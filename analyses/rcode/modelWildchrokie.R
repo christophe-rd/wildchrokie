@@ -9,6 +9,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
+options(mc.cores = parallel::detectCores())
 options(digits = 3)
 # quartz()
 
@@ -32,14 +33,13 @@ if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
 
 # === === === === === === === === === === === === === === === === 
 #### Step 2. Simulate data ####
-# === === === === === === === === === === === === === === === === 
-# set parameters
+# === === === === === === === === === === === === === === === ===
 
 # set parameters
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.2
+sigma_y <- 0.1
 sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.5
 sigma_a_site <- 0.1
@@ -133,18 +133,24 @@ fit <- rstan::stan("stan/twolevelhierint.stan",
                     iter=4000, chains=4, cores=4,
                     control = list(max_treedepth = 15))  
 
+
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
 launch_shinystan(fit)
 
 
-# === === === === === === === === === === === === #
+0# === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
 
-write.csv(df_fit, "output/df_fit.csv")
-
+write <- FALSE
+if (FALSE){
+  write.csv(df_fit, "output/df_fit.csv")
+  
+  df_fit <- read.csv("output/df_fit.csv")
+  
+}
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
