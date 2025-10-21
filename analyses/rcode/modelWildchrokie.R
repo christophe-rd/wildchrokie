@@ -119,7 +119,7 @@ simcoef$treeid <- factor(simcoef$treeid)
 # === === === === === #
 y <- simcoef$ringwidth
 N <- nrow(simcoef)
-gdd <- simcoef$gddcons
+gdd <- simcoef$gddcons - mean(simcoef$gddcons) # testing it centered 
 Nspp <- length(unique(simcoef$spp))
 Nsite <- length(unique(simcoef$site))
 site <- as.numeric(as.character(simcoef$site))
@@ -128,7 +128,10 @@ treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
 
-fit <- rstan::stan("stan/twolevelhierint.stan", 
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
+fit <- stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4,
                     control = list(max_treedepth = 15))  
