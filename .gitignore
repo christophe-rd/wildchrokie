@@ -9,3 +9,5 @@
 photobank
 modeloutput
 df_fit.csv
+twolevelhierint.rds
+*.rds

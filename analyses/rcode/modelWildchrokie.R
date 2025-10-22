@@ -16,6 +16,7 @@ options(digits = 3)
 # Load library 
 library(ggplot2)
 library(rstan)
+library(future)
 library(shinystan)
 library(wesanderson)
 library(patchwork)
@@ -39,10 +40,10 @@ if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.1
-sigma_a_spp <- 0.3 # This is pretty low, but I guess you think your species are closely related and will be similar?
+sigma_y <- 0.2
+sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.5
-sigma_a_site <- 0.1
+sigma_a_site <- 0.3
 sigma_b_spp <- 0.25
 
 n_site <- 4 # number of sites
@@ -134,9 +135,9 @@ options(mc.cores = parallel::detectCores())
 fit <- stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4,
-                    control = list(max_treedepth = 15))  
+                    control = list(max_treedepth = 10))  
 
-
+pairs(x, )
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
 launch_shinystan(fit)
@@ -303,12 +304,16 @@ site_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot sigmas ######
+# temporary removal of treeid
+sigma_df2 <- sigma_df2[c(1:3,5),]
 sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
-  geom_point(color = "#046C9A", size = 3) +
+  geom_errorbar(aes(ymin = per25, ymax = per75),
+                width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +
   geom_errorbar(aes(ymin = per5, ymax = per95),
-                width = 0, color = "darkgray", alpha = 1) +
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
               color = "#B40F20", linewidth = 1) +
+  geom_point(color = "#046C9A", size = 3) +
   ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
   labs(x = "sim sigma", y = "fit sigma",
        title = "fit vs sim sigmas") +
@@ -322,14 +327,17 @@ bspptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
           c("spp", "b_spp")], 
   bspp_df2[!duplicated(bspp_df2$spp), 
-           c("spp", "fit_b_spp", "fit_b_spp_per5", "fit_b_spp_per95")], 
+           c("spp", "fit_b_spp", "fit_b_spp_per25", "fit_b_spp_per75", "fit_b_spp_per5", "fit_b_spp_per95")], 
   by = "spp"
 )
 bspptoplot
 
 b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
+  geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_b_spp_per25, ymax = fit_b_spp_per75), 
+                width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +
   geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), width = 0, color = "darkgray", alpha=0.9) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim b_spp", y = "fit b_spp", title = "") +
   theme_minimal()
@@ -344,14 +352,19 @@ treeidtoplot <- merge(
   simcoef[!duplicated(simcoef$treeid), 
           c("treeid", "a_treeid")], 
   treeid_df2[!duplicated(treeid_df2$treeid), 
-             c("treeid", "fit_a_treeid", "fit_a_treeid_per5", "fit_a_treeid_per95")], 
+             c("treeid", "fit_a_treeid", 
+               "fit_a_treeid_per5", 
+               "fit_a_treeid_per25",
+               "fit_a_treeid_per75",
+               "fit_a_treeid_per95")], 
   by = "treeid"
 )
 treeidtoplot
 # plot treeid
 a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
-  geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), width = 0, color = "darkgray", alpha=0.3) +
+  geom_point(color = "#046C9A", size = 2, alpha = 0.8) +
+  geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.3) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
   theme_minimal()
@@ -365,16 +378,23 @@ aspptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
           c("spp", "a_spp")], 
   aspp_df2[!duplicated(aspp_df2$spp), 
-           c("spp", "fit_a_spp", "fit_a_spp_per5", "fit_a_spp_per95")], 
+           c("spp", "fit_a_spp", 
+             "fit_a_spp_per5", 
+             "fit_a_spp_per25", 
+             "fit_a_spp_per75", 
+             "fit_a_spp_per95")], 
   by = "spp"
 )
 aspptoplot
 
 a_spp_simXfit_plot <- ggplot(aspptoplot, aes(x = a_spp, y = fit_a_spp)) +
-  geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), width = 0, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_a_spp_per25, ymax = fit_a_spp_per75), 
+                width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim a_spp", y = "fit a_spp", title = "") +
+  geom_point(color = "#046C9A", size = 2) +
   theme_minimal()
 a_spp_simXfit_plot
 # ggsave!
@@ -386,14 +406,21 @@ sitetoplot <- merge(
   simcoef[!duplicated(simcoef$site), 
           c("site", "a_site")], 
   site_df2[!duplicated(site_df2$site), 
-           c("site", "fit_a_site", "fit_a_site_per5", "fit_a_site_per95")], 
+           c("site", "fit_a_site", 
+             "fit_a_site_per5", 
+             "fit_a_site_per25", 
+             "fit_a_site_per75", 
+             "fit_a_site_per95")], 
   by = "site"
 )
 sitetoplot
 
 a_site_simXfit_plot <- ggplot(sitetoplot, aes(x = a_site, y = fit_a_site)) +
+  geom_errorbar(aes(ymin = fit_a_site_per5, ymax = fit_a_site_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_a_site_per25, ymax = fit_a_site_per75), 
+                width = 0, linewidth = 1.5, color = "darkgray", alpha=0.9) +
   geom_point(color = "#046C9A", size = 2) +
-  geom_errorbar(aes(ymin = fit_a_site_per5, ymax = fit_a_site_per95), width = 0, color = "darkgray", alpha=0.9) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim a_site", y = "fit a_site", title = "") +
   theme_minimal()
