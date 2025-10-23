@@ -40,19 +40,19 @@ if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.2
+sigma_y <- 0.1
 sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
-sigma_a_treeid <- 0.5
+sigma_a_treeid <- 0.15
 sigma_a_site <- 0.3
 sigma_b_spp <- 0.25
 
-n_site <- 4 # number of sites
-n_spp <- 10 # number of species
-n_perspp <- 10 # number of individuals per species
+n_site <- 20 # number of sites
+n_spp <- 20 # number of species
+n_perspp <- 20 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
 n_meas <- 5 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
-
+N
 
 # get replicated treeid
 treeid <- rep(1:n_treeid, each = n_meas)
@@ -130,14 +130,12 @@ Ntreeid <- length(unique(treeid))
 table(treeid)
 
 rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
 
 fit <- stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                    iter=4000, chains=4, cores=4,
-                    control = list(max_treedepth = 10))  
+                    iter=4000, chains=4, cores=4)  
+# control = list(max_treedepth = 10)
 
-pairs(x, )
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
 launch_shinystan(fit)
@@ -305,7 +303,6 @@ site_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot sigmas ######
 # temporary removal of treeid
-sigma_df2 <- sigma_df2[c(1:3,5),]
 sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
   geom_errorbar(aes(ymin = per25, ymax = per75),
                 width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +
