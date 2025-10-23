@@ -331,9 +331,9 @@ bspptoplot
 
 b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
   geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_errorbar(aes(ymin = fit_b_spp_per25, ymax = fit_b_spp_per75), 
-                width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +
+                width = 0, linewidth = 1.5, color = "darkgray", alpha = 0.7) +
   geom_point(color = "#046C9A", size = 2) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim b_spp", y = "fit b_spp", title = "") +
@@ -359,9 +359,9 @@ treeidtoplot <- merge(
 treeidtoplot
 # plot treeid
 a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.8) +
   geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.3) +
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.1) +
+  geom_point(color = "#046C9A", size = 2, alpha = 0.1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
   theme_minimal()
@@ -427,48 +427,28 @@ ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, heigh
 
 
 # === === === === === === === === === === === === === === === === 
-#### Step 3. Look at my priors####
+#### Look at my priors####
 # === === === === === === === === === === === === === === === === 
-n <- 1e4
-prior_a <- rnorm(n, 2, 4)
-hist(prior_a)
-prior_b <- rnorm(n, 0.4, 1)
-hist(prior_b)
-prior_bsp <- rnorm(n, 0, 0.1)
-hist(prior_bsp)
-prior_zasp <-  rnorm(n, 0, 1)
-hist(prior_zasp)
-prior_asite <-  rnorm(n, 0, 0.5)
-hist(prior_asite)
-prior_sigma_bsp <-  rnorm(n, 0, 0.2)
-hist(prior_sigma_bsp)
-prior_sigma_asp <-  rnorm(n, 0, 0.5)
-hist(prior_sigma_asp)
-prior_sigma_asite <-  rnorm(n, 0, 0.06 )
-hist(prior_sigma_asite)
-prior_sigma_atreeid <-  rnorm(n, 0, 0.05)
-hist(prior_sigma_atreeid)
 
 ##### Priors VS Posterior #####
 # prior predictive checks. Simulating prior values from the values set in the model block
-Ndraws <- 1000
+Ndraws <- 8000
 colnames(sigma_df) <- paste("post", colnames(sigma_df), sep = "_")
 
 ###### sigmas ######
-sigma_bsp_draw <- abs(rnorm(Ndraws, 0, 0.2))   
+sigma_bsp_draw <- abs(rnorm(Ndraws, 0, 0.3))   
 sigma_asp_draw <- abs(rnorm(Ndraws, 0, 0.5))
 sigma_asite_draw <- abs(rnorm(Ndraws, 0, 0.5))
 sigma_atree_draw <- abs(rnorm(Ndraws, 0, 0.05))
 sigma_y_draw <- abs(rnorm(Ndraws, 0, 5))
 
 inds <- 1:Ndraws
-
 bsp_list <- vector("list", Ndraws)   
 asp_list <- vector("list", Ndraws)  
 asite_list <- vector("list", Ndraws)
 atree_list <- vector("list", Ndraws)
 
-for (i in seq_along(inds)) {
+for (i in seq_along(inds)) { # i =1
   idx <- inds[i]
   bsp_list[[i]]   <- rnorm(n_spp, 0, sigma_bsp_draw[idx])
   asp_list[[i]]   <- rnorm(n_spp, 0, sigma_asp_draw[idx]) 
@@ -476,26 +456,72 @@ for (i in seq_along(inds)) {
   atree_list[[i]] <- rnorm(n_treeid, 0, sigma_atree_draw[idx])
 }
 
+
+for (i in seq_along(inds)) { # i =1
+  idx <- inds[i]
+  bsp_list[[i]]   <- rnorm(n_spp, 0, sigma_bsp_draw[idx])
+}
+  
 # Flatten bsp/asp into data.frames for plotting
 prior_bsp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_bsp = sigma_bsp_draw[inds[i]],
-             species = 1:Nspp, bsp = bsp_list[[i]])
+             spp = 1:Nspp, prior_bsp = bsp_list[[i]])
 }))
 
+# copy of bspp_df
+bspp_df3 <- bspp_df
+
+bspp_df3$draw <- rownames(bspp_df3)
+
+colnames(bspp_df3)[1:20] <- paste0("spp", 1:20)
+
+long_post_bspp <- reshape(
+  bspp_df3,
+  direction = "long",
+  varying = paste0("spp", 1:20),
+  v.names = "post_bsp",
+  idvar = "draw",
+  timevar = "spp"
+)
+
 # join in the posterior estimates
-joined_bsp <- bspp_df
+joined_bsp <- cbind(prior_bsp_df, long_post_bspp)
+
+# get a subset of 10000 randomly selected rows
+sub <- joined_bsp[sample(0:160000, 1e4, replace = TRUE), 
+                  c(1,3,4,7)
+                  ]
+sub
+
+ggplot(sub) +
+  geom_density(aes(x = prior_bsp, colour = "Prior", group = spp),
+               linewidth = 0.3) +
+  geom_density(aes(x = post_bsp, colour = "Posterior", group = spp),
+               linewidth = 0.3) +
+  labs(title = "priorVSposterior_bsp", x = "BSP", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+ggsave("figures/priorVSposterior_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
 
 asp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
   data.frame(draw = i, sigma_asp = sigma_asp_draw[inds[i]],
              species = 1:Nspp, asp = asp_list[[i]])
 }))
 
-ggplot(sigma_long_bsp, aes(x = value, color = source, fill = source)) +
-  geom_density(alpha = 0.3) +
-  labs(color = "Parameter", fill = "Parameter") +
+sigma_bsp_draw <- rnorm(Ndraws, 0, 0.3)
+sigma_df$prior_sigma_bsp <- sigma_bsp_draw
+
+ggplot(sigma_df) +
+  geom_density(aes(x = prior_sigma_bsp, colour = "Prior"),
+               linewidth = 0.3) +
+  geom_density(aes(x = post_sigma_bsp, colour = "Posterior"),
+               linewidth = 0.3) +
+  labs(title = "priorVSposterior_sigma_bsp", x = "sigma_bsp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
+ggsave("figures/priorVSposterior_sigma_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
 
 
 
@@ -509,11 +535,10 @@ sigma_long_bsp <- data.frame(
                each = nrow(sigma_df))
 )
 
-ggplot(sigma_long_bsp, aes(x = value, color = source, fill = source)) +
+ggplot(sigma_long_bsp, aes(x = value, color = source)) +
   geom_density(alpha = 0.3) +
   labs(color = "Parameter", fill = "Parameter") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
 
 # Sigma asp
