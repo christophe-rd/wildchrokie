@@ -116,7 +116,7 @@ simcoef$spp <- factor(simcoef$spp)
 simcoef$treeid <- factor(simcoef$treeid)
 
 # === === === === === #
-##### Run models #####
+##### Run model #####
 # === === === === === #
 y <- simcoef$ringwidth
 N <- nrow(simcoef)
@@ -133,20 +133,21 @@ rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                    iter=4000, chains=4, cores=4)  
-# control = list(max_treedepth = 10)
-
+                    iter=100, chains=1, cores=4,
+            control = list(max_treedepth = 15))  
+saveRDS(fit, "output/fitMaxtreedepth15")
 # summary(fit)$summary
 # saveRDS(fit, "output/fit")
-launch_shinystan(fit)
+# launch_shinystan(fit)
 
+if (FALSE) {
 
-0# === === === === === === === === === === === === #
+# === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
 
-write <- FALSE
+
 if (FALSE){
   write.csv(df_fit, "output/df_fit.csv")
   
@@ -697,7 +698,7 @@ combined_plot
 # save combined plot
 ggsave("figures/asite_parameterization.jpeg", combined_plot,
        width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
-
+}
 # === === === === === === === === === === === === === === === === 
 #### Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
