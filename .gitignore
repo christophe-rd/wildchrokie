@@ -12,3 +12,4 @@ df_fit.csv
 twolevelhierint.rds
 *.rds
 fit
+stanOutput
