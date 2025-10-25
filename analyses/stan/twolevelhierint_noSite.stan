@@ -15,12 +15,12 @@ array[N] real y; 		// day of year of phenological event (response)
 parameters{
 real b;        // slope
 real a;		// mean intercept across everything
-real<lower=0> sigma_bsp;
+// real<lower=0> sigma_bsp;
 real<lower=0> sigma_asp;	// variation of intercept across species	
 real<lower=0> sigma_atreeid;    // variation of intercept across tree ids
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 //vector[Nspp] bsp;
-vector[Nspp] bsp;
+//vector[Nspp] bsp;
 vector[Nspp] zasp; 		// defining transformed asp
 vector[Ntreeid] atreeid;       //the intercept for each tree id
 }
@@ -33,20 +33,20 @@ for (i in 1:N){ // don't change this for reparameterization
     ypred[i]=a + 
         asp[species[i]] + 
         atreeid[treeid[i]] + 
-        b*gdd[i] +
-        bsp[species[i]]*gdd[i];
+        //bsp[species[i]]*gdd[i]+
+        b*gdd[i];
     }
 }
-
+ 
 model{	
-  bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
+  //bsp ~ normal(0, sigma_bsp); // partial pooling on slopes for species
   atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
-  a ~ normal(4, 1);
-  b ~ normal(0, 0.2);
-  sigma_bsp ~ normal(0, 1);
-  sigma_asp ~ normal(0, 0.3);
+  a ~ normal(1.5, 1);
+  b ~ normal(0.4, 0.5);
+  //sigma_bsp ~ normal(0, 1);
+  sigma_asp ~ normal(0, 0.2);
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
-  sigma_atreeid ~ normal(0, 0.1);
+  sigma_atreeid ~ normal(0, 0.3);
   sigma_y ~ normal(0, 1);
   
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
