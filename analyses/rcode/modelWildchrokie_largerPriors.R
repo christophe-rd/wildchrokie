@@ -26,7 +26,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 } else if (length(grep("lizzie", getwd())) > 0) {
   setwd("/Users/lizzie/Documents/git/projects/others/christophe/wildchrokie/analyses")
 } else if (length(grep("midge", getwd())) > 0) {
-  setwd("/crouleau/wildchrokie/analyses")
+  setwd("home/crouleau/wildchrokie/analyses")
 }
 
 
