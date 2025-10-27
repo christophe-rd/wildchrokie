@@ -14,12 +14,12 @@ options(digits = 3)
 # quartz()
 
 # Load library 
-library(ggplot2)
+# library(ggplot2)
 library(rstan)
-library(future)
-library(shinystan)
-library(wesanderson)
-library(patchwork)
+# library(future)
+# library(shinystan)
+# library(wesanderson)
+# library(patchwork)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
