@@ -25,10 +25,9 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if (length(grep("lizzie", getwd())) > 0) {
   setwd("/Users/lizzie/Documents/git/projects/others/christophe/wildchrokie/analyses")
-} else if (length(grep("midge", getwd())) > 0) {
-  setwd("home/crouleau/wildchrokie/analyses")
+} else  {
+  setwd("/home/crouleau/wildchrokie/analyses")
 }
-
 
 # === === === === === === === === === === === === === === === === 
 #### Step 1. Come up with a model ####
@@ -136,7 +135,7 @@ rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint_largerPriors.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                    iter=4000, chains=4, cores=4)  
+                    iter=5, chains=4, cores=4)  
 # control = list(max_treedepth = 10)
 
 # summary(fit)$summary
