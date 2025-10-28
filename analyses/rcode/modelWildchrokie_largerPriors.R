@@ -135,7 +135,7 @@ rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint_largerPriors.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                    iter=5, chains=4, cores=4)  
+                    iter=4000, chains=4, cores=4)  
 # control = list(max_treedepth = 10)
 
 # summary(fit)$summary
