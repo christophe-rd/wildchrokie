@@ -1,4 +1,3 @@
-
 # Wildchrokie model
 # CRD 23 April 2025
 # Started in Boston shortly after completing field work for the tree spotters

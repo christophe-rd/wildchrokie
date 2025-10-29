@@ -40,11 +40,13 @@ unique(temp3$sampleType)
 # remove 2 samples for a given individuals
 temp4 <- subset(temp3, sampleType != "coresWithCookies") 
 temp5 <- temp4[!is.na(temp4$pgsGDD),]
-temp5$idyear <- paste(temp5$id, temp5$year, sep = "_")
+temp5$idyear <- paste(temp5$treeid, temp5$year, sep = "_")
 temp6 <- temp5[!duplicated(temp5$idyear),] 
 
+# write csv
+nrow(temp6)
 y2020 <- subset(temp4, year == "2020")
-y2020$idyear <- paste(y2020$id, y2020$year, sep = "_")
+y2020$idyear <- paste(y2020$treeid, y2020$year, sep = "_")
 y2020 <- y2020[which(!is.na(y2020$leafout) & !is.na(y2020$budset)),]
 y2020 <- y2020[!duplicated(y2020$idyear),]
 nrow(y2020)

@@ -5,10 +5,12 @@
 
 # Clear workspace 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+
 # Load libraries
+library(pollen)
 
 # copy of obsdata2
-obsdata2 <- obsdata2
+obsdata2 <- obsdata
 
 ###calculate primary growth season and full growing season in days
 obsdata2$pgs <- obsdata2$budset-obsdata2$leafout

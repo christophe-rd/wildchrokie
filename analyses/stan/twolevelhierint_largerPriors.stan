@@ -49,8 +49,8 @@ model{
   atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
   a ~ normal(1.5, 1);
   b ~ normal(0.4, 0.2);
-  sigma_bsp ~ normal(0, 0.5);
-  sigma_asp ~ normal(0, 0.5);
+  sigma_bsp ~ normal(0, 1);
+  sigma_asp ~ normal(0, 1);
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
   sigma_asite ~ normal(0, 0.5);
   sigma_atreeid ~ normal(0, 0.1);
