@@ -44,13 +44,4 @@ temp5$idyear <- paste(temp5$treeid, temp5$year, sep = "_")
 temp6 <- temp5[!duplicated(temp5$idyear),] 
 
 # write csv
-nrow(temp6)
-y2020 <- subset(temp4, year == "2020")
-y2020$idyear <- paste(y2020$treeid, y2020$year, sep = "_")
-y2020 <- y2020[which(!is.na(y2020$leafout) & !is.na(y2020$budset)),]
-y2020 <- y2020[!duplicated(y2020$idyear),]
-nrow(y2020)
-unique(y2020$id)
-
-# merged_df$species<-substr(merged_df$Name, 0,6)
-
+write_csv(temp6, "output/empiricalDataMAIN.csv")
