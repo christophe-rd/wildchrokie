@@ -106,9 +106,9 @@ simcoef$ringwidth <-
   simcoef$a_site + 
   simcoef$a_spp + 
   simcoef$a_treeid + 
-  simcoef$a + 
+  # simcoef$a + 
   (simcoef$b*simcoef$gddcons) + 
-  # (simcoef$b_spp*simcoef$gddcons)+
+  (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
 # prepare grouping factors
@@ -136,7 +136,7 @@ fit <- stan("stan/twolevelhierint.stan",
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/fit_nobspp")
+saveRDS(fit, "output/stanOutput/fit_withbspp")
 
 run_fit_noSite <- TRUE
 if(run_fit_noSite) {
@@ -490,7 +490,7 @@ for (i in 1:ncol(sigma_df)) { # i = 1
 }
 
 sigma_df2$sim_sigma <- c(
-  # sigma_b_spp, 
+  sigma_b_spp,
                          sigma_a_spp, 
                          sigma_a_site, 
                          sigma_a_treeid, 
