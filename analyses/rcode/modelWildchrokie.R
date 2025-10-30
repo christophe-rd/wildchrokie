@@ -21,12 +21,13 @@ library(shinystan)
 library(wesanderson)
 library(patchwork)
 
-if(length(grep("christophe_rouleau-desrochers", getwd()) > 0)) {
+if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
-} else if(length(grep("lizzie", getwd())) > 0){
+} else if (length(grep("lizzie", getwd())) > 0) {
   setwd("/Users/lizzie/Documents/git/projects/others/christophe/wildchrokie/analyses")
+} else  {
+  setwd("/home/crouleau/wildchrokie/analyses")
 }
-
 # === === === === === === === === === === === === === === === === 
 #### Step 1. Come up with a model ####
 # === === === === === === === === === === === === === === === === 
@@ -46,9 +47,9 @@ sigma_a_treeid <- 0.15
 sigma_a_site <- 0.3
 sigma_b_spp <- 0.25
 
-n_site <- 20 # number of sites
-n_spp <- 20 # number of species
-n_perspp <- 20 # number of individuals per species
+n_site <- 10 # number of sites
+n_spp <- 10 # number of species
+n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
 n_meas <- 5 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
@@ -98,7 +99,7 @@ simcoef$sigma_a_spp <- sigma_a_spp
 simcoef$sigma_a_site <- sigma_a_site
 simcoef$error <- rnorm(N, 0, sigma_y)
 simcoef$gdd <- rnorm(N, 1800, 100)
-simcoef$gddcons <- simcoef$gdd - mean(simcoef$gdd)
+simcoef$gddcons <- simcoef$gdd/200
 
 # adding both options of tree rings
 simcoef$ringwidth <- 
@@ -107,7 +108,7 @@ simcoef$ringwidth <-
   simcoef$a_treeid + 
   simcoef$a + 
   (simcoef$b*simcoef$gddcons) + 
-  (simcoef$b_spp*simcoef$gddcons)+
+  # (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
 # prepare grouping factors
@@ -120,7 +121,7 @@ simcoef$treeid <- factor(simcoef$treeid)
 # === === === === === #
 y <- simcoef$ringwidth
 N <- nrow(simcoef)
-gdd <- simcoef$gddcons - mean(simcoef$gddcons) # testing it centered 
+gdd <- simcoef$gddcons
 Nspp <- length(unique(simcoef$spp))
 Nsite <- length(unique(simcoef$site))
 site <- as.numeric(as.character(simcoef$site))
@@ -133,10 +134,9 @@ rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
-                    iter=100, chains=1, cores=)
+                    iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/fit")
-save(fit, "output/fit")
+saveRDS(fit, "output/stanOutput/fit_nobspp")
 
 run_fit_noSite <- TRUE
 if(run_fit_noSite) {
@@ -489,7 +489,12 @@ for (i in 1:ncol(sigma_df)) { # i = 1
   sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
 }
 
-sigma_df2$sim_sigma <- c(sigma_b_spp, sigma_a_spp, sigma_a_site, sigma_a_treeid, sigma_y)
+sigma_df2$sim_sigma <- c(
+  # sigma_b_spp, 
+                         sigma_a_spp, 
+                         sigma_a_site, 
+                         sigma_a_treeid, 
+                         sigma_y)
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 

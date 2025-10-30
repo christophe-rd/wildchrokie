@@ -34,7 +34,7 @@ vector[Nspp] asp;
 asp = 0 + sigma_asp*zasp; // non-centered a_sp
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
-    ypred[i]=a + 
+    ypred[i]= a + 
         asp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 

@@ -155,8 +155,9 @@ if (write){
   
 }
 
+fit <- readRDS
+
 if (FALSE){
-  
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
