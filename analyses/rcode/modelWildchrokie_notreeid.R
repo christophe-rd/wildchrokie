@@ -38,7 +38,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.1
+sigma_y <- 0.3
 sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.15
 sigma_a_site <- 0.3
@@ -183,7 +183,7 @@ sigma_df2$sim_sigma <- c(
   sigma_b_spp,
                          sigma_a_spp, 
                          sigma_a_site, 
-                         sigma_a_treeid, 
+                         # sigma_a_treeid, 
                          sigma_y)
 
 
@@ -214,37 +214,6 @@ for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 
-
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover treeid ######
-
-# grab treeid 
-treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
-# remove sigma_asp for now
-treeid_cols <- treeid_cols[2:length(treeid_cols)]
-
-treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
-# change their names
-colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
-# empty treeid dataframe
-treeid_df2 <- data.frame(
-  treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
-)
-for (i in 1:ncol(treeid_df)) { # i = 1
-  treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
-}
-treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
@@ -321,7 +290,7 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
        title = "fit vs sim sigmas") +
   theme_minimal()
 sigma_simXfit_plot
-ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/notreeid_sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot b spp ######
@@ -345,34 +314,8 @@ b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
   theme_minimal()
 b_spp_simXfit_plot
 # ggsave!
-ggsave("figures/b_spp_simXfit_plot2.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/notreeid_b_spp_simXfit_plot2.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot treeid ######
-# add sim to fit treeid df
-treeidtoplot <- merge(
-  simcoef[!duplicated(simcoef$treeid), 
-          c("treeid", "a_treeid")], 
-  treeid_df2[!duplicated(treeid_df2$treeid), 
-             c("treeid", "fit_a_treeid", 
-               "fit_a_treeid_per5", 
-               "fit_a_treeid_per25",
-               "fit_a_treeid_per75",
-               "fit_a_treeid_per95")], 
-  by = "treeid"
-)
-treeidtoplot
-# plot treeid
-a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
-  geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.1) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.1) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
-  theme_minimal()
-a_treeid_simXfit_plot
-# ggsave!
-ggsave("figures/a_treeid_simXfit_plot.jpeg", a_treeid_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot a spp ######
@@ -400,7 +343,7 @@ a_spp_simXfit_plot <- ggplot(aspptoplot, aes(x = a_spp, y = fit_a_spp)) +
   theme_minimal()
 a_spp_simXfit_plot
 # ggsave!
-ggsave("figures/a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/notreeid_a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
@@ -428,7 +371,7 @@ a_site_simXfit_plot <- ggplot(sitetoplot, aes(x = a_site, y = fit_a_site)) +
   theme_minimal()
 a_site_simXfit_plot
 # ggsave!
-ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/notreeid_a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 
 # === === === === === === === === === === === === === === === === 
