@@ -38,8 +38,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 set.seed(124)
 a <- 1.5
 b <- 0.4
-sigma_y <- 0.3
-sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
+sigma_y <- 0.1
+sigma_a_spp <- 0.5 
 sigma_a_treeid <- 0.15
 sigma_a_site <- 0.3
 sigma_b_spp <- 0.25
@@ -48,7 +48,7 @@ n_site <- 10 # number of sites
 n_spp <- 10 # number of species
 n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 5 # repeated measurements per id
+n_meas <- 3 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 N
 
@@ -114,6 +114,82 @@ simcoef$spp <- factor(simcoef$spp)
 # simcoef$treeid <- factor(simcoef$treeid)
 
 # === === === === === #
+# Plot sim data #
+# === === === === === #
+# start with intercepts
+simcoef$a_asp <- simcoef$a + simcoef$a_spp
+simcoef$a_asite <- simcoef$a + simcoef$a_site
+simcoef$a_asp_asite <- simcoef$a + simcoef$a_spp + simcoef$a_site
+ggplot(simcoef) +
+  geom_vline(aes(xintercept = a), # a
+             color = "black", alpha = 1, linewidth = 2) +
+  geom_vline(aes(xintercept = a_asp), 
+             color = "#0A9F9D", alpha = 0.8, , linewidth = 1.5) +
+  geom_vline(aes(xintercept = a_asite), 
+             color = "#E54E21", alpha = 0.8) +
+  geom_vline(aes(xintercept = a_asp_asite), 
+             color = "#6C8645", alpha = 0.8) +
+  labs(x = "", y = "",
+       title = "intercept values when a=1.5") +
+  facet_wrap(~spp) +
+  theme_minimal()
+ggsave("figures/intercept_simData_a1.5.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+
+simcoef$b_bsp <- simcoef$b + simcoef$b_spp
+ggplot(simcoef) +
+  geom_vline(aes(xintercept = b), # a
+             color = "black", alpha = 1) +
+  geom_vline(aes(xintercept = b_bsp), 
+             color = "#0A9F9D", alpha = 0.8) +
+  labs(x = "", y = "",
+       title = "slope values when b=0.4") +
+  facet_wrap(~spp) +
+  theme_minimal()
+ggsave("figures/slope_simData_b0.4.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+
+# scale up a and b
+simcoef$a <- 15
+simcoef$b <- 4
+simcoef$ringwidth <- 
+  simcoef$a_site + 
+  simcoef$a_spp + 
+  # simcoef$a_treeid + 
+  simcoef$a +
+  (simcoef$b*simcoef$gddcons) + 
+  (simcoef$b_spp*simcoef$gddcons)+
+  simcoef$error
+
+# intercepts
+simcoef$a_asp <- simcoef$a + simcoef$a_spp
+simcoef$a_asite <- simcoef$a + simcoef$a_site
+simcoef$a_asp_asite <- simcoef$a + simcoef$a_spp + simcoef$a_site
+ggplot(simcoef) +
+  geom_vline(aes(xintercept = a), # a
+             color = "black", alpha = 1, linewidth =2) +
+  geom_vline(aes(xintercept = a_asp), 
+             color = "#0A9F9D", alpha = 1, linewidth =1.5) +
+  geom_vline(aes(xintercept = a_asite), 
+             color = "#E54E21", alpha = 0.8) +
+  geom_vline(aes(xintercept = a_asp_asite), 
+             color = "#6C8645", alpha = 0.8) +
+  labs(x = "", y = "",
+       title = "intercept values when a=15") +
+  facet_wrap(~spp) +
+  theme_minimal()
+ggsave("figures/intercept_simData_a15.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+
+simcoef$b_bsp <- simcoef$b + simcoef$b_spp
+ggplot(simcoef) +
+  geom_vline(aes(xintercept = b), # a
+             color = "black", alpha = 1) +
+  geom_vline(aes(xintercept = b_bsp), 
+             color = "#0A9F9D", alpha = 0.8) +
+  labs(x = "", y = "",
+       title = "slope values when b=4") +
+  facet_wrap(~spp) +
+  theme_minimal()
+ggsave("figures/slope_simData_b4.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+# === === === === === #
 ##### Run model #####
 # === === === === === #
 y <- simcoef$ringwidth
@@ -135,7 +211,7 @@ fit <- stan("stan/twolevelhierint_notreeid.stan",
                            "gdd"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/fit_no_a")
+saveRDS(fit, "output/stanOutput/fit_notreeid_normal_aANDb")
 fit <- readRDS("output/stanOutput/fit_withbspp")
 run_fit_noSite <- FALSE
 
@@ -287,7 +363,7 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
   geom_point(color = "#046C9A", size = 3) +
   ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
   labs(x = "sim sigma", y = "fit sigma",
-       title = "fit vs sim sigmas") +
+       title = "") +
   theme_minimal()
 sigma_simXfit_plot
 ggsave("figures/notreeid_sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
@@ -373,6 +449,11 @@ a_site_simXfit_plot
 # ggsave!
 ggsave("figures/notreeid_a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
+
+# combine plots
+combined_plot <- (sigma_simXfit_plot + b_spp_simXfit_plot) /
+  (a_spp_simXfit_plot + a_site_simXfit_plot)
+ggsave("figures/notreeid_combined_plot_a1.5ANDb0.4.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
 # === === === === === === === === === === === === === === === === 
 #### Look at my priors####
