@@ -47,8 +47,8 @@ model{
   bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
   asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
   //atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
-  a ~ normal(4, 1);
-  b ~ normal(0, 0.2);
+  a ~ normal(15, 1);
+  b ~ normal(4, 1);
   sigma_bsp ~ normal(0, 1);
   sigma_asp ~ normal(0, 0.3);
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp

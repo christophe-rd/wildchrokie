@@ -36,8 +36,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 
 # set parameters
 set.seed(124)
-a <- 1.5
-b <- 0.4
+a <- 15
+b <- 4
 sigma_y <- 0.1
 sigma_a_spp <- 0.5 
 sigma_a_treeid <- 0.15
