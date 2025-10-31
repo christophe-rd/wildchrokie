@@ -29,6 +29,8 @@ y20$GDD_10 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 10, type = "B")
 
 gdd <- rbind(y18, y19, y20)
 
+write_csv(gdd, "output/gddByYear.csv")
+
 # Initialize new GDD columns
 obsdata2$budburstGDD <- NA
 obsdata2$budsetGDD <- NA
@@ -62,11 +64,20 @@ for(i in 1:nrow(obsdata2)) {
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafcolor[i])
     if(length(idx) == 1) obsdata2$leafcolorGDD[i] <- gdd$GDD_10[idx]
   }
+  
 }
 
 # add primary GS and full GS cols
 obsdata2$pgsGDD <- obsdata2$budsetGDD - obsdata2$leafoutGDD
 obsdata2$fgsGDD <- obsdata2$leafcolorGDD - obsdata2$leafoutGDD
+
+# add max gdd per year
+y18maxGDD <- max(y18$GDD_10)
+y19maxGDD <- max(y19$GDD_10)
+y20maxGDD <- max(y20$GDD_10)
+obsdata2$fullGDD[which(obsdata2$year == "2018")] <- y18maxGDD
+obsdata2$fullGDD[which(obsdata2$year == "2019")] <- y19maxGDD
+obsdata2$fullGDD[which(obsdata2$year == "2020")] <- y20maxGDD
 
 obsdataWithGDD <- obsdata2
 
