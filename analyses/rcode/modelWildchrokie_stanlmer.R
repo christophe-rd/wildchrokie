@@ -26,6 +26,9 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
+# empirical data
+emp <- read.csv("output/empiricalDataMAIN.csv")
+
 # sim data
 a <- 1.5
 b <- 0.4
@@ -114,7 +117,24 @@ fit <- stan_lmer(
   core=4
 )
 
+# run model on empirical data
+emp <- read.csv("output/empiricalDataMAIN.csv")
+
+# scale pgsgdd
+emp$pgsGDDscaled <- emp$pgsGDD/200
+
+fit <- stan_lmer(
+  lengthCM ~ 1 + pgsGDDscaled + 
+    (1|prov) + (1|spp) + (1|treeid),
+  data = emp,
+  chains = 4,
+  iter = 4000,
+  core=4
+)
+
 df_fit <- as.data.frame(fit)
+saveRDS(fit, "output/stanOutput/fitEmpirical_stanlmer")
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover b spp ######
