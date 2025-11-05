@@ -31,7 +31,7 @@ gdd <- rbind(y18, y19, y20)
 
 write_csv(gdd, "output/gddByYear.csv")
 
-# Initialize new GDD columns
+# create new GDD empty columns
 obsdata2$budburstGDD <- NA
 obsdata2$budsetGDD <- NA
 obsdata2$leafoutGDD <- NA
@@ -72,6 +72,7 @@ obsdata2$pgsGDD <- obsdata2$budsetGDD - obsdata2$leafoutGDD
 obsdata2$fgsGDD <- obsdata2$leafcolorGDD - obsdata2$leafoutGDD
 
 # add max gdd per year
+obsdata2$fullGDD <- NA
 y18maxGDD <- max(y18$GDD_10)
 y19maxGDD <- max(y19$GDD_10)
 y20maxGDD <- max(y20$GDD_10)

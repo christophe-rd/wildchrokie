@@ -82,6 +82,20 @@ ringwidth_i &\sim \text{Normal}(\mu, \sigma_y) \\
 \end{aligned}
 \]
 
+
+% with slope
+\[
+\begin{aligned}
+ringwidth_i &\sim \text{Normal}(\mu, \sigma_y) \\
+\mu &= \alpha + \alpha_{\text{site}} + \alpha_{\text{treeid}} + \beta \, * gdd + \beta_{\text{species}}\, * gdd \\
+\alpha_{\text{site}} &\sim \text{Normal}(0, \sigma_{\alpha \, \text{site}}) \\
+\alpha_{\text{treeid}} &\sim \text{Normal}(0, \sigma_{\alpha \, \text{treeid}}) \\
+\beta_{\text{species}} &\sim \text{Normal}(0, \sigma_{\beta \, \text{species}}) \\
+\end{aligned}
+\]
+
+
+
 \textit{Notes on option 1 vs option 2}: Charles pointed out during the working group that opt 1 and 2 were actually the same thing. After chatting with Lizzie on 8-09-2025, we concluded that he was right and to simplify the code, we will use option 2.
 
 \subsection*{Model update after simulating the data}

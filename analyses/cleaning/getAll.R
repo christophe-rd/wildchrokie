@@ -31,7 +31,7 @@ temp <- merge(wildchrokie_rw, obsdata, by = c("treeid", "spp", "year"))
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
 
 temp3 <- merge(temp2,
-               obsdataWithGDD[, c("treeid", "year", "pgsGDD", "fgsGDD")],
+               obsdataWithGDD[, c("treeid", "year", "pgsGDD", "fgsGDD", "fullGDD")],
                by = c("treeid", "year")
                )
 

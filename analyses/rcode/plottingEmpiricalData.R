@@ -6,7 +6,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
-options(digits = 3)
+options(digits = 5)
 # quartz()
 
 # Load library 
@@ -24,121 +24,113 @@ sim <- read.csv("output/simdata.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
 gdd <- read.csv("output/gddByYear.csv")
 
+# add full species
+emp$sppfull <- NA
+emp$sppfull[which(emp$spp == "ALNINC")] <- "Gray alder 
+(Alnus incana)"
+emp$sppfull[which(emp$spp == "BETPOP")] <- "Gray birch 
+(Betula populifolia)"
+emp$sppfull[which(emp$spp == "BETPAP")] <- "Paper birch 
+(Betula papyrifera)"
+emp$sppfull[which(emp$spp == "BETALL")] <- "Yellow birch 
+(Betula alleghaniensis)"
+
 # load fit
 fit <- readRDS("output/stanOutput/fitEmpirical_stanlmer")
+fit_pgsNgrowingdays <- readRDS("output/stanOutput/fit_pgsNgrowingdays_Empirical_stanlmer")
 
-# Plot empirical data
-ggplot(emp, aes(x= pgsGDD, y = lengthCM, group = spp, color = spp)) +
-  # geom_violin() +
-  geom_boxplot() +
-  facet_wrap(~spp, ncol = 1, nrow = 4) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) + 
-  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  theme_minimal()
-ggsave("figures/empiricalData/sppBoxPlots.jpeg", width = 6, height = 6, units = "in", dpi = 300)
-
-# let's just look at 2018
-y18 <- subset(emp, year == "2018")
-
-ggplot(y18, aes(x= pgsGDD, y = lengthCM, group = spp, color = spp)) +
-  geom_boxplot(position = "dodge2") +
-  facet_wrap(~year) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) + 
-  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  theme_minimal()
-
+# faceted
+# order by spp
+emp <- emp[order(emp$spp), ]
 ggplot(emp, aes(x = pgsGDD, y = lengthCM, 
-                color = spp, 
-                fill = spp)) +
-  geom_point(size = 2, alpha = 0.7, aes(shape = as.factor(year))) +  # optional: show raw data points
+                color = sppfull, 
+                fill = sppfull)) +
+  geom_point(size = 2, alpha = 0.7) + 
   geom_smooth(method = "lm", se = TRUE, alpha = 0.2) +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  facet_wrap(~spp)+
-  theme_minimal()
-ggsave("figures/empiricalData/sppLinearRegressions_nofacet.jpeg", width = 6, height = 6, units = "in", dpi = 300)
-
-
-# plot gdd
-gddstats <- aggregate(GDD_10 ~ doy, FUN = mean, data = gdd)
-colnames(gddstats)[2] <-  "mean"
-gddstats2 <- aggregate(GDD_10 ~ doy, FUN = min, data = gdd)
-colnames(gddstats2)[2] <-  "min"
-gddstats3 <- aggregate(GDD_10 ~ doy, FUN = max, data = gdd)
-colnames(gddstats3)[2] <-  "max"
-
-gddstats <- merge(gddstats, gddstats2, by = "doy")
-gddstats <- merge(gddstats, gddstats3, by = "doy")
-
-ggplot(gddstats, aes(x = doy, y = mean)) + 
-  geom_line() +
-  geom_ribbon(aes(ymin = min, ymax = max), alpha = 0.2, color = NA) +
-  geom_vline(xintercept = 5) +
-  labs(title = "GDD accumulation")
-
-test <- data.frame(
-  # aspp = rnorm(8000, 0, 1),
-  aspp1 = rnorm(8000, 0.2, 1),
-  aspp2 = rnorm(8000, -0.5, 1),
-  aspp3 = rnorm(8000, -1, 1),
-  aspp4 = rnorm(8000, 1, 1)
-)
-test 
-simsub <- sim[sample(sample(1:40000, 1e4)),]
-simsub <- subset(sim, spp %in% 1:4)
-
-# get some basic stats
-simcoef_summary <- aggregate(ringwidth ~ spp, data = simsub, function(x) {
-  mean <- mean(x)
-  serror <- sd(x) / sqrt(length(x))
-  lower <- mean - 1.96 * serror
-  upper <- mean + 1.96 * serror
-  c(mean = mean, serror = serror, lower = lower, upper = upper)
-})
-
-# split
-simcoef_summary <- do.call(data.frame, simcoef_summary)
-names(simcoef_summary) <- c("spp", "mean_ringwidth", "serror", "lower", "upper")
-
-# mean gdd and merge!
-gdd_mean <- aggregate(gddcons ~ spp, data = simcoef, mean)
-simcoef_summary <- merge(simcoef_summary, gdd_mean, by = "spp")
-
-ggplot(simcoef_summary, aes(x = gddcons, y = factor(spp))) +
-  geom_vline(xintercept = 0, color = "black") +
-  
-  # geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = "grey50") +
-  geom_point(size = 3, color = "black") +
+  facet_wrap(~sppfull) +
+  labs(y = "Ring width (cm)", x = "Growing degree days (GDD)", color = "Tree Species") +
   theme_minimal() +
-  labs(
-    x = "GDD (centered, gddcons)",
-    y = "Species",
-    title = "ringwidth by spp "
-  ) +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank()
-  )
+  theme(strip.text = element_blank(),         
+          legend.key.height = unit(1.5, "lines")) +
+  guides(fill = "none") 
+ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD.jpeg", width = 9, height = 6, units = "in", dpi = 300)
 
-# Plot test parameters
-test_long <- data.frame(
-  spp = rep(names(test), each = nrow(test)),
-  a_spp = as.vector(as.matrix(test))
-)
-test_long
-
-ggplot(test_long, aes(x = a_spp, y = spp, group = spp, color = spp)) +
-  geom_boxplot(position = "dodge2", outlier.shape = NA) +
-  geom_vline(xintercept = 0, color = "black") +
+# full growing season
+ggplot(emp, aes(x = fgsGDD, y = lengthCM, 
+                color = sppfull, 
+                fill = sppfull)) +
+  geom_point(size = 2, alpha = 0.7) + 
+  geom_smooth(method = "lm", se = TRUE, alpha = 0.2) +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  theme_minimal()
-ggsave("figures/aspp_boxPlot.jpeg", width = 6, height = 6, units = "in", dpi = 300)
-  
+  facet_wrap(~sppfull) +
+  labs(y = "Ring width (cm)", x = "Growing degree days (GDD)", color = "Tree Species") +
+  theme_minimal() +
+    theme(strip.text = element_blank(),         
+          legend.key.height = unit(1.5, "lines")) +
+  guides(fill = "none") 
+ggsave("figures/empiricalData/sppLinearRegressions.jpeg", 
+       width = 9, height = 6, units = "in", dpi = 300)
 
-# plot fit parameters ####
-###### Recover treeid ######
+# just the number of days, without gdd
+emp$pgsNgrowingdays <- emp$budset - emp$leafout
+emp$fgsNgrowingdays <- emp$leafcolor - emp$budburst
+
+# number of days  in pgs
+ggplot(emp) +
+  # geom_point(size = 2, alpha = 0.7) + 
+  geom_smooth(aes(x = pgsNgrowingdays, y = lengthCM, 
+                  color = sppfull, 
+                  fill = sppfull),
+              method = "lm", se = TRUE, alpha = 0.2) +
+
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  facet_wrap(~sppfull) +
+  labs(y = "Ring width (cm)", x = "", color = "Tree Species") +
+  theme_minimal() +
+  theme(strip.text = element_blank(),         
+          legend.key.height = unit(1.5, "lines")) +
+  guides(fill = "none") 
+ggsave("figures/empiricalData/sppLinearRegressions_pgsNdays.jpeg", width = 9, height = 6, units = "in", dpi = 300)
+# number of days  in fgs
+ggplot(emp, aes(x = fgsNgrowingdays, y = lengthCM, 
+                color = sppfull, 
+                fill = sppfull)) +
+  geom_point(size = 2, alpha = 0.7) + 
+  geom_smooth(method = "lm", se = TRUE, alpha = 0.2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  facet_wrap(~sppfull) +
+  labs(y = "Ring width (cm)", x = "", color = "Tree Species") +
+  theme_minimal() +   theme(strip.text = element_blank(),                    legend.key.height = unit(1.5, "lines")) +
+  theme(strip.text = element_blank(),
+        legend.key.height = unit(1.5, "lines")) +
+  guides(fill = "none") 
+# # plot gdd
+# gddstats <- aggregate(GDD_10 ~ doy, FUN = mean, data = gdd)
+# colnames(gddstats)[2] <-  "mean"
+# gddstats2 <- aggregate(GDD_10 ~ doy, FUN = min, data = gdd)
+# colnames(gddstats2)[2] <-  "min"
+# gddstats3 <- aggregate(GDD_10 ~ doy, FUN = max, data = gdd)
+# colnames(gddstats3)[2] <-  "max"
+# 
+# gddstats <- merge(gddstats, gddstats2, by = "doy")
+# gddstats <- merge(gddstats, gddstats3, by = "doy")
+# 
+# ggplot(gddstats, aes(x = doy, y = mean)) + 
+#   geom_line() +
+#   geom_ribbon(aes(ymin = min, ymax = max), alpha = 0.2, color = NA) +
+#   geom_vline(xintercept = 5) +
+#   labs(title = "GDD accumulation")
+
+
+# recover fit parameters for pgsGDD ####
 df_fit <- as.data.frame(fit)
+
+###### Recover treeid ######
 
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("treeid", colnames(df_fit))]
@@ -169,9 +161,11 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit)[grepl("spp", colnames(df_fit))]
 aspp_cols <- aspp_cols[!grepl("Sigma", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("pgsGDDscaled", aspp_cols)]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
@@ -195,7 +189,37 @@ for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 aspp_df2
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover b spp ###### 
+bspp_cols <- colnames(df_fit)[grepl("pgsGDDscaled", colnames(df_fit))]
+# remove sigma_aspp for now
+bspp_cols <- bspp_cols[!grepl("Sigma", bspp_cols)]
+bspp_cols <- bspp_cols[2:5]
+
+
+bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+# change their names
+colnames(bspp_df) <- sub(".*spp:([^]]+)\\].*", "\\1", colnames(bspp_df))
+#empty spp df
+bspp_df2 <- data.frame(
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),
+  fit_b_spp_per5 = NA,
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
+)
+for (i in 1:ncol(bspp_df)) { # i = 1
+  bspp_df2$spp[i] <- colnames(bspp_df)[i]
+  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)
+  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+}
+bspp_df2
+
 ###### Recover site ######
 site_cols <- colnames(df_fit)[grepl("prov", colnames(df_fit))]
 # remove for now
@@ -223,8 +247,254 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df2
 
- 
-# Map
+
+# recover fit parameters for pgsNgrowingdays ####
+df_fit_pgsNgrowingday <- as.data.frame(fit_pgsNgrowingdays)
+
+###### Recover treeid ######
+
+# grab treeid 
+treeid_cols <- colnames(df_fit_pgsNgrowingday)[grepl("treeid", colnames(df_fit_pgsNgrowingday))]
+# remove sigma_asp for now
+treeid_cols <- treeid_cols[1:length(treeid_cols)]
+
+treeid_df <- df_fit_pgsNgrowingday[, colnames(df_fit_pgsNgrowingday) %in% treeid_cols]
+# change their names
+colnames(treeid_df) <- sub(".*treeid:([^]]+)\\].*", "\\1", colnames(treeid_df))
+
+# empty treeid dataframe
+treeid_df_pgsNgrowingdays <- data.frame(
+  treeid = character(ncol(treeid_df)),
+  fit_a_treeid = numeric(ncol(treeid_df)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
+)
+for (i in 1:ncol(treeid_df)) { # i = 1
+  treeid_df_pgsNgrowingdays$treeid[i] <- colnames(treeid_df)[i]         
+  treeid_df_pgsNgrowingdays$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df_pgsNgrowingdays$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df_pgsNgrowingdays$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df_pgsNgrowingdays$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df_pgsNgrowingdays$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+}
+treeid_df_pgsNgrowingdays
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover a spp  ######
+aspp_cols <- colnames(df_fit_pgsNgrowingday)[grepl("spp", colnames(df_fit_pgsNgrowingday))]
+aspp_cols <- aspp_cols[!grepl("Sigma", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("pgsNgrowingdays", aspp_cols)]
+
+aspp_df <- df_fit_pgsNgrowingday[, colnames(df_fit_pgsNgrowingday) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub(".*spp:([^]]+)\\].*", "\\1", colnames(aspp_df))
+
+#empty aspp df
+aspp_df_pgsNgrowingdays <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df_pgsNgrowingdays$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df_pgsNgrowingdays$fit_a_spp[i] <- round(mean(aspp_df[[i]]),5)  
+  aspp_df_pgsNgrowingdays$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df_pgsNgrowingdays$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df_pgsNgrowingdays$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df_pgsNgrowingdays$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df_pgsNgrowingdays
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover b spp ###### 
+bspp_cols <- colnames(df_fit_pgsNgrowingday)[grepl("pgsNgrowingdays", colnames(df_fit_pgsNgrowingday))]
+# remove sigma_aspp for now
+bspp_cols <- bspp_cols[!grepl("Sigma", bspp_cols)]
+bspp_cols <- bspp_cols[2:5]
+
+bspp_df <- df_fit_pgsNgrowingday[, colnames(df_fit_pgsNgrowingday) %in% bspp_cols]
+# change their names
+colnames(bspp_df) <- sub(".*spp:([^]]+)\\].*", "\\1", colnames(bspp_df))
+#empty spp df
+bspp_df_pgsNgrowingdays <- data.frame(
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),
+  fit_b_spp_per5 = NA,
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
+)
+for (i in 1:ncol(bspp_df)) { # i = 1
+  bspp_df_pgsNgrowingdays$spp[i] <- colnames(bspp_df)[i]
+  bspp_df_pgsNgrowingdays$fit_b_spp[i] <- round(mean(bspp_df[[i]]),5)
+  bspp_df_pgsNgrowingdays$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df_pgsNgrowingdays$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df_pgsNgrowingdays$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df_pgsNgrowingdays$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+}
+bspp_df_pgsNgrowingdays
+
+###### Recover site ######
+site_cols <- colnames(df_fit_pgsNgrowingday)[grepl("prov", colnames(df_fit_pgsNgrowingday))]
+# remove for now
+site_cols <- site_cols[1:length(site_cols)]
+site_cols <- site_cols[!grepl("Sigma", site_cols)]
+site_df <- df_fit_pgsNgrowingday[, colnames(df_fit_pgsNgrowingday) %in% site_cols]
+# change their names
+colnames(site_df) <- sub(".*prov:([^]]+)\\].*", "\\1", colnames(site_df))
+# empty site df
+site_df_pgsNgrowingdays <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df_pgsNgrowingdays$site[i] <- colnames(site_df)[i]         
+  site_df_pgsNgrowingdays$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df_pgsNgrowingdays$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df_pgsNgrowingdays$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df_pgsNgrowingdays$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df_pgsNgrowingdays$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df_pgsNgrowingdays
+
+###### Plot asp ######
+aspp_df2$sppfull[which(aspp_df2$spp == "ALNINC")] <- "Gray alder 
+(Alnus incana)"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETPOP")] <- "Gray birch 
+(Betula populifolia)"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETPAP")] <- "Paper birch 
+(Betula papyrifera)"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETALL")] <- "Yellow birch 
+(Betula alleghaniensis)"
+
+aspp_df_pgsNgrowingdays$sppfull[which(aspp_df_pgsNgrowingdays$spp == "ALNINC")] <- "Gray alder 
+(Alnus incana)"
+aspp_df_pgsNgrowingdays$sppfull[which(aspp_df_pgsNgrowingdays$spp == "BETPOP")] <- "Gray birch 
+(Betula populifolia)"
+aspp_df_pgsNgrowingdays$sppfull[which(aspp_df_pgsNgrowingdays$spp == "BETPAP")] <- "Paper birch 
+(Betula papyrifera)"
+aspp_df_pgsNgrowingdays$sppfull[which(aspp_df_pgsNgrowingdays$spp == "BETALL")] <- "Yellow birch 
+(Betula alleghaniensis)"
+
+# order by spp
+aspp_df2 <- aspp_df2[order(aspp_df2$spp), ]
+aspp_df_pgsNgrowingdays <- aspp_df_pgsNgrowingdays[order(aspp_df_pgsNgrowingdays$spp), ]
+
+# pgsGDD
+ggplot(aspp_df2, aes(x = fit_a_spp, y = sppfull, color = sppfull)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_spp_per5, xmax = fit_a_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_spp_per25, xmax = fit_a_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
+  theme_minimal() 
+ggsave("figures/empiricalData/empiricalData_asp_lmer.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+
+# pgsNgrowingdays
+ggplot(aspp_df_pgsNgrowingdays, aes(x = fit_a_spp, y = sppfull, color = sppfull)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_spp_per5, xmax = fit_a_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_spp_per25, xmax = fit_a_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
+  theme_minimal() 
+
+###### Plot bsp ######
+bspp_df2$sppfull[which(bspp_df2$spp == "ALNINC")] <- "Gray alder 
+(Alnus incana)"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETPOP")] <- "Gray birch 
+(Betula populifolia)"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETPAP")] <- "Paper birch 
+(Betula papyrifera)"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETALL")] <- "Yellow birch 
+(Betula alleghaniensis)"
+
+bspp_df_pgsNgrowingdays$sppfull[which(bspp_df_pgsNgrowingdays$spp == "ALNINC")] <- "Gray alder 
+(Alnus incana)"
+bspp_df_pgsNgrowingdays$sppfull[which(bspp_df_pgsNgrowingdays$spp == "BETPOP")] <- "Gray birch 
+(Betula populifolia)"
+bspp_df_pgsNgrowingdays$sppfull[which(bspp_df_pgsNgrowingdays$spp == "BETPAP")] <- "Paper birch 
+(Betula papyrifera)"
+bspp_df_pgsNgrowingdays$sppfull[which(bspp_df_pgsNgrowingdays$spp == "BETALL")] <- "Yellow birch 
+(Betula alleghaniensis)"
+
+# plot bspp for pgsGDD
+bspp_df2 <- bspp_df2[order(bspp_df2$spp), ]
+
+ggplot(bspp_df2, aes(x = fit_b_spp, y = sppfull, color = sppfull)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_b_spp_per5, xmax = fit_b_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_b_spp_per25, xmax = fit_b_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "", x = "Species slope values", color = "Tree Species")+
+  theme_minimal() +   
+  theme(strip.text = element_blank(),         
+        legend.key.height = unit(1.5, "lines"),
+        axis.text.y = element_blank()) +
+  scale_y_discrete(limits = rev)   
+ggsave("figures/empiricalData/empiricalData_bsp_lmer.jpeg", width = 9, height = 6, units = "in", dpi = 300)
+
+# plot bspp for pgsNgrowingdays
+bspp_df_pgsNgrowingdays <- bspp_df_pgsNgrowingdays[order(bspp_df_pgsNgrowingdays$spp), ]
+
+ggplot(bspp_df_pgsNgrowingdays, aes(x = fit_b_spp, y = sppfull, color = sppfull)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_b_spp_per5, xmax = fit_b_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_b_spp_per25, xmax = fit_b_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
+  theme_minimal() +   theme(strip.text = element_blank(),                    legend.key.height = unit(1.5, "lines")) +
+  scale_y_discrete(limits = rev)   
+
+###### Plot asite ######
+# add lat to df
+site_df2$sitefull <- c("Dartmouth College (NH)", "Harvard Forest (MA)", "St-Hyppolyte (Qc)", "White Mountains (NH)")
+site_df2$Latitude <- c(44.92,42.55,45.98,44.11)
+
+site_df2 <- site_df2[order(site_df2$Latitude), ]
+
+site_df2$site <- factor(site_df2$site, levels = site_df2$site)
+site_df2 <- site_df2[order(-site_df2$Latitude), ]
+
+
+ggplot(site_df2, aes(x = fit_a_site, y = Latitude, color = sitefull)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_site_per5, xmax = fit_a_site_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_site_per25, xmax = fit_a_site_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("Darjeeling1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(x = "Sites intercept values", y = "Latitude", color = "Site") +
+  theme_minimal() 
+ggsave("figures/empiricalData/empiricalData_asite_lmer.jpeg", width = 9, height = 6, units = "in", dpi = 300)
+
+# Map ####
 library(ggplot2)
 library(sf)
 library(rnaturalearth)
@@ -249,7 +519,7 @@ locations <- data.frame(
 )
 
 special_point <- data.frame(
-  name = "Arnorld Arboretum of 
+  name = "Arnold Arboretum of 
   Harvard University (MA)",
   lon = -71.13358611669867,
   lat = 42.29601035316377
@@ -268,11 +538,11 @@ ggplot(data = world) +
             nudge_y = 0.4, nudge_x = 0, size = 3.5) +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
-            nudge_y = -0.5, nudge_x = 6, color = "#E54E21", fontface = "bold") +
+            nudge_y = -0, nudge_x = 3.5, color = "#E54E21", fontface = "bold") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
-  theme_minimal() +
+  theme_minimal() +   theme(strip.text = element_blank(),                    legend.key.height = unit(1.5, "lines")) +
   labs(
-    title = "Source populations of seeds and location of the common garden",
+    title = "",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -280,7 +550,10 @@ ggplot(data = world) +
     panel.background = element_rect(fill = "aliceblue"),
     panel.grid.major = element_line(color = "gray80", linetype = "dotted")
   )
-ggsave("figures/mapSourcePop.jpeg", width = 6, height = 4, units = "in", dpi = 300)
+ggsave("figures/mapSourcePop.jpeg", width = 9, height = 6, units = "in", dpi = 300)
 
-# Fitting empirical data with stan_lmer ####
+
+
+
+ # Fitting empirical data with stan_lmer ####
 
