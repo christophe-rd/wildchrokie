@@ -42,7 +42,8 @@ fit_pgsNgrowingdays <- readRDS("output/stanOutput/fit_pgsNgrowingdays_Empirical_
 # faceted
 # order by spp
 emp <- emp[order(emp$spp), ]
-ggplot(emp, aes(x = pgsGDD, y = lengthCM, 
+emp$lengthMM
+ggplot(emp, aes(x = pgsGDD, y = lengthMM, 
                 color = sppfull, 
                 fill = sppfull)) +
   geom_point(size = 2, alpha = 0.7) + 
@@ -50,7 +51,7 @@ ggplot(emp, aes(x = pgsGDD, y = lengthCM,
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   facet_wrap(~sppfull) +
-  labs(y = "Ring width (cm)", x = "Growing degree days (GDD)", color = "Tree Species") +
+  labs(y = "Ring width (mm)", x = "Growing degree days (GDD)", color = "Tree Species") +
   theme_minimal() +
   theme(strip.text = element_blank(),         
           legend.key.height = unit(1.5, "lines")) +

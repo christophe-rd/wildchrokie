@@ -123,9 +123,30 @@ emp <- read.csv("output/empiricalDataMAIN.csv")
 # scale pgsgdd
 emp$pgsGDDscaled <- emp$pgsGDD/200
 
+emp$lengthMM <- emp$lengthCM*10
+
 fit <- stan_lmer(
-  lengthCM ~ 1 + pgsGDDscaled + 
-    (1|prov) + (1|spp) + (1|treeid),
+  lengthMM ~ 1 + pgsGDDscaled + 
+    (1|prov) + 
+    (0 + pgsGDDscaled | spp) +
+    (1|treeid),
+  data = emp,
+  chains = 4,
+  iter = 4000,
+  core=4
+)
+
+emp$pgsNgrowingdays <- emp$budset - emp$leafout
+emp$fgsNgrowingdays <- emp$leafcolor - emp$budburst
+
+emp$pgsNgrowingdays_scaled <- emp$pgsNgrowingdays/20
+
+
+fit_pgsNgrowingdays <- stan_lmer(
+  lengthMM ~ 1 + pgsNgrowingdays + 
+    (1|prov) + 
+    (0 + pgsNgrowingdays | spp) +
+    (1|treeid),
   data = emp,
   chains = 4,
   iter = 4000,
@@ -134,34 +155,34 @@ fit <- stan_lmer(
 
 df_fit <- as.data.frame(fit)
 saveRDS(fit, "output/stanOutput/fitEmpirical_stanlmer")
-
+saveRDS(fit_pgsNgrowingdays, "output/stanOutput/fit_pgsNgrowingdays_Empirical_stanlmer")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover b spp ######
-# bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
-# # remove sigma_aspp for now
-# bspp_cols <- bspp_cols[2:length(bspp_cols)]
-# 
-# bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
-# # change their names
-# colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
-# #empty spp df
-# bspp_df2 <- data.frame(
-#   spp = character(ncol(bspp_df)),
-#   fit_b_spp = numeric(ncol(bspp_df)),  
-#   fit_b_spp_per5 = NA, 
-#   fit_b_spp_per25 = NA,
-#   fit_b_spp_per75 = NA,
-#   fit_b_spp_per95 = NA
-# )
-# for (i in 1:ncol(bspp_df)) { # i = 1
-#   bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-#   bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-#   bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-#   bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-#   bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-#   bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
-# }
+bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
+# remove sigma_aspp for now
+bspp_cols <- bspp_cols[2:length(bspp_cols)]
+
+bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+# change their names
+colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
+#empty spp df
+bspp_df2 <- data.frame(
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),
+  fit_b_spp_per5 = NA,
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
+)
+for (i in 1:ncol(bspp_df)) { # i = 1
+  bspp_df2$spp[i] <- colnames(bspp_df)[i]
+  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)
+  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+}
 
 
 
