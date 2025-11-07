@@ -42,7 +42,8 @@ fit_pgsNgrowingdays <- readRDS("output/stanOutput/fit_pgsNgrowingdays_Empirical_
 # faceted
 # order by spp
 emp <- emp[order(emp$spp), ]
-emp$lengthMM
+emp$lengthMM <- emp$lengthCM*10
+
 ggplot(emp, aes(x = pgsGDD, y = lengthMM, 
                 color = sppfull, 
                 fill = sppfull)) +
@@ -163,6 +164,7 @@ treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
+if (FALSE) {
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit)[grepl("spp", colnames(df_fit))]
 aspp_cols <- aspp_cols[!grepl("Sigma", aspp_cols)]
@@ -192,6 +194,7 @@ for (i in 1:ncol(aspp_df)) { # i = 1
 aspp_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+}
 ###### Recover b spp ###### 
 bspp_cols <- colnames(df_fit)[grepl("pgsGDDscaled", colnames(df_fit))]
 # remove sigma_aspp for now
@@ -283,6 +286,7 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 treeid_df_pgsNgrowingdays
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+if (FALSE) {
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit_pgsNgrowingday)[grepl("spp", colnames(df_fit_pgsNgrowingday))]
 aspp_cols <- aspp_cols[!grepl("Sigma", aspp_cols)]
@@ -312,6 +316,7 @@ for (i in 1:ncol(aspp_df)) { # i = 1
 aspp_df_pgsNgrowingdays
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+}
 ###### Recover b spp ###### 
 bspp_cols <- colnames(df_fit_pgsNgrowingday)[grepl("pgsNgrowingdays", colnames(df_fit_pgsNgrowingday))]
 # remove sigma_aspp for now
@@ -367,6 +372,7 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df_pgsNgrowingdays
 
+if (FALSE) {
 ###### Plot asp ######
 aspp_df2$sppfull[which(aspp_df2$spp == "ALNINC")] <- "Gray alder 
 (Alnus incana)"
@@ -417,6 +423,7 @@ ggplot(aspp_df_pgsNgrowingdays, aes(x = fit_a_spp, y = sppfull, color = sppfull)
   labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
   theme_minimal() 
 
+}
 ###### Plot bsp ######
 bspp_df2$sppfull[which(bspp_df2$spp == "ALNINC")] <- "Gray alder 
 (Alnus incana)"
@@ -506,10 +513,10 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 
 # --- Define bounding box for northeastern North America ---
 # Adjust these coordinates as needed
-lat_min <- 40
-lat_max <- 52
-lon_min <- -82
-lon_max <- -55
+lat_min <- 41
+lat_max <- 48
+lon_min <- -78
+lon_max <- -63
 
 # --- Create example points along a latitudinal gradient ---
 # These are arbitrary example locations
@@ -518,6 +525,10 @@ locations <- data.frame(
   lon = c(-72.2, -71, -70.66, -74.01),
   lat = c(42.55, 44.11, 44.92, 45.98)
 )
+
+locations2 <- locations[order(-locations$lat), ]
+
+locations2$col <-  wes_palettes$Darjeeling1[1:4]
 
 special_point <- data.frame(
   name = "Arnold Arboretum of 
@@ -528,20 +539,22 @@ special_point <- data.frame(
 special_sf <- st_as_sf(special_point, coords = c("lon", "lat"), crs = 4326)
 
 # Convert to sf object
-points_sf <- st_as_sf(locations, coords = c("lon", "lat"), crs = 4326)
+points_sf <- st_as_sf(locations2, coords = c("lon", "lat"), crs = 4326)
 
 # --- Plot the map ---
 ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
-  geom_sf(data = points_sf, color = "#0A9F9D", size = 3) +
+  geom_sf(data = points_sf, color = locations2$col, size = 3) +
   geom_sf(data = special_sf, color = "#E54E21", shape = 8, size = 5, stroke = 1.2) +
-  geom_text(data = locations, aes(x = lon, y = lat, label = name),
+  geom_text(data = locations2, aes(x = lon, y = lat, label = name),
             nudge_y = 0.4, nudge_x = 0, size = 3.5) +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
             nudge_y = -0, nudge_x = 3.5, color = "#E54E21", fontface = "bold") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
-  theme_minimal() +   theme(strip.text = element_blank(),                    legend.key.height = unit(1.5, "lines")) +
+  theme_minimal() +   
+  theme(strip.text = element_blank(),                    
+        legend.key.height = unit(1.5, "lines")) +
   labs(
     title = "",
     x = "Longitude",
@@ -554,7 +567,7 @@ ggplot(data = world) +
 ggsave("figures/mapSourcePop.jpeg", width = 9, height = 6, units = "in", dpi = 300)
 
 
-
+[1] "#FF0000" "#00A08A" "#F2AD00" "#F98400"
 
  # Fitting empirical data with stan_lmer ####
 
