@@ -26,14 +26,10 @@ gdd <- read.csv("output/gddByYear.csv")
 
 # add full species
 emp$sppfull <- NA
-emp$sppfull[which(emp$spp == "ALNINC")] <- "Gray alder 
-(Alnus incana)"
-emp$sppfull[which(emp$spp == "BETPOP")] <- "Gray birch 
-(Betula populifolia)"
-emp$sppfull[which(emp$spp == "BETPAP")] <- "Paper birch 
-(Betula papyrifera)"
-emp$sppfull[which(emp$spp == "BETALL")] <- "Yellow birch 
-(Betula alleghaniensis)"
+emp$sppfull[which(emp$spp == "ALNINC")] <- "Alnus incana"
+emp$sppfull[which(emp$spp == "BETPOP")] <- "Betula populifolia"
+emp$sppfull[which(emp$spp == "BETPAP")] <- "Betula papyrifera"
+emp$sppfull[which(emp$spp == "BETALL")] <- "Betula alleghaniensis"
 
 # load fit
 fit <- readRDS("output/stanOutput/fitEmpirical_stanlmer")
@@ -44,6 +40,10 @@ fit_pgsNgrowingdays <- readRDS("output/stanOutput/fit_pgsNgrowingdays_Empirical_
 emp <- emp[order(emp$spp), ]
 emp$lengthMM <- emp$lengthCM*10
 
+emp$year <- as.factor(emp$year)
+
+
+# At eco evo:
 ggplot(emp, aes(x = pgsGDD, y = lengthMM, 
                 color = sppfull, 
                 fill = sppfull)) +
@@ -53,11 +53,34 @@ ggplot(emp, aes(x = pgsGDD, y = lengthMM,
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   facet_wrap(~sppfull) +
   labs(y = "Ring width (mm)", x = "Growing degree days (GDD)", color = "Tree Species") +
-  theme_minimal() +
-  theme(strip.text = element_blank(),         
-          legend.key.height = unit(1.5, "lines")) +
-  guides(fill = "none") 
-ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD.jpeg", width = 9, height = 6, units = "in", dpi = 300)
+  theme_bw() +
+  theme(legend.key.height = unit(1.5, "lines"),
+        strip.text = element_text(face = "bold.italic", size = 10)) +
+  guides(fill = "none", color = "none") 
+
+# new symbols and stuff
+ggplot(emp, aes(x = pgsGDD, y = lengthMM)) +
+  geom_point(size = 2, alpha = 0.9,
+             aes(shape = prov,
+                 color = year, 
+                 fill = year)) + 
+  geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  scale_shape_manual(values = c(21, 22, 23, 24, 25)) +  
+  facet_wrap(~sppfull) +
+  labs(y = "Ring width (mm)", 
+       x = "Growing degree days (GDD)", 
+       color = "Year",
+       fill = "Year",
+       shape = "Site") +  
+  theme_bw() +
+  guides(color = guide_legend(override.aes = list(shape = 21)),
+         fill = guide_legend(override.aes = list(shape = 21)))
+ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD2.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+
+
 
 # full growing season
 ggplot(emp, aes(x = fgsGDD, y = lengthCM, 
@@ -374,14 +397,10 @@ site_df_pgsNgrowingdays
 
 if (FALSE) {
 ###### Plot asp ######
-aspp_df2$sppfull[which(aspp_df2$spp == "ALNINC")] <- "Gray alder 
-(Alnus incana)"
-aspp_df2$sppfull[which(aspp_df2$spp == "BETPOP")] <- "Gray birch 
-(Betula populifolia)"
-aspp_df2$sppfull[which(aspp_df2$spp == "BETPAP")] <- "Paper birch 
-(Betula papyrifera)"
-aspp_df2$sppfull[which(aspp_df2$spp == "BETALL")] <- "Yellow birch 
-(Betula alleghaniensis)"
+aspp_df2$sppfull[which(aspp_df2$spp == "ALNINC")] <- "Alnus incana"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETPOP")] <- "Betula populifolia"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETPAP")] <- "Betula papyrifera"
+aspp_df2$sppfull[which(aspp_df2$spp == "BETALL")] <- "Betula alleghaniensis"
 
 aspp_df_pgsNgrowingdays$sppfull[which(aspp_df_pgsNgrowingdays$spp == "ALNINC")] <- "Gray alder 
 (Alnus incana)"
@@ -425,14 +444,10 @@ ggplot(aspp_df_pgsNgrowingdays, aes(x = fit_a_spp, y = sppfull, color = sppfull)
 
 }
 ###### Plot bsp ######
-bspp_df2$sppfull[which(bspp_df2$spp == "ALNINC")] <- "Gray alder 
-(Alnus incana)"
-bspp_df2$sppfull[which(bspp_df2$spp == "BETPOP")] <- "Gray birch 
-(Betula populifolia)"
-bspp_df2$sppfull[which(bspp_df2$spp == "BETPAP")] <- "Paper birch 
-(Betula papyrifera)"
-bspp_df2$sppfull[which(bspp_df2$spp == "BETALL")] <- "Yellow birch 
-(Betula alleghaniensis)"
+bspp_df2$sppfull[which(bspp_df2$spp == "ALNINC")] <- "Alnus incana"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETPOP")] <- "Betula populifolia"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETPAP")] <- "Betula papyrifera"
+bspp_df2$sppfull[which(bspp_df2$spp == "BETALL")] <- "Betula alleghaniensis"
 
 bspp_df_pgsNgrowingdays$sppfull[which(bspp_df_pgsNgrowingdays$spp == "ALNINC")] <- "Gray alder 
 (Alnus incana)"
@@ -456,11 +471,16 @@ ggplot(bspp_df2, aes(x = fit_b_spp, y = sppfull, color = sppfull)) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   labs(y = "", x = "Species slope values", color = "Tree Species")+
-  theme_minimal() +   
-  theme(strip.text = element_blank(),         
-        legend.key.height = unit(1.5, "lines"),
-        axis.text.y = element_blank()) +
-  scale_y_discrete(limits = rev)   
+  theme_bw()+  
+  scale_y_discrete(limits = rev) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10, face = "italic"),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) 
 ggsave("figures/empiricalData/empiricalData_bsp_lmer.jpeg", width = 9, height = 6, units = "in", dpi = 300)
 
 # plot bspp for pgsNgrowingdays
@@ -476,21 +496,38 @@ ggplot(bspp_df_pgsNgrowingdays, aes(x = fit_b_spp, y = sppfull, color = sppfull)
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
-  theme_minimal() +   theme(strip.text = element_blank(),                    legend.key.height = unit(1.5, "lines")) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) +
+  theme_bw() +
   scale_y_discrete(limits = rev)   
 
 ###### Plot asite ######
 # add lat to df
-site_df2$sitefull <- c("Dartmouth College (NH)", "Harvard Forest (MA)", "St-Hyppolyte (Qc)", "White Mountains (NH)")
-site_df2$Latitude <- c(44.92,42.55,45.98,44.11)
+site_df_forplot <- site_df2
+site_df_forplot$sitefull <- c("Dartmouth College (NH)", "Harvard Forest (MA)", "St-Hyppolyte (Qc)", "White Mountains (NH)")
 
-site_df2 <- site_df2[order(site_df2$Latitude), ]
+site_df_forplot$Latitude <- c(44.92,42.55,45.98,44.11)
 
-site_df2$site <- factor(site_df2$site, levels = site_df2$site)
-site_df2 <- site_df2[order(-site_df2$Latitude), ]
+site_df_forplot$site <- factor(site_df_forplot$site, levels = site_df_forplot$site)
+site_df_forplot <- site_df_forplot[order(-site_df_forplot$Latitude), ]
+
+# latitudinal degree difference from arboretum
+site_df_forplot$degreedif <- site_df_forplot$Latitude-42.29601035316377
+
+# latitudinal km difference from arboretum
+site_df_forplot$kmdif <- site_df_forplot$degreedif*111
+
+site_df_forplot$sitefull <- factor(site_df_forplot$sitefull,
+                                   levels = site_df_forplot$sitefull)
 
 
-ggplot(site_df2, aes(x = fit_a_site, y = Latitude, color = sitefull)) +
+ggplot(site_df_forplot, aes(x = fit_a_site, y = kmdif, color = sitefull)) +
   geom_point(size = 6, alpha = 1) + 
   geom_errorbarh(aes(xmin = fit_a_site_per5, xmax = fit_a_site_per95), 
                  width = 0, alpha = 1, linewidth = 0.7) +
@@ -498,9 +535,16 @@ ggplot(site_df2, aes(x = fit_a_site, y = Latitude, color = sitefull)) +
                  width = 0, alpha = 1, linewidth = 2) +
   scale_color_manual(values = wes_palette("Darjeeling1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(x = "Sites intercept values", y = "Latitude", color = "Site") +
-  theme_minimal() 
-ggsave("figures/empiricalData/empiricalData_asite_lmer.jpeg", width = 9, height = 6, units = "in", dpi = 300)
+  labs(x = "Sites intercept values", y = "Latitude distance (km)", color = "Site") +
+  scale_y_continuous(breaks = seq(0, 450, by = 50))+
+  theme_bw() +
+  theme(
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  )
+ggsave("figures/empiricalData/empiricalData_asite_lmer.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # Map ####
 library(ggplot2)
@@ -544,17 +588,18 @@ points_sf <- st_as_sf(locations2, coords = c("lon", "lat"), crs = 4326)
 # --- Plot the map ---
 ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
-  geom_sf(data = points_sf, color = locations2$col, size = 3) +
-  geom_sf(data = special_sf, color = "#E54E21", shape = 8, size = 5, stroke = 1.2) +
+  geom_sf(data = points_sf, color = locations2$col, size = 4) +
+  geom_sf(data = special_sf, color = "#E54E21", shape = 8, size = 6, stroke = 1.2) +
   geom_text(data = locations2, aes(x = lon, y = lat, label = name),
-            nudge_y = 0.4, nudge_x = 0, size = 3.5) +
+            nudge_y = 0.35, nudge_x = 0, size = 4.5, fontface = "bold") +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
-            nudge_y = -0, nudge_x = 3.5, color = "#E54E21", fontface = "bold") +
+            nudge_y = 0.2, nudge_x = 2.5, color = "#E54E21", size = 5, fontface = "bold") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
   theme_minimal() +   
   theme(strip.text = element_blank(),                    
-        legend.key.height = unit(1.5, "lines")) +
+        legend.key.height = unit(1.5, "lines"),
+        panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
   labs(
     title = "",
     x = "Longitude",
