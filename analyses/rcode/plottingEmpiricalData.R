@@ -57,6 +57,7 @@ ggplot(emp, aes(x = pgsGDD, y = lengthMM,
   theme(legend.key.height = unit(1.5, "lines"),
         strip.text = element_text(face = "bold.italic", size = 10)) +
   guides(fill = "none", color = "none") 
+ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD.jpeg", width = 6, height = 6, units = "in", dpi = 300)
 
 # new symbols and stuff
 ggplot(emp, aes(x = pgsGDD, y = lengthMM)) +
