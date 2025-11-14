@@ -96,6 +96,7 @@ unique(emp$countFrostFree)
 emp$colfrost[which(emp$year %in% c(2018, 2019))] <- "#81A88D"
 emp$colfrost[which(emp$year %in% c(2020))] <- "#02401B"
 
+emp$countFrostFree <- as.factor(emp$countFrostFree)
 ggplot(emp, aes(x = pgsGDD, y = lengthMM)) +
   geom_point(size = 2, alpha = 1,
              aes(shape = prov,
@@ -118,14 +119,13 @@ ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD_frostFreeDays.jpeg", w
 ### start with bepa
 bepa <- subset(emp, spp == "BETPAP")
 bepaplot <- ggplot(bepa, aes(x = pgsGDD, y = lengthMM)) +
-geom_point(size = 2, alpha = 1,
-           aes(color = treeid,
-               fill = treeid)) + 
-  geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
-  labs(y = "Ring width (mm)", 
-       x = "Growing degree days (GDD)", 
+geom_point(size = 2, alpha = 1) + 
+  # geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
+  labs(y = "", 
+       x = "", 
        color = "treeid",
        fill = "treeid") +  
+  facet_wrap(~treeid)+
   theme_bw() +
   guides(color = guide_legend(override.aes = list(shape = 21)),
          fill = guide_legend(override.aes = list(shape = 21)))
@@ -134,14 +134,13 @@ ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD_betpap.jpeg", bepaplot
 ### bepa
 betpop <- subset(emp, spp == "BETPOP")
 betpopplot <- ggplot(betpop, aes(x = pgsGDD, y = lengthMM)) +
-  geom_point(size = 2, alpha = 1,
-             aes(color = treeid,
-                 fill = treeid)) + 
-  geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
-  labs(y = "Ring width (mm)", 
-       x = "Growing degree days (GDD)", 
+  geom_point(size = 2, alpha = 1) + 
+  # geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
+  labs(y = "", 
+       x = "", 
        color = "treeid",
        fill = "treeid") +  
+  facet_wrap(~treeid) +
   theme_bw() +
   guides(color = guide_legend(override.aes = list(shape = 21)),
          fill = guide_legend(override.aes = list(shape = 21)))
@@ -150,14 +149,13 @@ ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD_betpop.jpeg", betpoppl
 ### betall
 betall <- subset(emp, spp == "BETALL")
 betallplot <- ggplot(betall, aes(x = pgsGDD, y = lengthMM)) +
-  geom_point(size = 2, alpha = 1,
-             aes(color = treeid,
-                 fill = treeid)) + 
-  geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
-  labs(y = "Ring width (mm)", 
-       x = "Growing degree days (GDD)", 
+  geom_point(size = 2, alpha = 1) + 
+  # geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
+  labs(y = "", 
+       x = "", 
        color = "treeid",
        fill = "treeid") +  
+  facet_wrap(~treeid)+
   theme_bw() +
   guides(color = guide_legend(override.aes = list(shape = 21)),
          fill = guide_legend(override.aes = list(shape = 21)))
@@ -166,15 +164,14 @@ ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD_betall.jpeg", betallpl
 ### alninc 
 alninc <- subset(emp, spp == "ALNINC")
 alnincplot <- ggplot(alninc, aes(x = pgsGDD, y = lengthMM)) +
-  geom_point(size = 2, alpha = 1,
-             aes(color = treeid,
-                 fill = treeid)) + 
-  geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
-  labs(y = "Ring width (mm)", 
-       x = "Growing degree days (GDD)", 
+  geom_point(size = 2, alpha = 1) + 
+  # geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
+  labs(y = "", 
+       x = "", 
        color = "treeid",
        fill = "treeid") +  
   theme_bw() +
+  facet_wrap(~treeid)+
   guides(color = guide_legend(override.aes = list(shape = 21)),
          fill = guide_legend(override.aes = list(shape = 21)))
 ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD_alninc.jpeg", alnincplot, width = 8, height = 6, units = "in", dpi = 300)
