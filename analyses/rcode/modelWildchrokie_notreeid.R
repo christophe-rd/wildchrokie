@@ -36,13 +36,11 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 
 # set parameters
 set.seed(124)
-a <- 15
-b <- 4
+a <- 1.5
 sigma_y <- 0.1
 sigma_a_spp <- 0.5 
 sigma_a_treeid <- 0.15
 sigma_a_site <- 0.3
-sigma_b_spp <- 0.25
 
 n_site <- 10 # number of sites
 n_spp <- 10 # number of species
@@ -76,119 +74,42 @@ simcoef <- data.frame(
 # get intercept values for each species
 a_spp <- rnorm(n_spp, 0, sigma_a_spp)
 a_site <- rnorm(n_site, 0, sigma_a_site)
-# a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
-
-# get slope values for each speciess
-b_spp <- rnorm(n_spp, 0, sigma_b_spp)
+a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
 
 # Add my parameters to the df
-# simcoef$a_treeid <- a_treeid[treeid]
+simcoef$a_treeid <- a_treeid[treeid]
 simcoef$a_site <- a_site[simcoef$site]
 simcoef$a_spp <- a_spp[simcoef$spp]
-simcoef$b_spp <- b_spp[simcoef$spp]
 
 # add the rest of the boring stuff 
 simcoef$a <- a
-simcoef$b <- b
 simcoef$sigma_y <- sigma_y
-# simcoef$sigma_a_treeid <- sigma_a_treeid
+simcoef$sigma_a_treeid <- sigma_a_treeid
 simcoef$sigma_a_spp <- sigma_a_spp
 simcoef$sigma_a_site <- sigma_a_site
 simcoef$error <- rnorm(N, 0, sigma_y)
-simcoef$gdd <- rnorm(N, 1800, 100)
-simcoef$gddcons <- simcoef$gdd/200
 
-# adding both options of tree rings
+# sum for tree rings
 simcoef$ringwidth <- 
   simcoef$a_site + 
   simcoef$a_spp + 
-  # simcoef$a_treeid + 
+  simcoef$a_treeid +
   simcoef$a +
-  (simcoef$b*simcoef$gddcons) + 
-  (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
 # prepare grouping factors
 simcoef$site <- factor(simcoef$site) 
 simcoef$spp <- factor(simcoef$spp)
-# simcoef$treeid <- factor(simcoef$treeid)
-
-# === === === === === #
-# Plot sim data #
-# === === === === === #
-# start with intercepts
-simcoef$a_asp <- simcoef$a + simcoef$a_spp
-simcoef$a_asite <- simcoef$a + simcoef$a_site
-simcoef$a_asp_asite <- simcoef$a + simcoef$a_spp + simcoef$a_site
-ggplot(simcoef) +
-  geom_vline(aes(xintercept = a), # a
-             color = "black", alpha = 1, linewidth = 2) +
-  geom_vline(aes(xintercept = a_asp), 
-             color = "#0A9F9D", alpha = 0.8, , linewidth = 1.5) +
-  geom_vline(aes(xintercept = a_asite), 
-             color = "#E54E21", alpha = 0.8) +
-  geom_vline(aes(xintercept = a_asp_asite), 
-             color = "#6C8645", alpha = 0.8) +
-  labs(x = "", y = "",
-       title = "intercept values when a=1.5") +
-  facet_wrap(~spp) +
-  theme_minimal()
-ggsave("figures/intercept_simData_a1.5.jpeg", width = 6, height = 6, units = "in", dpi = 300)
-
-simcoef$b_bsp <- simcoef$b + simcoef$b_spp
-ggplot(simcoef) +
-  geom_vline(aes(xintercept = b), # a
-             color = "black", alpha = 1) +
-  geom_vline(aes(xintercept = b_bsp), 
-             color = "#0A9F9D", alpha = 0.8) +
-  labs(x = "", y = "",
-       title = "slope values when b=0.4") +
-  facet_wrap(~spp) +
-  theme_minimal()
-ggsave("figures/slope_simData_b0.4.jpeg", width = 6, height = 6, units = "in", dpi = 300)
+simcoef$treeid <- factor(simcoef$treeid)
 
 # scale up a and b
-simcoef$a <- 15
-simcoef$b <- 4
 simcoef$ringwidth <- 
   simcoef$a_site + 
   simcoef$a_spp + 
-  # simcoef$a_treeid + 
+  simcoef$a_treeid +
   simcoef$a +
-  (simcoef$b*simcoef$gddcons) + 
-  (simcoef$b_spp*simcoef$gddcons)+
   simcoef$error
 
-# intercepts
-simcoef$a_asp <- simcoef$a + simcoef$a_spp
-simcoef$a_asite <- simcoef$a + simcoef$a_site
-simcoef$a_asp_asite <- simcoef$a + simcoef$a_spp + simcoef$a_site
-ggplot(simcoef) +
-  geom_vline(aes(xintercept = a), # a
-             color = "black", alpha = 1, linewidth =2) +
-  geom_vline(aes(xintercept = a_asp), 
-             color = "#0A9F9D", alpha = 1, linewidth =1.5) +
-  geom_vline(aes(xintercept = a_asite), 
-             color = "#E54E21", alpha = 0.8) +
-  geom_vline(aes(xintercept = a_asp_asite), 
-             color = "#6C8645", alpha = 0.8) +
-  labs(x = "", y = "",
-       title = "intercept values when a=15") +
-  facet_wrap(~spp) +
-  theme_minimal()
-ggsave("figures/intercept_simData_a15.jpeg", width = 6, height = 6, units = "in", dpi = 300)
-
-simcoef$b_bsp <- simcoef$b + simcoef$b_spp
-ggplot(simcoef) +
-  geom_vline(aes(xintercept = b), # a
-             color = "black", alpha = 1) +
-  geom_vline(aes(xintercept = b_bsp), 
-             color = "#0A9F9D", alpha = 0.8) +
-  labs(x = "", y = "",
-       title = "slope values when b=4") +
-  facet_wrap(~spp) +
-  theme_minimal()
-ggsave("figures/slope_simData_b4.jpeg", width = 6, height = 6, units = "in", dpi = 300)
 # === === === === === #
 ##### Run model #####
 # === === === === === #
@@ -199,7 +120,7 @@ Nspp <- length(unique(simcoef$spp))
 Nsite <- length(unique(simcoef$site))
 site <- as.numeric(as.character(simcoef$site))
 species <- as.numeric(as.character(simcoef$spp))
-# treeid <- treeid
+treeid <- treeid
 # Ntreeid <- length(unique(treeid))
 table(treeid)
 
