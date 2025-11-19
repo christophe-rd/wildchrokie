@@ -34,7 +34,7 @@ asp = 0 + sigma_asp*zasp; // non-centered a_sp
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
     ypred[i]=
-        //a + 
+        a + 
         asp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
@@ -47,12 +47,12 @@ model{
   bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
   asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
   atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
-  a ~ normal(4, 1);
-  b ~ normal(0, 0.2);
-  sigma_bsp ~ normal(0, 1);
+  a ~ normal(15, 1);
+  b ~ normal(4, 0.2);
+  sigma_bsp ~ normal(0, 0.2);
   sigma_asp ~ normal(0, 0.3);
   zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
-  sigma_asite ~ normal(0, 1);
+  sigma_asite ~ normal(0, 0.6);
   sigma_atreeid ~ normal(0, 0.1);
   sigma_y ~ normal(0, 1);
   

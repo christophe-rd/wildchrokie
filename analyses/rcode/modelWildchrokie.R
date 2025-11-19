@@ -39,8 +39,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 
 # set parameters
 set.seed(124)
-a <- 1.5
-b <- 0.4
+a <- 15
+b <- 4
 sigma_y <- 0.1
 sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
 sigma_a_treeid <- 0.15
@@ -435,77 +435,57 @@ ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, heigh
 # === === === === === === === === === === === === === === === === 
 #### Look at my priors####
 # === === === === === === === === === === === === === === === === 
-
 ##### Priors VS Posterior #####
 # prior predictive checks. Simulating prior values from the values set in the model block
-draws <- 8000
-
-vec <- rep(NA, draws*length(sigma_b_spp))
-
-###### sigmas ######
 sigma_bsp_draw <- abs(rnorm(Ndraws, 0, 0.3))   
 sigma_asp_draw <- abs(rnorm(Ndraws, 0, 0.5))
 sigma_asite_draw <- abs(rnorm(Ndraws, 0, 0.5))
 sigma_atree_draw <- abs(rnorm(Ndraws, 0, 0.05))
 sigma_y_draw <- abs(rnorm(Ndraws, 0, 5))
 
-inds <- 1:Ndraws
-bsp_list <- vector("list", Ndraws)   
-asp_list <- vector("list", Ndraws)  
-asite_list <- vector("list", Ndraws)
-atree_list <- vector("list", Ndraws)
+# #### trying Ken's ways
+sigma_df
 
-for (i in seq_along(inds)) { # i =1
-  idx <- inds[i]
-  bsp_list[[i]]   <- rnorm(n_spp, 0, sigma_bsp_draw[idx])
-  asp_list[[i]]   <- rnorm(n_spp, 0, sigma_asp_draw[idx]) 
-  asite_list[[i]] <- rnorm(n_site, 0, sigma_asite_draw[idx])
-  atree_list[[i]] <- rnorm(n_treeid, 0, sigma_atree_draw[idx])
+draws <- 100
+n_sigma_bsp <- 100
+
+# set to prior values
+sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 1))
+
+prior_bsp <- rep(NA, draws*length(sigma_bsp_vec))
+
+for (i in 1: length(sigma_bsp_vec)) {
+  prior_bsp[((i - 1)*draws + 1):(i*draws)] <- rnorm(draws, 0, sigma_bsp_vec[i])
 }
-
-
-for (i in seq_along(inds)) { # i =1
-  idx <- inds[i]
-  bsp_list[[i]]   <- rnorm(n_spp, 0, sigma_bsp_draw[idx])
-}
-  
-# Flatten bsp/asp into data.frames for plotting
-prior_bsp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
-  data.frame(draw = i, sigma_bsp = sigma_bsp_draw[inds[i]],
-             spp = 1:Nspp, prior_bsp = bsp_list[[i]])
-}))
+prior_bsp
 
 # copy of bspp_df
 bspp_df3 <- bspp_df
 
 bspp_df3$draw <- rownames(bspp_df3)
 
-colnames(bspp_df3)[1:20] <- paste0("spp", 1:20)
+colnames(bspp_df3) <- paste0("spp", 1:10)
+bspp_df3
 
 long_post_bspp <- reshape(
   bspp_df3,
   direction = "long",
-  varying = paste0("spp", 1:20),
+  varying = paste0("spp", 1:10),
   v.names = "post_bsp",
   idvar = "draw",
   timevar = "spp"
 )
+long_post_bspp
 
-# join in the posterior estimates
-joined_bsp <- cbind(prior_bsp_df, long_post_bspp)
-
-# get a subset of 10000 randomly selected rows
-sub <- joined_bsp[sample(0:160000, 1e4, replace = TRUE), 
-                  c(1,3,4,7)
-                  ]
-sub
-
-ggplot(sub) +
-  geom_density(aes(x = prior_bsp, colour = "Prior", group = spp),
+ggplot() +
+  geom_density(data = data.frame(prior_bsp = prior_bsp),
+               aes(x = prior_bsp, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = long_post_bspp,
+               aes(x = post_bsp, colour = "Posterior", group = spp),
                linewidth = 0.3) +
-  geom_density(aes(x = post_bsp, colour = "Posterior", group = spp),
-               linewidth = 0.3) +
-  labs(title = "priorVSposterior_bsp", x = "BSP", y = "Density", color = "Curve") +
+  labs(title = "priorVSposterior_bsp",
+       x = "BSP", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 ggsave("figures/priorVSposterior_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)

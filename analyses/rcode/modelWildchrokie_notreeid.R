@@ -7,7 +7,7 @@ rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
-options(digits = 3)
+# options(digits = 3)
 # quartz()
 
 # Load library 
@@ -44,7 +44,7 @@ sigma_a_site <- 0.3
 
 n_site <- 10 # number of sites
 n_spp <- 10 # number of species
-n_perspp <- 10 # number of individuals per species
+n_perspp <- 5 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
 n_meas <- 3 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
@@ -121,20 +121,18 @@ Nsite <- length(unique(simcoef$site))
 site <- as.numeric(as.character(simcoef$site))
 species <- as.numeric(as.character(simcoef$spp))
 treeid <- treeid
-# Ntreeid <- length(unique(treeid))
-table(treeid)
+Ntreeid <- length(unique(treeid))
+table(species)
 
 rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint_notreeid.stan", 
                     data=c("N","y","Nspp","species","Nsite", "site", 
-                           # "Ntreeid", "treeid", 
-                           "gdd"),
+                           "Ntreeid", "treeid"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/fit_notreeid_normal_aANDb")
-fit <- readRDS("output/stanOutput/fit_withbspp")
-run_fit_noSite <- FALSE
+# saveRDS(fit, "output/stanOutput/fit_notreeid_normal_aANDb")
+# fit <- readRDS("output/stanOutput/fit_withbspp")
 
 if (FALSE) {
 
@@ -177,42 +175,43 @@ for (i in 1:ncol(sigma_df)) { # i = 1
 }
 
 sigma_df2$sim_sigma <- c(
-  sigma_b_spp,
                          sigma_a_spp, 
                          sigma_a_site, 
-                         # sigma_a_treeid, 
+                         sigma_a_treeid,
                          sigma_y)
 
-
+sigma_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover b spp ######
-bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
-# remove sigma_aspp for now
-bspp_cols <- bspp_cols[2:length(bspp_cols)]
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover treeid ######
 
-bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+# grab treeid 
+treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
+# remove sigma_asp for now
+treeid_cols <- treeid_cols[2:length(treeid_cols)]
+
+treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
 # change their names
-colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
-#empty spp df
-bspp_df2 <- data.frame(
-  spp = character(ncol(bspp_df)),
-  fit_b_spp = numeric(ncol(bspp_df)),  
-  fit_b_spp_per5 = NA, 
-  fit_b_spp_per25 = NA,
-  fit_b_spp_per75 = NA,
-  fit_b_spp_per95 = NA
+colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
+# empty treeid dataframe
+treeid_df2 <- data.frame(
+  treeid = character(ncol(treeid_df)),
+  fit_a_treeid = numeric(ncol(treeid_df)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
 )
-for (i in 1:ncol(bspp_df)) { # i = 1
-  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+for (i in 1:ncol(treeid_df)) { # i = 1
+  treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
+  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
+treeid_df2
 
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
 aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
@@ -232,13 +231,13 @@ aspp_df2 <- data.frame(
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$fit_a_spp[i] <- mean(aspp_df[[i]])  
+  aspp_df2$fit_a_spp_per5[i] <- quantile(aspp_df[[i]], probs = 0.05)
+  aspp_df2$fit_a_spp_per25[i] <-quantile(aspp_df[[i]], probs = 0.25)
+  aspp_df2$fit_a_spp_per75[i] <- quantile(aspp_df[[i]], probs = 0.75)
+  aspp_df2$fit_a_spp_per95[i] <- quantile(aspp_df[[i]], probs = 0.95)
 }
-
+aspp_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
@@ -287,31 +286,34 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
        title = "") +
   theme_minimal()
 sigma_simXfit_plot
-ggsave("figures/notreeid_sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/no_b_sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot b spp ######
-bspptoplot <- merge(
-  simcoef[!duplicated(simcoef$spp), 
-          c("spp", "b_spp")], 
-  bspp_df2[!duplicated(bspp_df2$spp), 
-           c("spp", "fit_b_spp", "fit_b_spp_per25", "fit_b_spp_per75", "fit_b_spp_per5", "fit_b_spp_per95")], 
-  by = "spp"
+###### Plot treeid ######
+# add sim to fit treeid df
+treeidtoplot <- merge(
+  simcoef[!duplicated(simcoef$treeid), 
+          c("treeid", "a_treeid")], 
+  treeid_df2[!duplicated(treeid_df2$treeid), 
+             c("treeid", "fit_a_treeid", 
+               "fit_a_treeid_per5", 
+               "fit_a_treeid_per25",
+               "fit_a_treeid_per75",
+               "fit_a_treeid_per95")], 
+  by = "treeid"
 )
-bspptoplot
-
-b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
-  geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_b_spp_per25, ymax = fit_b_spp_per75), 
-                width = 0, linewidth = 1.5, color = "darkgray", alpha = 0.7) +
-  geom_point(color = "#046C9A", size = 2) +
+treeidtoplot
+# plot treeid
+a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
+  geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.5) +
+  geom_point(color = "#046C9A", size = 2, alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim b_spp", y = "fit b_spp", title = "") +
+  labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
   theme_minimal()
-b_spp_simXfit_plot
+a_treeid_simXfit_plot
 # ggsave!
-ggsave("figures/notreeid_b_spp_simXfit_plot2.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/no_b_simXfit_plot.jpeg", a_treeid_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -340,7 +342,7 @@ a_spp_simXfit_plot <- ggplot(aspptoplot, aes(x = a_spp, y = fit_a_spp)) +
   theme_minimal()
 a_spp_simXfit_plot
 # ggsave!
-ggsave("figures/notreeid_a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/no_b_a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
@@ -368,11 +370,11 @@ a_site_simXfit_plot <- ggplot(sitetoplot, aes(x = a_site, y = fit_a_site)) +
   theme_minimal()
 a_site_simXfit_plot
 # ggsave!
-ggsave("figures/notreeid_a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/no_b_a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 
 # combine plots
-combined_plot <- (sigma_simXfit_plot + b_spp_simXfit_plot) /
+combined_plot <- (sigma_simXfit_plot + a_treeid_simXfit_plot) /
   (a_spp_simXfit_plot + a_site_simXfit_plot)
 ggsave("figures/notreeid_combined_plot_a1.5ANDb0.4.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
