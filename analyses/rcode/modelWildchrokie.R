@@ -366,8 +366,8 @@ treeidtoplot
 # plot treeid
 a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
   geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.1) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.1) +
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
   theme_minimal()
