@@ -136,9 +136,8 @@ fit <- stan("stan/twolevelhierint.stan",
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/fit_no_a")
-fit <- readRDS("output/stanOutput/fit_withbspp")
-run_fit_noSite <- FALSE
+saveRDS(fit, "output/stanOutput/fit")
+fit2 <- readRDS("output/stanOutput/fit")
 
 if (FALSE) {
 
@@ -147,13 +146,6 @@ if (FALSE) {
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
 
-
-if (FALSE){
-  write.csv(df_fit, "output/df_fit.csv")
-  
-  df_fit <- read.csv("output/df_fit.csv")
-  
-}
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
@@ -275,7 +267,7 @@ for (i in 1:ncol(aspp_df)) { # i = 1
 }
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover site ######
+###### Recover a site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
 # remove sigma_asp for now
 site_cols <- site_cols[2:length(site_cols)]
@@ -319,7 +311,7 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
   geom_point(color = "#046C9A", size = 3) +
   ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
   labs(x = "sim sigma", y = "fit sigma",
-       title = "fit vs sim sigmas") +
+       title = "") +
   theme_minimal()
 sigma_simXfit_plot
 ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
@@ -431,6 +423,12 @@ a_site_simXfit_plot
 # ggsave!
 ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
+##### Combine plots #####
+combined_plot <- (a_treeid_simXfit_plot) /
+  (sigma_simXfit_plot + b_spp_simXfit_plot ) /
+  (a_spp_simXfit_plot + a_site_simXfit_plot)
+combined_plot
+ggsave("figures/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
 # === === === === === === === === === === === === === === === === 
 #### Look at my priors####
@@ -444,13 +442,11 @@ sigma_atree_draw <- abs(rnorm(Ndraws, 0, 0.05))
 sigma_y_draw <- abs(rnorm(Ndraws, 0, 5))
 
 # #### trying Ken's ways
-sigma_df
-
 draws <- 100
 n_sigma_bsp <- 100
 
 # set to prior values
-sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 1))
+sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 0.2))
 
 prior_bsp <- rep(NA, draws*length(sigma_bsp_vec))
 
@@ -464,7 +460,7 @@ bspp_df3 <- bspp_df
 
 bspp_df3$draw <- rownames(bspp_df3)
 
-colnames(bspp_df3) <- paste0("spp", 1:10)
+colnames(bspp_df3) <- c(paste0("spp", 1:10), "draw") 
 bspp_df3
 
 long_post_bspp <- reshape(

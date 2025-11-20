@@ -26,7 +26,14 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
-# simulate data
+# empirical data
+emp <- read.csv("output/empiricalDataMAIN.csv")
+
+# gdd data
+gdd <- read.csv("output/gddByYear.csv")
+
+
+# simulate data gdd at leafout
 set.seed(124)
 a <- 150
 sigma_y <- 6
@@ -34,11 +41,11 @@ sigma_asp <- 8
 sigma_atreeid <- 2
 sigma_asite <- 4
 
-n_site <- 10 # number of sites
-n_spp <- 10 # number of species
-n_perspp <- 10 # number of individuals per species
+n_site <- 4 # number of sites
+n_spp <- 4 # number of species
+n_perspp <- 5 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 5 # repeated measurements per id
+n_meas <- 3 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 # get replicated treeid
@@ -59,6 +66,7 @@ sim <- data.frame(
   spp = spp,
   treeid = treeid
 )
+sim
 
 # get intercept values for each parameter
 asp <- rnorm(n_spp, 0, sigma_asp)
@@ -86,13 +94,32 @@ sim$gddleafout <-
   sim$atreeid +
   sim$a +
   sim$error
+sim
 
 
 hist(sim$gddleafout)
-emp <- read.csv("output/empiricalDataMAIN.csv")
+ 
 
-gdd <- read.csv("output/gddByYear.csv")
+sim$spp <- as.factor(sim$spp)
+sim$spp <- paste("spp", sim$spp)
+sim$site <- as.factor(sim$site)
+sim$site <- paste("site", sim$site)
 
+sim$a_asite <- sim$a + sim$asite
+sim$a_asp <- sim$a + sim$asp
+
+# plot sim data
+ggplot(sim) +
+  geom_hline(aes(yintercept = gddleafout, color = site), alpha = 0.7) +
+  geom_hline(aes(yintercept = a_asite), linewidth = 0.9, alpha = 0.8) +
+  geom_hline(aes(yintercept = a_asp), linewidth = 0.9, linetype = 2) +
+  facet_wrap(site~spp) +
+  labs(y = "gdd", title = "gdd at leafout") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  theme_minimal()
+ggsave("figures/sim_gddLeafout.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# plot gdd
 gdd$year <- as.factor(gdd$year)
 ggplot(gdd)  +
   geom_point(aes(x = doy, y = GDD_10, color = year)) + 
