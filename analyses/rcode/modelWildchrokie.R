@@ -137,7 +137,7 @@ fit <- stan("stan/twolevelhierint.stan",
                     iter=4000, chains=4, cores=4)
 
 saveRDS(fit, "output/stanOutput/fit")
-fit2 <- readRDS("output/stanOutput/fit")
+fit <- readRDS("output/stanOutput/fit")
 
 if (FALSE) {
 
@@ -435,27 +435,45 @@ ggsave("figures/combinedPlots.jpeg", combined_plot, width = 10, height = 8, unit
 # === === === === === === === === === === === === === === === === 
 ##### Priors VS Posterior #####
 # prior predictive checks. Simulating prior values from the values set in the model block
-sigma_bsp_draw <- abs(rnorm(Ndraws, 0, 0.3))   
-sigma_asp_draw <- abs(rnorm(Ndraws, 0, 0.5))
-sigma_asite_draw <- abs(rnorm(Ndraws, 0, 0.5))
-sigma_atree_draw <- abs(rnorm(Ndraws, 0, 0.05))
-sigma_y_draw <- abs(rnorm(Ndraws, 0, 5))
+# trying Ken's ways #### 
+hyperparameter_draws <- 8000
+parameter_draws <- 1000
 
-# #### trying Ken's ways
-draws <- 100
-n_sigma_bsp <- 100
+##### Priors sigma_bsp #####
+sigma_bsp_draw <- abs(rnorm(hyperparameter_draws, 0, 0.2))   
+ggplot() +
+  geom_density(data = data.frame(sigma_bsp_draw = sigma_bsp_draw),
+               aes(x = sigma_bsp_draw, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = sigma_df,
+               aes(x = sigma_bsp, colour = "Posterior"),
+               linewidth = 0.8) +
+  labs(title = "priorVSposterior_bsp",
+       x = "BSP", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+ggsave("figures/priorsPredictiveChecks/priorVSposterior_sigma_bsp.jpeg", width = 10, height = 8, units = "in", dpi = 300)
+
+
+sigma_asp_draw <- abs(rnorm(draws, 0, 0.5))
+sigma_asite_draw <- abs(rnorm(draws, 0, 0.5))
+sigma_atree_draw <- abs(rnorm(draws, 0, 0.05))
+sigma_y_draw <- abs(rnorm(draws, 0, 5))
+
+##### Priors bsp #####
+n_sigma_bsp <- 200
 
 # set to prior values
 sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 0.2))
 
-prior_bsp <- rep(NA, draws*length(sigma_bsp_vec))
+prior_bsp <- rep(NA, parameter_draws*length(sigma_bsp_vec))
 
 for (i in 1: length(sigma_bsp_vec)) {
-  prior_bsp[((i - 1)*draws + 1):(i*draws)] <- rnorm(draws, 0, sigma_bsp_vec[i])
+  prior_bsp[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_bsp_vec[i])
 }
 prior_bsp
 
-# copy of bspp_df
+# Get the posterior distribution
 bspp_df3 <- bspp_df
 
 bspp_df3$draw <- rownames(bspp_df3)
@@ -484,29 +502,7 @@ ggplot() +
        x = "BSP", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
-ggsave("figures/priorVSposterior_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
-
-asp_df <- do.call(rbind, lapply(1:Ndraws, function(i) {
-  data.frame(draw = i, sigma_asp = sigma_asp_draw[inds[i]],
-             species = 1:Nspp, asp = asp_list[[i]])
-}))
-
-sigma_bsp_draw <- rnorm(Ndraws, 0, 0.3)
-sigma_df$prior_sigma_bsp <- sigma_bsp_draw
-
-ggplot(sigma_df) +
-  geom_density(aes(x = prior_sigma_bsp, colour = "Prior"),
-               linewidth = 0.3) +
-  geom_density(aes(x = post_sigma_bsp, colour = "Posterior"),
-               linewidth = 0.3) +
-  labs(title = "priorVSposterior_sigma_bsp", x = "sigma_bsp", y = "Density", color = "Curve") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  theme_minimal()
-ggsave("figures/priorVSposterior_sigma_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
-
-
+ggsave("figures/priorsPredictiveChecks/priorVSposterior_bsp.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # now add row for prior_bsp
 prior_bsp <- rnorm(nrow(sigma_df), 0, sigma_df$prior_sigma_bsp)
