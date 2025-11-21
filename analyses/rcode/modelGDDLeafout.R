@@ -96,24 +96,22 @@ sim$gddleafout <-
   sim$error
 sim
 
-
 hist(sim$gddleafout)
  
-
 sim$spp <- as.factor(sim$spp)
-sim$spp <- paste("spp", sim$spp)
+sim$sppname <- paste("spp", sim$spp)
 sim$site <- as.factor(sim$site)
-sim$site <- paste("site", sim$site)
+sim$sitename <- paste("site", sim$site)
 
 sim$a_asite <- sim$a + sim$asite
 sim$a_asp <- sim$a + sim$asp
 
 # plot sim data
 ggplot(sim) +
-  geom_hline(aes(yintercept = gddleafout, color = site), alpha = 0.7) +
+  geom_hline(aes(yintercept = gddleafout, color = sitename), alpha = 0.7) +
   geom_hline(aes(yintercept = a_asite), linewidth = 0.9, alpha = 0.8) +
   geom_hline(aes(yintercept = a_asp), linewidth = 0.9, linetype = 2) +
-  facet_wrap(site~spp) +
+  facet_wrap(sitename~sppname) +
   labs(y = "gdd", title = "gdd at leafout") +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   theme_minimal()
@@ -124,3 +122,24 @@ gdd$year <- as.factor(gdd$year)
 ggplot(gdd)  +
   geom_point(aes(x = doy, y = GDD_10, color = year)) + 
   geom_vline(xintercept = mean(emp$leafout))
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Run model ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+y <- sim$gddleafout
+N <- nrow(sim) 
+Nspp <- length(unique(sim$spp))
+species <- as.numeric(as.character(sim$spp))
+Nsite <- length(unique(sim$site))
+site <- as.numeric(as.character(sim$site))
+Ntreeid <- length(unique(sim$treeid))
+treeid <- treeid
+
+
+table(treeid, species)
+
+fit <- stan("stan/twolevelhierint.stan", 
+            data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid"),
+            iter=4000, chains=4, cores=4)
+
+

@@ -36,11 +36,11 @@ for (i in 1:N){
 }
 
 model{	
+  asp ~ normal(0, sigma_asp);
   asite ~ normal(0, sigma_asite);
   atreeid ~ normal(0, sigma_atreeid); 
   a ~ normal(1.5, 1);
   sigma_asp ~ normal(0, 0.3);
-  zasp ~ normal(0, 1);
   sigma_asite ~ normal(0, 1);
   sigma_atreeid ~ normal(0, 0.1);
   sigma_y ~ normal(0, 1);
