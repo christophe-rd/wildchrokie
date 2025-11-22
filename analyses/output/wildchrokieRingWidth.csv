@@ -1,4 +1,4 @@
-"";"treeid";"spp";"prov";"plot";"replicate";"year";"lengthCM";"sampleType"
+"";"treeid";"spp";"site";"plot";"replicate";"year";"lengthCM";"sampleType"
 "1";"ALNINC_GR11_P1";"ALNINC";"GR";"11";"P1";2017;0,1905;"cookies"
 "4";"ALNINC_GR11_P1";"ALNINC";"GR";"11";"P1";2018;0,597746666666667;"cookies"
 "7";"ALNINC_GR11_P1";"ALNINC";"GR";"11";"P1";2019;0,43688;"cookies"

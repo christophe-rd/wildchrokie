@@ -1,4 +1,4 @@
-treeid,year,spp,prov,plot,replicate,lengthCM,sampleType,budburst,flowers,leafout,flobuds,flobudburst,fruit,ripefruit,budset,leafcolor,provenance.lat,provenance.long,pgsGDD,fgsGDD,fullGDD,idyear
+treeid,year,spp,site,plot,replicate,lengthCM,sampleType,budburst,flowers,leafout,flobuds,flobudburst,fruit,ripefruit,budset,leafcolor,provenance.lat,provenance.long,pgsGDD,fgsGDD,fullGDD,idyear
 ALNINC_GR11_P1,2018,ALNINC,GR,11,P1,0.5977466666666666,cookies,107,NA,124,NA,NA,NA,NA,274,297,44.794942,-71.146683,1605.816666666667,1701.5083333333332,1883.5166666666664,ALNINC_GR11_P1_2018
 ALNINC_GR11_P1,2019,ALNINC,GR,11,P1,0.43688000000000005,cookies,NA,NA,115,NA,NA,NA,NA,249,245,44.794942,-71.146683,1310.3500000000001,1274.6194444444448,1766.9666666666658,ALNINC_GR11_P1_2019
 ALNINC_GR11_P1,2020,ALNINC,GR,11,P1,0.21928666666666669,cookies,91,NA,154,NA,NA,NA,268,268,241,44.794942,-71.146683,1397.1111111111104,1173.5833333333335,1937.583333333333,ALNINC_GR11_P1_2020

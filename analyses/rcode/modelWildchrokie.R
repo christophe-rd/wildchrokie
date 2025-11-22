@@ -28,11 +28,10 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 } else  {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
-# === === === === === === === === === === === === === === === === 
-#### Step 1. Come up with a model ####
-# === === === === === === === === === === === === === === === === 
-# As discussed with Victor, we will use a linear model to predict growth from GDD. 
 
+
+runSimData <- FALSE
+if (runSimData) {
 # === === === === === === === === === === === === === === === === 
 #### Step 2. Simulate data ####
 # === === === === === === === === === === === === === === === ===
@@ -139,7 +138,6 @@ fit <- stan("stan/twolevelhierint.stan",
 saveRDS(fit, "output/stanOutput/fit")
 fit <- readRDS("output/stanOutput/fit")
 
-if (FALSE) {
 
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
@@ -430,12 +428,14 @@ combined_plot <- (a_treeid_simXfit_plot) /
 combined_plot
 ggsave("figures/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
+#  === === === === === === === === === === === === === === === === 
+#### Diagnostics ####
 # === === === === === === === === === === === === === === === === 
-#### Look at my priors####
+
 # === === === === === === === === === === === === === === === === 
 ##### Priors VS Posterior #####
+# === === === === === === === === === === === === === === === === 
 # prior predictive checks. Simulating prior values from the values set in the model block
-# trying Ken's ways #### 
 hyperparameter_draws <- 8000
 parameter_draws <- 1000
 
@@ -453,7 +453,6 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 ggsave("figures/priorsPredictiveChecks/priorVSposterior_sigma_bsp.jpeg", width = 10, height = 8, units = "in", dpi = 300)
-
 
 sigma_asp_draw <- abs(rnorm(draws, 0, 0.5))
 sigma_asite_draw <- abs(rnorm(draws, 0, 0.5))
@@ -576,12 +575,7 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
 
-#  === === === === === === === === === === === === === === === === 
-#### Diagnostics ####
-# === === === === === === === === === === === === === === === === 
-
-
-# Non-centered parameterization #####
+##### Non-centered parameterization #####
 
 # bspp
 # y: log sigma for all my partial pooled parameters 
@@ -676,8 +670,370 @@ combined_plot
 # save combined plot
 ggsave("figures/asite_parameterization.jpeg", combined_plot,
        width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
+
 }
+
 # === === === === === === === === === === === === === === === === 
 #### Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
+emp <- read.csv("output/empiricalDataMAIN.csv")
 
+# transform my groups to numeric values
+emp$site_num <- match(emp$site, unique(emp$site))
+emp$spp_num <- match(emp$spp, unique(emp$spp))
+emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+
+# transform data in vectors
+y <- emp$lengthCM*10 # ring width in mm
+N <- nrow(emp)
+gdd <- emp$pgsGDD/200
+Nspp <- length(unique(emp$spp_num))
+Nsite <- length(unique(emp$site_num))
+site <- as.numeric(as.character(emp$site_num))
+species <- as.numeric(as.character(emp$spp_num))
+treeid <- emp$treeid_num
+Ntreeid <- length(unique(treeid))
+
+# check that everything is fine
+table(treeid,species)
+
+rstan_options(auto_write = TRUE)
+
+fit <- stan("stan/twolevelhierint.stan", 
+            data=c("N","y","Nspp","species","Nsite", 
+                   "site", "Ntreeid", "treeid", "gdd"),
+            iter=4000, chains=4, cores=4)
+
+saveRDS(fit, "output/stanOutput/fit")
+
+
+# === === === === === === === === === === === === #
+##### Recover parameters from the posterior #####
+# === === === === === === === === === === === === #
+df_fit <- as.data.frame(fit)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover sigmas ######
+unique(colnames(df_fit))
+sigma_cols <- colnames(df_fit)[grepl("sigma", colnames(df_fit))]
+
+sigma_df <- df_fit[, colnames(df_fit) %in% sigma_cols]
+
+sigma_df2 <- data.frame(
+  sigma = character(ncol(sigma_df)),
+  mean = numeric(ncol(sigma_df)),  
+  per5 = NA, 
+  per25 = NA,
+  per75 = NA,
+  per95 = NA
+)
+sigma_df2
+
+for (i in 1:ncol(sigma_df)) { # i = 1
+  sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
+  sigma_df2$mean[i] <- round(mean(sigma_df[[i]]),3)  
+  sigma_df2$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.05), 3)
+  sigma_df2$per25[i] <- round(quantile(sigma_df[[i]], probs = 0.25), 3)
+  sigma_df2$per75[i] <- round(quantile(sigma_df[[i]], probs = 0.75), 3)
+  sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
+}
+sigma_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover b spp ######
+bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
+# remove sigma_aspp for now
+bspp_cols <- bspp_cols[2:length(bspp_cols)]
+
+bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+# change their names
+colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
+#empty spp df
+bspp_df2 <- data.frame(
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),  
+  fit_b_spp_per5 = NA, 
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
+)
+for (i in 1:ncol(bspp_df)) { # i = 1
+  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
+  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+}
+bspp_df2
+
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover treeid ######
+
+# grab treeid 
+treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
+# remove sigma_asp for now
+treeid_cols <- treeid_cols[2:length(treeid_cols)]
+
+treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
+# change their names
+colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
+# empty treeid dataframe
+treeid_df2 <- data.frame(
+  treeid = character(ncol(treeid_df)),
+  fit_a_treeid = numeric(ncol(treeid_df)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
+)
+for (i in 1:ncol(treeid_df)) { # i = 1
+  treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
+  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+}
+treeid_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover a spp  ######
+aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
+
+aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2 <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover a site ######
+site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
+# remove sigma_asp for now
+site_cols <- site_cols[2:length(site_cols)]
+
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+# change their names
+colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
+# empty site df
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2$site[i] <- colnames(site_df)[i]         
+  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df2
+
+# === === === === === === === #
+
+# Plot parameter recovery #####
+# === === === === === === === #
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot sigmas ######
+sigma_long <- reshape(
+  sigma_df,
+  direction = "long",
+  varying = list(names(sigma_df)),
+  v.names = "value",
+  timevar = "parameter",
+  times = names(sigma_df),
+  idvar = "draw"
+)
+sigma_long
+
+sigma_long$prior <- NA
+sigma_long$prior[which(sigma_long$parameter == "sigma_bsp")] <- rnorm(8e3, 0, 0.2)
+sigma_long$prior[which(sigma_long$parameter == "sigma_asp")] <- rnorm(8e3, 0, 0.3)
+sigma_long$prior[which(sigma_long$parameter == "sigma_asite")] <- rnorm(8e3, 0, 0.3)
+sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.1)
+sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 0.1)
+
+ggplot(sigma_long) +
+  geom_density(aes(x = prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(aes(x = value, colour = "Posterior"),
+               linewidth = 0.8) +
+  facet_wrap(~parameter) + 
+  labs(title = "priorVSposterior_sigmas",
+       x = "BSP", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot b spp ######
+bspp_long <- reshape(
+  bspp_df,
+  direction = "long",
+  varying = list(names(bspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(bspp_df),
+  idvar = "draw"
+)
+bspp_long
+
+# simulate priors
+hyperparameter_draws <- 8000
+parameter_draws <- 1000
+n_sigma_bsp <- 200
+
+# set to prior values
+sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 0.2))
+
+prior_bsp <- rep(NA, parameter_draws*length(sigma_bsp_vec))
+
+for (i in 1: length(sigma_bsp_vec)) {
+  prior_bsp[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_bsp_vec[i])
+}
+prior_bsp
+
+ggplot() +
+  geom_density(data = data.frame(prior_bsp = prior_bsp),
+               aes(x = prior_bsp, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = bspp_long,
+               aes(x = value, colour = "Posterior"),
+               linewidth = 0.8) +
+  facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_bsp",
+       x = "BSP", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot treeid ######
+bspp_long <- reshape(
+  bspp_df,
+  direction = "long",
+  varying = list(names(bspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(bspp_df),
+  idvar = "draw"
+)
+bspp_long
+
+ggplot() +
+  # geom_density(data = data.frame(sigma_bsp_draw = sigma_bsp_draw),
+  #              aes(x = sigma_bsp_draw, colour = "Prior"),
+  #              linewidth = 0.8) +
+  geom_density(data = bspp_long,
+               aes(x = value, colour = "Posterior"),
+               linewidth = 0.8) +
+  facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_bsp",
+       x = "BSP", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot a spp ######
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot site ######
+site_df
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Diagnostics ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Parameterization
+colnames(aspp_df) <- paste("asp", colnames(aspp_df), sep = "")
+sigmaXasp <- cbind(sigma_df, aspp_df)
+
+predictors <- colnames(aspp_df)
+
+# set up a 2x2 plotting grid
+par(mfrow = c(2, 2))
+
+for (p in predictors) {
+  
+  # base R scatterplot
+  plot(
+    sigmaXasp[[p]],
+    log(sigmaXasp$sigma_asp),
+    xlab = p,
+    ylab = "log(sigma_asp)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+
+
+
+plot(log(sigmaXasp$sigma_asp) ~ sigmaXasp$asp1)
+
+asp1 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp1, log(sigma_asp)), alpha = 0.1, color = "#B40F20") + 
+  theme_minimal()
+
+asp2 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp2, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp3 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp3, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp4 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp4, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp5 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp5, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp6 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp6, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp7 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp7, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp8 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp8, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp9 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp9, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+asp10 <- ggplot(sigmaXasp) + 
+  geom_point(aes(asp10, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
+  theme_minimal()
+
+
+combined_plot <- (asp1 + asp2 + asp3 + asp4 + asp5) /
+  (asp6 + asp7 + asp8 + asp9 + asp10)
+
+combined_plot

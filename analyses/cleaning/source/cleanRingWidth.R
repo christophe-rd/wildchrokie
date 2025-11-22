@@ -55,7 +55,7 @@ c <- do.call(rbind, all_data)
 setwd(directory)
 list.files()
 d <- read.xlsx("_notcookies/treecookies.xlsx", sheetName = "Sheet1")
-# remove _ between provenance and number
+# remove _ between siteenance and number
 d$id <- gsub("(_)([A-Z]+)_([0-9]+[A-Z]?)$", "\\1\\2\\3", d$id)
 # paste id and plot
 d$idfull <- paste(d$id, paste0("P", d$Plot), sep = "_")
@@ -329,9 +329,9 @@ ggplot(betpop, aes(x = factor(yearCor), y = lengthCM, fill = sourceFolder)) +
 # names(d)[names(d) == "yearCor"] <- "year"
 names(d)[names(d) == "sourceFolder"] <- "sampleType"
 d$spp <- sub("_.*", "", d$name)
-d$provplot <- sub("^[^_]*_(.*?)_.*$", "\\1", d$name)
-d$prov <- substr(d$provplot, 0,2)
-d$plot <- substr(d$provplot, 3,4)
+d$siteplot <- sub("^[^_]*_(.*?)_.*$", "\\1", d$name)
+d$site <- substr(d$siteplot, 0,2)
+d$plot <- substr(d$siteplot, 3,4)
 d$replicate <- sub(".*_", "", d$name)
 
 averagedlengths <- aggregate(d$lengthCM, by = list(d$name, d$yearCor), FUN = mean )
@@ -347,7 +347,7 @@ wildchrokie_rw <- wildchrokie_rw[!duplicated(wildchrokie_rw$temp),]
 wildchrokie_rw <- wildchrokie_rw[c(
   "name",
   "spp",
-  "prov", 
+  "site", 
   "plot",
   "replicate",
   "yearCor",
@@ -358,7 +358,7 @@ wildchrokie_rw <- wildchrokie_rw[c(
 colnames(wildchrokie_rw) <- c(
   "treeid",
   "spp",
-  "prov", 
+  "site", 
   "plot",
   "replicate",
   "year",
@@ -368,7 +368,7 @@ colnames(wildchrokie_rw) <- c(
 
 wildchrokie_rw <- wildchrokie_rw[order(
   wildchrokie_rw$spp,
-  wildchrokie_rw$prov,
+  wildchrokie_rw$site,
   wildchrokie_rw$replicate,
   wildchrokie_rw$year
 ), ]
