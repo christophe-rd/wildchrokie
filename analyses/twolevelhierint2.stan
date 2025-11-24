@@ -22,21 +22,24 @@ real<lower=0> sigma_asp;	// variation of intercept across species
 real<lower=0> sigma_asite;    // variation of intercept across sites
 real<lower=0> sigma_atreeid;    // variation of intercept across tree ids
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
+// vector[Nspp] bsp;
 vector[Nspp] zbsp;
+// vector[Nspp] asp;
 vector[Nspp] zasp; 		// defining transformed asp
-vector[Nsite] zasite;       //the intercept for each sites
-vector[Ntreeid] atreeid;       //the intercept for each tree id
+vector[Nsite] asite;       //the intercept for each sites
+// vector[Ntreeid] atreeid;       //the intercept for each tree id
+vector[Ntreeid] zatreeid;       //the intercept for each tree id
 }
 
 transformed parameters{
 vector[Nspp] bsp;
-bsp = 0 + sigma_bsp*zbsp; 
+bsp = 0 + sigma_bsp*zbsp; // non-centered a_sp
 
 vector[Nspp] asp;
-asp = 0 + sigma_asp*zasp; 
+asp = 0 + sigma_asp*zasp; // non-centered a_sp
 
-vector[Nsite] asite;
-asite = 0 + sigma_asite*zasite; 
+vector[Ntreeid] atreeid;
+atreeid = 0 + sigma_atreeid*zatreeid;
 
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
@@ -52,16 +55,16 @@ for (i in 1:N){ // don't change this for reparameterization
 
 model{	
   // bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
-  zbsp ~ normal(0, 1);
-  // asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
-  zasite ~ normal(0, 1);
-  // asp ~ normal(0, sigma_asp); 
-  zasp ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids
-  atreeid ~ normal(0, sigma_atreeid);
-  a ~ normal(5, 1);
-  b ~ normal(0.5, 0.2);
+  asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
+  // atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids
+  // asp ~ normal(0, sigma_asp);
+  a ~ normal(10, 1);
+  b ~ normal(1, 0.2);
   sigma_bsp ~ normal(0, 0.2);
   sigma_asp ~ normal(0, 0.3);
+  zasp ~ normal(0, 1); // here i put the standard centered prior on zasp
+  zatreeid ~ normal(0, 1); 
+  zbsp ~ normal(0, 1); 
   sigma_asite ~ normal(0, 0.3);
   sigma_atreeid ~ normal(0, 0.1);
   sigma_y ~ normal(0, 1);
