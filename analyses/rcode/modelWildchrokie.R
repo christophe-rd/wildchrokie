@@ -575,104 +575,7 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")[3:4])+
   theme_minimal()
 
-##### Non-centered parameterization #####
-
-# bspp
-# y: log sigma for all my partial pooled parameters 
-# x: sigma of every parameter (e.g. spp1, spp2), need to check all of them individually.
-# tree id 
-
-# get asp df and add prefix to spp
-colnames(aspp_df) <- paste("asp", colnames(aspp_df), sep = "")
-
-sigmaXasp <- cbind(sigma_df, aspp_df)
-
-plot(log(sigmaXasp$sigma_asp) ~ sigmaXasp$asp1)
-
-asp1 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp1, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp2 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp2, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp3 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp3, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp4 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp4, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp5 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp5, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp6 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp6, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp7 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp7, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp8 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp8, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp9 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp9, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp10 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp10, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-
-combined_plot <- (asp1 + asp2 + asp3 + asp4 + asp5) /
-  (asp6 + asp7 + asp8 + asp9 + asp10)
-
-combined_plot
-
-# save combined plot
-ggsave("figures/asp_parameterization.jpeg", combined_plot, width = 12, height = 6, units = "in", dpi = 300)
-ggsave("figures/asp_parameterization.jpeg", combined_plot,
-       width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
-
-# site
-
-# get asp df and add prefix to spp
-colnames(site_df) <- paste("site", colnames(site_df), sep = "")
-
-sigmaXasite <- cbind(sigma_df, aspp_df)
-
-site1 <- ggplot(sigmaXasite) + 
-  geom_point(aes(site1, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
-  theme_minimal()
-
-site2 <- ggplot(sigmaXasite) + 
-  geom_point(aes(site2, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
-  theme_minimal()
-
-site3 <- ggplot(sigmaXasite) + 
-  geom_point(aes(site3, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
-  theme_minimal()
-
-site4 <- ggplot(sigmaXasite) + 
-  geom_point(aes(site4, log(sigma_asite)), alpha = 0.03, color = "#273046") + 
-  theme_minimal()
-
-combined_plot <- (site1 + site2 + site3 + site4)
-
-combined_plot
-
-# save combined plot
-ggsave("figures/asite_parameterization.jpeg", combined_plot,
-       width = 12, height = 6, units = "in", dpi = 300, device = "jpeg")
-
 }
-
 # === === === === === === === === === === === === === === === === 
 #### Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
@@ -689,22 +592,45 @@ N <- nrow(emp)
 gdd <- emp$pgsGDD/200
 Nspp <- length(unique(emp$spp_num))
 Nsite <- length(unique(emp$site_num))
-site <- as.numeric(as.character(emp$site_num))
-species <- as.numeric(as.character(emp$spp_num))
-treeid <- emp$treeid_num
+site <- as.integer(as.character(emp$site_num))
+species <- as.integer(as.character(emp$spp_num))
+treeid <- as.integer(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 # check that everything is fine
 table(treeid,species)
 
 rstan_options(auto_write = TRUE)
-
+ 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fit <- stan("stan/twolevelhierint.stan", 
             data=c("N","y","Nspp","species","Nsite", 
                    "site", "Ntreeid", "treeid", "gdd"),
             iter=4000, chains=4, cores=4)
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-saveRDS(fit, "output/stanOutput/fit")
+jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
+     units = "px", res = 300)
+pairs(fit)
+dev.off()
+# saveRDS(fit, "output/stanOutput/fit")
+# 
+# png("pairs_plot.png", width = 2400, height = 2400)
+# pairs(fit, c("a", "b"))
+# 
+# png("pairs_plot.png", width = 10000, height = 10000)
+# pairs(fit)
+# rstan::check_hmc_diagnostics(fit)
+# 
+# 
+# 
+# sampler <- rstan::get_sampler_params(fit, inc_warmup = FALSE)
+# str(sampler)
+# 
+# 
+# 
+# problem_params <- c("a", "b", "sigma_bsp")   # example
+# pairs(fit, pars = c(problem_params, "lp__", "energy__", "accept_stat__"))
 
 
 # === === === === === === === === === === === === #
@@ -855,7 +781,6 @@ for (i in 1:ncol(site_df)) { # i = 1
 site_df2
 
 # === === === === === === === #
-
 # Plot parameter recovery #####
 # === === === === === === === #
 
@@ -886,7 +811,7 @@ ggplot(sigma_long) +
                linewidth = 0.8) +
   facet_wrap(~parameter) + 
   labs(title = "priorVSposterior_sigmas",
-       x = "BSP", y = "Density", color = "Curve") +
+       x = "", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
@@ -966,18 +891,64 @@ site_df
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Parameterization
-colnames(aspp_df) <- paste("asp", colnames(aspp_df), sep = "")
-sigmaXasp <- cbind(sigma_df, aspp_df)
+# Parameterization for bsp
+bspp_df3 <- bspp_df
+colnames(bspp_df3) <- paste("bsp", colnames(bspp_df3), sep = "")
+sigmaXbsp <- cbind(sigma_df, bspp_df3)
 
-predictors <- colnames(aspp_df)
+predictors <- colnames(bspp_df3)
 
-# set up a 2x2 plotting grid
+jpeg("figures/bspParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
 par(mfrow = c(2, 2))
 
 for (p in predictors) {
-  
-  # base R scatterplot
+  plot(
+    sigmaXbsp[[p]],
+    log(sigmaXbsp$sigma_bsp),
+    xlab = p,
+    ylab = "log(sigma_bsp)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
+
+# Parameterization for treeid
+treeid_df3 <- treeid_df
+colnames(treeid_df3) <- paste("treeid", colnames(treeid_df3), sep = "")
+sigmaXtreeid <- cbind(sigma_df, treeid_df3)
+
+predictors <- colnames(treeid_df3)
+
+jpeg("figures/treeidParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(3, 3)) # 75 treeid, but subsetting for 10 of them
+
+for (p in predictors[1:9]) {
+  plot(
+    sigmaXtreeid[[p]],
+    log(sigmaXtreeid$sigma_atreeid),
+    xlab = p,
+    ylab = "log(sigma_treeid)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
+
+# Parameterization for asp
+aspp_df3 <- aspp_df
+colnames(aspp_df3) <- paste("asp", colnames(aspp_df3), sep = "")
+sigmaXasp <- cbind(sigma_df, aspp_df3)
+
+predictors <- colnames(aspp_df3)
+
+jpeg("figures/aspParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(2, 2))
+
+for (p in predictors) {
   plot(
     sigmaXasp[[p]],
     log(sigmaXasp$sigma_asp),
@@ -987,53 +958,28 @@ for (p in predictors) {
     col = adjustcolor("#B40F20", alpha.f = 0.09)
   )
 }
+dev.off()
 
+# Parameterization for site
+site_df3 <- site_df
+colnames(site_df3) <- paste("site", colnames(site_df3), sep = "")
+sigmaXsite <- cbind(sigma_df, site_df3)
 
+predictors <- colnames(site_df3)
 
-plot(log(sigmaXasp$sigma_asp) ~ sigmaXasp$asp1)
+jpeg("figures/siteParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(2, 2))
 
-asp1 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp1, log(sigma_asp)), alpha = 0.1, color = "#B40F20") + 
-  theme_minimal()
-
-asp2 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp2, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp3 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp3, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp4 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp4, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp5 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp5, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp6 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp6, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp7 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp7, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp8 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp8, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp9 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp9, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-asp10 <- ggplot(sigmaXasp) + 
-  geom_point(aes(asp10, log(sigma_asp)), alpha = 0.03, color = "#B40F20") + 
-  theme_minimal()
-
-
-combined_plot <- (asp1 + asp2 + asp3 + asp4 + asp5) /
-  (asp6 + asp7 + asp8 + asp9 + asp10)
-
-combined_plot
+for (p in predictors) {
+  
+  plot(
+    sigmaXsite[[p]],
+    log(sigmaXsite$sigma_asite),
+    xlab = p,
+    ylab = "log(sigma_site)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
