@@ -23,20 +23,14 @@ real<lower=0> sigma_asite;    // variation of intercept across sites
 real<lower=0> sigma_atreeid;    // variation of intercept across tree ids
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 vector[Nspp] zbsp;
-vector[Nspp] zasp; 		// defining transformed asp
-vector[Nsite] zasite;       //the intercept for each sites
+vector[Nspp] asp; 		// defining transformed asp
+vector[Nsite] asite;       //the intercept for each sites
 vector[Ntreeid] atreeid;       //the intercept for each tree id
 }
 
 transformed parameters{
 vector[Nspp] bsp;
-bsp = 0 + sigma_bsp*zbsp; 
-
-vector[Nspp] asp;
-asp = 0 + sigma_asp*zasp; 
-
-vector[Nsite] asite;
-asite = 0 + sigma_asite*zasite; 
+bsp = 0 + sigma_bsp*zbsp;
 
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
@@ -51,12 +45,9 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  // bsp ~ normal(0, sigma_bsp); // I guess partial pooling on slopes for species
-  zbsp ~ normal(0, 1);
-  // asite ~ normal(0, sigma_asite); // this creates the partial pooling on intercepts for sites
-  zasite ~ normal(0, 1);
-  // asp ~ normal(0, sigma_asp); 
-  zasp ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids
+  zbsp ~ normal(0, 1); 
+  asite ~ normal(0, sigma_asite);
+  asp ~ normal(0, sigma_asp);
   atreeid ~ normal(0, sigma_atreeid);
   a ~ normal(5, 1);
   b ~ normal(0.5, 0.2);

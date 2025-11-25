@@ -592,9 +592,9 @@ N <- nrow(emp)
 gdd <- emp$pgsGDD/200
 Nspp <- length(unique(emp$spp_num))
 Nsite <- length(unique(emp$site_num))
-site <- as.integer(as.character(emp$site_num))
-species <- as.integer(as.character(emp$spp_num))
-treeid <- as.integer(emp$treeid_num)
+site <- as.numeric(as.character(emp$site_num))
+species <- as.numeric(as.character(emp$spp_num))
+treeid <- as.numeric(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 # check that everything is fine
@@ -611,8 +611,22 @@ fit <- stan("stan/twolevelhierint.stan",
 
 jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
      units = "px", res = 300)
-pairs(fit)
-dev.off()
+
+fit@model_pars
+
+pairs(fit, pars = c("a", "b", "sigma_bsp",
+                    "sigma_bsp",
+                    "sigma_asp",
+                    "sigma_asite",
+                    "sigma_atreeid",
+                    "sigma_y"))
+# saving a copy for bsp centered 
+fit_centered <- fit
+pairs(fit_centered, pars = c("sigma_bsp", "bsp"))
+
+#
+pairs(fit, pars = c("sigma_bsp", "bsp"))
+
 # saveRDS(fit, "output/stanOutput/fit")
 # 
 # png("pairs_plot.png", width = 2400, height = 2400)
@@ -780,6 +794,101 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df2
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Diagnostics ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Parameterization for bsp
+bspp_df3 <- bspp_df
+colnames(bspp_df3) <- paste("bsp", colnames(bspp_df3), sep = "")
+sigmaXbsp <- cbind(sigma_df, bspp_df3)
+
+predictors <- colnames(bspp_df3)
+
+jpeg("figures/bspParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(2, 2))
+
+for (p in predictors) {
+  plot(
+    sigmaXbsp[[p]],
+    log(sigmaXbsp$sigma_bsp),
+    xlab = p,
+    ylab = "log(sigma_bsp)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
+
+# Parameterization for treeid
+treeid_df3 <- treeid_df
+colnames(treeid_df3) <- paste("treeid", colnames(treeid_df3), sep = "")
+sigmaXtreeid <- cbind(sigma_df, treeid_df3)
+
+predictors <- colnames(treeid_df3)
+
+jpeg("figures/treeidParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(3, 3)) # 75 treeid, but subsetting for 10 of them
+
+for (p in predictors[1:9]) {
+  plot(
+    sigmaXtreeid[[p]],
+    log(sigmaXtreeid$sigma_atreeid),
+    xlab = p,
+    ylab = "log(sigma_treeid)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
+
+# Parameterization for asp
+aspp_df3 <- aspp_df
+colnames(aspp_df3) <- paste("asp", colnames(aspp_df3), sep = "")
+sigmaXasp <- cbind(sigma_df, aspp_df3)
+
+predictors <- colnames(aspp_df3)
+
+jpeg("figures/aspParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(2, 2))
+
+for (p in predictors) {
+  plot(
+    sigmaXasp[[p]],
+    log(sigmaXasp$sigma_asp),
+    xlab = p,
+    ylab = "log(sigma_asp)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
+
+# Parameterization for site
+site_df3 <- site_df
+colnames(site_df3) <- paste("site", colnames(site_df3), sep = "")
+sigmaXsite <- cbind(sigma_df, site_df3)
+
+predictors <- colnames(site_df3)
+
+jpeg("figures/siteParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+par(mfrow = c(2, 2))
+
+for (p in predictors) {
+  
+  plot(
+    sigmaXsite[[p]],
+    log(sigmaXsite$sigma_asite),
+    xlab = p,
+    ylab = "log(sigma_site)",
+    pch = 16,
+    col = adjustcolor("#B40F20", alpha.f = 0.09)
+  )
+}
+dev.off()
 # === === === === === === === #
 # Plot parameter recovery #####
 # === === === === === === === #
@@ -888,98 +997,4 @@ ggplot() +
 ###### Plot site ######
 site_df
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Diagnostics ####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Parameterization for bsp
-bspp_df3 <- bspp_df
-colnames(bspp_df3) <- paste("bsp", colnames(bspp_df3), sep = "")
-sigmaXbsp <- cbind(sigma_df, bspp_df3)
 
-predictors <- colnames(bspp_df3)
-
-jpeg("figures/bspParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictors) {
-  plot(
-    sigmaXbsp[[p]],
-    log(sigmaXbsp$sigma_bsp),
-    xlab = p,
-    ylab = "log(sigma_bsp)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
-
-# Parameterization for treeid
-treeid_df3 <- treeid_df
-colnames(treeid_df3) <- paste("treeid", colnames(treeid_df3), sep = "")
-sigmaXtreeid <- cbind(sigma_df, treeid_df3)
-
-predictors <- colnames(treeid_df3)
-
-jpeg("figures/treeidParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(3, 3)) # 75 treeid, but subsetting for 10 of them
-
-for (p in predictors[1:9]) {
-  plot(
-    sigmaXtreeid[[p]],
-    log(sigmaXtreeid$sigma_atreeid),
-    xlab = p,
-    ylab = "log(sigma_treeid)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
-
-# Parameterization for asp
-aspp_df3 <- aspp_df
-colnames(aspp_df3) <- paste("asp", colnames(aspp_df3), sep = "")
-sigmaXasp <- cbind(sigma_df, aspp_df3)
-
-predictors <- colnames(aspp_df3)
-
-jpeg("figures/aspParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictors) {
-  plot(
-    sigmaXasp[[p]],
-    log(sigmaXasp$sigma_asp),
-    xlab = p,
-    ylab = "log(sigma_asp)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
-
-# Parameterization for site
-site_df3 <- site_df
-colnames(site_df3) <- paste("site", colnames(site_df3), sep = "")
-sigmaXsite <- cbind(sigma_df, site_df3)
-
-predictors <- colnames(site_df3)
-
-jpeg("figures/siteParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictors) {
-  
-  plot(
-    sigmaXsite[[p]],
-    log(sigmaXsite$sigma_asite),
-    xlab = p,
-    ylab = "log(sigma_site)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
