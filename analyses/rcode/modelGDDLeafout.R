@@ -43,9 +43,9 @@ sigma_asite <- 4
 
 n_site <- 4 # number of sites
 n_spp <- 4 # number of species
-n_perspp <- 5 # number of individuals per species
+n_perspp <- 30 # number of individuals per species
 n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 3 # repeated measurements per id
+n_meas <- 10 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 # get replicated treeid
@@ -108,14 +108,82 @@ sim$a_asp <- sim$a + sim$asp
 
 # plot sim data
 ggplot(sim) +
-  geom_hline(aes(yintercept = gddleafout, color = sitename), alpha = 0.7) +
-  geom_hline(aes(yintercept = a_asite), linewidth = 0.9, alpha = 0.8) +
-  geom_hline(aes(yintercept = a_asp), linewidth = 0.9, linetype = 2) +
-  facet_wrap(sitename~sppname) +
-  labs(y = "gdd", title = "gdd at leafout") +
+  geom_histogram(aes(gddleafout, color = sitename, fill = sitename), 
+                 binwidth = 2) +
+  geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
+             linewidth = 0.9, alpha = 0.8, color = "black") +
+  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+             linewidth = 0.9, color = "black") +
+  geom_vline(aes(xintercept = a, linetype = "Grand mean"),
+             linewidth = 1.2, color = "black") +
+  facet_wrap(sitename ~ sppname) +
+  labs(y = "",
+       title = "gdd at leafout",
+       linetype = "line type") +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  theme_minimal()
-ggsave("figures/sim_gddLeafout.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  scale_linetype_manual(values = c(
+    "Grand mean" = "solid",
+    "Site mean" = "dotted",
+    "Species mean" = "dashed"
+  )) +
+  theme_minimal() +
+  theme(
+    legend.key.height = unit(4, "lines")
+  )
+ggsave("figures/gddLeafout_simData/sim_gddLeafout4x4.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(sim) +
+  geom_histogram(aes(gddleafout, color = sitename, fill = sitename), 
+                 binwidth = 2) +
+  # geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
+  #            linewidth = 0.9, alpha = 0.8, color = "black") +
+  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+             linewidth = 0.9, color = "black") +
+  geom_vline(aes(xintercept = a, linetype = "Grand mean"),
+             linewidth = 1.2, color = "black") +
+  facet_wrap(~sppname) +
+  labs(y = "",
+       title = "gdd at leafout",
+       linetype = "line type") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  scale_linetype_manual(values = c(
+    "Grand mean" = "solid",
+    "Site mean" = "dotted",
+    "Species mean" = "dashed"
+  )) +
+  theme_minimal() +
+  theme(
+    legend.key.height = unit(4, "lines")
+  )
+ggsave("figures/gddLeafout_simData/sim_gddLeafoutSppFacet.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(sim) +
+  geom_density(aes(gddleafout, color = sitename), 
+                 linewidth = 1) +
+  # geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
+  #            linewidth = 0.9, alpha = 0.8, color = "black") +
+  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+             linewidth = 0.9, color = "black") +
+  geom_vline(aes(xintercept = a, linetype = "Grand mean"),
+             linewidth = 1.2, color = "black") +
+  facet_wrap(~sppname) +
+  labs(y = "",
+       title = "gdd at leafout",
+       linetype = "line type") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  scale_linetype_manual(values = c(
+    "Grand mean" = "solid",
+    "Site mean" = "dotted",
+    "Species mean" = "dashed"
+  )) +
+  theme_minimal() +
+  theme(
+    legend.key.height = unit(4, "lines")
+  )
+ggsave("figures/gddLeafout_simData/sim_gddLeafoutSppFacet_density.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # plot gdd
 gdd$year <- as.factor(gdd$year)
@@ -138,8 +206,10 @@ treeid <- treeid
 
 table(treeid, species)
 
+if(FALSE){
 fit <- stan("stan/twolevelhierint.stan", 
             data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid"),
             iter=4000, chains=4, cores=4)
 
+}
 
