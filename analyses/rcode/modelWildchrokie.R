@@ -135,8 +135,8 @@ fit <- stan("stan/twolevelhierint.stan",
                     data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/fit")
-fit <- readRDS("output/stanOutput/fit")
+saveRDS(fit, "output/stanOutput/GDDleafout/fit")
+fit <- readRDS("output/stanOutput/GDDleafout/fit")
 
 
 # === === === === === === === === === === === === #
@@ -298,7 +298,6 @@ site_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot sigmas ######
-# temporary removal of treeid
 sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
   geom_errorbar(aes(ymin = per25, ymax = per75),
                 width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +

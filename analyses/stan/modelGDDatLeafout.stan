@@ -39,10 +39,10 @@ model{
   asp ~ normal(0, sigma_asp);
   asite ~ normal(0, sigma_asite);
   atreeid ~ normal(0, sigma_atreeid); 
-  a ~ normal(1.5, 1);
-  sigma_asp ~ normal(0, 0.3);
-  sigma_asite ~ normal(0, 1);
-  sigma_atreeid ~ normal(0, 0.1);
-  sigma_y ~ normal(0, 1);
+  a ~ normal(150, 10);
+  sigma_asp ~ normal(0, 5);
+  sigma_asite ~ normal(0, 5);
+  sigma_atreeid ~ normal(0, 3);
+  sigma_y ~ normal(0, 2);
   y ~ normal(ypred, sigma_y); 
 }	
