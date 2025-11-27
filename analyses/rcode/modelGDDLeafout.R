@@ -120,8 +120,8 @@ ggplot(sim) +
   labs(y = "",
        title = "gdd at leafout",
        linetype = "line type") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   scale_linetype_manual(values = c(
     "Grand mean" = "solid",
     "Site mean" = "dotted",
@@ -146,8 +146,8 @@ ggplot(sim) +
   labs(y = "",
        title = "gdd at leafout",
        linetype = "line type") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   scale_linetype_manual(values = c(
     "Grand mean" = "solid",
     "Site mean" = "dotted",
@@ -172,7 +172,7 @@ ggplot(sim) +
   labs(y = "",
        title = "gdd at leafout",
        linetype = "line type") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_color_manual(values = wes_palette("AsteroidCity1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   scale_linetype_manual(values = c(
     "Grand mean" = "solid",
@@ -210,7 +210,7 @@ if(FALSE){
 fit <- stan("stan/modelGDDatLeafout.stan", 
             data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid"),
             iter=4000, chains=4, cores=4)
-
+writeRDS(fit, "output/stanOutput/gddLeafout_simData/fit")
 }
 
 fit@model_pars

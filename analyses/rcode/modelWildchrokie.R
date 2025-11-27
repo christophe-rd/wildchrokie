@@ -29,6 +29,9 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
+util <- new.env()
+source('mcmc_analysis_tools_rstan.R', local=util)
+source('mcmc_visualization_tools.R', local=util)
 
 runSimData <- FALSE
 if (runSimData) {
@@ -606,6 +609,13 @@ fit <- stan("stan/twolevelhierint.stan",
             data=c("N","y","Nspp","species","Nsite", 
                    "site", "Ntreeid", "treeid", "gdd"),
             iter=4000, chains=4, cores=4)
+
+fit_noncentered <- stan("stan/twolevelhierint2.stan", 
+            data=c("N","y","Nspp","species","Nsite", 
+                   "site", "Ntreeid", "treeid", "gdd"),
+            iter=4000, chains=4, cores=4)
+saveRDS(fit_noncentered, "output/stanOutput/fit_noncentered") # nothing centered except atreeid
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
@@ -681,7 +691,7 @@ sigma_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover b spp ######
 bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
-# remove sigma_aspp for now
+# remove sigma_bspp for now
 bspp_cols <- bspp_cols[2:length(bspp_cols)]
 
 bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
@@ -801,13 +811,14 @@ bspp_df3 <- bspp_df
 colnames(bspp_df3) <- paste("bsp", colnames(bspp_df3), sep = "")
 sigmaXbsp <- cbind(sigma_df, bspp_df3)
 
-predictors <- colnames(bspp_df3)
+predictors <- colnames(bspp_df3)[5:8]
+predictorsz <- colnames(bspp_df3)[1:4]
 
-jpeg("figures/bspParameterization.jpg", width = 2000, height = 2000, 
+jpeg("figures/bspParameterization2.jpg", width = 2000, height = 2000, 
      units = "px", res = 300)
 par(mfrow = c(2, 2))
 
-for (p in predictors) {
+for (p in predictorsz) {
   plot(
     sigmaXbsp[[p]],
     log(sigmaXbsp$sigma_bsp),
@@ -994,6 +1005,16 @@ ggplot() +
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
-site_df
 
+diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 
+util$check_all_hmc_diagnostics(diagnostics)
 
+samples <- util$extract_expectand_vals(fit)
+
+util$plot_div_pairs("bsp[1]", "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
+
+util$plot_div_pairs("asp[1]", "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+
+util$plot_div_pairs("asite[1]", "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+
+util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
