@@ -1009,12 +1009,12 @@ ggplot() +
 diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 
 util$check_all_hmc_diagnostics(diagnostics)
 
-samples <- util$extract_expectand_vals(fit)
+samples <- util$extract_expectand_vals(fit_noncentered)
 
-util$plot_div_pairs("bsp[1]", "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
+util$plot_div_pairs("zbsp[1]", "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
 
-util$plot_div_pairs("asp[1]", "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+util$plot_div_pairs("zasp[1]", "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
 
-util$plot_div_pairs("asite[1]", "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+util$plot_div_pairs("zasite[1]", "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
 
 util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
