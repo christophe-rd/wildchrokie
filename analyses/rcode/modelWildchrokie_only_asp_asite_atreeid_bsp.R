@@ -54,12 +54,26 @@ treeid <- as.numeric(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 # check that everything is fine
-table(treeid,species)
+table(species)
+emp$count <- 1
+emp2 <- emp[!duplicated(emp$treeid),]
+aggregate(count ~ spp, FUN = sum, data = emp2)
+
+agg <- aggregate(count ~ treeid + spp, FUN = sum, data = emp)
+str(agg)
+hist(emp$treeid)
+
+ggplot(agg) +
+  geom_histogram(aes(x = count), bins = 3) +
+  facet_wrap(~spp) + 
+  theme_minimal() + 
+  labs(x = "number of observations")
+ggsave("figures/empiricalData/countSpp.jpeg", width = 6, height = 6, units = "in", dpi = 300)
 
 rstan_options(auto_write = TRUE)
  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fit <- stan("stan/twolevelhierint_only_asp_asite_atreeid.stan", 
+fit <- stan("stan/twolevelhierint_only_asp_asite_atreeid_bsp.stan", 
             data=c("N","y","Nspp","species","Nsite", 
                    "site", "Ntreeid", "treeid", "gdd"),
             iter=4000, chains=4, cores=4)
@@ -90,7 +104,7 @@ samples <- util$extract_expectand_vals(fit)
 asp <- names(samples)[grepl("asp", names(samples))]
 asp <- asp[!grepl("sigma", asp)]
 
-jpeg("figures/aspParameterization_only_asp_asite_atreeid.jpg", width = 2000, height = 2000, 
+jpeg("figures/aspParameterization_only_asp_asite_atreeid_bsp.jpg", width = 2000, height = 2000, 
      units = "px", res = 300)
 util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
 dev.off()
@@ -99,7 +113,7 @@ dev.off()
 asite <- names(samples)[grepl("asite", names(samples))]
 asite <- asite[!grepl("sigma", asite)]
 
-jpeg("figures/asiteParameterization_only_asp_asite_atreeid.jpg", width = 2000, height = 2000, 
+jpeg("figures/asiteParameterization_only_asp_asite_atreeid_bsp.jpg", width = 2000, height = 2000, 
      units = "px", res = 300)
 util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
 dev.off()
@@ -108,6 +122,15 @@ dev.off()
 atreeid <- names(samples)[grepl("atreeid", names(samples))]
 atreeid <- atreeid[!grepl("sigma", atreeid)]
 atreeid <- atreeid[sample(length(unique(atreeid)), 21)]
-pdf("figures/atreeidParameterization_only_asp_asite_atreeid.pdf", width = 6, height = 18)
+pdf("figures/atreeidParameterization_only_asp_asite_atreeid_bsp.pdf", width = 6, height = 18)
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
+dev.off()
+
+# bsp
+bsp <- names(samples)[grepl("bsp", names(samples))]
+bsp <- bsp[!grepl("sigma", bsp)]
+
+jpeg("figures/bspParameterization_only_asp_asite_atreeid_bsp.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+util$plot_div_pairs(bsp, "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
 dev.off()
