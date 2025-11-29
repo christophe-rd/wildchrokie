@@ -18,6 +18,10 @@ library(shinystan)
 library(wesanderson)
 library(patchwork)
 
+# run models
+runsimdata <- FALSE
+
+# directories
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if (length(grep("lizzie", getwd())) > 0) {
@@ -26,13 +30,12 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
-# empirical data
-emp <- read.csv("output/empiricalDataMAIN.csv")
-
-# gdd data
-gdd <- read.csv("output/gddByYear.csv")
+util <- new.env()
+source('mcmc_analysis_tools_rstan.R', local=util)
+source('mcmc_visualization_tools.R', local=util)
 
 
+if (runsimdata) {
 # Simulate data gdd at leafout ####
 set.seed(124)
 a <- 150
@@ -450,7 +453,7 @@ combined_plot <- (atreeid_plot + sigma_plot) /
 combined_plot
 ggsave("figures/gddLeafout_simData/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
-# Parameterization diagnostics ####
+##### Parameterization diagnostics #####
 
 # Parameterization for treeid
 treeid_df3 <- treeid_df
@@ -526,3 +529,220 @@ for (p in predictors) {
   )
 }
 dev.off()
+
+}
+
+# Run model on empirical data ####
+# empirical data
+emp <- read.csv("output/empiricalDataNORing.csv")
+gdd <- read.csv("output/gddByYear.csv")
+
+no_noleafout <- emp[!is.na(emp2$leafout),]
+
+# give numeric ids to my groups 
+no_noleafout$site_num <- match(no_noleafout$site, unique(no_noleafout$site))
+no_noleafout$spp_num <- match(no_noleafout$spp, unique(no_noleafout$spp))
+no_noleafout$treeid_num <- match(no_noleafout$treeid, unique(no_noleafout$treeid))
+obsdataWithGDD
+y <- no_noleafout$leafoutGDD
+N <- nrow(no_noleafout) 
+Nspp <- length(unique(no_noleafout$spp_num))
+species <- as.numeric(as.character(no_noleafout$spp_num))
+Nsite <- length(unique(no_noleafout$site_num))
+site <- as.numeric(as.character(no_noleafout$site_num))
+Ntreeid <- length(unique(treeid))
+treeid <- as.numeric(no_noleafout$treeid_num)
+
+table(treeid, species)
+
+if(FALSE){
+  fit <- stan("stan/modelGDDatLeafout.stan", 
+              data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid"),
+              iter=4000, chains=4, cores=4)
+  writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
+}
+
+df_fit <- as.data.frame(fit)
+
+
+# Diagnostics ####
+# Parameterization for asp
+
+diagnostics <- util$extract_hmc_diagnostics(fit) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+samples <- util$extract_expectand_vals(fit)
+
+# asp
+asp <- names(samples)[grepl("asp", names(samples))]
+asp <- asp[!grepl("sigma", asp)]
+
+jpeg("figures/gddLeafout_empData/aspParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+dev.off()
+
+# asite
+asite <- names(samples)[grepl("asite", names(samples))]
+asite <- asite[!grepl("sigma", asite)]
+
+jpeg("figures/gddLeafout_empData/asiteParameterization.jpg", width = 2000, height = 2000, 
+     units = "px", res = 300)
+util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+dev.off()
+
+# atreeid
+atreeid <- names(samples)[grepl("atreeid", names(samples))]
+atreeid <- atreeid[!grepl("sigma", atreeid)]
+atreeid <- atreeid[sample(length(unique(atreeid)), 21)]
+pdf("figures/gddLeafout_empData/atreeidParameterization.pdf", width = 6, height = 18)
+util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
+dev.off()
+
+
+
+# === === === === === === === === === === === === === === === === === === === ==
+# Recover parameters ####
+# === === === === === === === === === === === === === === === === === === === ==
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover sigmas ######
+unique(colnames(df_fit))
+sigma_cols <- colnames(df_fit)[grepl("sigma", colnames(df_fit))]
+
+sigma_df <- df_fit[, colnames(df_fit) %in% sigma_cols]
+
+sigma_df2 <- data.frame(
+  sigma = character(ncol(sigma_df)),
+  mean = numeric(ncol(sigma_df)),  
+  per5 = NA, 
+  per25 = NA,
+  per75 = NA,
+  per95 = NA
+)
+sigma_df2
+
+for (i in 1:ncol(sigma_df)) { # i = 1
+  sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
+  sigma_df2$mean[i] <- round(mean(sigma_df[[i]]),3)  
+  sigma_df2$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.05), 3)
+  sigma_df2$per25[i] <- round(quantile(sigma_df[[i]], probs = 0.25), 3)
+  sigma_df2$per75[i] <- round(quantile(sigma_df[[i]], probs = 0.75), 3)
+  sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
+}
+sigma_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover b spp ######
+bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
+# remove sigma_bspp for now
+bspp_cols <- bspp_cols[2:length(bspp_cols)]
+
+bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
+# change their names
+colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
+#empty spp df
+bspp_df2 <- data.frame(
+  spp = character(ncol(bspp_df)),
+  fit_b_spp = numeric(ncol(bspp_df)),  
+  fit_b_spp_per5 = NA, 
+  fit_b_spp_per25 = NA,
+  fit_b_spp_per75 = NA,
+  fit_b_spp_per95 = NA
+)
+for (i in 1:ncol(bspp_df)) { # i = 1
+  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
+  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+}
+bspp_df2
+
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover treeid ######
+
+# grab treeid 
+treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
+# remove sigma_asp for now
+treeid_cols <- treeid_cols[2:length(treeid_cols)]
+
+treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
+# change their names
+colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
+# empty treeid dataframe
+treeid_df2 <- data.frame(
+  treeid = character(ncol(treeid_df)),
+  fit_a_treeid = numeric(ncol(treeid_df)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
+)
+for (i in 1:ncol(treeid_df)) { # i = 1
+  treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
+  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+}
+treeid_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover a spp  ######
+aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
+
+aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2 <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df2
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Recover a site ######
+site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
+# remove sigma_asp for now
+site_cols <- site_cols[2:length(site_cols)]
+
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+# change their names
+colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
+# empty site df
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2$site[i] <- colnames(site_df)[i]         
+  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df2
