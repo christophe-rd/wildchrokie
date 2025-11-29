@@ -31,6 +31,39 @@ gdd <- rbind(y18, y19, y20)
 
 write_csv(gdd, "output/gddByYear.csv")
 
+# replace NaN by NA. Hopefully this is ok
+obsdata2$budburst <- gsub("NaN", "NA", obsdata2$budburst) 
+obsdata2$budset <- gsub("NaN", "NA", obsdata2$budset)
+obsdata2$leafout <- gsub("NaN", "NA", obsdata2$leafout)
+obsdata2$leafcolor <- gsub("NaN", "NA", obsdata2$leafcolor)
+
+# convert to integer to avoid downstream problems with matching gdd
+obsdata2$budburst2 <- round(obsdata2$budburst)
+obsdata2$budset2 <- round(obsdata$budset)
+
+unique(as.numeric(obsdata2$leafout))
+
+obsdata2$leafout2 <- obsdata2$leafout
+obsdata2$leafout2 <- gsub("135.5", 136, obsdata2$leafout2)
+obsdata2$leafout2 <- gsub("130.5", 131, obsdata2$leafout2)
+obsdata2$leafout2 <- gsub("132.5", 133, obsdata2$leafout2)
+obsdata2$leafout2 <- gsub("134.5", 135, obsdata2$leafout2)
+obsdata2$leafout2 <- gsub("131.5", 132, obsdata2$leafout2)
+
+unique(obsdata2$leafout2)
+obsdata2$leafout3 <- as.numeric((obsdata2$leafout2))
+
+nrow(obsdata2[!is.na(obsdata2$leafout),])
+nrow(obsdata2[!is.na(obsdata2$leafout2),])
+
+obsdata2$leafcolor2 <- as.integer(obsdata$leafcolor)
+
+
+unique(obsdata2$budburst)
+unique(obsdata2$budset)
+unique(obsdata2$leafout)
+unique(obsdata2$leafcolor)
+
 # create new GDD empty columns
 obsdata2$budburstGDD <- NA
 obsdata2$budsetGDD <- NA
@@ -54,7 +87,7 @@ for(i in 1:nrow(obsdata2)) {
   }
   
   # Leafout
-  if(!is.na(obsdata2$leafout[i])) {
+  if(!is.na(obsdata2$leafout[i])) { # 49
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafout[i])
     if(length(idx) == 1) obsdata2$leafoutGDD[i] <- gdd$GDD_10[idx]
   }

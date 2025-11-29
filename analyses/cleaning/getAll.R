@@ -24,7 +24,7 @@ source("cleaning/source/cleanClimate.r")
 # 4. Calculate primary and full growing season GDD
 source("cleaning/source/calculateGrowingSeasonGDD.R")
 
-# merge dfs!
+# merge dfs for ring width with phenology data 
 temp <- merge(wildchrokie_rw, obsdata, by = c("treeid", "spp", "year"))
 
 # get only the years we have data for
@@ -45,3 +45,19 @@ temp6 <- temp5[!duplicated(temp5$idyear),]
 
 # write csv
 write_csv(temp6, "output/empiricalDataMAIN.csv")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Now without tree rings!
+obsdataWithGDD$siteplot <- sub("^[^_]*_(.*?)_.*$", "\\1", obsdataWithGDD$treeid)
+obsdataWithGDD$site <- substr(obsdataWithGDD$siteplot, 0,2)
+obsdataWithGDD$plot <- substr(obsdataWithGDD$siteplot, 3,4)
+obsdataWithGDD$replicate <- sub(".*_", "", obsdataWithGDD$treeid)
+
+obsdataWithGDD <- obsdataWithGDD[order(
+  obsdataWithGDD$spp,
+  obsdataWithGDD$site,
+  obsdataWithGDD$replicate,
+  obsdataWithGDD$year
+), ]
+
+write_csv(obsdataWithGDD, "output/empiricalDataNORing.csv")
