@@ -12,6 +12,8 @@ library(pollen)
 # copy of obsdata2
 obsdata2 <- obsdata
 
+obsdata2$leafout <- round(obsdata2$leafout)
+
 ###calculate primary growth season and full growing season in days
 obsdata2$pgs <- obsdata2$budset-obsdata2$leafout
 obsdata2$fgs <- obsdata2$leafcolor-obsdata2$leafout
@@ -28,36 +30,18 @@ y19$GDD_10 <- gdd(tmax = y19$maxT, tmin = y19$minT, tbase = 10, type = "B")
 y20$GDD_10 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 10, type = "B")
 
 gdd <- rbind(y18, y19, y20)
+str(gdd)
 
 write_csv(gdd, "output/gddByYear.csv")
 
 # replace NaN by NA. Hopefully this is ok
-obsdata2$budburst <- gsub("NaN", "NA", obsdata2$budburst) 
-obsdata2$budset <- gsub("NaN", "NA", obsdata2$budset)
-obsdata2$leafout <- gsub("NaN", "NA", obsdata2$leafout)
-obsdata2$leafcolor <- gsub("NaN", "NA", obsdata2$leafcolor)
-
-# convert to integer to avoid downstream problems with matching gdd
-obsdata2$budburst2 <- round(obsdata2$budburst)
-obsdata2$budset2 <- round(obsdata$budset)
-
-unique(as.numeric(obsdata2$leafout))
-
-obsdata2$leafout2 <- obsdata2$leafout
-obsdata2$leafout2 <- gsub("135.5", 136, obsdata2$leafout2)
-obsdata2$leafout2 <- gsub("130.5", 131, obsdata2$leafout2)
-obsdata2$leafout2 <- gsub("132.5", 133, obsdata2$leafout2)
-obsdata2$leafout2 <- gsub("134.5", 135, obsdata2$leafout2)
-obsdata2$leafout2 <- gsub("131.5", 132, obsdata2$leafout2)
-
-unique(obsdata2$leafout2)
-obsdata2$leafout3 <- as.numeric((obsdata2$leafout2))
-
-nrow(obsdata2[!is.na(obsdata2$leafout),])
-nrow(obsdata2[!is.na(obsdata2$leafout2),])
-
-obsdata2$leafcolor2 <- as.integer(obsdata$leafcolor)
-
+str(obsdata2)
+for (i in 2:10) {
+  obsdata2[[i]][is.nan(obsdata2[[i]])] <- NA
+}
+str(obsdata2)
+nrow(obsdata)
+nrow(obsdata2[!is.na(obsdata2$leafout),]) # missing 9 rows of NaN
 
 unique(obsdata2$budburst)
 unique(obsdata2$budset)
@@ -70,6 +54,8 @@ obsdata2$budsetGDD <- NA
 obsdata2$leafoutGDD <- NA
 obsdata2$leafcolorGDD <- NA
 
+
+gdd$year <- as.numeric(gdd$year)
 # Loop over rows
 for(i in 1:nrow(obsdata2)) {
   yr <- obsdata2$year[i]
@@ -99,9 +85,24 @@ for(i in 1:nrow(obsdata2)) {
   }
   
 }
+str(obsdata2)
+
+# check that the loop didn't miss any rows
+nrow(obsdata2[!is.na(obsdata2$budburst),]) 
+nrow(obsdata2[!is.na(obsdata2$budburstGDD),])
+
+nrow(obsdata2[!is.na(obsdata2$budset),]) 
+nrow(obsdata2[!is.na(obsdata2$budsetGDD),])
+
+nrow(obsdata2[!is.na(obsdata2$leafout),]) 
+nrow(obsdata2[!is.na(obsdata2$leafoutGDD),])
+
+nrow(obsdata2[!is.na(obsdata2$leafcolor),]) 
+nrow(obsdata2[!is.na(obsdata2$leafcolorGDD),])
 
 # add primary GS and full GS cols
 obsdata2$pgsGDD <- obsdata2$budsetGDD - obsdata2$leafoutGDD
+nrow(obsdata2[!is.na(obsdata2$pgsGDD),]) 
 obsdata2$fgsGDD <- obsdata2$leafcolorGDD - obsdata2$leafoutGDD
 
 # add max gdd per year

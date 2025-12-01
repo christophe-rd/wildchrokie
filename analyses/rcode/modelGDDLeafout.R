@@ -537,32 +537,37 @@ dev.off()
 emp <- read.csv("output/empiricalDataNORing.csv")
 gdd <- read.csv("output/gddByYear.csv")
 
-no_noleafout <- emp[!is.na(emp2$leafout),]
+no_naleafout <- emp[!is.na(emp$leafoutGDD),]
+nrow(no_naleafout)
 
 # give numeric ids to my groups 
-no_noleafout$site_num <- match(no_noleafout$site, unique(no_noleafout$site))
-no_noleafout$spp_num <- match(no_noleafout$spp, unique(no_noleafout$spp))
-no_noleafout$treeid_num <- match(no_noleafout$treeid, unique(no_noleafout$treeid))
-obsdataWithGDD
-y <- no_noleafout$leafoutGDD
-N <- nrow(no_noleafout) 
-Nspp <- length(unique(no_noleafout$spp_num))
-species <- as.numeric(as.character(no_noleafout$spp_num))
-Nsite <- length(unique(no_noleafout$site_num))
-site <- as.numeric(as.character(no_noleafout$site_num))
+no_naleafout$site_num <- match(no_naleafout$site, unique(no_naleafout$site))
+no_naleafout$spp_num <- match(no_naleafout$spp, unique(no_naleafout$spp))
+no_naleafout$treeid_num <- match(no_naleafout$treeid, unique(no_naleafout$treeid))
+
+y <- no_naleafout$leafoutGDD
+N <- nrow(no_naleafout) 
+species <- as.numeric(as.character(no_naleafout$spp_num))
+Nspp <- length(unique(no_naleafout$spp_num))
+site <- as.numeric(as.character(no_naleafout$site_num))
+Nsite <- length(unique(no_naleafout$site_num))
+treeid <- as.numeric(no_naleafout$treeid_num)
 Ntreeid <- length(unique(treeid))
-treeid <- as.numeric(no_noleafout$treeid_num)
 
 table(treeid, species)
+table(treeid)
+table(species)
 
 if(FALSE){
   fit <- stan("stan/modelGDDatLeafout.stan", 
-              data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid"),
+              data=c("N","y",
+                     "Nspp","species", 
+                     "Ntreeid", "treeid"),
               iter=4000, chains=4, cores=4)
   writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
 }
 
-df_fit <- as.data.frame(fit)
+
 
 
 # Diagnostics ####
@@ -574,37 +579,35 @@ util$check_all_hmc_diagnostics(diagnostics)
 samples <- util$extract_expectand_vals(fit)
 
 # asp
-asp <- names(samples)[grepl("asp", names(samples))]
-asp <- asp[!grepl("sigma", asp)]
+# asp <- names(samples)[grepl("asp", names(samples))]
+# asp <- asp[!grepl("sigma", asp)]
 
-jpeg("figures/gddLeafout_empData/aspParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
-dev.off()
+# jpeg("figures/gddLeafout_empData/aspParameterization.jpg", width = 2000, height = 2000, 
+#      units = "px", res = 300)
+# util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+# dev.off()
 
 # asite
-asite <- names(samples)[grepl("asite", names(samples))]
-asite <- asite[!grepl("sigma", asite)]
-
-jpeg("figures/gddLeafout_empData/asiteParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
-dev.off()
+# asite <- names(samples)[grepl("asite", names(samples))]
+# asite <- asite[!grepl("sigma", asite)]
+# 
+# jpeg("figures/gddLeafout_empData/asiteParameterization.jpg", width = 2000, height = 2000, 
+#      units = "px", res = 300)
+# util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+# dev.off()
 
 # atreeid
-atreeid <- names(samples)[grepl("atreeid", names(samples))]
+atreeid <- names(samples)[grepl("zatreeid", names(samples))]
 atreeid <- atreeid[!grepl("sigma", atreeid)]
 atreeid <- atreeid[sample(length(unique(atreeid)), 21)]
 pdf("figures/gddLeafout_empData/atreeidParameterization.pdf", width = 6, height = 18)
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
 
-
-
 # === === === === === === === === === === === === === === === === === === === ==
 # Recover parameters ####
 # === === === === === === === === === === === === === === === === === === === ==
-
+df_fit <- as.data.frame(fit)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
@@ -631,34 +634,6 @@ for (i in 1:ncol(sigma_df)) { # i = 1
   sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
 }
 sigma_df2
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover b spp ######
-bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
-# remove sigma_bspp for now
-bspp_cols <- bspp_cols[2:length(bspp_cols)]
-
-bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
-# change their names
-colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
-#empty spp df
-bspp_df2 <- data.frame(
-  spp = character(ncol(bspp_df)),
-  fit_b_spp = numeric(ncol(bspp_df)),  
-  fit_b_spp_per5 = NA, 
-  fit_b_spp_per25 = NA,
-  fit_b_spp_per75 = NA,
-  fit_b_spp_per95 = NA
-)
-for (i in 1:ncol(bspp_df)) { # i = 1
-  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
-}
-bspp_df2
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -694,8 +669,6 @@ treeid_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
-aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
-aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
@@ -746,3 +719,132 @@ for (i in 1:ncol(site_df)) { # i = 1
   site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
 }
 site_df2
+
+# transform atreeid
+# plot
+atreeid_long <- reshape(
+  treeid_df,
+  direction = "long",
+  varying = list(names(treeid_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(treeid_df),
+  idvar = "draw"
+)
+atreeid_long
+
+# sample to plot
+vec <- sample(treeid, 20)
+sub_atreeid <- subset(atreeid_long, spp %in% vec)
+
+# simulate priors
+hyperparameter_draws <- 1000
+parameter_draws <- 1000
+n_sigma_atreeid <- 200
+
+# set to prior values
+sigma_atreeid_vec <- abs(rnorm(n_sigma_atreeid, 0, 0.3))
+
+prior_atreeid <- rep(NA, parameter_draws*length(sigma_atreeid_vec))
+
+for (i in 1: length(sigma_atreeid_vec)) {
+  prior_atreeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_atreeid_vec[i])
+}
+prior_atreeid
+
+ggplot() +
+  geom_density(data = data.frame(prior_atreeid = prior_atreeid),
+               aes(x = prior_atreeid, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = sub_atreeid,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.1) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "atreeid", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+# a #####
+df_fit <- as.data.frame(fit)
+
+# Prior checks ####
+# grab treeid 
+a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
+
+a_prior <- rnorm(1e4, 10, 1)
+
+ggplot() +
+  geom_density(data = data.frame(a = a_prior),
+               aes(x = a, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = data.frame(value = a_posterior),
+               aes(x = value, colour = "Posterior"),
+               linewidth = 0.8) +
+  labs(title = "priorVSposterior_a",
+       x = "a", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+# aspp #####
+
+# convert posterior distribution to long format
+aspp_long <- reshape(
+  aspp_df,
+  direction = "long",
+  varying = list(names(aspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(aspp_df),
+  idvar = "draw"
+)
+aspp_long
+
+# asp prior
+asp_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asp_prior = asp_prior),
+               aes(x = asp_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = aspp_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asp", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+
+# asite #####
+
+# convert posterior distribution to long format
+asite_long <- reshape(
+  site_df,
+  direction = "long",
+  varying = list(names(site_df)),
+  v.names = "value",
+  timevar = "site",
+  times = names(site_df),
+  idvar = "draw"
+)
+asite_long
+
+# asite prior
+asite_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asite_prior = asite_prior),
+               aes(x = asite_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = asite_long,
+               aes(x = value, colour = "Posterior", group = site),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+

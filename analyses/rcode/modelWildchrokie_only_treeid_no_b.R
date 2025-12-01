@@ -37,29 +37,37 @@ source('mcmc_visualization_tools.R', local=util)
 #### Run model on empirical data ####
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
-
+nrow(emp)
 # transform my groups to numeric values
 alnbetpop <- subset(emp, spp %in% c("ALNINC", "BETPOP"))
 
-emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+emp$spp_num <- match(emp$spp, unique(emp$spp))
+emp$site_num <- match(emp$site, unique(emp$site))
 
 # transform data in vectors
 y <- emp$lengthCM*10 # ring width in mm
 N <- nrow(emp)
-Nspp <- length(unique(emp$spp_num))
-species <- as.numeric(as.character(emp$spp_num))
 treeid <- as.numeric(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
-N
+species <- as.numeric(as.character(emp$spp_num))
+Nspp <- length(unique(species))
+site <- as.numeric(as.character(emp$site_num))
+Nsite<- length(unique(site))
+
 # check that everything is fine
 table(treeid, species)
+table(site)
+table(species)
 
 rstan_options(auto_write = TRUE)
  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fit <- stan("stan/twolevelhierint_only_atreeid_no_b.stan", 
-            data=c("N","y", "Ntreeid", "treeid","Nspp","species"),
+            data=c("N","y", 
+                   "Ntreeid", "treeid",
+                   "Nspp","species",
+                   "Nsite","site"),
             iter=4000, chains=4, cores=4)
 
 
@@ -85,14 +93,7 @@ util$check_all_hmc_diagnostics(diagnostics)
 
 samples <- util$extract_expectand_vals(fit)
 
-# a
-a <- names(samples)["a"]
-a <- a[!grepl("sigma", a)]
 
-jpeg("figures/troubleShootingGrowthModel/aParameterization.jpg", width = 2000, height = 2000,
-     units = "px", res = 300)
-util$plot_div_pairs(a, "sigma_a", samples, diagnostics, transforms = list("sigma_a" = 1))
-dev.off()
 
 # asp
 asp <- names(samples)[grepl("asp", names(samples))]
@@ -101,7 +102,7 @@ asp <- asp[!grepl("sigma", asp)]
 jpeg("figures/troubleShootingGrowthModel/aspParameterization.jpg", 
      width = 2000, height = 2000,
      units = "px", res = 300)
-util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+# util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
 dev.off()
 
 # # asite
@@ -114,7 +115,7 @@ dev.off()
 # dev.off()
 
 # atreeid
-atreeid <- names(samples)[grepl("atreeid", names(samples))]
+atreeid <- names(samples)[grepl("zatreeid", names(samples))]
 atreeid <- atreeid[!grepl("sigma", atreeid)]
 atreeid <- atreeid[sample(length(unique(atreeid)), 9)]
 # pdf("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.pdf", 
@@ -171,8 +172,6 @@ atreeid_long <- reshape(
 )
 atreeid_long
 
-
-
 # simulate priors
 hyperparameter_draws <- 1000
 parameter_draws <- 1000
@@ -200,6 +199,116 @@ ggplot() +
        x = "atreeid", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+
+###### Recover a spp  ######
+aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
+
+aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2 <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df2
+
+# convert posterior distribution to long format
+aspp_long <- reshape(
+  aspp_df,
+  direction = "long",
+  varying = list(names(aspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(aspp_df),
+  idvar = "draw"
+)
+aspp_long
+
+# asp prior
+asp_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asp_prior = asp_prior),
+               aes(x = asp_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = aspp_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asp", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+###### Recover a site ######
+site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
+
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+# change their names
+colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
+# empty site df
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2$site[i] <- colnames(site_df)[i]         
+  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df2
+
+# convert posterior distribution to long format
+asite_long <- reshape(
+  site_df,
+  direction = "long",
+  varying = list(names(site_df)),
+  v.names = "value",
+  timevar = "site",
+  times = names(site_df),
+  idvar = "draw"
+)
+asite_long
+
+# asite prior
+asite_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asite_prior = asite_prior),
+               aes(x = asite_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = asite_long,
+               aes(x = value, colour = "Posterior", group = site),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+
 
 # a #####
 df_fit <- as.data.frame(fit)
