@@ -84,12 +84,22 @@ diagnostics <- util$extract_hmc_diagnostics(fit)
 util$check_all_hmc_diagnostics(diagnostics)
 
 samples <- util$extract_expectand_vals(fit)
-# 
+
+# a
+a <- names(samples)["a"]
+a <- a[!grepl("sigma", a)]
+
+jpeg("figures/troubleShootingGrowthModel/aParameterization.jpg", width = 2000, height = 2000,
+     units = "px", res = 300)
+util$plot_div_pairs(a, "sigma_a", samples, diagnostics, transforms = list("sigma_a" = 1))
+dev.off()
+
 # asp
 asp <- names(samples)[grepl("asp", names(samples))]
 asp <- asp[!grepl("sigma", asp)]
 
-jpeg("figures/troubleShootingGrowthModel/aspParameterization.jpg", width = 2000, height = 2000,
+jpeg("figures/troubleShootingGrowthModel/aspParameterization.jpg", 
+     width = 2000, height = 2000,
      units = "px", res = 300)
 util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
 dev.off()
@@ -106,8 +116,12 @@ dev.off()
 # atreeid
 atreeid <- names(samples)[grepl("atreeid", names(samples))]
 atreeid <- atreeid[!grepl("sigma", atreeid)]
-atreeid <- atreeid[sample(length(unique(atreeid)), 21)]
-pdf("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.pdf", width = 6, height = 18)
+atreeid <- atreeid[sample(length(unique(atreeid)), 9)]
+# pdf("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.pdf", 
+#     width = 6, height = 18)
+jpeg("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.jpeg", 
+     width = 2000, height = 3000,
+     units = "px", res = 300)
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
 
