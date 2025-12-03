@@ -6,8 +6,8 @@ data{
 int<lower=0> N;
 int<lower=0> Nspp; 
 array[N] int species;
-// int<lower=0> Nsite;  
-// array[N] int site;   
+int<lower=0> Nsite;
+array[N] int site;
 int<lower=0> Ntreeid;
 array[N] int treeid;  
 array[N] real y; 		
@@ -18,7 +18,7 @@ real a;
 real<lower=0> sigma_atreeid;  
 real<lower=0> sigma_y;
 vector[Nspp] asp; 		
-// vector[Nsite] asite;
+vector[Nsite] asite;
 vector[Ntreeid] zatreeid;
 }
 
@@ -31,7 +31,7 @@ for (i in 1:N){
     ypred[i]=
         a + 
         asp[species[i]] + 
-        // asite[site[i]] +
+        asite[site[i]] +
         atreeid[treeid[i]];
     }
 }
@@ -40,10 +40,10 @@ model{
   // asp ~ normal(0, sigma_asp);
   // asite ~ normal(0, sigma_asite);
   zatreeid ~ normal(0, 1); 
-  a ~ normal(150, 10);
-  asp ~ normal(0, 5);
-  // sigma_asite ~ normal(0, 5);
-  sigma_atreeid ~ normal(0, 3);
-  sigma_y ~ normal(0, 5);
+  a ~ normal(18, 2);
+  asp ~ normal(0, 1);
+  asite ~ normal(0, 1);
+  sigma_atreeid ~ normal(0, 0.5);
+  sigma_y ~ normal(0, 1);
   y ~ normal(ypred, sigma_y); 
 }	

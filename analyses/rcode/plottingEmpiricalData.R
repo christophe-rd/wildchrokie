@@ -63,7 +63,7 @@ ggsave("figures/empiricalData/sppLinearRegressions_pgsGDD.jpeg", width = 6, heig
 # new symbols and stuff
 ggplot(emp, aes(x = pgsGDD, y = lengthMM)) +
   geom_point(size = 2, alpha = 0.9,
-             aes(shape = prov,
+             aes(shape = site,
                  color = year, 
                  fill = year)) + 
   geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
@@ -99,7 +99,7 @@ emp$colfrost[which(emp$year %in% c(2020))] <- "#02401B"
 emp$countFrostFree <- as.factor(emp$countFrostFree)
 ggplot(emp, aes(x = pgsGDD, y = lengthMM)) +
   geom_point(size = 2, alpha = 1,
-             aes(shape = prov,
+             aes(shape = site,
                  color = countFrostFree, 
                  fill = countFrostFree)) + 
   geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
@@ -351,13 +351,13 @@ for (i in 1:ncol(bspp_df)) { # i = 1
 bspp_df2
 
 ###### Recover site ######
-site_cols <- colnames(df_fit)[grepl("prov", colnames(df_fit))]
+site_cols <- colnames(df_fit)[grepl("site", colnames(df_fit))]
 # remove for now
 site_cols <- site_cols[1:length(site_cols)]
 site_cols <- site_cols[!grepl("Sigma", site_cols)]
 site_df <- df_fit[, colnames(df_fit) %in% site_cols]
 # change their names
-colnames(site_df) <- sub(".*prov:([^]]+)\\].*", "\\1", colnames(site_df))
+colnames(site_df) <- sub(".*site:([^]]+)\\].*", "\\1", colnames(site_df))
 # empty site df
 site_df2 <- data.frame(
   site = character(ncol(site_df)),
@@ -472,13 +472,13 @@ for (i in 1:ncol(bspp_df)) { # i = 1
 bspp_df_pgsNgrowingdays
 
 ###### Recover site ######
-site_cols <- colnames(df_fit_pgsNgrowingday)[grepl("prov", colnames(df_fit_pgsNgrowingday))]
+site_cols <- colnames(df_fit_pgsNgrowingday)[grepl("site", colnames(df_fit_pgsNgrowingday))]
 # remove for now
 site_cols <- site_cols[1:length(site_cols)]
 site_cols <- site_cols[!grepl("Sigma", site_cols)]
 site_df <- df_fit_pgsNgrowingday[, colnames(df_fit_pgsNgrowingday) %in% site_cols]
 # change their names
-colnames(site_df) <- sub(".*prov:([^]]+)\\].*", "\\1", colnames(site_df))
+colnames(site_df) <- sub(".*site:([^]]+)\\].*", "\\1", colnames(site_df))
 # empty site df
 site_df_pgsNgrowingdays <- data.frame(
   site = character(ncol(site_df)),

@@ -55,6 +55,8 @@ Nspp <- length(unique(species))
 site <- as.numeric(as.character(emp$site_num))
 Nsite<- length(unique(site))
 
+gdd <- emp$pgsGDD/200
+
 # check that everything is fine
 table(treeid, species)
 table(site)
@@ -70,6 +72,13 @@ fit <- stan("stan/twolevelhierint_only_atreeid_no_b.stan",
                    "Nsite","site"),
             iter=4000, chains=4, cores=4)
 
+fit_with_b <- stan("stan/twolevelhierint_only_atreeid_no_b.stan", 
+            data=c("N","y", 
+                   "Ntreeid", "treeid",
+                   "Nspp","species",
+                   "Nsite","site",
+                   "gdd"),
+            iter=4000, chains=4, cores=4)
 
 # saveRDS(fit, "output/stanOutput/fit_a_atreeid_ppONasp_all_spp")
 
@@ -93,27 +102,6 @@ util$check_all_hmc_diagnostics(diagnostics)
 
 samples <- util$extract_expectand_vals(fit)
 
-
-
-# asp
-asp <- names(samples)[grepl("asp", names(samples))]
-asp <- asp[!grepl("sigma", asp)]
-
-jpeg("figures/troubleShootingGrowthModel/aspParameterization.jpg", 
-     width = 2000, height = 2000,
-     units = "px", res = 300)
-# util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
-dev.off()
-
-# # asite
-# asite <- names(samples)[grepl("asite", names(samples))]
-# asite <- asite[!grepl("sigma", asite)]
-# 
-# jpeg("figures/asiteParameterization_only_asp_asite_atreeid.jpg", width = 2000, height = 2000, 
-#      units = "px", res = 300)
-# util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
-# dev.off()
-
 # atreeid
 atreeid <- names(samples)[grepl("zatreeid", names(samples))]
 atreeid <- atreeid[!grepl("sigma", atreeid)]
@@ -127,10 +115,10 @@ util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms =
 dev.off()
 
 
-###### Plot treeid ######
+# Recover parameters ####
+###### treeid ######
 df_fit <- as.data.frame(fit)
 
-# Prior checks ####
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
 treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
@@ -160,6 +148,60 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 }
 treeid_df2
 
+###### aspp  ######
+aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
+
+aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2 <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df2
+
+###### asite ######
+site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
+
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+# change their names
+colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
+# empty site df
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2$site[i] <- colnames(site_df)[i]         
+  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df2
+
+# Prior checks ####
+##### atreeid #####
 # plot
 atreeid_long <- reshape(
   treeid_df,
@@ -171,7 +213,6 @@ atreeid_long <- reshape(
   idvar = "draw"
 )
 atreeid_long
-
 # simulate priors
 hyperparameter_draws <- 1000
 parameter_draws <- 1000
@@ -200,33 +241,7 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
-###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
-aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
-aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
-
-aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
-# change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
-#empty aspp df
-aspp_df2 <- data.frame(
-  spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
-)
-for (i in 1:ncol(aspp_df)) { # i = 1
-  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
-}
-aspp_df2
-
+##### asp #####
 # convert posterior distribution to long format
 aspp_long <- reshape(
   aspp_df,
@@ -255,31 +270,8 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
-###### Recover a site ######
-site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
 
-site_df <- df_fit[, colnames(df_fit) %in% site_cols]
-# change their names
-colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
-# empty site df
-site_df2 <- data.frame(
-  site = character(ncol(site_df)),
-  fit_a_site = numeric(ncol(site_df)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
-)
-for (i in 1:ncol(site_df)) { # i = 1
-  site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
-}
-site_df2
-
+##### asite #####
 # convert posterior distribution to long format
 asite_long <- reshape(
   site_df,
@@ -309,12 +301,9 @@ ggplot() +
   theme_minimal()
 
 
-
-# a #####
+##### a #####
 df_fit <- as.data.frame(fit)
 
-# Prior checks ####
-# grab treeid 
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
 a_prior <- rnorm(1e4, 5, 1)
@@ -331,3 +320,170 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
+# Model comparison ####
+##### recover the model with bsp first #####
+###### treeid ######
+df_fit_with_b <- as.data.frame(fit_with_b)
+
+# grab treeid 
+treeid_cols <- colnames(df_fit_with_b)[grepl("atreeid", colnames(df_fit_with_b))]
+treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
+
+# remove sigma_asp for now
+treeid_cols <- treeid_cols[2:length(treeid_cols)]
+
+treeid_df <- df_fit_with_b[, colnames(df_fit_with_b) %in% treeid_cols]
+# change their names
+colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
+# empty treeid dataframe
+treeid_df2_with_b <- data.frame(
+  treeid = character(ncol(treeid_df)),
+  fit_a_treeid = numeric(ncol(treeid_df)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
+)
+for (i in 1:ncol(treeid_df)) { # i = 1
+  treeid_df2_with_b$treeid[i] <- colnames(treeid_df)[i]         
+  treeid_df2_with_b$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2_with_b$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2_with_b$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2_with_b$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2_with_b$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+}
+treeid_df
+
+###### aspp  ######
+aspp_cols <- colnames(df_fit_with_b)[grepl("asp", colnames(df_fit_with_b))]
+aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
+
+aspp_df <- df_fit_with_b[, colnames(df_fit_with_b) %in% aspp_cols]
+# change their names
+colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2_with_b <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_a_spp = numeric(ncol(aspp_df)),  
+  fit_a_spp_per5 = NA, 
+  fit_a_spp_per25 = NA,
+  fit_a_spp_per75 = NA,
+  fit_a_spp_per95 = NA
+)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2_with_b$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2_with_b$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2_with_b$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2_with_b$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2_with_b$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2_with_b$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
+aspp_df2_with_b
+
+###### asite ######
+site_cols <- colnames(df_fit_with_b)[grepl("asite", colnames(df_fit_with_b))]
+
+site_df <- df_fit_with_b[, colnames(df_fit_with_b) %in% site_cols]
+# change their names
+colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
+# empty site df
+site_df2_with_b <- data.frame(
+  site = character(ncol(site_df)),
+  fit_a_site = numeric(ncol(site_df)),  
+  fit_a_site_per5 = NA, 
+  fit_a_site_per25 = NA,
+  fit_a_site_per75 = NA,
+  fit_a_site_per95 = NA
+)
+for (i in 1:ncol(site_df)) { # i = 1
+  site_df2_with_b$site[i] <- colnames(site_df)[i]         
+  site_df2_with_b$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
+  site_df2_with_b$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2_with_b$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2_with_b$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2_with_b$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+}
+site_df2_with_b
+
+##### Plots #####
+###### asp ######
+aspp_df2$spp <- as.numeric(aspp_df2$spp)
+aspp_df2$spp_name <- emp$spp[match(aspp_df2$spp, emp$spp_num)]
+
+aspp_df2_with_b$spp <- as.numeric(aspp_df2_with_b$spp)
+aspp_df2_with_b$spp_name <- emp$spp[match(aspp_df2_with_b$spp, emp$spp_num)]
+
+aspp_df2$model <- "intercept only"
+aspp_df2_with_b$model <- "intercept and b"
+
+aspp_df_binded <- rbind(aspp_df2, aspp_df2_with_b)
+
+pos <- position_jitter(height = 0.15)
+
+##### aspp intercepts means #####
+ggplot(aspp_df_binded, aes(x = fit_a_spp, y = spp_name, color = model)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_spp_per5, 
+                     xmax = fit_a_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_spp_per25, 
+                     xmax = fit_a_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Model parameters") +
+  facet_wrap(~ model, nrow =2) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) +
+  theme_bw() +
+  scale_y_discrete(limits = rev)  
+ggsave("figures/interceptVSinterceptslope_spp.jpeg", width = 8, height = 6, 
+       units = "in", dpi = 300)
+
+
+###### asite ######
+site_df2$site <- as.numeric(site_df2$site)
+site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
+
+site_df2_with_b$site <- as.numeric(site_df2_with_b$site)
+site_df2_with_b$site_name <- emp$site[match(site_df2_with_b$site, emp$site_num)]
+
+site_df2$model <- "intercept only"
+site_df2_with_b$model <- "intercept and b"
+
+asite_df_binded <- rbind(site_df2, site_df2_with_b)
+
+##### asite intercepts means #####
+ggplot(asite_df_binded, aes(x = fit_a_site, y = site_name, color = model)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_site_per5, 
+                     xmax = fit_a_site_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_site_per25, 
+                     xmax = fit_a_site_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Site", x = "Site intercept values", color = "Model parameters") +
+  facet_wrap(~ model, nrow =2) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) +
+  theme_bw() +
+  scale_y_discrete(limits = rev)  
+ggsave("figures/interceptVSinterceptslope_site.jpeg", width = 8, height = 6, 
+       units = "in", dpi = 300)

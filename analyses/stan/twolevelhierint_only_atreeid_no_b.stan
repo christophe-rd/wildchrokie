@@ -10,14 +10,14 @@ int<lower=0> Nspp;
 array[N] int species;
 int<lower=0> Nsite; 	
 array[N] int site;
+vector[N] gdd;
 array[N] real y; 		// day of year of phenological event (response)
 }
 
 parameters{
 real a;		// mean intercept across everything
+real b; 
 real<lower=0> sigma_atreeid;
-// real<lower=0> sigma_asp;
-// real<lower=0> sigma_asite;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 vector[Ntreeid] zatreeid;
 vector[Nspp] asp;
@@ -37,12 +37,14 @@ for (i in 1:N){ // don't change this for reparameterization
         a + 
         atreeid[treeid[i]] +
         asp[species[i]] +
-        asite[site[i]];
+        asite[site[i]] +
+        b*gdd[i];
     }
 }
 
 model{	
   a ~ normal(5, 1);
+  b ~ normal(1, 0.2);
   zatreeid ~ normal(0, 1);
   asp ~ normal(0, 0.5);
   asite ~ normal(0, 0.5);

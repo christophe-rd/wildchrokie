@@ -532,7 +532,7 @@ dev.off()
 
 }
 
-# Run model on empirical data ####
+# RUN MODEL ON EMPIRICAL DATA ####
 # empirical data
 emp <- read.csv("output/empiricalDataNORing.csv")
 gdd <- read.csv("output/gddByYear.csv")
@@ -545,7 +545,9 @@ no_naleafout$site_num <- match(no_naleafout$site, unique(no_naleafout$site))
 no_naleafout$spp_num <- match(no_naleafout$spp, unique(no_naleafout$spp))
 no_naleafout$treeid_num <- match(no_naleafout$treeid, unique(no_naleafout$treeid))
 
-y <- no_naleafout$leafoutGDD
+# set a value to scale down the gdd
+scale <- 20
+y <- no_naleafout$leafoutGDD/scale
 N <- nrow(no_naleafout) 
 species <- as.numeric(as.character(no_naleafout$spp_num))
 Nspp <- length(unique(no_naleafout$spp_num))
@@ -558,20 +560,19 @@ table(treeid, species)
 table(treeid)
 table(species)
 
-if(FALSE){
-  fit <- stan("stan/modelGDDatLeafout.stan", 
-              data=c("N","y",
-                     "Nspp","species", 
-                     "Ntreeid", "treeid"),
-              iter=4000, chains=4, cores=4)
-  writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
-}
 
-
-
+fit <- stan("stan/modelGDDatLeafout.stan", 
+            data=c("N","y",
+                   "Nspp","species",
+                   "Nsite","site",
+                   "Ntreeid", "treeid"),
+            iter=4000, chains=4, cores=4)
+# writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
 
 # Diagnostics ####
 # Parameterization for asp
+if (FALSE) {
+  
 
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
@@ -603,11 +604,17 @@ atreeid <- atreeid[sample(length(unique(atreeid)), 21)]
 pdf("figures/gddLeafout_empData/atreeidParameterization.pdf", width = 6, height = 18)
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
-
+}
 # === === === === === === === === === === === === === === === === === === === ==
 # Recover parameters ####
 # === === === === === === === === === === === === === === === === === === === ==
 df_fit <- as.data.frame(fit)
+
+# get values to original scale
+for (i in 1:ncol(df_fit)){
+  df_fit[[i]] <- df_fit[[i]]*scale
+}
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
@@ -638,9 +645,9 @@ sigma_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover treeid ######
-
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
+treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
 # remove sigma_asp for now
 treeid_cols <- treeid_cols[2:length(treeid_cols)]
 
@@ -695,8 +702,6 @@ aspp_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
-# remove sigma_asp for now
-site_cols <- site_cols[2:length(site_cols)]
 
 site_df <- df_fit[, colnames(df_fit) %in% site_cols]
 # change their names
@@ -743,7 +748,7 @@ parameter_draws <- 1000
 n_sigma_atreeid <- 200
 
 # set to prior values
-sigma_atreeid_vec <- abs(rnorm(n_sigma_atreeid, 0, 0.3))
+sigma_atreeid_vec <- abs(rnorm(n_sigma_atreeid, 0, 0.5))
 
 prior_atreeid <- rep(NA, parameter_draws*length(sigma_atreeid_vec))
 
@@ -846,5 +851,210 @@ ggplot() +
        x = "asite", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+
+
+# Plots ####
+aspp_df2$spp <- as.numeric(aspp_df2$spp)
+aspp_df2$spp_name <- no_naleafout$spp[match(aspp_df2$spp, no_naleafout$spp_num)]
+
+##### aspp intercepts means #####
+ggplot(aspp_df2, aes(x = fit_a_spp, y = spp_name, color = spp_name)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_spp_per5, 
+                     xmax = fit_a_spp_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_spp_per25, 
+                     xmax = fit_a_spp_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_fill_manual(values = wes_palette("AsteroidCity1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) +
+  theme_bw() +
+  scale_y_discrete(limits = rev)   
+ggsave("figures/gddLeafout_simData/sppEstimates.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+## site intercept means ####
+
+site_df2$site <- as.numeric(site_df2$site)
+site_df2$site_name <- no_naleafout$site[match(site_df2$site, no_naleafout$site_num)]
+
+ggplot(site_df2, aes(x = fit_a_site, y = site_name, color = site_name)) +
+  geom_point(size = 6, alpha = 1) + 
+  geom_errorbarh(aes(xmin = fit_a_site_per5, 
+                     xmax = fit_a_site_per95), 
+                 width = 0, alpha = 1, linewidth = 0.7) +
+  geom_errorbarh(aes(xmin = fit_a_site_per25, 
+                     xmax = fit_a_site_per75), 
+                 width = 0, alpha = 1, linewidth = 2) +
+  scale_color_manual(values = wes_palette("Darjeeling1")) +
+  scale_fill_manual(values = wes_palette("Darjeeling1")) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species")+
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.title = element_text(size = 12, face = "bold"),  
+    legend.text = element_text(size = 10),                  
+    legend.key.size = unit(1.5, "lines"),                   
+    legend.position = "right"                               
+  ) +
+  theme_bw() +
+  scale_y_discrete(limits = rev)   
+ggsave("figures/gddLeafout_simData/sppEstimates.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# Mean plots with atreeid ####
+no_naleafout
+
+treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
+treeid_df2$treeid_name <- no_naleafout$treeid[match(treeid_df2$treeid, no_naleafout$treeid_num)]
+
+# now do the same, but for species
+treeid_df2$spp <- no_naleafout$spp[match(treeid_df2$treeid, no_naleafout$treeid_num)]
+
+# same for site
+treeid_df2$site <- no_naleafout$site[match(treeid_df2$treeid, no_naleafout$treeid_num)]
+
+
+# quick check that I didn't mess anything up
+un <- no_naleafout[!duplicated(no_naleafout$treeid),]
+table(un$spp)
+table(treeid_df2$spp)
+
+# open device
+jpeg(
+  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 1800,
+  res = 300          # good print-quality resolution
+)
+par(mar = c(5, 6, 4, 5))
+
+# define a gap between species clusters
+gap <- 3
+
+# y positions
+treeid_df2$y_pos <- NA
+current_y <- 1
+
+for(sp in species_order){
+  idx <- which(treeid_df2$spp == sp)
+  n <- length(idx)
+  
+  # assign sequential positions for this species
+  treeid_df2$y_pos[idx] <- current_y:(current_y + n - 1)
+  
+  # move cursor down with a gap before next species cluster
+  current_y <- current_y + n + gap
+}
+
+treeid_df2$y_pos
+
+# Set up empty plot
+plot(
+  NA, NA,
+  xlim = range(c(treeid_df2$fit_a_treeid_per5,
+                 treeid_df2$fit_a_treeid_per95)),
+  ylim = c(0.5, max(treeid_df2$y_pos) + 0.5),
+  xlab = "treeid intercept values",
+  ylab = "",
+  yaxt = "n"  
+)
+
+# col
+my_colors <- c(
+  ALNINC = wes_palette("AsteroidCity1")[1],
+  BETALL = wes_palette("AsteroidCity1")[2],
+  BETPAP = wes_palette("AsteroidCity1")[3],
+  BETPOP = wes_palette("AsteroidCity1")[4]
+)
+# shapes for sites
+my_shapes <- c(
+  GR = 3,
+  HF = 16,
+  SH = 17,
+  WM = 19
+)
+
+cols_site <- c(
+  GR = wes_palette("Darjeeling1")[1],
+  HF = wes_palette("Darjeeling1")[2],
+  SH = wes_palette("Darjeeling1")[3],
+  WM = wes_palette("Darjeeling1")[4]
+)
+
+# --- Add horizontal error bars (5–95%) ---
+segments(
+  x0 = treeid_df2$fit_a_treeid_per5,
+  x1 = treeid_df2$fit_a_treeid_per95,
+  y0 = treeid_df2$y_pos,
+  col = my_colors[ treeid_df2$spp ],
+  lwd = 1
+)
+
+# --- Add thicker horizontal error bars (25–75%) ---
+segments(
+  x0 = treeid_df2$fit_a_treeid_per25,
+  x1 = treeid_df2$fit_a_treeid_per75,
+  y0 = treeid_df2$y_pos,
+  col = my_colors[ treeid_df2$spp ],
+  lwd = 1.5
+)
+
+# --- Add the points ---
+points(
+  treeid_df2$fit_a_treeid,
+  treeid_df2$y_pos,
+  cex = 0.8,
+  pch = 16,
+  col = cols_site[treeid_df2$site]
+)
+
+# --- Add vertical line at 0 ---
+abline(v = 0, lty = 2)
+
+# --- Add custom y-axis labels (reverse order if needed) ---
+axis(
+  side = 2,
+  at = treeid_df2$y_pos,
+  labels = treeid_df2$treeid_name,
+  cex.axis = 0.5,
+  las = 1
+)
+
+
+# --- Optional: add legend ---
+legend(
+  x = max(treeid_df2$fit_a_treeid_per95) -6,
+  y = max(treeid_df2$y_pos)-2,
+  legend = names(my_colors),
+  col = my_colors,
+  pch = 16,
+  pt.cex = 1.2,
+  title = "Species",
+  bty = "n"
+)
+
+legend(
+  x = max(treeid_df2$fit_a_treeid_per95) -6,
+  y = max(treeid_df2$y_pos)-35,
+  legend = names(cols_site),
+  col = cols_site,
+  pch = 16,
+  pt.cex = 1.2,
+  title = "Sites",
+  bty = "n"
+)
+
+
+dev.off()
 
 
