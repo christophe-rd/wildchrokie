@@ -612,7 +612,7 @@ df_fit <- as.data.frame(fit)
 
 # get values to original scale
 for (i in 1:ncol(df_fit)){
-  df_fit[[i]] <- df_fit[[i]]*scale
+  df_fit[[i]] <- df_fit[[i]] * scale
 }
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -945,6 +945,19 @@ gap <- 3
 treeid_df2$y_pos <- NA
 current_y <- 1
 
+species_order <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
+# site_order <- c("SH", "GR", "WM", "HF")
+site_order <- c("HF","WM","GR", "SH")
+
+treeid_df2$spp  <- factor(treeid_df2$spp, levels = species_order)
+treeid_df2$site <- factor(treeid_df2$site, levels = site_order)
+
+treeid_df2 <- treeid_df2[
+  order(treeid_df2$spp, treeid_df2$site, treeid_df2$treeid),
+]
+
+treeid_df2$y_pos <- seq_len(nrow(treeid_df2))
+
 for(sp in species_order){
   idx <- which(treeid_df2$spp == sp)
   n <- length(idx)
@@ -961,8 +974,8 @@ treeid_df2$y_pos
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df2$fit_a_treeid_per5,
-                 treeid_df2$fit_a_treeid_per95)),
+  xlim = range(c(treeid_df2$fit_a_treeid_per5-40,
+                 treeid_df2$fit_a_treeid_per95+10)),
   ylim = c(0.5, max(treeid_df2$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
@@ -978,10 +991,10 @@ my_colors <- c(
 )
 # shapes for sites
 my_shapes <- c(
-  GR = 3,
-  HF = 16,
+  GR = 15,
+  HF = 19,
   SH = 17,
-  WM = 19
+  WM = 18
 )
 
 cols_site <- c(
@@ -996,7 +1009,7 @@ segments(
   x0 = treeid_df2$fit_a_treeid_per5,
   x1 = treeid_df2$fit_a_treeid_per95,
   y0 = treeid_df2$y_pos,
-  col = my_colors[ treeid_df2$spp ],
+  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4),
   lwd = 1
 )
 
@@ -1005,7 +1018,7 @@ segments(
   x0 = treeid_df2$fit_a_treeid_per25,
   x1 = treeid_df2$fit_a_treeid_per75,
   y0 = treeid_df2$y_pos,
-  col = my_colors[ treeid_df2$spp ],
+  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4),
   lwd = 1.5
 )
 
@@ -1014,9 +1027,41 @@ points(
   treeid_df2$fit_a_treeid,
   treeid_df2$y_pos,
   cex = 0.8,
-  pch = 16,
-  col = cols_site[treeid_df2$site]
+  pch = my_shapes[treeid_df2$site],
+  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4)
 )
+
+aspp_df2$spp <- aspp_df2$spp_name
+
+spp_y <- tapply(treeid_df2$y_pos, treeid_df2$spp, mean)
+
+aspp_df2$y_pos <- spp_y[aspp_df2$spp]
+
+
+segments(
+  x0 = aspp_df2$fit_a_spp_per5,
+  x1 = aspp_df2$fit_a_spp_per95,
+  y0 = aspp_df2$y_pos,
+  col = adjustcolor(my_colors[aspp_df2$spp], alpha.f = 0.9),
+  lwd = 2
+)
+
+segments(
+  x0 = aspp_df2$fit_a_spp_per25,
+  x1 = aspp_df2$fit_a_spp_per75,
+  y0 = aspp_df2$y_pos,
+  col = my_colors[aspp_df2$spp],
+  lwd = 4
+)
+points(
+  aspp_df2$fit_a_spp,
+  aspp_df2$y_pos,
+  pch = 21,
+  bg  = my_colors[aspp_df2$spp],
+  col = "black",
+  cex = 1.5
+)
+
 
 # --- Add vertical line at 0 ---
 abline(v = 0, lty = 2)
@@ -1046,9 +1091,9 @@ legend(
 legend(
   x = max(treeid_df2$fit_a_treeid_per95) -6,
   y = max(treeid_df2$y_pos)-35,
-  legend = names(cols_site),
-  col = cols_site,
-  pch = 16,
+  legend = names(my_shapes),
+  # col = cols_site,
+  pch = my_shapes,
   pt.cex = 1.2,
   title = "Sites",
   bty = "n"
