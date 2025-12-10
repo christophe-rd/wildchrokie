@@ -10,7 +10,7 @@ rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
-options(digits = 3)
+options(digits = 5)
 # quartz()
 
 # Load library 
@@ -65,14 +65,14 @@ table(species)
 rstan_options(auto_write = TRUE)
  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fit <- stan("stan/twolevelhierint_only_atreeid_no_b.stan", 
+fit <- stan("stan/twolevelhierint_only_inter_no_b.stan", 
             data=c("N","y", 
                    "Ntreeid", "treeid",
                    "Nspp","species",
                    "Nsite","site"),
             iter=4000, chains=4, cores=4)
 
-fit_with_b <- stan("stan/twolevelhierint_only_atreeid_no_b.stan", 
+fit_with_b <- stan("stan/twolevelhierint_only_inter_b.stan", 
             data=c("N","y", 
                    "Ntreeid", "treeid",
                    "Nspp","species",
@@ -487,3 +487,32 @@ ggplot(asite_df_binded, aes(x = fit_a_site, y = site_name, color = model)) +
   scale_y_discrete(limits = rev)  
 ggsave("figures/interceptVSinterceptslope_site.jpeg", width = 8, height = 6, 
        units = "in", dpi = 300)
+
+# Gdd on the x axis and growth on y ####
+aspp_df2_with_b$b <- mean(df_fit_with_b[,"b"])
+aspp_df2_with_b$a <- mean(df_fit_with_b[,"a"])
+aspp_df2_with_b$a_asp <- aspp_df2_with_b$a + aspp_df2_with_b$fit_a_spp
+
+colnames(aspp_df2_with_b)[colnames(aspp_df2_with_b) == "spp"] <- "spp_num"
+colnames(site_df2_with_b)[colnames(site_df2_with_b) == "site"] <- "site_num"
+emp2 <- emp
+emp2$a <- mean(df_fit_with_b[,"a"])
+emp2$b <- mean(df_fit_with_b[,"b"])
+emp2 <- merge(emp2, aspp_df2_with_b[, c("spp_num", "fit_a_spp")], by = "spp_num")
+emp3 <- merge(emp2, site_df2_with_b[, c("site_num", "fit_a_site")], by = "site_num")
+emp3$a_asp <- emp3$a + emp3$fit_a_spp 
+# + emp3$fit_a_site
+
+
+ggplot(emp3) +
+  geom_point(aes(x = pgsGDD/200, y = lengthCM*10, colour = spp)) +
+  geom_abline(aes(intercept = a_asp, slope = b, colour = spp), 
+              linewidth = 0.5) +
+  labs(title = "", x = "pgsGDD", y = "ring width in mm") +
+  scale_colour_manual(values = wes_palette("AsteroidCity1")) +
+  # facet_wrap(~ spp) + 
+  theme_minimal()
+ggsave("figures/slope_intercepts.jpeg", width = 8, height = 6, 
+       units = "in", dpi = 300)
+y
+plot(y~gdd)
