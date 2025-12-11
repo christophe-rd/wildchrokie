@@ -929,9 +929,57 @@ un <- no_naleafout[!duplicated(no_naleafout$treeid),]
 table(un$spp)
 table(treeid_df2$spp)
 
+sub <- subset(no_naleafout, select = c("treeid_num", "spp_num", "site_num"))
+sub <- sub[!duplicated(sub$treeid_num),]
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# sum atreeid, asp, asite
+aspp_df3 <- as.matrix(aspp_df)
+site_df3 <- as.matrix(site_df)
+treeid_df3 <- as.matrix(treeid_df)
+
+fullatreeid <-
+  treeid_df3[, sub$treeid_num] +
+  aspp_df3[, sub$spp_num] +
+  site_df3[, sub$site_num] 
+fullatreeid
+
+fullatreeid2 <- as.data.frame(fullatreeid)
+# get posterior means and quantiles
+
+# empty treeid dataframe
+treeid_df4 <- data.frame(
+  treeid = character(ncol(fullatreeid2)),
+  fit_a_treeid = numeric(ncol(fullatreeid2)),  
+  fit_a_treeid_per5 = NA, 
+  fit_a_treeid_per25 = NA,
+  fit_a_treeid_per75 = NA,
+  fit_a_treeid_per95 = NA
+)
+for (i in 1:ncol(fullatreeid2)) { # i = 1
+  treeid_df4$treeid[i] <- colnames(fullatreeid2)[i]         
+  treeid_df4$fit_a_treeid[i] <- round(mean(fullatreeid2[[i]]),3)  
+  treeid_df4$fit_a_treeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
+  treeid_df4$fit_a_treeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
+  treeid_df4$fit_a_treeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
+  treeid_df4$fit_a_treeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
+}
+treeid_df4
+
+# get the og treeid names, spp and site back:
+treeid_df4$treeid <- as.numeric(treeid_df4$treeid)
+treeid_df4$treeid_name <- no_naleafout$treeid[match(treeid_df4$treeid,
+                                                    no_naleafout$treeid_num)]
+treeid_df4$spp_name <- no_naleafout$spp[match(treeid_df4$treeid,
+                                                    no_naleafout$treeid_num)]
+treeid_df4$site_name <- no_naleafout$site[match(treeid_df4$treeid,
+                                                    no_naleafout$treeid_num)]
+treeid_df4
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
 # open device
 jpeg(
-  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp.jpeg",
+  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp_with_a.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 1800,
   res = 300          # good print-quality resolution
@@ -942,41 +990,41 @@ par(mar = c(5, 6, 4, 5))
 gap <- 3
 
 # y positions
-treeid_df2$y_pos <- NA
+treeid_df4$y_pos <- NA
 current_y <- 1
 
 species_order <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
 # site_order <- c("SH", "GR", "WM", "HF")
 site_order <- c("HF","WM","GR", "SH")
 
-treeid_df2$spp  <- factor(treeid_df2$spp, levels = species_order)
-treeid_df2$site <- factor(treeid_df2$site, levels = site_order)
+treeid_df4$spp  <- factor(treeid_df4$spp, levels = species_order)
+treeid_df4$site <- factor(treeid_df4$site, levels = site_order)
 
-treeid_df2 <- treeid_df2[
-  order(treeid_df2$spp, treeid_df2$site, treeid_df2$treeid),
+treeid_df4 <- treeid_df4[
+  order(treeid_df4$spp, treeid_df4$site, treeid_df4$treeid),
 ]
 
-treeid_df2$y_pos <- seq_len(nrow(treeid_df2))
+treeid_df4$y_pos <- seq_len(nrow(treeid_df4))
 
 for(sp in species_order){
-  idx <- which(treeid_df2$spp == sp)
+  idx <- which(treeid_df4$spp == sp)
   n <- length(idx)
   
   # assign sequential positions for this species
-  treeid_df2$y_pos[idx] <- current_y:(current_y + n - 1)
+  treeid_df4$y_pos[idx] <- current_y:(current_y + n - 1)
   
   # move cursor down with a gap before next species cluster
   current_y <- current_y + n + gap
 }
 
-treeid_df2$y_pos
+treeid_df4$y_pos
 
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df2$fit_a_treeid_per5-40,
-                 treeid_df2$fit_a_treeid_per95+10)),
-  ylim = c(0.5, max(treeid_df2$y_pos) + 0.5),
+  xlim = range(c(treeid_df4$fit_a_treeid_per5-40,
+                 treeid_df4$fit_a_treeid_per95+10)),
+  ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
   yaxt = "n"  
@@ -1006,34 +1054,34 @@ cols_site <- c(
 
 # --- Add horizontal error bars (5–95%) ---
 segments(
-  x0 = treeid_df2$fit_a_treeid_per5,
-  x1 = treeid_df2$fit_a_treeid_per95,
-  y0 = treeid_df2$y_pos,
-  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4),
+  x0 = treeid_df4$fit_a_treeid_per5,
+  x1 = treeid_df4$fit_a_treeid_per95,
+  y0 = treeid_df4$y_pos,
+  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1
 )
 
 # --- Add thicker horizontal error bars (25–75%) ---
 segments(
-  x0 = treeid_df2$fit_a_treeid_per25,
-  x1 = treeid_df2$fit_a_treeid_per75,
-  y0 = treeid_df2$y_pos,
-  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4),
+  x0 = treeid_df4$fit_a_treeid_per25,
+  x1 = treeid_df4$fit_a_treeid_per75,
+  y0 = treeid_df4$y_pos,
+  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1.5
 )
 
 # --- Add the points ---
 points(
-  treeid_df2$fit_a_treeid,
-  treeid_df2$y_pos,
+  treeid_df4$fit_a_treeid,
+  treeid_df4$y_pos,
   cex = 0.8,
-  pch = my_shapes[treeid_df2$site],
-  col = adjustcolor(my_colors[treeid_df2$spp], alpha.f = 0.4)
+  pch = my_shapes[treeid_df4$site],
+  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4)
 )
 
 aspp_df2$spp <- aspp_df2$spp_name
 
-spp_y <- tapply(treeid_df2$y_pos, treeid_df2$spp, mean)
+spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
 
 aspp_df2$y_pos <- spp_y[aspp_df2$spp]
 
@@ -1069,8 +1117,8 @@ abline(v = 0, lty = 2)
 # --- Add custom y-axis labels (reverse order if needed) ---
 axis(
   side = 2,
-  at = treeid_df2$y_pos,
-  labels = treeid_df2$treeid_name,
+  at = treeid_df4$y_pos,
+  labels = treeid_df4$treeid_name,
   cex.axis = 0.5,
   las = 1
 )
@@ -1078,8 +1126,8 @@ axis(
 
 # --- Optional: add legend ---
 legend(
-  x = max(treeid_df2$fit_a_treeid_per95) -6,
-  y = max(treeid_df2$y_pos)-2,
+  x = max(treeid_df4$fit_a_treeid_per95) -6,
+  y = max(treeid_df4$y_pos)-2,
   legend = names(my_colors),
   col = my_colors,
   pch = 16,
@@ -1089,8 +1137,8 @@ legend(
 )
 
 legend(
-  x = max(treeid_df2$fit_a_treeid_per95) -6,
-  y = max(treeid_df2$y_pos)-35,
+  x = max(treeid_df4$fit_a_treeid_per95) -6,
+  y = max(treeid_df4$y_pos)-35,
   legend = names(my_shapes),
   # col = cols_site,
   pch = my_shapes,
