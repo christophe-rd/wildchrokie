@@ -979,12 +979,16 @@ treeid_df4
 
 # open device
 jpeg(
-  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp_with_a.jpeg",
+  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 1800,
   res = 300          # good print-quality resolution
 )
-par(mar = c(5, 6, 4, 5))
+par(mar = c(
+  4, 
+  6, 
+  4, 
+  5))
 
 # define a gap between species clusters
 gap <- 3
@@ -993,9 +997,33 @@ gap <- 3
 treeid_df4$y_pos <- NA
 current_y <- 1
 
-species_order <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
+species_order <- c(
+  "ALNINC", 
+  "BETALL", 
+  "BETPAP", 
+  "BETPOP")
 # site_order <- c("SH", "GR", "WM", "HF")
-site_order <- c("HF","WM","GR", "SH")
+site_order <- c(
+  "HF",
+  "WM",
+  "GR", 
+  "SH")
+
+# col
+my_colors <- c(
+  ALNINC = wes_palette("AsteroidCity1")[1],
+  BETALL = wes_palette("AsteroidCity1")[2],
+  BETPAP = wes_palette("AsteroidCity1")[3],
+  BETPOP = wes_palette("AsteroidCity1")[4]
+)
+# shapes for sites
+my_shapes <- c(
+  HF = 19,
+  WM = 18,
+  GR = 15,
+  SH = 17
+)
+
 
 treeid_df4$spp  <- factor(treeid_df4$spp, levels = species_order)
 treeid_df4$site <- factor(treeid_df4$site, levels = site_order)
@@ -1022,35 +1050,14 @@ treeid_df4$y_pos
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df4$fit_a_treeid_per5-40,
-                 treeid_df4$fit_a_treeid_per95+10)),
+  xlim = range(c(treeid_df4$fit_a_treeid_per5-15,
+                 treeid_df4$fit_a_treeid_per95+15)),
   ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
   yaxt = "n"  
 )
 
-# col
-my_colors <- c(
-  ALNINC = wes_palette("AsteroidCity1")[1],
-  BETALL = wes_palette("AsteroidCity1")[2],
-  BETPAP = wes_palette("AsteroidCity1")[3],
-  BETPOP = wes_palette("AsteroidCity1")[4]
-)
-# shapes for sites
-my_shapes <- c(
-  GR = 15,
-  HF = 19,
-  SH = 17,
-  WM = 18
-)
-
-cols_site <- c(
-  GR = wes_palette("Darjeeling1")[1],
-  HF = wes_palette("Darjeeling1")[2],
-  SH = wes_palette("Darjeeling1")[3],
-  WM = wes_palette("Darjeeling1")[4]
-)
 
 # --- Add horizontal error bars (5–95%) ---
 segments(
@@ -1122,31 +1129,36 @@ axis(
   cex.axis = 0.5,
   las = 1
 )
+# spp mean
+spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
 
+## order species by mean y descending (top of plot first)
+species_legend_order <- names(sort(spp_y, decreasing = TRUE))
+site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
-# --- Optional: add legend ---
+## species legend (colors matched by name)
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) -6,
-  y = max(treeid_df4$y_pos)-2,
-  legend = names(my_colors),
-  col = my_colors,
+  x = max(treeid_df4$fit_a_treeid_per95) - 6,
+  y = max(treeid_df4$y_pos) - 2,
+  legend = species_legend_order,
+  col = my_colors[species_legend_order],    # index so colors match
   pch = 16,
   pt.cex = 1.2,
   title = "Species",
   bty = "n"
 )
 
+site_legend_order <- c("SH", "GR", "WM", "HF")
+# site legend
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) -6,
-  y = max(treeid_df4$y_pos)-35,
-  legend = names(my_shapes),
-  # col = cols_site,
-  pch = my_shapes,
+  x = max(treeid_df4$fit_a_treeid_per95) - 6,
+  y = max(treeid_df4$y_pos) - 35,
+  legend = site_legend_order,
+  pch = my_shapes[site_legend_order],
   pt.cex = 1.2,
   title = "Sites",
   bty = "n"
 )
-
 
 dev.off()
 
