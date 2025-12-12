@@ -72,7 +72,7 @@ fit <- stan("stan/twolevelhierint_only_inter_no_b.stan",
                    "Nsite","site"),
             iter=4000, chains=4, cores=4)
 
-fit_with_b <- stan("stan/twolevelhierint_only_inter_b.stan", 
+fit_with_b <- stan("stan/twolevelhierint_only_inter_bsp.stan", 
             data=c("N","y", 
                    "Ntreeid", "treeid",
                    "Nspp","species",
