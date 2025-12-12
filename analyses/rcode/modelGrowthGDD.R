@@ -36,7 +36,7 @@ source('mcmc_visualization_tools.R', local=util)
 runSimData <- FALSE
 if (runSimData) {
 # === === === === === === === === === === === === === === === === 
-#### Step 2. Simulate data ####
+#### SIMULATED DATA ####
 # === === === === === === === === === === === === === === === ===
 
 # set parameters
@@ -135,17 +135,29 @@ table(treeid)
 rstan_options(auto_write = TRUE)
 
 fit <- stan("stan/twolevelhierint.stan", 
-                    data=c("N","y","Nspp","species","Nsite", "site", "Ntreeid", "treeid", "gdd"),
+                    data=c("N","y",
+                           "Nspp","species",
+                           "Nsite", "site", 
+                           "Ntreeid", "treeid", 
+                           "gdd"),
                     iter=4000, chains=4, cores=4)
 
-saveRDS(fit, "output/stanOutput/GDDleafout/fit")
-fit <- readRDS("output/stanOutput/GDDleafout/fit")
+# saveRDS(fit, "output/stanOutput/GDDleafout/fit")
+# fit <- readRDS("output/stanOutput/GDDleafout/fit")
 
-
+fit_with_b <- stan("stan/twolevelhierint_only_inter_bsp.stan", 
+                   data=c("N","y", 
+                          "Ntreeid", "treeid",
+                          "Nspp","species",
+                          "Nsite","site",
+                          "gdd"),
+                   iter=4000, chains=4, cores=4)
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
+
+if (FALSE){
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
@@ -296,7 +308,7 @@ for (i in 1:ncol(site_df)) { # i = 1
 site_df2
 
 # === === === === === === === #
-# Plot parameter recovery #####
+##### Plot parameter recovery #####
 # === === === === === === === #
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -423,7 +435,7 @@ a_site_simXfit_plot
 # ggsave!
 ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
-##### Combine plots #####
+###### Combine plots  ######
 combined_plot <- (a_treeid_simXfit_plot) /
   (sigma_simXfit_plot + b_spp_simXfit_plot ) /
   (a_spp_simXfit_plot + a_site_simXfit_plot)
@@ -431,17 +443,20 @@ combined_plot
 ggsave("figures/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
 #  === === === === === === === === === === === === === === === === 
-#### Diagnostics ####
+
+}
+
+##### Diagnostics #####
 # === === === === === === === === === === === === === === === === 
 
 # === === === === === === === === === === === === === === === === 
-##### Priors VS Posterior #####
+###### Priors VS Posterior ######
 # === === === === === === === === === === === === === === === === 
 # prior predictive checks. Simulating prior values from the values set in the model block
 hyperparameter_draws <- 8000
 parameter_draws <- 1000
 
-##### Priors sigma_bsp #####
+###### Priors sigma_bsp ######
 sigma_bsp_draw <- abs(rnorm(hyperparameter_draws, 0, 0.2))   
 ggplot() +
   geom_density(data = data.frame(sigma_bsp_draw = sigma_bsp_draw),
@@ -461,7 +476,7 @@ sigma_asite_draw <- abs(rnorm(draws, 0, 0.5))
 sigma_atree_draw <- abs(rnorm(draws, 0, 0.05))
 sigma_y_draw <- abs(rnorm(draws, 0, 5))
 
-##### Priors bsp #####
+######Priors bsp ######
 n_sigma_bsp <- 200
 
 # set to prior values
@@ -578,8 +593,9 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
   theme_minimal()
 
 }
+
 # === === === === === === === === === === === === === === === === 
-#### Run model on empirical data ####
+# EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -606,58 +622,29 @@ rstan_options(auto_write = TRUE)
  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fit <- stan("stan/twolevelhierint.stan", 
-            data=c("N","y","Nspp","species","Nsite", 
-                   "site", "Ntreeid", "treeid", "gdd"),
+            data=c("N","y",
+                   "Nspp","species",
+                   "Nsite", "site", 
+                   "Ntreeid", "treeid", 
+                   "gdd"),
             iter=4000, chains=4, cores=4)
-
-fit_noncentered <- stan("stan/twolevelhierint2.stan", 
-            data=c("N","y","Nspp","species","Nsite", 
-                   "site", "Ntreeid", "treeid", "gdd"),
-            iter=4000, chains=4, cores=4)
-saveRDS(fit_noncentered, "output/stanOutput/fit_noncentered") # nothing centered except atreeid
+# check warnings
+diagnostics <- util$extract_hmc_diagnostics(fit) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
-     units = "px", res = 300)
+# jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
+     # units = "px", res = 300)
 
 fit@model_pars
 
-pairs(fit, pars = c("a", "b", "sigma_bsp",
-                    "sigma_bsp",
-                    "sigma_asp",
-                    "sigma_asite",
+pairs(fit, pars = c("a", "b",
                     "sigma_atreeid",
                     "sigma_y"))
-# saving a copy for bsp centered 
-fit_centered <- fit
-pairs(fit_centered, pars = c("sigma_bsp", "bsp"))
-
-#
-pairs(fit, pars = c("sigma_bsp", "bsp"))
-
-# saveRDS(fit, "output/stanOutput/fit")
-# 
-# png("pairs_plot.png", width = 2400, height = 2400)
-# pairs(fit, c("a", "b"))
-# 
-# png("pairs_plot.png", width = 10000, height = 10000)
-# pairs(fit)
-# rstan::check_hmc_diagnostics(fit)
-# 
-# 
-# 
-# sampler <- rstan::get_sampler_params(fit, inc_warmup = FALSE)
-# str(sampler)
-# 
-# 
-# 
-# problem_params <- c("a", "b", "sigma_bsp")   # example
-# pairs(fit, pars = c(problem_params, "lp__", "energy__", "accept_stat__"))
-
 
 # === === === === === === === === === === === === #
-##### Recover parameters from the posterior #####
+##### Recover parameters from the posterior ##### 
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
 
@@ -692,7 +679,7 @@ sigma_df2
 ###### Recover b spp ######
 bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
 # remove sigma_bspp for now
-bspp_cols <- bspp_cols[2:length(bspp_cols)]
+# bspp_cols <- bspp_cols[2:length(bspp_cols)]
 
 bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
 # change their names
@@ -722,10 +709,11 @@ bspp_df2
 
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
-# remove sigma_asp for now
-treeid_cols <- treeid_cols[2:length(treeid_cols)]
+treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
+treeid_cols <- treeid_cols[!grepl("sigma", treeid_cols)]
 
 treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
+
 # change their names
 colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
@@ -750,8 +738,6 @@ treeid_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
 aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
-aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
-aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
@@ -806,105 +792,62 @@ site_df2
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Parameterization for bsp
-bspp_df3 <- bspp_df
-colnames(bspp_df3) <- paste("bsp", colnames(bspp_df3), sep = "")
-sigmaXbsp <- cbind(sigma_df, bspp_df3)
-
-predictors <- colnames(bspp_df3)[5:8]
-predictorsz <- colnames(bspp_df3)[1:4]
-
-jpeg("figures/bspParameterization2.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictorsz) {
-  plot(
-    sigmaXbsp[[p]],
-    log(sigmaXbsp$sigma_bsp),
-    xlab = p,
-    ylab = "log(sigma_bsp)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
-
 # Parameterization for treeid
-treeid_df3 <- treeid_df
-colnames(treeid_df3) <- paste("treeid", colnames(treeid_df3), sep = "")
-sigmaXtreeid <- cbind(sigma_df, treeid_df3)
+samples <- util$extract_expectand_vals(fit)
 
-predictors <- colnames(treeid_df3)
-
-jpeg("figures/treeidParameterization.jpg", width = 2000, height = 2000, 
+# atreeid
+atreeid <- names(samples)[grepl("zatreeid", names(samples))]
+atreeid <- atreeid[!grepl("sigma", atreeid)]
+atreeid <- atreeid[sample(length(unique(atreeid)), 9)]
+# pdf("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.pdf", 
+#     width = 6, height = 18)
+jpeg("figures/atreeidParameterization.jpeg", 
+     width = 2000, height = 3000,
      units = "px", res = 300)
-par(mfrow = c(3, 3)) # 75 treeid, but subsetting for 10 of them
-
-for (p in predictors[1:9]) {
-  plot(
-    sigmaXtreeid[[p]],
-    log(sigmaXtreeid$sigma_atreeid),
-    xlab = p,
-    ylab = "log(sigma_treeid)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
+util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
 
-# Parameterization for asp
-aspp_df3 <- aspp_df
-colnames(aspp_df3) <- paste("asp", colnames(aspp_df3), sep = "")
-sigmaXasp <- cbind(sigma_df, aspp_df3)
-
-predictors <- colnames(aspp_df3)
-
-jpeg("figures/aspParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictors) {
-  plot(
-    sigmaXasp[[p]],
-    log(sigmaXasp$sigma_asp),
-    xlab = p,
-    ylab = "log(sigma_asp)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
-
-# Parameterization for site
-site_df3 <- site_df
-colnames(site_df3) <- paste("site", colnames(site_df3), sep = "")
-sigmaXsite <- cbind(sigma_df, site_df3)
-
-predictors <- colnames(site_df3)
-
-jpeg("figures/siteParameterization.jpg", width = 2000, height = 2000, 
-     units = "px", res = 300)
-par(mfrow = c(2, 2))
-
-for (p in predictors) {
-  
-  plot(
-    sigmaXsite[[p]],
-    log(sigmaXsite$sigma_asite),
-    xlab = p,
-    ylab = "log(sigma_site)",
-    pch = 16,
-    col = adjustcolor("#B40F20", alpha.f = 0.09)
-  )
-}
-dev.off()
 # === === === === === === === #
-# Plot parameter recovery #####
+##### Plot parameter recovery #####
 # === === === === === === === #
 
+###### Plot a prior vs posterior ######
+a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
+
+a_prior <- rnorm(1e4, 5, 1)
+
+ggplot() +
+  geom_density(data = data.frame(a = a_prior),
+               aes(x = a, colour = "Prior"),
+               linewidth = 1) +
+  geom_density(data = data.frame(value = a_posterior),
+               aes(x = value, colour = "Posterior"),
+               linewidth = 1) +
+  labs(title = "priorVSposterior_a",
+       x = "a", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot sigmas ######
+
+###### plot b prior vs posterior ######
+b_posterior <- df_fit[, colnames(df_fit) %in% "b"]
+
+b_prior <- rnorm(1e4, 1, 0.2)
+
+ggplot() +
+  geom_density(data = data.frame(b = b_prior),
+               aes(x = b, colour = "Prior"),
+               linewidth = 1) +
+  geom_density(data = data.frame(value = b_posterior),
+               aes(x = value, colour = "Posterior"),
+               linewidth = 1) +
+  labs(title = "priorVSposterior_b",
+       x = "b", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
+###### Plot sigmas prior vs posterior ######
 sigma_long <- reshape(
   sigma_df,
   direction = "long",
@@ -917,11 +860,8 @@ sigma_long <- reshape(
 sigma_long
 
 sigma_long$prior <- NA
-sigma_long$prior[which(sigma_long$parameter == "sigma_bsp")] <- rnorm(8e3, 0, 0.2)
-sigma_long$prior[which(sigma_long$parameter == "sigma_asp")] <- rnorm(8e3, 0, 0.3)
-sigma_long$prior[which(sigma_long$parameter == "sigma_asite")] <- rnorm(8e3, 0, 0.3)
-sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.1)
-sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 0.1)
+sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.3)
+sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 1)
 
 ggplot(sigma_long) +
   geom_density(aes(x = prior, colour = "Prior"),
@@ -935,49 +875,110 @@ ggplot(sigma_long) +
   theme_minimal()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot b spp ######
-bspp_long <- reshape(
-  bspp_df,
+###### Plot atreeid prior vs posterior ######
+treeid_long <- reshape(
+  treeid_df,
   direction = "long",
-  varying = list(names(bspp_df)),
+  varying = list(names(treeid_df)),
   v.names = "value",
-  timevar = "spp",
-  times = names(bspp_df),
+  timevar = "treeid",
+  times = names(treeid_df),
   idvar = "draw"
 )
-bspp_long
+treeid_long
 
 # simulate priors
 hyperparameter_draws <- 8000
 parameter_draws <- 1000
-n_sigma_bsp <- 200
+n_sigma_treeid <- 200
 
 # set to prior values
-sigma_bsp_vec <- abs(rnorm(n_sigma_bsp, 0, 0.2))
+sigma_treeid_vec <- abs(rnorm(n_sigma_treeid, 0, 0.3))
 
-prior_bsp <- rep(NA, parameter_draws*length(sigma_bsp_vec))
+prior_treeid <- rep(NA, parameter_draws*length(sigma_treeid_vec))
 
-for (i in 1: length(sigma_bsp_vec)) {
-  prior_bsp[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_bsp_vec[i])
+for (i in 1: length(sigma_treeid_vec)) {
+  prior_treeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_treeid_vec[i])
 }
-prior_bsp
+prior_treeid
+
+# sub of some treeids for plotting
+subtreeid <- subset(treeid_long, treeid %in% sample(treeid_long$treeid, 5))
 
 ggplot() +
-  geom_density(data = data.frame(prior_bsp = prior_bsp),
-               aes(x = prior_bsp, colour = "Prior"),
+  geom_density(data = data.frame(prior_treeid = prior_treeid),
+               aes(x = prior_treeid, colour = "Prior"),
                linewidth = 0.8) +
-  geom_density(data = bspp_long,
+  geom_density(data = subtreeid,
                aes(x = value, colour = "Posterior"),
                linewidth = 0.8) +
-  facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_bsp",
-       x = "BSP", y = "Density", color = "Curve") +
+  facet_wrap(~treeid) + 
+  labs(title = "priorVSposterior_treeid",
+       x = "treeid", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot treeid ######
-bspp_long <- reshape(
+
+###### Plot asp prior vs posterior ######
+# convert posterior distribution to long format
+aspp_long <- reshape(
+  aspp_df,
+  direction = "long",
+  varying = list(names(aspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(aspp_df),
+  idvar = "draw"
+)
+aspp_long
+
+# asp prior
+asp_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asp_prior = asp_prior),
+               aes(x = asp_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = aspp_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asp", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+###### Plot asite prior vs posterior ######
+# convert posterior distribution to long format
+asite_long <- reshape(
+  site_df,
+  direction = "long",
+  varying = list(names(site_df)),
+  v.names = "value",
+  timevar = "site",
+  times = names(site_df),
+  idvar = "draw"
+)
+asite_long
+
+asite_prior <- rnorm(1e4, 0, 0.5)
+
+ggplot() +
+  geom_density(data = data.frame(asite_prior = asite_prior),
+               aes(x = asite_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = asite_long,
+               aes(x = value, colour = "Posterior", group = site),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+###### Plot bsp prior vs posterior ######
+# convert posterior distribution to long format
+bsp_long <- reshape(
   bspp_df,
   direction = "long",
   varying = list(names(bspp_df)),
@@ -986,26 +987,52 @@ bspp_long <- reshape(
   times = names(bspp_df),
   idvar = "draw"
 )
-bspp_long
+bsp_long
+
+# asp prior
+bsp_prior <- rnorm(1e4, 0, 0.3)
 
 ggplot() +
-  # geom_density(data = data.frame(sigma_bsp_draw = sigma_bsp_draw),
-  #              aes(x = sigma_bsp_draw, colour = "Prior"),
-  #              linewidth = 0.8) +
-  geom_density(data = bspp_long,
-               aes(x = value, colour = "Posterior"),
+  geom_density(data = data.frame(bsp_prior = bsp_prior),
+               aes(x = bsp_prior, colour = "Prior"),
                linewidth = 0.8) +
-  facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_bsp",
-       x = "BSP", y = "Density", color = "Curve") +
+  geom_density(data = bsp_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "bsp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot a spp ######
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot site ######
+###### Plot lines ######
+# Gdd on the x axis and growth on y ####
+aspp_df2$a <- mean(df_fit[,"a"])
+aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_a_spp
+aspp_df2$b <- mean(df_fit[,"b"])
+aspp_df2$bsp <- bspp_df2$fit_b_spp
+aspp_df2$b_bsp <- aspp_df2$b + bspp_df2$fit_b_spp
 
+colnames(aspp_df2)[colnames(aspp_df2) == "spp"] <- "spp_num"
+
+emp2 <- emp
+emp2 <- merge(emp2, aspp_df2[, c("spp_num", "a", "b", "b_bsp", "a_asp")], 
+              by = "spp_num")
+# plot lines
+ggplot(emp2) +
+  geom_point(aes(x = pgsGDD/200, y = lengthCM*10, colour = spp)) +
+  geom_abline(aes(intercept = a_asp, slope = b_bsp, colour = spp), 
+              linewidth = 0.5) +
+  labs(title = "", x = "pgsGDD", y = "ring width in mm") +
+  scale_colour_manual(values = wes_palette("AsteroidCity1")) +
+  # facet_wrap(~ spp) +
+  theme_minimal()
+ggsave("figures/slope_intercepts_varyingslopes.jpeg", 
+       width = 8, height = 6, units = "in", dpi = 300)
+
+
+
+# other diagnostics?
 diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 
 util$check_all_hmc_diagnostics(diagnostics)
 
