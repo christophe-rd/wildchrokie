@@ -488,7 +488,7 @@ ggplot(asite_df_binded, aes(x = fit_a_site, y = site_name, color = model)) +
 ggsave("figures/interceptVSinterceptslope_site.jpeg", width = 8, height = 6, 
        units = "in", dpi = 300)
 
-# Gdd on the x axis and growth on y ####
+# Line plot ####
 aspp_df2_with_b$b <- mean(df_fit_with_b[,"b"])
 aspp_df2_with_b$a <- mean(df_fit_with_b[,"a"])
 aspp_df2_with_b$a_asp <- aspp_df2_with_b$a + aspp_df2_with_b$fit_a_spp
@@ -516,3 +516,5 @@ ggsave("figures/slope_intercepts.jpeg", width = 8, height = 6,
        units = "in", dpi = 300)
 y
 plot(y~gdd)
+
+##### aspp intercepts means #####

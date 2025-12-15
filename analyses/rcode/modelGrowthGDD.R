@@ -628,6 +628,7 @@ fit <- stan("stan/twolevelhierint.stan",
                    "Ntreeid", "treeid", 
                    "gdd"),
             iter=4000, chains=4, cores=4)
+saveRDS(fit, "output/stanOutput/fit")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
@@ -1003,141 +1004,6 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
-##### Plot lines #####
-# Gdd on the x axis and growth on y ####
-aspp_df2$a <- mean(df_fit[,"a"])
-aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_a_spp
-aspp_df2$b <- mean(df_fit[,"b"])
-aspp_df2$bsp <- bspp_df2$fit_b_spp
-aspp_df2$b_bsp <- aspp_df2$b + bspp_df2$fit_b_spp
-
-colnames(aspp_df2)[colnames(aspp_df2) == "spp"] <- "spp_num"
-
-emp2 <- emp
-emp2 <- merge(emp2, aspp_df2[, c("spp_num", "a", "b", "b_bsp", "a_asp")], 
-              by = "spp_num")
-# plot lines
-ggplot(emp2) +
-  geom_point(aes(x = pgsGDD/200, y = lengthCM*10, colour = spp)) +
-  geom_abline(aes(intercept = a_asp, slope = b_bsp, colour = spp), 
-              linewidth = 0.5) +
-  labs(title = "", x = "pgsGDD", y = "ring width in mm") +
-  scale_colour_manual(values = wes_palette("AsteroidCity1")) +
-  # facet_wrap(~ spp) +
-  theme_minimal()
-ggsave("figures/slope_intercepts_varyingslopes.jpeg", 
-       width = 8, height = 6, units = "in", dpi = 300)
-
-##### mu plots #####
-###### asp ######
-aspp_df2$spp <- as.numeric(aspp_df2$spp)
-aspp_df2$spp_name <- emp$spp[match(aspp_df2$spp, emp$spp_num)]
-
-asp_mean_plot <- ggplot(aspp_df2, aes(x = fit_a_spp, y = spp_name, color = spp_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_spp_per5, 
-                     xmax = fit_a_spp_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_spp_per25, 
-                     xmax = fit_a_spp_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Species intercept values") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-asp_mean_plot
-ggsave("figures/asp_mean_plot.jpeg",
-       asp_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
-
-###### asite ######
-site_df2$site <- as.numeric(site_df2$site)
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-
-site_mean_plot <- ggplot(site_df2, 
-                         aes(x = fit_a_site, 
-                             y = site_name, 
-                             color = site_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_site_per5, 
-                     xmax = fit_a_site_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_site_per25, 
-                     xmax = fit_a_site_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("Darjeeling1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Site", x = "Site intercept values") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-site_mean_plot
-ggsave("figures/asite_mean_plot.jpeg",
-       site_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
-
-###### bsp ###### 
-bspp_df2$spp <- as.numeric(bspp_df2$spp)
-bspp_df2$spp_name <- emp$spp[match(bspp_df2$spp, emp$spp_num)]
-
-bsp_mean_plot <- ggplot(bspp_df2, 
-                        aes(x = fit_b_spp, 
-                            y = spp_name, 
-                            color = spp_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_b_spp_per5, 
-                     xmax = fit_b_spp_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_b_spp_per25, 
-                     xmax = fit_b_spp_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Species slope values") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-bsp_mean_plot
-ggsave("figures/bsp_mean_plot.jpeg",
-       bsp_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
-
-
-combined_plot <- (asp_mean_plot + site_mean_plot + bsp_mean_plot)
-combined_plot
-ggsave("figures/combinedMeanPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
 # other diagnostics?
 diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 

@@ -1131,6 +1131,7 @@ axis(
 )
 # spp mean
 spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
+site_y <- tapply(treeid_df4$y_pos, treeid_df4$site, max)
 
 ## order species by mean y descending (top of plot first)
 species_legend_order <- names(sort(spp_y, decreasing = TRUE))
