@@ -411,7 +411,7 @@ treeid_df4
 jpeg(
   filename = "figures/empiricalData/meanPlotGrowthGDD_treeidBYspp.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
-  height = 1800,
+  height = 2400,
   res = 300          # good print-quality resolution
 )
 par(mar = c(
@@ -480,8 +480,8 @@ treeid_df4$y_pos
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df4$fit_a_treeid_per5-15,
-                 treeid_df4$fit_a_treeid_per95+15)),
+  xlim = range(c(treeid_df4$fit_a_treeid_per5-0.5,
+                 treeid_df4$fit_a_treeid_per95+0.5)),
   ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
@@ -569,8 +569,8 @@ site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 6,
-  y = max(treeid_df4$y_pos) - 2,
+  x = max(treeid_df4$fit_a_treeid_per95) - 0.1,
+  y = max(treeid_df4$y_pos) + 1,
   legend = species_legend_order,
   col = my_colors[species_legend_order],    # index so colors match
   pch = 16,
@@ -580,10 +580,10 @@ legend(
 )
 
 site_legend_order <- c("SH", "GR", "WM", "HF")
-# site legend
+# site legen
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 6,
-  y = max(treeid_df4$y_pos) - 35,
+  x = max(treeid_df4$fit_a_treeid_per95) - 0.1,
+  y = max(treeid_df4$y_pos) - 15,
   legend = site_legend_order,
   pch = my_shapes[site_legend_order],
   pt.cex = 1.2,
