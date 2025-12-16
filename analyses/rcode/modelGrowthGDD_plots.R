@@ -4,7 +4,7 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-rm(list=ls()) 
+rm(list=ls())  
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
@@ -30,8 +30,6 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
-
-runSimData <- FALSE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -244,7 +242,7 @@ asp_mean_plot <- ggplot(aspp_df2, aes(x = fit_a_spp, y = spp_name, color = spp_n
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Species intercept values") +
+  labs(y = "Species", x = "Intercept change in ring width (mm)") +
   # facet_wrap(~ model, nrow =2) +
   theme(
     axis.text.y = element_blank(),
@@ -280,7 +278,7 @@ site_mean_plot <- ggplot(site_df2,
   scale_color_manual(values = wes_palette("Darjeeling1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Site", x = "Site intercept values") +
+  labs(y = "Site", x = "Intercept change in ring width (mm)") +
   # facet_wrap(~ model, nrow =2) +
   theme(
     axis.text.y = element_blank(),
@@ -316,7 +314,8 @@ bsp_mean_plot <- ggplot(bspp_df2,
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Species slope values") +
+  geom_vline(xintercept = bspp_df2$meanbsp, linetype = "dashed", color = "blue", linewidth = 1) +
+  labs(y = "Species", x = "Slope change in ring width (mm)") +
   # facet_wrap(~ model, nrow =2) +
   theme(
     axis.text.y = element_blank(),
