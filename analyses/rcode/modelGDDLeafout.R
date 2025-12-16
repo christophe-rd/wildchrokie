@@ -540,6 +540,10 @@ gdd <- read.csv("output/gddByYear.csv")
 no_naleafout <- emp[!is.na(emp$leafoutGDD),]
 nrow(no_naleafout)
 
+# some checks
+checks <- subset(no_naleafout, leafoutGDD > 300)
+checks # there are two entries for very late leafout dates...
+
 # give numeric ids to my groups 
 no_naleafout$site_num <- match(no_naleafout$site, unique(no_naleafout$site))
 no_naleafout$spp_num <- match(no_naleafout$spp, unique(no_naleafout$spp))
@@ -570,7 +574,7 @@ fit <- stan("stan/modelGDDatLeafout.stan",
 # writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
 
 # Diagnostics ####
-# Parameterization for asp
+# Parameterization 
 if (FALSE) {
   
 
@@ -777,19 +781,44 @@ df_fit <- as.data.frame(fit)
 # grab treeid 
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
-a_prior <- rnorm(1e4, 10, 1)
+a_prior <- rnorm(1e4, 18, 2)
 
-ggplot() +
-  geom_density(data = data.frame(a = a_prior),
+mu18 <- ggplot() +
+  geom_density(data = data.frame(a = a_prior*20),
                aes(x = a, colour = "Prior"),
                linewidth = 0.8) +
-  geom_density(data = data.frame(value = a_posterior),
+  geom_density(data = data.frame(value = a_posterior*20),
                aes(x = value, colour = "Posterior"),
                linewidth = 0.8) +
-  labs(title = "priorVSposterior_a",
+  labs(title = "prior at mu = 360",
        x = "a", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+ggsave("figures/gddLeafout_simData/a_prior_mu18.jpeg", 
+       mu18, 
+       width = 8, height = 6, units = "in", dpi = 300)
+
+
+a_prior <- rnorm(1e4, 8, 2)
+
+mu8 <- ggplot() +
+  geom_density(data = data.frame(a = a_prior*20),
+               aes(x = a, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = data.frame(value = a_posterior*20),
+               aes(x = value, colour = "Posterior"),
+               linewidth = 0.8) +
+  labs(title = "prior at mu = 160",
+       x = "a", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+ggsave("figures/gddLeafout_empData/a_prior_mu8.jpeg", 
+       mu8,
+       width = 8, height = 6, units = "in", dpi = 300)
+
+combined_plot <- (mu18 + mu8) 
+combined_plot
+ggsave("figures/gddLeafout_empData/priorsChecks_a.jpeg", combined_plot, width = 8, height = 6, units = "in", dpi = 300)
 
 # aspp #####
 
@@ -981,7 +1010,7 @@ treeid_df4
 jpeg(
   filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
-  height = 1800,
+  height = 2400,
   res = 300          # good print-quality resolution
 )
 par(mar = c(
@@ -1052,8 +1081,8 @@ plot(
   NA, NA,
   xlim = range(c(treeid_df4$fit_a_treeid_per5-15,
                  treeid_df4$fit_a_treeid_per95+15)),
-  ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
-  xlab = "treeid intercept values",
+  ylim = c(1, max(treeid_df4$y_pos) + 0.5),
+  xlab = "Estimate of GDD change from the grand mean",
   ylab = "",
   yaxt = "n"  
 )
@@ -1153,7 +1182,7 @@ site_legend_order <- c("SH", "GR", "WM", "HF")
 # site legend
 legend(
   x = max(treeid_df4$fit_a_treeid_per95) - 6,
-  y = max(treeid_df4$y_pos) - 35,
+  y = max(treeid_df4$y_pos) - 25,
   legend = site_legend_order,
   pch = my_shapes[site_legend_order],
   pt.cex = 1.2,

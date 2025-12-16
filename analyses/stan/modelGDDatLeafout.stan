@@ -40,7 +40,7 @@ model{
   // asp ~ normal(0, sigma_asp);
   // asite ~ normal(0, sigma_asite);
   zatreeid ~ normal(0, 1); 
-  a ~ normal(18, 2);
+  a ~ normal(8, 2);
   asp ~ normal(0, 1);
   asite ~ normal(0, 1);
   sigma_atreeid ~ normal(0, 0.5);
