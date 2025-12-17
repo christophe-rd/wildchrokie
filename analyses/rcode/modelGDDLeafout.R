@@ -729,56 +729,10 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df2
 
-# transform atreeid
-# plot
-atreeid_long <- reshape(
-  treeid_df,
-  direction = "long",
-  varying = list(names(treeid_df)),
-  v.names = "value",
-  timevar = "spp",
-  times = names(treeid_df),
-  idvar = "draw"
-)
-atreeid_long
-
-# sample to plot
-vec <- sample(treeid, 20)
-sub_atreeid <- subset(atreeid_long, spp %in% vec)
-
-# simulate priors
-hyperparameter_draws <- 1000
-parameter_draws <- 1000
-n_sigma_atreeid <- 200
-
-# set to prior values
-sigma_atreeid_vec <- abs(rnorm(n_sigma_atreeid, 0, 0.5))
-
-prior_atreeid <- rep(NA, parameter_draws*length(sigma_atreeid_vec))
-
-for (i in 1: length(sigma_atreeid_vec)) {
-  prior_atreeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_atreeid_vec[i])
-}
-prior_atreeid
-
-ggplot() +
-  geom_density(data = data.frame(prior_atreeid = prior_atreeid),
-               aes(x = prior_atreeid, colour = "Prior"),
-               linewidth = 0.8) +
-  geom_density(data = sub_atreeid,
-               aes(x = value, colour = "Posterior", group = spp),
-               linewidth = 0.1) +
-  # facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_atreeid",
-       x = "atreeid", y = "Density", color = "Curve") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  theme_minimal()
-
-# a #####
 df_fit <- as.data.frame(fit)
 
 # Prior checks ####
-# grab treeid 
+###### a ######
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
 a_prior <- rnorm(1e4, 18, 2)
@@ -820,7 +774,7 @@ combined_plot <- (mu18 + mu8)
 combined_plot
 ggsave("figures/gddLeafout_empData/priorsChecks_a.jpeg", combined_plot, width = 8, height = 6, units = "in", dpi = 300)
 
-# aspp #####
+###### aspp ######
 
 # convert posterior distribution to long format
 aspp_long <- reshape(
@@ -851,7 +805,7 @@ ggplot() +
   theme_minimal()
 
 
-# asite #####
+###### asite ######
 
 # convert posterior distribution to long format
 asite_long <- reshape(
@@ -878,6 +832,52 @@ ggplot() +
   # facet_wrap(~spp) + 
   labs(title = "priorVSposterior_atreeid",
        x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  theme_minimal()
+
+
+###### atreeid ######
+# plot
+atreeid_long <- reshape(
+  treeid_df,
+  direction = "long",
+  varying = list(names(treeid_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(treeid_df),
+  idvar = "draw"
+)
+atreeid_long
+
+# sample to plot
+vec <- sample(treeid, 20)
+sub_atreeid <- subset(atreeid_long, spp %in% vec)
+
+# simulate priors
+hyperparameter_draws <- 1000
+parameter_draws <- 1000
+n_sigma_atreeid <- 200
+
+# set to prior values
+sigma_atreeid_vec <- abs(rnorm(n_sigma_atreeid, 0, 0.5))
+
+prior_atreeid <- rep(NA, parameter_draws*length(sigma_atreeid_vec))
+
+for (i in 1: length(sigma_atreeid_vec)) {
+  prior_atreeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_atreeid_vec[i])
+}
+prior_atreeid
+
+ggplot() +
+  geom_density(data = data.frame(prior_atreeid = prior_atreeid),
+               aes(x = prior_atreeid, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = sub_atreeid,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.1) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_atreeid",
+       x = "atreeid", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
