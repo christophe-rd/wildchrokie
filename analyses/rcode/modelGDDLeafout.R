@@ -571,7 +571,8 @@ fit <- stan("stan/modelGDDatLeafout.stan",
                    "Nsite","site",
                    "Ntreeid", "treeid"),
             iter=4000, chains=4, cores=4)
-# writeRDS(fit, "output/stanOutput/gddLeafout_empData/fit")
+
+saveRDS(fit, "output/stanOutput/gddLeafout_empData_fit")
 
 # Diagnostics ####
 # Parameterization 
