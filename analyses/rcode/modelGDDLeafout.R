@@ -572,7 +572,15 @@ fit <- stan("stan/modelGDDatLeafout.stan",
                    "Ntreeid", "treeid"),
             iter=4000, chains=4, cores=4)
 
+fit_largerPriors <- stan("stan/modelGDDatLeafout_largerPriors.stan", 
+            data=c("N","y",
+                   "Nspp","species",
+                   "Nsite","site",
+                   "Ntreeid", "treeid"),
+            iter=4000, chains=4, cores=4)
+
 saveRDS(fit, "output/stanOutput/gddLeafout_empData_fit")
+saveRDS(fit_largerPriors, "output/stanOutput/gddLeafout_empData_fit_largerPriors")
 
 # Diagnostics ####
 # Parameterization 
