@@ -882,4 +882,21 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
+# Retrodictive checks ####
+diagnostics <- util$extract_hmc_diagnostics(fit) 
+util$check_all_hmc_diagnostics(diagnostics)
 
+samples <- util$extract_expectand_vals(fit)
+fit@model_pars
+base_samples <- util$filter_expectands(samples,
+                                       c('asp[1]', 'asp[2]', 'asp[3]'))
+util$check_all_expectand_diagnostics(base_samples)
+
+par(mfrow=c(1, 1))
+
+pred_names <- sapply(1:no_naleafout$pgsGDD,
+                     function(n) paste0('y_pred_grid[', n, ']'))
+util$plot_conn_pushforward_quantiles(samples, pred_names, data$x_grid,
+                                     xlab="x", ylab="y")
+points(data$x, data$y, pch=16, cex=1.0, col="white")
+points(data$x, data$y, pch=16, cex=0.8, col="black")

@@ -11,7 +11,9 @@ array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
 vector[N] gdd; 	// gdd (predictor for slope)
-array[N] real y; 		// day of year of phenological event (response)
+array[N] real y; 		// ring width (response)
+
+
 }
 
 parameters{

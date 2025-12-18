@@ -47,3 +47,10 @@ model{
   sigma_y ~ normal(0, 1);
   y ~ normal(ypred, sigma_y); 
 }	
+
+generated quantities{
+  array[N] real y_tilde;
+  for (i in 1:N){
+    y_tilde[i] = normal_rng(ypred[i], sigma_y);
+  }
+}
