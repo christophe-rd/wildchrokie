@@ -73,7 +73,6 @@ sigma_df2 <- data.frame(
   per75 = NA,
   per95 = NA
 )
-sigma_df2
 
 for (i in 1:ncol(sigma_df)) { # i = 1
   sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
@@ -98,21 +97,21 @@ treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
 # change their names
 colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
-treeid_df2 <- data.frame(``````
+treeid_df2 <- data.frame(
   treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df)) { # i = 1
   treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
 treeid_df2
 
@@ -122,7 +121,7 @@ aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
@@ -152,24 +151,23 @@ colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
 # empty site df
 site_df2 <- data.frame(
   site = character(ncol(site_df)),
-  fit_a_site = numeric(ncol(site_df)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
+  fit_asite = numeric(ncol(site_df)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
 )
 for (i in 1:ncol(site_df)) { # i = 1
   site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
 }
 site_df2
 
 df_fit <- as.data.frame(fit)
-
 
 
 # Plots ####
@@ -177,7 +175,7 @@ aspp_df2$spp <- as.numeric(aspp_df2$spp)
 aspp_df2$spp_name <- no_naleafout$spp[match(aspp_df2$spp, no_naleafout$spp_num)]
 
 ##### aspp intercepts means #####
-aspEstimates_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = spp_name)) +
+asppEstimates_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = spp_name)) +
   geom_point(size = 6, alpha = 1) + 
   geom_errorbarh(aes(xmin = fit_aspp_per5, 
                      xmax = fit_aspp_per95), 
@@ -197,9 +195,10 @@ aspEstimates_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = sp
     legend.key.size = unit(1.5, "lines"),                   
     legend.position = "right"                               
   ) +
-  xlim(-80, 80) +
+  # xlim(-80, 80) +
   theme_bw() +
   scale_y_discrete(limits = rev)   
+asppEstimates_plot
 ggsave("figures/gddLeafout_empData/sppEstimates.jpeg", asppEstimates_plot, width = 8, height = 6, units = "in", dpi = 300)
 
 ## site intercept means ####
@@ -207,13 +206,13 @@ ggsave("figures/gddLeafout_empData/sppEstimates.jpeg", asppEstimates_plot, width
 site_df2$site <- as.numeric(site_df2$site)
 site_df2$site_name <- no_naleafout$site[match(site_df2$site, no_naleafout$site_num)]
 
-siteEstimates_plot <- ggplot(site_df2, aes(x = fit_a_site, y = site_name, color = site_name)) +
+siteEstimates_plot <- ggplot(site_df2, aes(x = fit_asite, y = site_name, color = site_name)) +
   geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_site_per5, 
-                     xmax = fit_a_site_per95), 
+  geom_errorbarh(aes(xmin = fit_asite_per5, 
+                     xmax = fit_asite_per95), 
                  width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_site_per25, 
-                     xmax = fit_a_site_per75), 
+  geom_errorbarh(aes(xmin = fit_asite_per25, 
+                     xmax = fit_asite_per75), 
                  width = 0, alpha = 1, linewidth = 2) +
   scale_color_manual(values = wes_palette("Darjeeling1")) +
   scale_fill_manual(values = wes_palette("Darjeeling1")) +
@@ -227,14 +226,13 @@ siteEstimates_plot <- ggplot(site_df2, aes(x = fit_a_site, y = site_name, color 
     legend.key.size = unit(1.5, "lines"),                   
     legend.position = "right"                               
   ) +
-  xlim(-60, 60) +
+  # xlim(-60, 60) +
   theme_bw() +
   scale_y_discrete(limits = rev)   
+siteEstimates_plot
 ggsave("figures/gddLeafout_empData/siteEstimates.jpeg", siteEstimates_plot, width = 8, height = 6, units = "in", dpi = 300)
 
 # Mean plots with atreeid ####
-no_naleafout
-
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- no_naleafout$treeid[match(treeid_df2$treeid, no_naleafout$treeid_num)]
 
@@ -270,19 +268,19 @@ fullatreeid2 <- as.data.frame(fullatreeid)
 # empty treeid dataframe
 treeid_df4 <- data.frame(
   treeid = character(ncol(fullatreeid2)),
-  fit_a_treeid = numeric(ncol(fullatreeid2)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(fullatreeid2)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(fullatreeid2)) { # i = 1
   treeid_df4$treeid[i] <- colnames(fullatreeid2)[i]         
-  treeid_df4$fit_a_treeid[i] <- round(mean(fullatreeid2[[i]]),3)  
-  treeid_df4$fit_a_treeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
-  treeid_df4$fit_a_treeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
-  treeid_df4$fit_a_treeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
-  treeid_df4$fit_a_treeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
+  treeid_df4$fit_atreeid[i] <- round(mean(fullatreeid2[[i]]),3)  
+  treeid_df4$fit_atreeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
+  treeid_df4$fit_atreeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
+  treeid_df4$fit_atreeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
+  treeid_df4$fit_atreeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
 }
 treeid_df4
 
@@ -297,7 +295,7 @@ treeid_df4$site_name <- no_naleafout$site[match(treeid_df4$treeid,
 treeid_df4
 
 
-
+if (FALSE){
 # Recover parameters for larger priors ####
 # === === === === === === === === === === === === === === === === === === === ==
 df_fit_largerPriors <- as.data.frame(fit_largerPriors)
@@ -349,19 +347,19 @@ colnames(treeid_df_largerPriors) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(t
 # empty treeid dataframe
 treeid_df_largerPriors2 <- data.frame(
   treeid = character(ncol(treeid_df_largerPriors)),
-  fit_a_treeid = numeric(ncol(treeid_df_largerPriors)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df_largerPriors)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df_largerPriors)) { # i = 1
   treeid_df_largerPriors2$treeid[i] <- colnames(treeid_df_largerPriors)[i]         
-  treeid_df_largerPriors2$fit_a_treeid[i] <- round(mean(treeid_df_largerPriors[[i]]),3)  
-  treeid_df_largerPriors2$fit_a_treeid_per5[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.05), 3)
-  treeid_df_largerPriors2$fit_a_treeid_per25[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.25), 3)
-  treeid_df_largerPriors2$fit_a_treeid_per75[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.75), 3)
-  treeid_df_largerPriors2$fit_a_treeid_per95[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.95), 3)
+  treeid_df_largerPriors2$fit_atreeid[i] <- round(mean(treeid_df_largerPriors[[i]]),3)  
+  treeid_df_largerPriors2$fit_atreeid_per5[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.05), 3)
+  treeid_df_largerPriors2$fit_atreeid_per25[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.25), 3)
+  treeid_df_largerPriors2$fit_atreeid_per75[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.75), 3)
+  treeid_df_largerPriors2$fit_atreeid_per95[i] <- round(quantile(treeid_df_largerPriors[[i]], probs = 0.95), 3)
 }
 treeid_df_largerPriors2
 
@@ -401,19 +399,19 @@ colnames(site_df_largerPriors) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_
 # empty site df
 site_df_largerPriors2 <- data.frame(
   site = character(ncol(site_df_largerPriors)),
-  fit_a_site = numeric(ncol(site_df_largerPriors)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
+  fit_asite = numeric(ncol(site_df_largerPriors)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
 )
 for (i in 1:ncol(site_df_largerPriors)) { # i = 1
   site_df_largerPriors2$site[i] <- colnames(site_df_largerPriors)[i]         
-  site_df_largerPriors2$fit_a_site[i] <- round(mean(site_df_largerPriors[[i]]),3)  
-  site_df_largerPriors2$fit_a_site_per5[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.05), 3)
-  site_df_largerPriors2$fit_a_site_per25[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.25), 3)
-  site_df_largerPriors2$fit_a_site_per75[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.75), 3)
-  site_df_largerPriors2$fit_a_site_per95[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.95), 3)
+  site_df_largerPriors2$fit_asite[i] <- round(mean(site_df_largerPriors[[i]]),3)  
+  site_df_largerPriors2$fit_asite_per5[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.05), 3)
+  site_df_largerPriors2$fit_asite_per25[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.25), 3)
+  site_df_largerPriors2$fit_asite_per75[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.75), 3)
+  site_df_largerPriors2$fit_asite_per95[i] <- round(quantile(site_df_largerPriors[[i]], probs = 0.95), 3)
 }
 site_df_largerPriors2
 
@@ -446,20 +444,20 @@ aspp_df_largerPrior_plot <- ggplot(aspp_df_largerPriors2, aes(x = fit_aspp, y = 
   xlim(-80, 80) +
   theme_bw() +
   scale_y_discrete(limits = rev)   
-ggsave("figures/gddLeafout_empData/sppEstimates_largerPriors.jpeg", asp_df_largerPrior_plot, width = 8, height = 6, units = "in", dpi = 300)
+ggsave("figures/gddLeafout_empData/sppEstimates_largerPriors.jpeg", aspp_df_largerPrior_plot, width = 8, height = 6, units = "in", dpi = 300)
 
 ## site intercept means ####
 
 site_df_largerPriors2$site <- as.numeric(site_df_largerPriors2$site)
 site_df_largerPriors2$site_name <- no_naleafout$site[match(site_df_largerPriors2$site, no_naleafout$site_num)]
 
-site_df_largerPrior_plot <- ggplot(site_df_largerPriors2, aes(x = fit_a_site, y = site_name, color = site_name)) +
+site_df_largerPrior_plot <- ggplot(site_df_largerPriors2, aes(x = fit_asite, y = site_name, color = site_name)) +
   geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_site_per5, 
-                     xmax = fit_a_site_per95), 
+  geom_errorbarh(aes(xmin = fit_asite_per5, 
+                     xmax = fit_asite_per95), 
                  width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_site_per25, 
-                     xmax = fit_a_site_per75), 
+  geom_errorbarh(aes(xmin = fit_asite_per25, 
+                     xmax = fit_asite_per75), 
                  width = 0, alpha = 1, linewidth = 2) +
   scale_color_manual(values = wes_palette("Darjeeling1")) +
   scale_fill_manual(values = wes_palette("Darjeeling1")) +
@@ -524,19 +522,19 @@ fullatreeid_largerPriors2 <- as.data.frame(fullatreeid_largerPriors)
 # empty treeid dataframe
 treeid_df4_largerPriors <- data.frame(
   treeid = character(ncol(fullatreeid_largerPriors2)),
-  fit_a_treeid = numeric(ncol(fullatreeid_largerPriors2)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(fullatreeid_largerPriors2)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(fullatreeid_largerPriors2)) { # i = 1
   treeid_df4_largerPriors$treeid[i] <- colnames(fullatreeid_largerPriors2)[i]         
-  treeid_df4_largerPriors$fit_a_treeid[i] <- round(mean(fullatreeid_largerPriors2[[i]]),3)  
-  treeid_df4_largerPriors$fit_a_treeid_per5[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.05), 3)
-  treeid_df4_largerPriors$fit_a_treeid_per25[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.25), 3)
-  treeid_df4_largerPriors$fit_a_treeid_per75[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.75), 3)
-  treeid_df4_largerPriors$fit_a_treeid_per95[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.95), 3)
+  treeid_df4_largerPriors$fit_atreeid[i] <- round(mean(fullatreeid_largerPriors2[[i]]),3)  
+  treeid_df4_largerPriors$fit_atreeid_per5[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.05), 3)
+  treeid_df4_largerPriors$fit_atreeid_per25[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.25), 3)
+  treeid_df4_largerPriors$fit_atreeid_per75[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.75), 3)
+  treeid_df4_largerPriors$fit_atreeid_per95[i] <- round(quantile(fullatreeid_largerPriors2[[i]], probs = 0.95), 3)
 }
 treeid_df4_largerPriors
 
@@ -561,14 +559,14 @@ treeidtoplot <- merge(treeid_df2, treeid_df_largerPriors2,
 
 treeidtoplot
 # plot treeid
-atreeid_plot_priorComp <- ggplot(treeidtoplot, aes(x = fit_a_treeid, y = fit_a_treeid_LP)) +
-  geom_errorbar(aes(xmin = fit_a_treeid_per25, xmax = fit_a_treeid_per75), 
+atreeid_plot_priorComp <- ggplot(treeidtoplot, aes(x = fit_atreeid, y = fit_atreeid_LP)) +
+  geom_errorbar(aes(xmin = fit_atreeid_per25, xmax = fit_atreeid_per75), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_a_treeid_per25_LP, ymax = fit_a_treeid_per75_LP), 
+  geom_errorbar(aes(ymin = fit_atreeid_per25_LP, ymax = fit_atreeid_per75_LP), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim atreeid", y = "fit atreeid", title = "") +
+  labs(x = "priors unchanged", y = "priors 3x larger", title = "atreeid estimates") +
   theme_minimal()
 atreeid_plot_priorComp
 
@@ -580,8 +578,6 @@ colnames(aspp_df_largerPriors23)[2:ncol(aspp_df_largerPriors23)] <-
 aspptoplot <- merge(aspp_df2, aspp_df_largerPriors23,
                       by = "spp"
 )
-
-treeidtoplot
 # plot aspp
 aspp_plot_priorComp <- ggplot(aspptoplot, aes(x = fit_aspp, y = fit_aspp_LP)) +
   geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75), 
@@ -590,7 +586,7 @@ aspp_plot_priorComp <- ggplot(aspptoplot, aes(x = fit_aspp, y = fit_aspp_LP)) +
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim atreeid", y = "fit atreeid", title = "") +
+  labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
   theme_minimal()
 aspp_plot_priorComp
 
@@ -604,25 +600,23 @@ asitetoplot <- merge(site_df2, site_df_largerPriors2,
 )
 
 # plot asite
-asite_plot_priorComp <- ggplot(asitetoplot, aes(x = fit_a_site, y = fit_a_site_LP)) +
-  geom_errorbar(aes(xmin = fit_a_site_per25, xmax = fit_a_site_per75), 
+asite_plot_priorComp <- ggplot(asitetoplot, aes(x = fit_asite, y = fit_asite_LP)) +
+  geom_errorbar(aes(xmin = fit_asite_per25, xmax = fit_asite_per75), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_a_site_per25_LP, ymax = fit_a_site_per75_LP), 
+  geom_errorbar(aes(ymin = fit_asite_per25_LP, ymax = fit_asite_per75_LP), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim atreeid", y = "fit atreeid", title = "") +
+  labs(x = "priors unchanged", y = "priors 3x larger", title = "asite estimates") +
   theme_minimal()
 asite_plot_priorComp
 
+prior11plot <- (atreeid_plot_priorComp + aspp_plot_priorComp + asite_plot_priorComp)
+prior11plot
+ggsave("figures/gddLeafout_empData/priorComp11plots.jpeg", prior11plot, width = 10, height = 6, units = "in", dpi = 300)
 
 
-
-
-
-
-
-
+}
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -700,8 +694,8 @@ treeid_df4$y_pos
 # Set up empty plot
 plot(
   NA, NA,
-  # xlim = range(c(treeid_df4$fit_a_treeid_per5-15,
-  #                treeid_df4$fit_a_treeid_per95+15)),
+  # xlim = range(c(treeid_df4$fit_atreeid_per5-15,
+  #                treeid_df4$fit_atreeid_per95+15)),
   xlim = range(c(-100, 100)),
   ylim = c(1, max(treeid_df4$y_pos) + 0.5),
   xlab = "Estimate of GDD change from the grand mean",
@@ -712,8 +706,8 @@ plot(
 
 # --- Add horizontal error bars (5–95%) ---
 segments(
-  x0 = treeid_df4$fit_a_treeid_per5,
-  x1 = treeid_df4$fit_a_treeid_per95,
+  x0 = treeid_df4$fit_atreeid_per5,
+  x1 = treeid_df4$fit_atreeid_per95,
   y0 = treeid_df4$y_pos,
   col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1
@@ -721,8 +715,8 @@ segments(
 
 # --- Add thicker horizontal error bars (25–75%) ---
 segments(
-  x0 = treeid_df4$fit_a_treeid_per25,
-  x1 = treeid_df4$fit_a_treeid_per75,
+  x0 = treeid_df4$fit_atreeid_per25,
+  x1 = treeid_df4$fit_atreeid_per75,
   y0 = treeid_df4$y_pos,
   col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1.5
@@ -730,7 +724,7 @@ segments(
 
 # --- Add the points ---
 points(
-  treeid_df4$fit_a_treeid,
+  treeid_df4$fit_atreeid,
   treeid_df4$y_pos,
   cex = 0.8,
   pch = my_shapes[treeid_df4$site],
@@ -790,7 +784,7 @@ site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 6,
+  x = max(treeid_df4$fit_atreeid_per95) - 6,
   y = max(treeid_df4$y_pos) - 2,
   legend = species_legend_order,
   col = my_colors[species_legend_order],    # index so colors match
@@ -803,7 +797,7 @@ legend(
 site_legend_order <- c("SH", "GR", "WM", "HF")
 # site legend
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 6,
+  x = max(treeid_df4$fit_atreeid_per95) - 6,
   y = max(treeid_df4$y_pos) - 25,
   legend = site_legend_order,
   pch = my_shapes[site_legend_order],
@@ -814,191 +808,217 @@ legend(
 
 dev.off()
 
+# === === === ===  === === === ===  === === === ===  === === === ===  === === === ===
+# === === === ===  === === === ===  === === === ===  === === === ===  === === === ===
+# === === === ===  === === === ===  === === === ===  === === === ===  === === === ===
+# LARGER priors below
+# open device
+jpeg(
+  filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp_largerPriors.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+par(mar = c(
+  4, 
+  6, 
+  4, 
+  5))
+
+# define a gap between species clusters
+gap <- 3
+
+# y positions
+treeid_df4_largerPriors$y_pos <- NA
+current_y <- 1
+
+species_order <- c(
+  "ALNINC", 
+  "BETALL", 
+  "BETPAP", 
+  "BETPOP")
+# site_order <- c("SH", "GR", "WM", "HF")
+site_order <- c(
+  "HF",
+  "WM",
+  "GR", 
+  "SH")
+
+# col
+my_colors <- c(
+  ALNINC = wes_palette("AsteroidCity1")[1],
+  BETALL = wes_palette("AsteroidCity1")[2],
+  BETPAP = wes_palette("AsteroidCity1")[3],
+  BETPOP = wes_palette("AsteroidCity1")[4]
+)
+# shapes for sites
+my_shapes <- c(
+  HF = 19,
+  WM = 18,
+  GR = 15,
+  SH = 17
+)
+
+
+treeid_df4_largerPriors$spp  <- factor(treeid_df4_largerPriors$spp, levels = species_order)
+treeid_df4_largerPriors$site <- factor(treeid_df4_largerPriors$site, levels = site_order)
+
+treeid_df4_largerPriors <- treeid_df4_largerPriors[
+  order(treeid_df4_largerPriors$spp, treeid_df4_largerPriors$site, treeid_df4_largerPriors$treeid),
+]
+
+treeid_df4_largerPriors$y_pos <- seq_len(nrow(treeid_df4_largerPriors))
+
+for(spp in species_order){
+  idx <- which(treeid_df4_largerPriors$spp == spp)
+  n <- length(idx)
   
-  # open device
-  jpeg(
-    filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp_largerPriors.jpeg",
-    width = 2400,      # wider image (pixels) → more horizontal room
-    height = 2400,
-    res = 300          # good print-quality resolution
-  )
-  par(mar = c(
-    4, 
-    6, 
-    4, 
-    5))
+  # assign sequential positions for this species
+  treeid_df4_largerPriors$y_pos[idx] <- current_y:(current_y + n - 1)
   
-  # define a gap between species clusters
-  gap <- 3
+  # move cursor down with a gap before next species cluster
+  current_y <- current_y + n + gap
+}
+
+treeid_df4_largerPriors$y_pos
+
+# Set up empty plot
+plot(
+  NA, NA,
+  # xlim = range(c(treeid_df4_largerPriors$fit_atreeid_per5-15,
+  #                treeid_df4_largerPriors$fit_atreeid_per95+15)),
+  xlim = range(c(-100, 100)),
+  ylim = c(1, max(treeid_df4_largerPriors$y_pos) + 0.5),
+  xlab = "Estimate of GDD change from the grand mean",
+  ylab = "",
+  yaxt = "n"  
+)
+
+
+# --- Add horizontal error bars (5–95%) ---
+segments(
+  x0 = treeid_df4_largerPriors$fit_atreeid_per5,
+  x1 = treeid_df4_largerPriors$fit_atreeid_per95,
+  y0 = treeid_df4_largerPriors$y_pos,
+  col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4),
+  lwd = 1
+)
+
+# --- Add thicker horizontal error bars (25–75%) ---
+segments(
+  x0 = treeid_df4_largerPriors$fit_atreeid_per25,
+  x1 = treeid_df4_largerPriors$fit_atreeid_per75,
+  y0 = treeid_df4_largerPriors$y_pos,
+  col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4),
+  lwd = 1.5
+)
+
+# --- Add the points ---
+points(
+  treeid_df4_largerPriors$fit_atreeid,
+  treeid_df4_largerPriors$y_pos,
+  cex = 0.8,
+  pch = my_shapes[treeid_df4_largerPriors$site],
+  col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4)
+)
+
+aspp_df_largerPriors2$spp <- aspp_df_largerPriors2$spp_name
+
+spp_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$spp, mean)
+
+aspp_df_largerPriors2$y_pos <- spp_y[aspp_df_largerPriors2$spp]
+
+
+segments(
+  x0 = aspp_df_largerPriors2$fit_aspp_per5,
+  x1 = aspp_df_largerPriors2$fit_aspp_per95,
+  y0 = aspp_df_largerPriors2$y_pos,
+  col = adjustcolor(my_colors[aspp_df_largerPriors2$spp], alpha.f = 0.9),
+  lwd = 2
+)
+
+segments(
+  x0 = aspp_df_largerPriors2$fit_aspp_per25,
+  x1 = aspp_df_largerPriors2$fit_aspp_per75,
+  y0 = aspp_df_largerPriors2$y_pos,
+  col = my_colors[aspp_df_largerPriors2$spp],
+  lwd = 4
+)
+points(
+  aspp_df_largerPriors2$fit_aspp,
+  aspp_df_largerPriors2$y_pos,
+  pch = 21,
+  bg  = my_colors[aspp_df_largerPriors2$spp],
+  col = "black",
+  cex = 1.5
+)
+
+
+# --- Add vertical line at 0 ---
+abline(v = 0, lty = 2)
+
+# --- Add custom y-axis labels (reverse order if needed) ---
+axis(
+  side = 2,
+  at = treeid_df4_largerPriors$y_pos,
+  labels = treeid_df4_largerPriors$treeid_name,
+  cex.axis = 0.5,
+  las = 1
+)
+# spp mean
+spp_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$spp, mean)
+site_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$site, max)
+
+## order species by mean y descending (top of plot first)
+species_legend_order <- names(sort(spp_y, decreasing = TRUE))
+site_legend_order <- names(sort(site_y, decreasing = FALSE))
+
+## species legend (colors matched by name)
+legend(
+  x = max(treeid_df4_largerPriors$fit_atreeid_per95) - 6,
+  y = max(treeid_df4_largerPriors$y_pos) - 2,
+  legend = species_legend_order,
+  col = my_colors[species_legend_order],    # index so colors match
+  pch = 16,
+  pt.cex = 1.2,
+  title = "Species",
+  bty = "n"
+)
+
+site_legend_order <- c("SH", "GR", "WM", "HF")
+# site legend
+legend(
+  x = max(treeid_df4_largerPriors$fit_atreeid_per95) - 6,
+  y = max(treeid_df4_largerPriors$y_pos) - 25,
+  legend = site_legend_order,
+  pch = my_shapes[site_legend_order],
+  pt.cex = 1.2,
+  title = "Sites",
+  bty = "n"
+)
+
+dev.off()
+
+
   
-  # y positions
-  treeid_df4_largerPriors$y_pos <- NA
-  current_y <- 1
+# Mis stuff ####
+aspp_df2$percentchange <- aspp_df2$fit_aspp/mean(df_fit[,"a"])
   
-  species_order <- c(
-    "ALNINC", 
-    "BETALL", 
-    "BETPAP", 
-    "BETPOP")
-  # site_order <- c("SH", "GR", "WM", "HF")
-  site_order <- c(
-    "HF",
-    "WM",
-    "GR", 
-    "SH")
-  
-  # col
-  my_colors <- c(
-    ALNINC = wes_palette("AsteroidCity1")[1],
-    BETALL = wes_palette("AsteroidCity1")[2],
-    BETPAP = wes_palette("AsteroidCity1")[3],
-    BETPOP = wes_palette("AsteroidCity1")[4]
-  )
-  # shapes for sites
-  my_shapes <- c(
-    HF = 19,
-    WM = 18,
-    GR = 15,
-    SH = 17
-  )
-  
-  
-  treeid_df4_largerPriors$spp  <- factor(treeid_df4_largerPriors$spp, levels = species_order)
-  treeid_df4_largerPriors$site <- factor(treeid_df4_largerPriors$site, levels = site_order)
-  
-  treeid_df4_largerPriors <- treeid_df4_largerPriors[
-    order(treeid_df4_largerPriors$spp, treeid_df4_largerPriors$site, treeid_df4_largerPriors$treeid),
-  ]
-  
-  treeid_df4_largerPriors$y_pos <- seq_len(nrow(treeid_df4_largerPriors))
-  
-  for(spp in species_order){
-    idx <- which(treeid_df4_largerPriors$spp == spp)
-    n <- length(idx)
-    
-    # assign sequential positions for this species
-    treeid_df4_largerPriors$y_pos[idx] <- current_y:(current_y + n - 1)
-    
-    # move cursor down with a gap before next species cluster
-    current_y <- current_y + n + gap
-  }
-  
-  treeid_df4_largerPriors$y_pos
-  
-  # Set up empty plot
-  plot(
-    NA, NA,
-    # xlim = range(c(treeid_df4_largerPriors$fit_a_treeid_per5-15,
-    #                treeid_df4_largerPriors$fit_a_treeid_per95+15)),
-    xlim = range(c(-100, 100)),
-    ylim = c(1, max(treeid_df4_largerPriors$y_pos) + 0.5),
-    xlab = "Estimate of GDD change from the grand mean",
-    ylab = "",
-    yaxt = "n"  
-  )
-  
-  
-  # --- Add horizontal error bars (5–95%) ---
-  segments(
-    x0 = treeid_df4_largerPriors$fit_a_treeid_per5,
-    x1 = treeid_df4_largerPriors$fit_a_treeid_per95,
-    y0 = treeid_df4_largerPriors$y_pos,
-    col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4),
-    lwd = 1
-  )
-  
-  # --- Add thicker horizontal error bars (25–75%) ---
-  segments(
-    x0 = treeid_df4_largerPriors$fit_a_treeid_per25,
-    x1 = treeid_df4_largerPriors$fit_a_treeid_per75,
-    y0 = treeid_df4_largerPriors$y_pos,
-    col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4),
-    lwd = 1.5
-  )
-  
-  # --- Add the points ---
-  points(
-    treeid_df4_largerPriors$fit_a_treeid,
-    treeid_df4_largerPriors$y_pos,
-    cex = 0.8,
-    pch = my_shapes[treeid_df4_largerPriors$site],
-    col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4)
-  )
-  
-  aspp_df_largerPriors2$spp <- aspp_df_largerPriors2$spp_name
-  
-  spp_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$spp, mean)
-  
-  aspp_df_largerPriors2$y_pos <- spp_y[aspp_df_largerPriors2$spp]
-  
-  
-  segments(
-    x0 = aspp_df_largerPriors2$fit_aspp_per5,
-    x1 = aspp_df_largerPriors2$fit_aspp_per95,
-    y0 = aspp_df_largerPriors2$y_pos,
-    col = adjustcolor(my_colors[aspp_df_largerPriors2$spp], alpha.f = 0.9),
-    lwd = 2
-  )
-  
-  segments(
-    x0 = aspp_df_largerPriors2$fit_aspp_per25,
-    x1 = aspp_df_largerPriors2$fit_aspp_per75,
-    y0 = aspp_df_largerPriors2$y_pos,
-    col = my_colors[aspp_df_largerPriors2$spp],
-    lwd = 4
-  )
-  points(
-    aspp_df_largerPriors2$fit_aspp,
-    aspp_df_largerPriors2$y_pos,
-    pch = 21,
-    bg  = my_colors[aspp_df_largerPriors2$spp],
-    col = "black",
-    cex = 1.5
-  )
-  
-  
-  # --- Add vertical line at 0 ---
-  abline(v = 0, lty = 2)
-  
-  # --- Add custom y-axis labels (reverse order if needed) ---
-  axis(
-    side = 2,
-    at = treeid_df4_largerPriors$y_pos,
-    labels = treeid_df4_largerPriors$treeid_name,
-    cex.axis = 0.5,
-    las = 1
-  )
-  # spp mean
-  spp_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$spp, mean)
-  site_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$site, max)
-  
-  ## order species by mean y descending (top of plot first)
-  species_legend_order <- names(sort(spp_y, decreasing = TRUE))
-  site_legend_order <- names(sort(site_y, decreasing = FALSE))
-  
-  ## species legend (colors matched by name)
-  legend(
-    x = max(treeid_df4_largerPriors$fit_a_treeid_per95) - 6,
-    y = max(treeid_df4_largerPriors$y_pos) - 2,
-    legend = species_legend_order,
-    col = my_colors[species_legend_order],    # index so colors match
-    pch = 16,
-    pt.cex = 1.2,
-    title = "Species",
-    bty = "n"
-  )
-  
-  site_legend_order <- c("SH", "GR", "WM", "HF")
-  # site legend
-  legend(
-    x = max(treeid_df4_largerPriors$fit_a_treeid_per95) - 6,
-    y = max(treeid_df4_largerPriors$y_pos) - 25,
-    legend = site_legend_order,
-    pch = my_shapes[site_legend_order],
-    pt.cex = 1.2,
-    title = "Sites",
-    bty = "n"
-  )
-  
-  dev.off()
-  
+##### Leaf out vs GDD #####
+leaf
+aspp_df23 <- aspp_df2
+colnames(aspp_df23) <- c("spp_num", "fit_aspp", "fit_aspp_per5", "fit_aspp_per25", "fit_aspp_per75",  "fit_aspp_per95", "spp_name"
+)
+asppchecks <- merge(no_naleafout, aspp_df23, by = "spp_num")
+asppchecks$a_aspp <- 157 + asppchecks$fit_aspp + site_df2$fit_asite
+ggplot(asppchecks, aes(x = leafout)) +
+  # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  # geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_histogram(aes(color = spp_name, fill = spp_name), binwidth = 4, alpha = 0.7) +
+  facet_wrap(~spp_name, nrow = 4, ncol = 3) +
+  geom_vline(aes(xintercept = a_aspp)) + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
+  theme_minimal()

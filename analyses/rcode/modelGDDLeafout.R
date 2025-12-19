@@ -908,3 +908,4 @@ util$plot_conn_pushforward_quantiles(samples, pred_names, data$x_grid,
                                      xlab="x", ylab="y")
 points(data$x, data$y, pch=16, cex=1.0, col="white")
 points(data$x, data$y, pch=16, cex=0.8, col="black")
+
