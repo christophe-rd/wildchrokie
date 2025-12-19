@@ -476,7 +476,7 @@ for (p in predictors) {
     sigmaXtreeid[[p]],
     log(sigmaXtreeid$sigma_atreeid),
     xlab = p,
-    ylab = "log(sigma_treeid)",
+    ylab = "log(sigmatreeid)",
     pch = 16,
     col = adjustcolor("#B40F20", alpha.f = 0.09)
   )
@@ -523,7 +523,7 @@ for (p in predictors) {
     sigmaXsite[[p]],
     log(sigmaXsite$sigma_asite),
     xlab = p,
-    ylab = "log(sigma_site)",
+    ylab = "log(sigmasite)",
     pch = 16,
     col = adjustcolor("#B40F20", alpha.f = 0.09)
   )
@@ -670,19 +670,19 @@ colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
 treeid_df2 <- data.frame(
   treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df)) { # i = 1
   treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
 treeid_df2
 
@@ -722,19 +722,19 @@ colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
 # empty site df
 site_df2 <- data.frame(
   site = character(ncol(site_df)),
-  fit_a_site = numeric(ncol(site_df)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
+  fit_asite = numeric(ncol(site_df)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
 )
 for (i in 1:ncol(site_df)) { # i = 1
   site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
 }
 site_df2
 
