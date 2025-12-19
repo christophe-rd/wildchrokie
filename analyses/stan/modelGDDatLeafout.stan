@@ -17,7 +17,7 @@ parameters{
 real a;
 real<lower=0> sigma_atreeid;  
 real<lower=0> sigma_y;
-vector[Nspp] asp; 		
+vector[Nspp] aspp; 		
 vector[Nsite] asite;
 vector[Ntreeid] zatreeid;
 }
@@ -30,18 +30,18 @@ array[N] real ypred;
 for (i in 1:N){ 
     ypred[i]=
         a + 
-        asp[species[i]] + 
+        aspp[species[i]] + 
         asite[site[i]] +
         atreeid[treeid[i]];
     }
 }
 
 model{	
-  // asp ~ normal(0, sigma_asp);
+  // aspp ~ normal(0, sigma_aspp);
   // asite ~ normal(0, sigma_asite);
   zatreeid ~ normal(0, 1); 
   a ~ normal(8, 2);
-  asp ~ normal(0, 1);
+  aspp ~ normal(0, 1);
   asite ~ normal(0, 1);
   sigma_atreeid ~ normal(0, 0.5);
   sigma_y ~ normal(0, 1);

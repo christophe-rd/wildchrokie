@@ -40,7 +40,7 @@ if (runsimdata) {
 set.seed(124)
 a <- 150
 sigma_y <- 3
-sigma_asp <- 6
+sigma_aspp <- 6
 sigma_atreeid <- 2
 sigma_asite <- 4
 
@@ -72,28 +72,28 @@ sim <- data.frame(
 sim
 
 # get intercept values for each parameter
-asp <- rnorm(n_spp, 0, sigma_asp)
+aspp <- rnorm(n_spp, 0, sigma_aspp)
 asite <- rnorm(n_site, 0, sigma_asite)
 atreeid <- rnorm(n_treeid, 0, sigma_atreeid)
 
 # Add my parameters to the df
 sim$atreeid <- atreeid[treeid]
 sim$asite <- asite[sim$site]
-sim$asp <- asp[sim$spp]
+sim$aspp <- aspp[sim$spp]
 
 # add the rest
 sim$a <- a
 sim$sigma_y <- sigma_y
 
 sim$sigma_atreeid <- sigma_atreeid
-sim$sigma_asp <- sigma_asp
+sim$sigma_aspp <- sigma_aspp
 sim$sigma_asite <- sigma_asite
 sim$error <- rnorm(N, 0, sigma_y)
 
 # adding both options of tree rings
 sim$gddleafout <- 
   sim$asite + 
-  sim$asp + 
+  sim$aspp + 
   sim$atreeid +
   sim$a +
   sim$error
@@ -107,7 +107,7 @@ sim$site <- as.factor(sim$site)
 sim$sitename <- paste("site", sim$site)
 
 sim$a_asite <- sim$a + sim$asite
-sim$a_asp <- sim$a + sim$asp
+sim$a_aspp <- sim$a + sim$aspp
 
 # plot sim data
 ggplot(sim) +
@@ -115,7 +115,7 @@ ggplot(sim) +
                  binwidth = 2) +
   geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
              linewidth = 0.9, alpha = 0.8, color = "black") +
-  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+  geom_vline(aes(xintercept = a_aspp, linetype = "Species mean"),
              linewidth = 0.9, color = "black") +
   geom_vline(aes(xintercept = a, linetype = "Grand mean"),
              linewidth = 1.2, color = "black") +
@@ -141,7 +141,7 @@ ggplot(sim) +
                  binwidth = 2) +
   # geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
   #            linewidth = 0.9, alpha = 0.8, color = "black") +
-  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+  geom_vline(aes(xintercept = a_aspp, linetype = "Species mean"),
              linewidth = 0.9, color = "black") +
   geom_vline(aes(xintercept = a, linetype = "Grand mean"),
              linewidth = 1.2, color = "black") +
@@ -167,7 +167,7 @@ ggplot(sim) +
                  linewidth = 1) +
   # geom_vline(aes(xintercept = a_asite, linetype = "Site mean"),
   #            linewidth = 0.9, alpha = 0.8, color = "black") +
-  geom_vline(aes(xintercept = a_asp, linetype = "Species mean"),
+  geom_vline(aes(xintercept = a_aspp, linetype = "Species mean"),
              linewidth = 0.9, color = "black") +
   geom_vline(aes(xintercept = a, linetype = "Grand mean"),
              linewidth = 1.2, color = "black") +
@@ -189,10 +189,10 @@ ggplot(sim) +
 ggsave("figures/gddLeafout_simData/sim_gddLeafoutSppFacet_density.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # plot gdd
-gdd$year <- as.factor(gdd$year)
-ggplot(gdd)  +
-  geom_point(aes(x = doy, y = GDD_10, color = year)) + 
-  geom_vline(xintercept = mean(emp$leafout))
+# gdd$year <- as.factor(gdd$year)
+# ggplot(gdd)  +
+#   geom_point(aes(x = doy, y = GDD_10, color = year)) + 
+#   geom_vline(xintercept = mean(emp$leafout))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Run model on sim data #####
@@ -206,7 +206,7 @@ site <- as.numeric(as.character(sim$site))
 Ntreeid <- length(unique(sim$treeid))
 treeid <- treeid
 
-
+N 
 table(treeid, species)
 
 if(FALSE){
@@ -218,7 +218,7 @@ writeRDS(fit, "output/stanOutput/gddLeafout_simData/fit")
 
 fit@model_pars
 fit@inits
-pairs(fit, pars = c("sigma_asp", "asp"))
+pairs(fit, pars = c("sigma_aspp", "aspp"))
 pairs(fit, pars = c("sigma_asite", "asite"))
 
 
@@ -253,7 +253,7 @@ for (i in 1:ncol(sigma_df)) { # i = 1
 }
 
 sigma_df2$sim_sigma <- c(
-  sigma_asp, 
+  sigma_aspp, 
   sigma_asite, 
   sigma_atreeid, 
   sigma_y)
@@ -288,37 +288,37 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover a spp  ######
-asp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
-asp_cols <- asp_cols[!grepl("zasp", asp_cols)]
-asp_cols <- asp_cols[!grepl("sigma", asp_cols)]
+###### Recover aspp  ######
+aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zaspp", aspp_cols)]
+aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
 
-asp_df <- df_fit[, colnames(df_fit) %in% asp_cols]
+aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(asp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(asp_df))
-#empty asp df
-asp_df2 <- data.frame(
-  spp = character(ncol(asp_df)),
-  fit_asp = numeric(ncol(asp_df)),  
-  fit_asp_per5 = NA, 
-  fit_asp_per25 = NA,
-  fit_asp_per75 = NA,
-  fit_asp_per95 = NA
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+#empty aspp df
+aspp_df2 <- data.frame(
+  spp = character(ncol(aspp_df)),
+  fit_aspp = numeric(ncol(aspp_df)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
 )
-for (i in 1:ncol(asp_df)) { # i = 1
-  asp_df2$spp[i] <- colnames(asp_df)[i]         
-  asp_df2$fit_asp[i] <- round(mean(asp_df[[i]]),3)  
-  asp_df2$fit_asp_per5[i] <- round(quantile(asp_df[[i]], probs = 0.05), 3)
-  asp_df2$fit_asp_per25[i] <- round(quantile(asp_df[[i]], probs = 0.25), 3)
-  asp_df2$fit_asp_per75[i] <- round(quantile(asp_df[[i]], probs = 0.75), 3)
-  asp_df2$fit_asp_per95[i] <- round(quantile(asp_df[[i]], probs = 0.95), 3)
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
+  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
-asp_df2
+aspp_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a site ######
 site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
-# remove sigma_asp for now
+# remove sigma_aspp for now
 site_cols <- site_cols[2:length(site_cols)]
 
 site_df <- df_fit[, colnames(df_fit) %in% site_cols]
@@ -392,32 +392,32 @@ atreeid_plot
 ggsave("figures/gddLeafout_simData/atreeid_simXfit_plot.jpeg", atreeid_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Plot a spp ######
-asptoplot <- merge(
+###### Plot aspp ######
+aspptoplot <- merge(
   sim[!duplicated(sim$spp), 
-          c("spp", "asp")], 
-  asp_df2[!duplicated(asp_df2$spp), 
-           c("spp", "fit_asp", 
-             "fit_asp_per5", 
-             "fit_asp_per25", 
-             "fit_asp_per75", 
-             "fit_asp_per95")], 
+          c("spp", "aspp")], 
+  aspp_df2[!duplicated(aspp_df2$spp), 
+           c("spp", "fit_aspp", 
+             "fit_aspp_per5", 
+             "fit_aspp_per25", 
+             "fit_aspp_per75", 
+             "fit_aspp_per95")], 
   by = "spp"
 )
-asptoplot
+aspptoplot
 
-asp_plot <- ggplot(asptoplot, aes(x = asp, y = fit_asp)) +
-  geom_errorbar(aes(ymin = fit_asp_per5, ymax = fit_asp_per95), 
+aspp_plot <- ggplot(aspptoplot, aes(x = aspp, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per5, ymax = fit_aspp_per95), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
-  geom_errorbar(aes(ymin = fit_asp_per25, ymax = fit_asp_per75), 
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75), 
                 width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim asp", y = "fit asp", title = "") +
+  labs(x = "sim aspp", y = "fit aspp", title = "") +
   geom_point(color = "#046C9A", size = 2) +
   theme_minimal()
-asp_plot
+aspp_plot
 # ggsave!
-ggsave("figures/gddLeafout_simData/asp_simXfit_plot.jpeg", asp_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/gddLeafout_simData/aspp_simXfit_plot.jpeg", aspp_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
@@ -449,7 +449,7 @@ ggsave("figures/gddLeafout_simData/asite_simXfit_plot.jpeg", asite_plot, width =
 
 ##### Combine plots #####
 combined_plot <- (atreeid_plot + sigma_plot) /
-  (asp_plot + asite_plot)
+  (aspp_plot + asite_plot)
 combined_plot
 ggsave("figures/gddLeafout_simData/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
@@ -483,23 +483,23 @@ for (p in predictors) {
 }
 dev.off()
 
-# Parameterization for asp
-asp_df3 <- asp_df
-colnames(asp_df3) <- paste("asp", colnames(asp_df3), sep = "")
-sigmaXasp <- cbind(sigma_df, asp_df3)
+# Parameterization for aspp
+aspp_df3 <- aspp_df
+colnames(aspp_df3) <- paste("aspp", colnames(aspp_df3), sep = "")
+sigmaXaspp <- cbind(sigma_df, aspp_df3)
 
-predictors <- colnames(asp_df3)
+predictors <- colnames(aspp_df3)
 
-jpeg("figures/gddLeafout_simData/aspParameterization.jpg", width = 2000, height = 2000, 
+jpeg("figures/gddLeafout_simData/asppParameterization.jpg", width = 2000, height = 2000, 
      units = "px", res = 300)
 par(mfrow = c(3, 3))
 
 for (p in predictors) {
   plot(
-    sigmaXasp[[p]],
-    log(sigmaXasp$sigma_asp),
+    sigmaXaspp[[p]],
+    log(sigmaXaspp$sigma_aspp),
     xlab = p,
-    ylab = "log(sigma_asp)",
+    ylab = "log(sigma_aspp)",
     pch = 16,
     col = adjustcolor("#B40F20", alpha.f = 0.09)
   )
@@ -592,13 +592,13 @@ util$check_all_hmc_diagnostics(diagnostics)
 
 samples <- util$extract_expectand_vals(fit)
 
-# asp
-# asp <- names(samples)[grepl("asp", names(samples))]
-# asp <- asp[!grepl("sigma", asp)]
+# aspp
+# aspp <- names(samples)[grepl("aspp", names(samples))]
+# aspp <- aspp[!grepl("sigma", aspp)]
 
-# jpeg("figures/gddLeafout_empData/aspParameterization.jpg", width = 2000, height = 2000, 
+# jpeg("figures/gddLeafout_empData/asppParameterization.jpg", width = 2000, height = 2000, 
 #      units = "px", res = 300)
-# util$plot_div_pairs(asp, "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+# util$plot_div_pairs(aspp, "sigma_aspp", samples, diagnostics, transforms = list("sigma_aspp" = 1))
 # dev.off()
 
 # asite
@@ -661,7 +661,7 @@ sigma_df2
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
 treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
-# remove sigma_asp for now
+# remove sigma_aspp for now
 treeid_cols <- treeid_cols[2:length(treeid_cols)]
 
 treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
@@ -687,28 +687,28 @@ for (i in 1:ncol(treeid_df)) { # i = 1
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+###### Recover aspp  ######
+aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
+  fit_aspp = numeric(ncol(aspp_df)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 aspp_df2
 
@@ -797,19 +797,19 @@ aspp_long <- reshape(
 )
 aspp_long
 
-# asp prior
-asp_prior <- rnorm(1e4, 0, 0.5)
+# aspp prior
+aspp_prior <- rnorm(1e4, 0, 0.5)
 
 ggplot() +
-  geom_density(data = data.frame(asp_prior = asp_prior),
-               aes(x = asp_prior, colour = "Prior"),
+  geom_density(data = data.frame(aspp_prior = aspp_prior),
+               aes(x = aspp_prior, colour = "Prior"),
                linewidth = 0.8) +
   geom_density(data = aspp_long,
                aes(x = value, colour = "Posterior", group = spp),
                linewidth = 0.5) +
   # facet_wrap(~spp) + 
   labs(title = "priorVSposterior_atreeid",
-       x = "asp", y = "Density", color = "Curve") +
+       x = "aspp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
@@ -897,7 +897,7 @@ util$check_all_hmc_diagnostics(diagnostics)
 samples <- util$extract_expectand_vals(fit)
 fit@model_pars
 base_samples <- util$filter_expectands(samples,
-                                       c('asp[1]', 'asp[2]', 'asp[3]'))
+                                       c('aspp[1]', 'aspp[2]', 'aspp[3]'))
 util$check_all_expectand_diagnostics(base_samples)
 
 par(mfrow=c(1, 1))
