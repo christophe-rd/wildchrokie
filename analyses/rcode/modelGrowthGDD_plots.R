@@ -592,3 +592,22 @@ legend(
 
 dev.off()
 
+# Mis ####
+# comparing with and without grand slopes. This requires running manually the stuff in main script
+bsp_withGrandSlope <- bspp_df2
+b <- mean(df_fit[, "b"])
+bsp_withGrandSlope$b_bsp <- bsp_withGrandSlope$fit_b_spp + b
+
+bsp_noGrandSlope <- bspp_df2
+
+mer <- merge(bsp_withGrandSlope, bsp_noGrandSlope, by = "spp")
+
+ggplot(mer, aes(x = b_bsp, y = fit_b_spp.y)) +
+  # geom_errorbar(aes(xmin = fit_asite_per25, xmax = fit_asite_per75), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  # geom_errorbar(aes(ymin = fit_asite_per25_LP, ymax = fit_asite_per75_LP), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "with grand slope mean", y = "no grand slope mean", title = "bsp estimates with and without grand slope") +
+  theme_minimal()
