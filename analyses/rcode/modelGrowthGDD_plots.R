@@ -98,19 +98,19 @@ colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
 #empty spp df
 bspp_df2 <- data.frame(
   spp = character(ncol(bspp_df)),
-  fit_b_spp = numeric(ncol(bspp_df)),  
-  fit_b_spp_per5 = NA, 
-  fit_b_spp_per25 = NA,
-  fit_b_spp_per75 = NA,
-  fit_b_spp_per95 = NA
+  fit_bspp = numeric(ncol(bspp_df)),  
+  fit_bspp_per5 = NA, 
+  fit_bspp_per25 = NA,
+  fit_bspp_per75 = NA,
+  fit_bspp_per95 = NA
 )
 for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+  bspp_df2$fit_bspp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_bspp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_bspp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_bspp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 bspp_df2
 
@@ -156,19 +156,19 @@ colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
+  fit_aspp = numeric(ncol(aspp_df)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 aspp_df2
 
@@ -204,10 +204,10 @@ site_df2
 ##### Plot lines #####
 # Gdd on the x axis and growth on y ####
 aspp_df2$a <- mean(df_fit[,"a"])
-aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_a_spp
+aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_aspp
 aspp_df2$b <- mean(df_fit[,"b"])
-aspp_df2$bsp <- bspp_df2$fit_b_spp
-aspp_df2$b_bsp <- aspp_df2$b + bspp_df2$fit_b_spp
+aspp_df2$bsp <- bspp_df2$fit_bspp
+aspp_df2$b_bsp <- aspp_df2$b + bspp_df2$fit_bspp
 
 colnames(aspp_df2)[colnames(aspp_df2) == "spp"] <- "spp_num"
 
@@ -231,13 +231,13 @@ ggsave("figures/empiricalData/empiricalData/slope_intercepts_varyingslopes.jpeg"
 aspp_df2$spp <- as.numeric(aspp_df2$spp)
 aspp_df2$spp_name <- emp$spp[match(aspp_df2$spp, emp$spp_num)]
 
-asp_mean_plot <- ggplot(aspp_df2, aes(x = fit_a_spp, y = spp_name, color = spp_name)) +
+aspp_mean_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = spp_name)) +
   geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_spp_per5, 
-                     xmax = fit_a_spp_per95), 
+  geom_errorbarh(aes(xmin = fit_aspp_per5, 
+                     xmax = fit_aspp_per95), 
                  width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_spp_per25, 
-                     xmax = fit_a_spp_per75), 
+  geom_errorbarh(aes(xmin = fit_aspp_per25, 
+                     xmax = fit_aspp_per75), 
                  width = 0, alpha = 1, linewidth = 2) +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
@@ -254,9 +254,9 @@ asp_mean_plot <- ggplot(aspp_df2, aes(x = fit_a_spp, y = spp_name, color = spp_n
   ) +
   theme_minimal() +
   scale_y_discrete(limits = rev)  
-asp_mean_plot
-ggsave("figures/empiricalData/asp_mean_plot.jpeg",
-       asp_mean_plot,
+aspp_mean_plot
+ggsave("figures/empiricalData/aspp_mean_plot.jpeg",
+       aspp_mean_plot,
        width = 8, height = 6, 
        units = "in", dpi = 300)
 
@@ -301,15 +301,15 @@ bspp_df2$spp <- as.numeric(bspp_df2$spp)
 bspp_df2$spp_name <- emp$spp[match(bspp_df2$spp, emp$spp_num)]
 
 bsp_mean_plot <- ggplot(bspp_df2, 
-                        aes(x = fit_b_spp, 
+                        aes(x = fit_bspp, 
                             y = spp_name, 
                             color = spp_name)) +
   geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_b_spp_per5, 
-                     xmax = fit_b_spp_per95), 
+  geom_errorbarh(aes(xmin = fit_bspp_per5, 
+                     xmax = fit_bspp_per95), 
                  width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_b_spp_per25, 
-                     xmax = fit_b_spp_per75), 
+  geom_errorbarh(aes(xmin = fit_bspp_per25, 
+                     xmax = fit_bspp_per75), 
                  width = 0, alpha = 1, linewidth = 2) +
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
@@ -334,7 +334,7 @@ ggsave("figures/empiricalData/bsp_mean_plot.jpeg",
        units = "in", dpi = 300)
 
 
-combined_plot <- (asp_mean_plot) /
+combined_plot <- (aspp_mean_plot) /
                   (site_mean_plot) / 
                   (bsp_mean_plot)
 combined_plot
@@ -523,22 +523,22 @@ aspp_df2$y_pos <- spp_y[aspp_df2$spp]
 
 
 segments(
-  x0 = aspp_df2$fit_a_spp_per5,
-  x1 = aspp_df2$fit_a_spp_per95,
+  x0 = aspp_df2$fit_aspp_per5,
+  x1 = aspp_df2$fit_aspp_per95,
   y0 = aspp_df2$y_pos,
   col = adjustcolor(my_colors[aspp_df2$spp], alpha.f = 0.9),
   lwd = 2
 )
 
 segments(
-  x0 = aspp_df2$fit_a_spp_per25,
-  x1 = aspp_df2$fit_a_spp_per75,
+  x0 = aspp_df2$fit_aspp_per25,
+  x1 = aspp_df2$fit_aspp_per75,
   y0 = aspp_df2$y_pos,
   col = my_colors[aspp_df2$spp],
   lwd = 4
 )
 points(
-  aspp_df2$fit_a_spp,
+  aspp_df2$fit_aspp,
   aspp_df2$y_pos,
   pch = 21,
   bg  = my_colors[aspp_df2$spp],
@@ -596,13 +596,13 @@ dev.off()
 # comparing with and without grand slopes. This requires running manually the stuff in main script
 bsp_withGrandSlope <- bspp_df2
 b <- mean(df_fit[, "b"])
-bsp_withGrandSlope$b_bsp <- bsp_withGrandSlope$fit_b_spp + b
+bsp_withGrandSlope$b_bsp <- bsp_withGrandSlope$fit_bspp + b
 
 bsp_noGrandSlope <- bspp_df2
 
 mer <- merge(bsp_withGrandSlope, bsp_noGrandSlope, by = "spp")
 
-ggplot(mer, aes(x = b_bsp, y = fit_b_spp.y)) +
+ggplot(mer, aes(x = b_bsp, y = fit_bspp.y)) +
   # geom_errorbar(aes(xmin = fit_asite_per25, xmax = fit_asite_per75), 
   #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   # geom_errorbar(aes(ymin = fit_asite_per25_LP, ymax = fit_asite_per75_LP), 

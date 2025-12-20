@@ -44,10 +44,10 @@ set.seed(124)
 a <- 15
 b <- 4
 sigma_y <- 0.1
-sigma_a_spp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
-sigma_a_treeid <- 0.15
-sigma_a_site <- 0.3
-sigma_b_spp <- 0.25
+sigma_aspp <- 0.5 # This is pretty low, but I guess you think your species are closely related and will be similar?
+sigma_atreeid <- 0.15
+sigma_asite <- 0.3
+sigma_bspp <- 0.25
 
 n_site <- 10 # number of sites
 n_spp <- 10 # number of species
@@ -79,38 +79,38 @@ simcoef <- data.frame(
 )
 
 # get intercept values for each species
-a_spp <- rnorm(n_spp, 0, sigma_a_spp)
-a_site <- rnorm(n_site, 0, sigma_a_site)
-a_treeid <- rnorm(n_treeid, 0, sigma_a_treeid)
+aspp <- rnorm(n_spp, 0, sigma_aspp)
+asite <- rnorm(n_site, 0, sigma_asite)
+atreeid <- rnorm(n_treeid, 0, sigma_atreeid)
 
 # get slope values for each speciess
-b_spp <- rnorm(n_spp, 0, sigma_b_spp)
+bspp <- rnorm(n_spp, 0, sigma_bspp)
 
 # Add my parameters to the df
-simcoef$a_treeid <- a_treeid[treeid]
-simcoef$a_site <- a_site[simcoef$site]
-simcoef$a_spp <- a_spp[simcoef$spp]
-simcoef$b_spp <- b_spp[simcoef$spp]
+simcoef$atreeid <- atreeid[treeid]
+simcoef$asite <- asite[simcoef$site]
+simcoef$aspp <- aspp[simcoef$spp]
+simcoef$bspp <- bspp[simcoef$spp]
 
 # add the rest of the boring stuff 
 simcoef$a <- a
 simcoef$b <- b
 simcoef$sigma_y <- sigma_y
-simcoef$sigma_a_treeid <- sigma_a_treeid
-simcoef$sigma_a_spp <- sigma_a_spp
-simcoef$sigma_a_site <- sigma_a_site
+simcoef$sigma_atreeid <- sigma_atreeid
+simcoef$sigma_aspp <- sigma_aspp
+simcoef$sigma_asite <- sigma_asite
 simcoef$error <- rnorm(N, 0, sigma_y)
 simcoef$gdd <- rnorm(N, 1800, 100)
 simcoef$gddcons <- simcoef$gdd/200
 
 # adding both options of tree rings
 simcoef$ringwidth <- 
-  simcoef$a_site + 
-  simcoef$a_spp + 
-  simcoef$a_treeid + 
+  simcoef$asite + 
+  simcoef$aspp + 
+  simcoef$atreeid + 
   simcoef$a +
   (simcoef$b*simcoef$gddcons) + 
-  (simcoef$b_spp*simcoef$gddcons)+
+  (simcoef$bspp*simcoef$gddcons)+
   simcoef$error
 
 # prepare grouping factors
@@ -186,10 +186,10 @@ for (i in 1:ncol(sigma_df)) { # i = 1
 }
 
 sigma_df2$sim_sigma <- c(
-  sigma_b_spp,
-                         sigma_a_spp, 
-                         sigma_a_site, 
-                         sigma_a_treeid, 
+  sigma_bspp,
+                         sigma_aspp, 
+                         sigma_asite, 
+                         sigma_atreeid, 
                          sigma_y)
 
 
@@ -205,19 +205,19 @@ colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
 #empty spp df
 bspp_df2 <- data.frame(
   spp = character(ncol(bspp_df)),
-  fit_b_spp = numeric(ncol(bspp_df)),  
-  fit_b_spp_per5 = NA, 
-  fit_b_spp_per25 = NA,
-  fit_b_spp_per75 = NA,
-  fit_b_spp_per95 = NA
+  fit_bspp = numeric(ncol(bspp_df)),  
+  fit_bspp_per5 = NA, 
+  fit_bspp_per25 = NA,
+  fit_bspp_per75 = NA,
+  fit_bspp_per95 = NA
 )
 for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+  bspp_df2$fit_bspp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_bspp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_bspp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_bspp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 
 
@@ -227,7 +227,7 @@ for (i in 1:ncol(bspp_df)) { # i = 1
 
 # grab treeid 
 treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
-# remove sigma_asp for now
+# remove sigma_aspp for now
 treeid_cols <- treeid_cols[2:length(treeid_cols)]
 
 treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
@@ -236,47 +236,47 @@ colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
 treeid_df2 <- data.frame(
   treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df)) { # i = 1
   treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
-aspp_cols <- aspp_cols[!grepl("zasp", aspp_cols)]
+aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
+aspp_cols <- aspp_cols[!grepl("zaspp", aspp_cols)]
 aspp_cols <- aspp_cols[!grepl("sigma", aspp_cols)]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
+  fit_aspp = numeric(ncol(aspp_df)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -291,19 +291,19 @@ colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
 # empty site df
 site_df2 <- data.frame(
   site = character(ncol(site_df)),
-  fit_a_site = numeric(ncol(site_df)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
+  fit_asite = numeric(ncol(site_df)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
 )
 for (i in 1:ncol(site_df)) { # i = 1
   site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
 }
 site_df2
 
@@ -332,113 +332,113 @@ ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height 
 ###### Plot b spp ######
 bspptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
-          c("spp", "b_spp")], 
+          c("spp", "bspp")], 
   bspp_df2[!duplicated(bspp_df2$spp), 
-           c("spp", "fit_b_spp", "fit_b_spp_per25", "fit_b_spp_per75", "fit_b_spp_per5", "fit_b_spp_per95")], 
+           c("spp", "fit_bspp", "fit_bspp_per25", "fit_bspp_per75", "fit_bspp_per5", "fit_bspp_per95")], 
   by = "spp"
 )
 bspptoplot
 
-b_spp_simXfit_plot <- ggplot(bspptoplot, aes(x = b_spp, y = fit_b_spp)) +
-  geom_errorbar(aes(ymin = fit_b_spp_per5, ymax = fit_b_spp_per95), 
+bspp_simXfit_plot <- ggplot(bspptoplot, aes(x = bspp, y = fit_bspp)) +
+  geom_errorbar(aes(ymin = fit_bspp_per5, ymax = fit_bspp_per95), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_b_spp_per25, ymax = fit_b_spp_per75), 
+  geom_errorbar(aes(ymin = fit_bspp_per25, ymax = fit_bspp_per75), 
                 width = 0, linewidth = 1.5, color = "darkgray", alpha = 0.7) +
   geom_point(color = "#046C9A", size = 2) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim b_spp", y = "fit b_spp", title = "") +
+  labs(x = "sim bspp", y = "fit bspp", title = "") +
   theme_minimal()
-b_spp_simXfit_plot
+bspp_simXfit_plot
 # ggsave!
-ggsave("figures/b_spp_simXfit_plot2.jpeg", b_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/bspp_simXfit_plot2.jpeg", bspp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot treeid ######
 # add sim to fit treeid df
 treeidtoplot <- merge(
   simcoef[!duplicated(simcoef$treeid), 
-          c("treeid", "a_treeid")], 
+          c("treeid", "atreeid")], 
   treeid_df2[!duplicated(treeid_df2$treeid), 
-             c("treeid", "fit_a_treeid", 
-               "fit_a_treeid_per5", 
-               "fit_a_treeid_per25",
-               "fit_a_treeid_per75",
-               "fit_a_treeid_per95")], 
+             c("treeid", "fit_atreeid", 
+               "fit_atreeid_per5", 
+               "fit_atreeid_per25",
+               "fit_atreeid_per75",
+               "fit_atreeid_per95")], 
   by = "treeid"
 )
 treeidtoplot
 # plot treeid
-a_treeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = a_treeid, y = fit_a_treeid)) +
-  geom_errorbar(aes(ymin = fit_a_treeid_per5, ymax = fit_a_treeid_per95), 
+atreeid_simXfit_plot <- ggplot(treeidtoplot, aes(x = atreeid, y = fit_atreeid)) +
+  geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_treeid", y = "fit a_treeid", title = "") +
+  labs(x = "sim atreeid", y = "fit atreeid", title = "") +
   theme_minimal()
-a_treeid_simXfit_plot
+atreeid_simXfit_plot
 # ggsave!
-ggsave("figures/a_treeid_simXfit_plot.jpeg", a_treeid_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/atreeid_simXfit_plot.jpeg", atreeid_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot a spp ######
 aspptoplot <- merge(
   simcoef[!duplicated(simcoef$spp), 
-          c("spp", "a_spp")], 
+          c("spp", "aspp")], 
   aspp_df2[!duplicated(aspp_df2$spp), 
-           c("spp", "fit_a_spp", 
-             "fit_a_spp_per5", 
-             "fit_a_spp_per25", 
-             "fit_a_spp_per75", 
-             "fit_a_spp_per95")], 
+           c("spp", "fit_aspp", 
+             "fit_aspp_per5", 
+             "fit_aspp_per25", 
+             "fit_aspp_per75", 
+             "fit_aspp_per95")], 
   by = "spp"
 )
 aspptoplot
 
-a_spp_simXfit_plot <- ggplot(aspptoplot, aes(x = a_spp, y = fit_a_spp)) +
-  geom_errorbar(aes(ymin = fit_a_spp_per5, ymax = fit_a_spp_per95), 
+aspp_simXfit_plot <- ggplot(aspptoplot, aes(x = aspp, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per5, ymax = fit_aspp_per95), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
-  geom_errorbar(aes(ymin = fit_a_spp_per25, ymax = fit_a_spp_per75), 
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75), 
                 width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_spp", y = "fit a_spp", title = "") +
+  labs(x = "sim aspp", y = "fit aspp", title = "") +
   geom_point(color = "#046C9A", size = 2) +
   theme_minimal()
-a_spp_simXfit_plot
+aspp_simXfit_plot
 # ggsave!
-ggsave("figures/a_spp_simXfit_plot.jpeg", a_spp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/aspp_simXfit_plot.jpeg", aspp_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
 sitetoplot <- merge(
   simcoef[!duplicated(simcoef$site), 
-          c("site", "a_site")], 
+          c("site", "asite")], 
   site_df2[!duplicated(site_df2$site), 
-           c("site", "fit_a_site", 
-             "fit_a_site_per5", 
-             "fit_a_site_per25", 
-             "fit_a_site_per75", 
-             "fit_a_site_per95")], 
+           c("site", "fit_asite", 
+             "fit_asite_per5", 
+             "fit_asite_per25", 
+             "fit_asite_per75", 
+             "fit_asite_per95")], 
   by = "site"
 )
 sitetoplot
 
-a_site_simXfit_plot <- ggplot(sitetoplot, aes(x = a_site, y = fit_a_site)) +
-  geom_errorbar(aes(ymin = fit_a_site_per5, ymax = fit_a_site_per95), 
+asite_simXfit_plot <- ggplot(sitetoplot, aes(x = asite, y = fit_asite)) +
+  geom_errorbar(aes(ymin = fit_asite_per5, ymax = fit_asite_per95), 
                 width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
-  geom_errorbar(aes(ymin = fit_a_site_per25, ymax = fit_a_site_per75), 
+  geom_errorbar(aes(ymin = fit_asite_per25, ymax = fit_asite_per75), 
                 width = 0, linewidth = 1.5, color = "darkgray", alpha=0.9) +
   geom_point(color = "#046C9A", size = 2) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "sim a_site", y = "fit a_site", title = "") +
+  labs(x = "sim asite", y = "fit asite", title = "") +
   theme_minimal()
-a_site_simXfit_plot
+asite_simXfit_plot
 # ggsave!
-ggsave("figures/a_site_simXfit_plot.jpeg", a_site_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
+ggsave("figures/asite_simXfit_plot.jpeg", asite_simXfit_plot, width = 6, height = 6, units = "in", dpi = 300)
 
 ###### Combine plots  ######
-combined_plot <- (a_treeid_simXfit_plot) /
-  (sigma_simXfit_plot + b_spp_simXfit_plot ) /
-  (a_spp_simXfit_plot + a_site_simXfit_plot)
+combined_plot <- (atreeid_simXfit_plot) /
+  (sigma_simXfit_plot + bspp_simXfit_plot ) /
+  (aspp_simXfit_plot + asite_simXfit_plot)
 combined_plot
 ggsave("figures/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
@@ -471,7 +471,7 @@ ggplot() +
   theme_minimal()
 ggsave("figures/priorsPredictiveChecks/priorVSposterior_sigma_bsp.jpeg", width = 10, height = 8, units = "in", dpi = 300)
 
-sigma_asp_draw <- abs(rnorm(draws, 0, 0.5))
+sigma_aspp_draw <- abs(rnorm(draws, 0, 0.5))
 sigma_asite_draw <- abs(rnorm(draws, 0, 0.5))
 sigma_atree_draw <- abs(rnorm(draws, 0, 0.05))
 sigma_y_draw <- abs(rnorm(draws, 0, 5))
@@ -536,14 +536,14 @@ ggplot(sigma_long_bsp, aes(x = value, color = source)) +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
-# Sigma asp
-sigma_long_asp <- data.frame(
-  value  = c(sigma_df$post_sigma_asp, sigma_df$prior_sigma_asp),
-  source = rep(c("post_sigma_asp", "prior_sigma_asp"), 
+# Sigma aspp
+sigma_long_aspp <- data.frame(
+  value  = c(sigma_df$post_sigma_aspp, sigma_df$prior_sigma_aspp),
+  source = rep(c("post_sigma_aspp", "prior_sigma_aspp"), 
                each = nrow(sigma_df))
 )
 
-ggplot(sigma_long_asp, aes(x = value, color = source, fill = source)) +
+ggplot(sigma_long_aspp, aes(x = value, color = source, fill = source)) +
   geom_density(alpha = 0.3) +
   labs(color = "Parameter", fill = "Parameter") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
@@ -628,6 +628,15 @@ fit <- stan("stan/twolevelhierint.stan",
                    "Ntreeid", "treeid", 
                    "gdd"),
             iter=4000, chains=4, cores=4)
+
+fit_noGrandSlope <- stan("stan/twolevelhierint_noGrandSlope.stan", 
+            data=c("N","y",
+                   "Nspp","species",
+                   "Nsite", "site", 
+                   "Ntreeid", "treeid", 
+                   "gdd"),
+            iter=4000, chains=4, cores=4)
+
 saveRDS(fit, "output/stanOutput/fit")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
@@ -648,7 +657,7 @@ pairs(fit, pars = c("a", "b",
 ##### Recover parameters from the posterior ##### 
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
-
+# df_fit <- as.data.frame(fit_noGrandSlope)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
@@ -688,19 +697,19 @@ colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
 #empty spp df
 bspp_df2 <- data.frame(
   spp = character(ncol(bspp_df)),
-  fit_b_spp = numeric(ncol(bspp_df)),  
-  fit_b_spp_per5 = NA, 
-  fit_b_spp_per25 = NA,
-  fit_b_spp_per75 = NA,
-  fit_b_spp_per95 = NA
+  fit_bspp = numeric(ncol(bspp_df)),  
+  fit_bspp_per5 = NA, 
+  fit_bspp_per25 = NA,
+  fit_bspp_per75 = NA,
+  fit_bspp_per95 = NA
 )
 for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_b_spp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_b_spp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_b_spp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_b_spp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_b_spp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
+  bspp_df2$fit_bspp[i] <- round(mean(bspp_df[[i]]),3)  
+  bspp_df2$fit_bspp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
+  bspp_df2$fit_bspp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
+  bspp_df2$fit_bspp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
+  bspp_df2$fit_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 bspp_df2
 
@@ -720,45 +729,45 @@ colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
 treeid_df2 <- data.frame(
   treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df)) { # i = 1
   treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
-  fit_a_spp = numeric(ncol(aspp_df)),  
-  fit_a_spp_per5 = NA, 
-  fit_a_spp_per25 = NA,
-  fit_a_spp_per75 = NA,
-  fit_a_spp_per95 = NA
+  fit_aspp = numeric(ncol(aspp_df)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
 )
 for (i in 1:ncol(aspp_df)) { # i = 1
   aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_a_spp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_a_spp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_a_spp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_a_spp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_a_spp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
 }
 aspp_df2
 
@@ -772,19 +781,19 @@ colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
 # empty site df
 site_df2 <- data.frame(
   site = character(ncol(site_df)),
-  fit_a_site = numeric(ncol(site_df)),  
-  fit_a_site_per5 = NA, 
-  fit_a_site_per25 = NA,
-  fit_a_site_per75 = NA,
-  fit_a_site_per95 = NA
+  fit_asite = numeric(ncol(site_df)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
 )
 for (i in 1:ncol(site_df)) { # i = 1
   site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_a_site[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_a_site_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_a_site_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_a_site_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_a_site_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
+  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)  
+  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
+  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
+  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
+  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
 }
 site_df2
 
@@ -832,7 +841,7 @@ ggplot() +
 ###### plot b prior vs posterior ######
 b_posterior <- df_fit[, colnames(df_fit) %in% "b"]
 
-b_prior <- rnorm(1e4, 1, 0.2)
+b_prior <- rnorm(1e4, 0.5, 0.5)
 
 ggplot() +
   geom_density(data = data.frame(b = b_prior),
@@ -890,15 +899,15 @@ treeid_long
 # simulate priors
 hyperparameter_draws <- 8000
 parameter_draws <- 1000
-n_sigma_treeid <- 200
+n_sigmatreeid <- 200
 
 # set to prior values
-sigma_treeid_vec <- abs(rnorm(n_sigma_treeid, 0, 0.3))
+sigmatreeid_vec <- abs(rnorm(n_sigmatreeid, 0, 0.3))
 
-prior_treeid <- rep(NA, parameter_draws*length(sigma_treeid_vec))
+prior_treeid <- rep(NA, parameter_draws*length(sigmatreeid_vec))
 
-for (i in 1: length(sigma_treeid_vec)) {
-  prior_treeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigma_treeid_vec[i])
+for (i in 1: length(sigmatreeid_vec)) {
+  prior_treeid[((i - 1)*parameter_draws + 1):(i*parameter_draws)] <- rnorm(parameter_draws, 0, sigmatreeid_vec[i])
 }
 prior_treeid
 
@@ -919,7 +928,7 @@ ggplot() +
   theme_minimal()
 
 
-###### Plot asp prior vs posterior ######
+###### Plot aspp prior vs posterior ######
 # convert posterior distribution to long format
 aspp_long <- reshape(
   aspp_df,
@@ -932,19 +941,19 @@ aspp_long <- reshape(
 )
 aspp_long
 
-# asp prior
-asp_prior <- rnorm(1e4, 0, 0.5)
+# aspp prior
+aspp_prior <- rnorm(1e4, 0, 0.5)
 
 ggplot() +
-  geom_density(data = data.frame(asp_prior = asp_prior),
-               aes(x = asp_prior, colour = "Prior"),
+  geom_density(data = data.frame(aspp_prior = aspp_prior),
+               aes(x = aspp_prior, colour = "Prior"),
                linewidth = 0.8) +
   geom_density(data = aspp_long,
                aes(x = value, colour = "Posterior", group = spp),
                linewidth = 0.5) +
   # facet_wrap(~spp) + 
   labs(title = "priorVSposterior_atreeid",
-       x = "asp", y = "Density", color = "Curve") +
+       x = "aspp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
@@ -989,7 +998,7 @@ bsp_long <- reshape(
 )
 bsp_long
 
-# asp prior
+# aspp prior
 bsp_prior <- rnorm(1e4, 0, 0.3)
 
 ggplot() +
@@ -1007,6 +1016,8 @@ ggplot() +
 
 
 # other diagnostics?
+if (FALSE) {
+  
 diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 
 util$check_all_hmc_diagnostics(diagnostics)
 
@@ -1014,8 +1025,10 @@ samples <- util$extract_expectand_vals(fit_noncentered)
 
 util$plot_div_pairs("zbsp[1]", "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
 
-util$plot_div_pairs("zasp[1]", "sigma_asp", samples, diagnostics, transforms = list("sigma_asp" = 1))
+util$plot_div_pairs("zaspp[1]", "sigma_aspp", samples, diagnostics, transforms = list("sigma_aspp" = 1))
 
 util$plot_div_pairs("zasite[1]", "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
 
 util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
+
+}

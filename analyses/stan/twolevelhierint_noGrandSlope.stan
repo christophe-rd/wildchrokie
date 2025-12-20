@@ -21,7 +21,7 @@ real a;		// mean intercept across everything
 real<lower=0> sigma_atreeid;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 vector[Ntreeid] zatreeid; // variation of intercept across tree ids, no-centered
-vector[Nspp] asp;
+vector[Nspp] aspp;
 vector[Nsite] asite;
 vector[Nspp] bsp;
 }
@@ -34,7 +34,7 @@ array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
     ypred[i]=
         a + 
-        asp[species[i]] + 
+        aspp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
         bsp[species[i]]*gdd[i];
@@ -45,7 +45,7 @@ for (i in 1:N){ // don't change this for reparameterization
 model{	
   a ~ normal(5, 1);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
-  asp ~ normal(0, 0.5);
+  aspp ~ normal(0, 0.5);
   asite ~ normal(0, 0.5);
   bsp ~ normal(0.5, 0.5);
   sigma_atreeid ~ normal(0, 0.3); 
