@@ -130,29 +130,29 @@ colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
 # empty treeid dataframe
 treeid_df2 <- data.frame(
   treeid = character(ncol(treeid_df)),
-  fit_a_treeid = numeric(ncol(treeid_df)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(treeid_df)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(treeid_df)) { # i = 1
   treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_a_treeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_a_treeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_a_treeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_a_treeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_a_treeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
+  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
+  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
+  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
+  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
+  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
 }
 treeid_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Recover a spp  #####
-aspp_cols <- colnames(df_fit)[grepl("asp", colnames(df_fit))]
+aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
 
 aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
 # change their names
-colnames(aspp_df) <- sub("asp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
+colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
 #empty aspp df
 aspp_df2 <- data.frame(
   spp = character(ncol(aspp_df)),
@@ -223,7 +223,7 @@ ggplot(emp2) +
   scale_colour_manual(values = wes_palette("AsteroidCity1")) +
   # facet_wrap(~ spp) +
   theme_minimal()
-ggsave("figures/empiricalData/empiricalData/slope_intercepts_varyingslopes.jpeg", 
+ggsave("figures/empiricalData/slope_intercepts_varyingslopes.jpeg", 
        width = 8, height = 6, units = "in", dpi = 300)
 
 ##### mu plots #####
@@ -378,19 +378,19 @@ fullatreeid2 <- as.data.frame(fullatreeid)
 # empty treeid dataframe
 treeid_df4 <- data.frame(
   treeid = character(ncol(fullatreeid2)),
-  fit_a_treeid = numeric(ncol(fullatreeid2)),  
-  fit_a_treeid_per5 = NA, 
-  fit_a_treeid_per25 = NA,
-  fit_a_treeid_per75 = NA,
-  fit_a_treeid_per95 = NA
+  fit_atreeid = numeric(ncol(fullatreeid2)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
 )
 for (i in 1:ncol(fullatreeid2)) { # i = 1
   treeid_df4$treeid[i] <- colnames(fullatreeid2)[i]         
-  treeid_df4$fit_a_treeid[i] <- round(mean(fullatreeid2[[i]]),3)  
-  treeid_df4$fit_a_treeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
-  treeid_df4$fit_a_treeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
-  treeid_df4$fit_a_treeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
-  treeid_df4$fit_a_treeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
+  treeid_df4$fit_atreeid[i] <- round(mean(fullatreeid2[[i]]),3)  
+  treeid_df4$fit_atreeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
+  treeid_df4$fit_atreeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
+  treeid_df4$fit_atreeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
+  treeid_df4$fit_atreeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
 }
 treeid_df4
 
@@ -479,8 +479,8 @@ treeid_df4$y_pos
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df4$fit_a_treeid_per5-0.5,
-                 treeid_df4$fit_a_treeid_per95+0.5)),
+  xlim = range(c(treeid_df4$fit_atreeid_per5-0.5,
+                 treeid_df4$fit_atreeid_per95+0.5)),
   ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
@@ -490,8 +490,8 @@ plot(
 
 # --- Add horizontal error bars (5–95%) ---
 segments(
-  x0 = treeid_df4$fit_a_treeid_per5,
-  x1 = treeid_df4$fit_a_treeid_per95,
+  x0 = treeid_df4$fit_atreeid_per5,
+  x1 = treeid_df4$fit_atreeid_per95,
   y0 = treeid_df4$y_pos,
   col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1
@@ -499,8 +499,8 @@ segments(
 
 # --- Add thicker horizontal error bars (25–75%) ---
 segments(
-  x0 = treeid_df4$fit_a_treeid_per25,
-  x1 = treeid_df4$fit_a_treeid_per75,
+  x0 = treeid_df4$fit_atreeid_per25,
+  x1 = treeid_df4$fit_atreeid_per75,
   y0 = treeid_df4$y_pos,
   col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
   lwd = 1.5
@@ -508,7 +508,7 @@ segments(
 
 # --- Add the points ---
 points(
-  treeid_df4$fit_a_treeid,
+  treeid_df4$fit_atreeid,
   treeid_df4$y_pos,
   cex = 0.8,
   pch = my_shapes[treeid_df4$site],
@@ -568,7 +568,7 @@ site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 0.1,
+  x = max(treeid_df4$fit_atreeid_per95) - 0.1,
   y = max(treeid_df4$y_pos) + 1,
   legend = species_legend_order,
   col = my_colors[species_legend_order],    # index so colors match
@@ -581,7 +581,7 @@ legend(
 site_legend_order <- c("SH", "GR", "WM", "HF")
 # site legen
 legend(
-  x = max(treeid_df4$fit_a_treeid_per95) - 0.1,
+  x = max(treeid_df4$fit_atreeid_per95) - 0.1,
   y = max(treeid_df4$y_pos) - 15,
   legend = site_legend_order,
   pch = my_shapes[site_legend_order],
@@ -611,3 +611,4 @@ ggplot(mer, aes(x = b_bsp, y = fit_bspp.y)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "with grand slope mean", y = "no grand slope mean", title = "bsp estimates with and without grand slope") +
   theme_minimal()
+
