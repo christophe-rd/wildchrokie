@@ -891,21 +891,23 @@ ggplot() +
   theme_minimal()
 
 # Retrodictive checks ####
-diagnostics <- util$extract_hmc_diagnostics(fit) 
-util$check_all_hmc_diagnostics(diagnostics)
-
 samples <- util$extract_expectand_vals(fit)
-fit@model_pars
-base_samples <- util$filter_expectands(samples,
-                                       c('aspp[1]', 'aspp[2]', 'aspp[3]'))
-util$check_all_expectand_diagnostics(base_samples)
+y_rep <- util$filter_expectands(samples, names(samples[grepl("y_rep", names(samples))]))
+head(y_rep)
 
-par(mfrow=c(1, 1))
 
-pred_names <- sapply(1:no_naleafout$pgsGDD,
-                     function(n) paste0('y_pred_grid[', n, ']'))
-util$plot_conn_pushforward_quantiles(samples, pred_names, data$x_grid,
-                                     xlab="x", ylab="y")
-points(data$x, data$y, pch=16, cex=1.0, col="white")
-points(data$x, data$y, pch=16, cex=0.8, col="black")
+y_rep_mat <- sapply(y_rep, function(x) as.vector(t(x)))
 
+# back transform to original scale
+y_rep_mat <- y_rep_mat*scale
+dim(y_rep_mat)
+
+draw <- y_rep_mat[1, ]
+
+plot(no_naleafout$leafoutGDD, draw,
+     xlab = "Observed GDD at leafout",
+     ylab = "GDD at leafout from 
+     generated quantities",
+     pch = 16, col = rgb(0,0,0,0.4))
+
+abline(0, 1, col = "red", lwd = 2)
