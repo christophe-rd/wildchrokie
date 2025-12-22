@@ -46,11 +46,11 @@ for (i in 1:N){ // don't change this for reparameterization
 
 model{	
   a ~ normal(5, 1);
-  b ~ normal(1, 0.2);
+  b ~ normal(0.5, 0.3);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 0.5);
   asite ~ normal(0, 0.5);
-  bsp ~ normal(0, 0.3);
+  bsp ~ normal(0, 0.2);
   sigma_atreeid ~ normal(0, 0.3); 
   sigma_y ~ normal(0, 1);
   

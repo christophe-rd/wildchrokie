@@ -201,7 +201,7 @@ site_df2
 
 
 
-##### Plot lines #####
+#### Plot lines ####
 # Gdd on the x axis and growth on y ####
 aspp_df2$a <- mean(df_fit[,"a"])
 aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_aspp
