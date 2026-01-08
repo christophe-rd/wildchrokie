@@ -47,7 +47,7 @@ model{
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 0.5);
   asite ~ normal(0, 0.5);
-  bsp ~ normal(0.5, 0.5);
+  bsp ~ normal(0, 0.3);
   sigma_atreeid ~ normal(0, 0.3); 
   sigma_y ~ normal(0, 1);
   
