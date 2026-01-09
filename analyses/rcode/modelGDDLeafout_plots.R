@@ -1005,7 +1005,6 @@ dev.off()
 aspp_df2$percentchange <- aspp_df2$fit_aspp/mean(df_fit[,"a"])
   
 ##### Leaf out vs GDD #####
-leaf
 aspp_df23 <- aspp_df2
 colnames(aspp_df23) <- c("spp_num", "fit_aspp", "fit_aspp_per5", "fit_aspp_per25", "fit_aspp_per75",  "fit_aspp_per95", "spp_name"
 )
@@ -1022,3 +1021,21 @@ ggplot(asppchecks, aes(x = leafout)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
   theme_minimal()
+
+
+ggplot(no_naleafout, aes(x = leafout)) +
+  # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  # geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP), 
+  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_histogram(aes(color = spp_name, fill = spp_name), binwidth = 4, alpha = 0.7) +
+  facet_wrap(~spp_name, nrow = 4, ncol = 3) +
+  geom_vline(aes(xintercept = a_aspp)) + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
+  theme_minimal()
+
+ggplot(no_naleafout) +
+  geom_point(aes(x = leafout, y = leafoutGDD)) +
+  facet_wrap(~year)
+plot(no_naleafout$leafout)

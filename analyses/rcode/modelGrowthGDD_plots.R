@@ -612,3 +612,15 @@ ggplot(mer, aes(x = b_bsp, y = fit_bspp.y)) +
   labs(x = "with grand slope mean", y = "no grand slope mean", title = "bsp estimates with and without grand slope") +
   theme_minimal()
 
+# Justifying priors of 0.3 ####
+hist(rnorm(1e4, 0, 0.3/200))
+
+# a slope of mean 0 and sd of 0.3 means it 
+quantile(rnorm(1e4, 0, 0.3), probs = 0.05)
+quantile(rnorm(1e4, 0, 0.3), probs = 0.95)
+
+# a slope of 0.5 back converted to gdd at original scale, at intercept of 0, would mean that a average pgs
+hist(emp$pgsGDD)
+mean(emp$pgsGDD)*quantile(rnorm(1e4, 0, 0.3), probs = 0.95)/200 + mean(aspp_df2$a_asp) + mean(site_df2$fit_a_site)
+aspp_df2
+hist(emp$lengthCM*10)
