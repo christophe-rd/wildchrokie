@@ -624,3 +624,11 @@ hist(emp$pgsGDD)
 mean(emp$pgsGDD)*quantile(rnorm(1e4, 0, 0.3), probs = 0.95)/200 + mean(aspp_df2$a_asp) + mean(site_df2$fit_a_site)
 aspp_df2
 hist(emp$lengthCM*10)
+
+# a prior of 0.3 is for the scale of a y in mm and a gdd divided by the constant 200. Therfore to back transform it, it should be divided by 200
+priorfornonconsgdd <- 0.3/200
+quantile(rnorm(1e4, 0, 0.3)/200*10, probs = 0.05)
+quantile(rnorm(1e4, 0, 0.3)/200*10, probs = 0.95)
+
+hist(rnorm(1e4, 0, 0.3)/200*10)
+# 
