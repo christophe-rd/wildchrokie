@@ -43,6 +43,12 @@ temp5 <- temp4[!is.na(temp4$pgsGDD),]
 temp5$idyear <- paste(temp5$treeid, temp5$year, sep = "_")
 temp6 <- temp5[!duplicated(temp5$idyear),] 
 
+temp6$latbi <- NA
+temp6$latbi[which(temp6$spp == "ALNINC")] <- "Alnus incana"
+temp6$latbi[which(temp6$spp == "BETPAP")] <- "Betula papyrifera"
+temp6$latbi[which(temp6$spp == "BETPOP")] <- "Betula populifolia"
+temp6$latbi[which(temp6$spp == "BETALL")] <- "Betula alleghaniensis"
+
 # write csv
 write_csv(temp6, "output/empiricalDataMAIN.csv")
 
