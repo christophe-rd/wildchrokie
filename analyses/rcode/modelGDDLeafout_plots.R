@@ -295,7 +295,7 @@ treeid_df4$site_name <- no_naleafout$site[match(treeid_df4$treeid,
 treeid_df4
 
 
-if (FALSE){
+if (TRUE){
 # Recover parameters for larger priors ####
 # === === === === === === === === === === === === === === === === === === === ==
 df_fit_largerPriors <- as.data.frame(fit_largerPriors)
@@ -548,8 +548,144 @@ treeid_df4_largerPriors$site_name <- no_naleafout$site[match(treeid_df4_largerPr
                                                 no_naleafout$treeid_num)]
 treeid_df4_largerPriors
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Prior vs posterior ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### asp #####
+# Regular prior
+aspp_long <- reshape(
+  aspp_df,
+  direction = "long",
+  varying = list(names(aspp_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(aspp_df),
+  idvar = "draw"
+)
+aspp_long
+
+# aspp prior
+aspp_prior <- rnorm(1e4, 0, 1)*20
+
+asp_priorunchanged <- ggplot() +
+  geom_density(data = data.frame(aspp_prior = aspp_prior),
+               aes(x = aspp_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = aspp_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_asp back 
+       converted to original scale",
+       x = "aspp", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(-200, 200)+
+  theme_minimal()
+asp_priorunchanged
+
+# asp prior 3x
+aspp_long_LP <- reshape(
+  aspp_df_largerPriors,
+  direction = "long",
+  varying = list(names(aspp_df_largerPriors)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(aspp_df_largerPriors),
+  idvar = "draw"
+)
+aspp_long_LP
+
+# aspp prior
+aspp_prior_LP <- rnorm(1e4, 0, 3)*20
+
+asp_priorunchanged_LP <- ggplot() +
+  geom_density(data = data.frame(aspp_prior_LP = aspp_prior_LP),
+               aes(x = aspp_prior_LP, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = aspp_long_LP,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_asp back 
+       converted to original scale with 3x priors",
+       x = "aspp", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(-200, 200) +
+  theme_minimal()
+asp_priorunchanged_LP
+
+asp_priorPosterior <- (asp_priorunchanged)/
+  asp_priorunchanged_LP
+ggsave("figures/gddLeafout_empData/asp_priorPosterior.jpeg", asp_priorPosterior, width = 6, height = 10, units = "in", dpi = 300)
+
+##### asite #####
+# Regular prior
+asite_long <- reshape(
+  site_df,
+  direction = "long",
+  varying = list(names(site_df)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(site_df),
+  idvar = "draw"
+)
+asite_long
+
+# asite prior
+asite_prior <- rnorm(1e4, 0, 1)*20
+
+asite_priorunchanged <- ggplot() +
+  geom_density(data = data.frame(asite_prior = asite_prior),
+               aes(x = asite_prior, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = asite_long,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_asp back 
+       converted to original scale",
+       x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(-200, 200)+
+  theme_minimal()
+asite_priorunchanged
+
+# asite prior 3x
+asite_long_LP <- reshape(
+  site_df_largerPriors,
+  direction = "long",
+  varying = list(names(site_df_largerPriors)),
+  v.names = "value",
+  timevar = "spp",
+  times = names(site_df_largerPriors),
+  idvar = "draw"
+)
+asite_long_LP
+
+# asite prior
+asite_prior_LP <- rnorm(1e4, 0, 3)*20
+
+asite_priorunchanged_LP <- ggplot() +
+  geom_density(data = data.frame(asite_prior_LP = asite_prior_LP),
+               aes(x = asite_prior_LP, colour = "Prior"),
+               linewidth = 0.8) +
+  geom_density(data = asite_long_LP,
+               aes(x = value, colour = "Posterior", group = spp),
+               linewidth = 0.5) +
+  # facet_wrap(~spp) + 
+  labs(title = "priorVSposterior_asp back 
+       converted to original scale with 3x priors",
+       x = "asite", y = "Density", color = "Curve") +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(-200, 200) +
+  theme_minimal()
+asite_priorunchanged_LP
+
+asite_priorPosterior <- (asite_priorunchanged)/
+  asite_priorunchanged_LP
+ggsave("figures/gddLeafout_empData/asite_priorPosterior.jpeg", asite_priorPosterior, width = 6, height = 10, units = "in", dpi = 300)
+
 # Prior differences mean comparisons ####
-treeid_df2
 colnames(treeid_df_largerPriors2)[2:ncol(treeid_df_largerPriors2)] <-
   paste(colnames(treeid_df_largerPriors2)[2:ncol(treeid_df_largerPriors2)], "LP", sep = "_")
 
@@ -731,7 +867,7 @@ points(
   col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4)
 )
 
-aspp_df2$spp <- aspp_df2$spp_name
+# aspp_df2$spp <- aspp_df2$spp_name
 
 spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
 
@@ -922,7 +1058,7 @@ points(
   col = adjustcolor(my_colors[treeid_df4_largerPriors$spp], alpha.f = 0.4)
 )
 
-aspp_df_largerPriors2$spp <- aspp_df_largerPriors2$spp_name
+# aspp_df_largerPriors2$spp <- aspp_df_largerPriors2$spp_name
 
 spp_y <- tapply(treeid_df4_largerPriors$y_pos, treeid_df4_largerPriors$spp, mean)
 
@@ -1023,14 +1159,33 @@ ggplot(asppchecks, aes(x = leafout)) +
   theme_minimal()
 
 
+
+# how many days species leaf out different
+aggregate(leafout ~ spp, no_naleafout,  mean)
+
+### check how many gdd around those days
+vec <- 125:135
+period <- subset(gdd, doy %in% vec)
+
+base_temp <- 10
+
+# average across years
+periodmean <- aggregate(GDD_10 ~ doy, period, FUN = mean)
+periodmean$GDD_10_diff <- NA
+for (i in 2:nrow(periodmean)) {
+  periodmean$GDD_10_diff[i] <- periodmean$GDD_10[i] - periodmean$GDD_10[i - 1]
+}
+mean(periodmean$GDD_10_diff, na.rm = TRUE)
+
+# across 3 years, for the period of doy 125 to doy 135, there is approximately 4 GDD per day, so my prior need to span at least 16 GDD 
 ggplot(no_naleafout, aes(x = leafout)) +
-  # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75), 
+  # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75),
   #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  # geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP), 
+  # geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP),
   #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_histogram(aes(color = spp_name, fill = spp_name), binwidth = 4, alpha = 0.7) +
-  facet_wrap(~spp_name, nrow = 4, ncol = 3) +
-  geom_vline(aes(xintercept = a_aspp)) + 
+  geom_histogram(aes(color = spp, fill = spp), binwidth = 4, alpha = 0.7) +
+  facet_wrap(~spp, nrow = 4, ncol = 3) +
+  geom_vline(aes(xintercept = a_aspp)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
   theme_minimal()
