@@ -1161,10 +1161,10 @@ ggplot(asppchecks, aes(x = leafout)) +
 
 
 # how many days species leaf out different
-aggregate(leafout ~ spp, no_naleafout,  mean)
+ag <- aggregate(leafout ~ spp + year, no_naleafout,  mean)
 
 ### check how many gdd around those days
-vec <- 125:135
+vec <- c(min(ag$leafout) : max(ag$leafout))
 period <- subset(gdd, doy %in% vec)
 
 base_temp <- 10
@@ -1172,12 +1172,23 @@ base_temp <- 10
 # average across years
 periodmean <- aggregate(GDD_10 ~ doy, period, FUN = mean)
 periodmean$GDD_10_diff <- NA
+
+# calculates gdd increment per day
 for (i in 2:nrow(periodmean)) {
   periodmean$GDD_10_diff[i] <- periodmean$GDD_10[i] - periodmean$GDD_10[i - 1]
 }
-mean(periodmean$GDD_10_diff, na.rm = TRUE)
 
-# across 3 years, for the period of doy 125 to doy 135, there is approximately 4 GDD per day, so my prior need to span at least 16 GDD 
+# averages gdd increment per day
+meangddperiod <- mean(periodmean$GDD_10_diff, na.rm = TRUE)
+
+(max(ag$leafout) - min(ag$leafout)) * meangddperiod 
+
+(max(ag$leafout) - min(ag$leafout)) * meangddperiod / 2
+
+quantile(rnorm(1e4, 0, 50), prob = 0.05)
+hist(rnorm(1e4, 0, 8)/20)
+hist(rnorm(1e4, 0, 8/20))
+# across 3 years, for the period of doy 125 to doy 135, there is approximately 4 GDD per day, so my prior need to span at least 22 GDD 
 ggplot(no_naleafout, aes(x = leafout)) +
   # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75),
   #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
