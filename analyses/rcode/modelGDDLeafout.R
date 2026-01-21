@@ -890,11 +890,74 @@ ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Generate point estimates ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# create an empty data frame in which I have more years than I currently have
+length(unique(no_naleafout$treeid_num))
+dfpoints <- data.frame(
+  year = rep(2017:2024, times = 105),
+  treeid_num = rep(unique(no_naleafout$treeid_num), each = 8)
+)
+test <- merge(dfpoints, 
+              no_naleafout[, c("year", "treeid_num", "spp_num", "site_num", "leafoutGDD")],   
+              by = c("year", "treeid_num"),
+              all.x = TRUE)
+
+# fill in the remaining spp and site by matching to of df
+test$site_num <- no_naleafout$site_num[match(test$treeid_num, no_naleafout$treeid_num)]
+test$spp_num <- no_naleafout$spp_num[match(test$treeid_num, no_naleafout$treeid_num)]
+
+# add parameter mean posterior estimates 
+test$a <- mean(df_fit[,"a"])*20
+test$aspp <- aspp_df2$fit_aspp[match(test$spp_num, aspp_df2$spp)]
+test$asite <- site_df2$fit_asite[match(test$site_num, site_df2$site)]
+test$atreeid <- treeid_df2$fit_atreeid[match(test$treeid_num, treeid_df2$treeid)]
+test$estimates <- test$a + test$aspp + test$asite + test$atreeid
+
+# quickly plot results to compare to observed data
+forplot <- test[!is.na(test$leafoutGDD),]
+par(mfrow=c(1,2))
+hist(forplot$leafoutGDD)
+hist(forplot$estimates) # at least it's consistent with my generated quantities bloc
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# quick and dirty way that's likely wrong
+generatedquantities <- df_fit[, grepl("y_rep", names(df_fit))]
+dim(no_naleafout)
+dim(generatedquantities)
+
+gen <- reshape(
+  generatedquantities,
+  direction = "long",
+  varying = list(names(generatedquantities)),
+  v.names = "value",
+  timevar = "generatedEstimate",
+  times = names(generatedquantities),
+  idvar = "draw"
+)
+
+# convert back to original scale
+gen$value2 <- gen$value * 20
+# averaged per observation over the 8000 samples
+agg <- aggregate(value2 ~ generatedEstimate, gen, FUN = mean)
+
+par(mfrow=c(1,2))
+hist(agg$value2)
+hist(no_naleafout$leafoutGDD)
+
+
+# Mike's way that doesn't work for me yet
 samples <- util$extract_expectand_vals(fit)
-y_rep <- util$filter_expectands(samples, names(samples[grepl("y_rep", names(samples))]))
+y_rep <- util$filter_expectands(samples, "y_rep")
 head(y_rep)
 
+par(mfrow = c(1,1), mar = c(4,4,1,1))
+util$plot_hist_quantiles(samples, "y_rep", 
+                         -2, 34, 1,
+                         baseline_values = y)
 
 y_rep_mat <- sapply(y_rep, function(x) as.vector(t(x)))
 

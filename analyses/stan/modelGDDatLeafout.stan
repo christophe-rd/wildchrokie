@@ -51,6 +51,9 @@ model{
 generated quantities {
   array[N] real y_rep;
   for (i in 1:N) {
-    y_rep[i] = normal_rng(ypred[i], sigma_y);
+    y_rep[i] = normal_rng(a + 
+        aspp[species[i]] + 
+        asite[site[i]] +
+        atreeid[treeid[i]], sigma_y);
   }
 }
