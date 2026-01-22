@@ -629,14 +629,6 @@ fit <- stan("stan/twolevelhierint.stan",
                    "gdd"),
             iter=4000, chains=4, cores=4)
 
-fit_noGrandSlope <- stan("stan/twolevelhierint_noGrandSlope.stan", 
-            data=c("N","y",
-                   "Nspp","species",
-                   "Nsite", "site", 
-                   "Ntreeid", "treeid", 
-                   "gdd"),
-            iter=4000, chains=4, cores=4)
-
 saveRDS(fit, "output/stanOutput/fit")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
@@ -649,15 +641,15 @@ util$check_all_hmc_diagnostics(diagnostics)
 
 fit@model_pars
 
-pairs(fit, pars = c("a", "b",
-                    "sigma_atreeid",
-                    "sigma_y"))
+# pairs(fit, pars = c("a", "b",
+#                     "sigma_atreeid",
+#                     "sigma_y"))
 
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior ##### 
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
-# df_fit <- as.data.frame(fit_noGrandSlope)
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover sigmas ######
 unique(colnames(df_fit))
@@ -823,11 +815,11 @@ dev.off()
 ###### Plot a prior vs posterior ######
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
-a_prior <- rnorm(1e4, 5, 1)
+a_prior <- rnorm(1e4, 5, 3)
 
-ggplot() +
+priora <- ggplot() +
   geom_density(data = data.frame(a = a_prior),
-               aes(x = a, colour = "Prior"),
+               aes(x = a, colour = "Prior at N(5,3)"),
                linewidth = 1) +
   geom_density(data = data.frame(value = a_posterior),
                aes(x = value, colour = "Posterior"),
@@ -836,24 +828,7 @@ ggplot() +
        x = "a", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
-###### plot b prior vs posterior ######
-b_posterior <- df_fit[, colnames(df_fit) %in% "b"]
-
-b_prior <- rnorm(1e4, 0.5, 0.5)
-
-ggplot() +
-  geom_density(data = data.frame(b = b_prior),
-               aes(x = b, colour = "Prior"),
-               linewidth = 1) +
-  geom_density(data = data.frame(value = b_posterior),
-               aes(x = value, colour = "Posterior"),
-               linewidth = 1) +
-  labs(title = "priorVSposterior_b",
-       x = "b", y = "Density", color = "Curve") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  theme_minimal()
+priora
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
 ###### Plot sigmas prior vs posterior ######
@@ -869,11 +844,12 @@ sigma_long <- reshape(
 sigma_long
 
 sigma_long$prior <- NA
-sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.3)
+sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.5)
 sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 1)
 
-ggplot(sigma_long) +
-  geom_density(aes(x = prior, colour = "Prior"),
+priorsigmas <- ggplot(sigma_long) +
+  geom_density(aes(x = prior, colour = "Prior sigma_atreeid  at N(0, 0.5)
+Prior sigma_y at N(0,1)"),
                linewidth = 0.8) +
   geom_density(aes(x = value, colour = "Posterior"),
                linewidth = 0.8) +
@@ -882,6 +858,7 @@ ggplot(sigma_long) +
        x = "", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+priorsigmas
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot atreeid prior vs posterior ######
@@ -902,7 +879,7 @@ parameter_draws <- 1000
 n_sigmatreeid <- 200
 
 # set to prior values
-sigmatreeid_vec <- abs(rnorm(n_sigmatreeid, 0, 0.3))
+sigmatreeid_vec <- abs(rnorm(n_sigmatreeid, 0, 0.5))
 
 prior_treeid <- rep(NA, parameter_draws*length(sigmatreeid_vec))
 
@@ -914,7 +891,7 @@ prior_treeid
 # sub of some treeids for plotting
 subtreeid <- subset(treeid_long, treeid %in% sample(treeid_long$treeid, 5))
 
-ggplot() +
+prioratreeid <- ggplot() +
   geom_density(data = data.frame(prior_treeid = prior_treeid),
                aes(x = prior_treeid, colour = "Prior"),
                linewidth = 0.8) +
@@ -926,7 +903,7 @@ ggplot() +
        x = "treeid", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
-
+prioratreeid
 
 ###### Plot aspp prior vs posterior ######
 # convert posterior distribution to long format
@@ -942,20 +919,22 @@ aspp_long <- reshape(
 aspp_long
 
 # aspp prior
-aspp_prior <- rnorm(1e4, 0, 0.5)
+aspp_prior <- rnorm(1e4, 0, 2)
 
-ggplot() +
+prioraspp <- ggplot() +
   geom_density(data = data.frame(aspp_prior = aspp_prior),
-               aes(x = aspp_prior, colour = "Prior"),
+               aes(x = aspp_prior, colour = "Prior at N(0,2)"),
                linewidth = 0.8) +
   geom_density(data = aspp_long,
                aes(x = value, colour = "Posterior", group = spp),
                linewidth = 0.5) +
   # facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_atreeid",
+  labs(title = "priorVSposterior_aspp",
        x = "aspp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(c(-6, 6)) +
   theme_minimal()
+prioraspp
 
 ###### Plot asite prior vs posterior ######
 # convert posterior distribution to long format
@@ -970,20 +949,22 @@ asite_long <- reshape(
 )
 asite_long
 
-asite_prior <- rnorm(1e4, 0, 0.5)
+asite_prior <- rnorm(1e4, 0, 0.8)
 
-ggplot() +
+priorasite <- ggplot() +
   geom_density(data = data.frame(asite_prior = asite_prior),
-               aes(x = asite_prior, colour = "Prior"),
+               aes(x = asite_prior, colour = "Prior at N(0, 0.8)"),
                linewidth = 0.8) +
   geom_density(data = asite_long,
                aes(x = value, colour = "Posterior", group = site),
                linewidth = 0.5) +
   # facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_atreeid",
+  labs(title = "priorVSposterior_asite",
        x = "asite", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
+  xlim(c(-6, 6)) +
   theme_minimal()
+priorasite
 
 ###### Plot bsp prior vs posterior ######
 # convert posterior distribution to long format
@@ -999,20 +980,28 @@ bsp_long <- reshape(
 bsp_long
 
 # aspp prior
-bsp_prior <- rnorm(1e4, 0, 0.3)
+bsp_prior <- rnorm(1e4, 0, 0.4)
 
-ggplot() +
+priorbsp <- ggplot() +
   geom_density(data = data.frame(bsp_prior = bsp_prior),
-               aes(x = bsp_prior, colour = "Prior"),
+               aes(x = bsp_prior, colour = "Prior at N(0, 0.4)"),
                linewidth = 0.8) +
   geom_density(data = bsp_long,
                aes(x = value, colour = "Posterior", group = spp),
                linewidth = 0.5) +
   # facet_wrap(~spp) + 
-  labs(title = "priorVSposterior_atreeid",
+  labs(title = "priorVSposterior_bsp",
        x = "bsp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+priorbsp
+
+#  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+priorcombined <- (priorsigmas) / (priora) / (prioraspp) / (priorasite) / (priorbsp)
+ggsave("figures/priorVSposteriorCombined.jpeg", priorcombined, width = 8, height = 12, units = "in", dpi = 300)
+
+#  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
 
 
 # other diagnostics?
