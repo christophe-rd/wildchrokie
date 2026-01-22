@@ -924,53 +924,23 @@ hist(forplot$estimates) # at least it's consistent with my generated quantities 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# quick and dirty way that's likely wrong
-generatedquantities <- df_fit[, grepl("y_rep", names(df_fit))]
-dim(no_naleafout)
-dim(generatedquantities)
-
-gen <- reshape(
-  generatedquantities,
-  direction = "long",
-  varying = list(names(generatedquantities)),
-  v.names = "value",
-  timevar = "generatedEstimate",
-  times = names(generatedquantities),
-  idvar = "draw"
-)
-
-# convert back to original scale
-gen$value2 <- gen$value * 20
-# averaged per observation over the 8000 samples
-agg <- aggregate(value2 ~ generatedEstimate, gen, FUN = mean)
-
-par(mfrow=c(1,2))
-hist(agg$value2)
-hist(no_naleafout$leafoutGDD)
-
-
-# Mike's way that doesn't work for me yet
 samples <- util$extract_expectand_vals(fit)
-y_rep <- util$filter_expectands(samples, "y_rep")
-head(y_rep)
 
-par(mfrow = c(1,1), mar = c(4,4,1,1))
-util$plot_hist_quantiles(samples, "y_rep", 
-                         -2, 34, 1,
-                         baseline_values = y)
+# back convert the object samples to the original gdd scale
+samples2 <- lapply(samples, function(x) x*scale)
+y2 <- y*scale
 
-y_rep_mat <- sapply(y_rep, function(x) as.vector(t(x)))
+jpeg(
+  filename = "figures/gddLeafout_empData/retrodictiveHist.jpeg",
+  width = 2400,      
+  height = 2400,
+  res = 300          
+)
+util$plot_hist_quantiles(samples2, "y_rep", 
+                         -20, # lower x axis limit
+                         680, # upper x axis limit
+                         20, # binning
+                         baseline_values = y2,
+                         xlab = "gdd at leafout")
+dev.off()
 
-# back transform to original scale
-y_rep_mat <- y_rep_mat*scale
-dim(y_rep_mat)
-
-draw <- y_rep_mat[1, ]
-
-plot(no_naleafout$leafoutGDD, draw,
-     xlab = "Observed GDD at leafout",
-     ylab = "GDD at leafout from 
-     generated quantities",
-     pch = 16, col = rgb(0,0,0,0.4))
-
-abline(0, 1, col = "red", lwd = 2)

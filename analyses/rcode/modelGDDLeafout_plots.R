@@ -760,9 +760,9 @@ ggsave("figures/gddLeafout_empData/priorComp11plots.jpeg", prior11plot, width = 
 # open device
 jpeg(
   filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 par(mar = c(
   4, 
@@ -951,9 +951,9 @@ dev.off()
 # open device
 jpeg(
   filename = "figures/gddLeafout_empData/meanPlot_treeidBYspp_largerPriors.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 par(mar = c(
   4, 
@@ -1189,19 +1189,18 @@ quantile(rnorm(1e4, 0, 50), prob = 0.05)
 hist(rnorm(1e4, 0, 8)/20)
 hist(rnorm(1e4, 0, 8/20))
 # across 3 years, for the period of doy 125 to doy 135, there is approximately 4 GDD per day, so my prior need to span at least 22 GDD 
-ggplot(no_naleafout, aes(x = leafout)) +
-  # geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75),
-  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  # geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP),
-  #               width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_histogram(aes(color = spp, fill = spp), binwidth = 4, alpha = 0.7) +
-  facet_wrap(~spp, nrow = 4, ncol = 3) +
-  geom_vline(aes(xintercept = a_aspp)) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
-  theme_minimal()
+
 
 ggplot(no_naleafout) +
   geom_point(aes(x = leafout, y = leafoutGDD)) +
   facet_wrap(~year)
 plot(no_naleafout$leafout)
+
+##### Empirical data distribution #####
+ggplot(no_naleafout, aes(x = leafoutGDD)) +
+  geom_histogram(aes(color = spp, fill = spp), binwidth = 4, alpha = 0.7) +
+  facet_wrap(~spp, nrow = 4, ncol = 3) +
+  # geom_vline(aes(xintercept = a_aspp)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
+  theme_minimal()
