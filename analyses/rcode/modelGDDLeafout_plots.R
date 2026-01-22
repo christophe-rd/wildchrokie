@@ -1198,9 +1198,39 @@ plot(no_naleafout$leafout)
 
 ##### Empirical data distribution #####
 ggplot(no_naleafout, aes(x = leafoutGDD)) +
-  geom_histogram(aes(color = spp, fill = spp), binwidth = 4, alpha = 0.7) +
-  facet_wrap(~spp, nrow = 4, ncol = 3) +
+  geom_histogram(binwidth = 20, alpha = 0.7) +
+  facet_wrap(~spp, nrow = 2, ncol = 2) +
   # geom_vline(aes(xintercept = a_aspp)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
-  theme_minimal()
+  theme_classic()
+ggsave("figures/gddLeafout_empData/histSppgddleafoutggplot.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+par(mfrow=c(1, 2))
+
+leafout_wide <- reshape(
+  no_naleafout[, c("year","treeid","spp","leafoutGDD")],
+  idvar = c("year","treeid"),
+  timevar = "spp",
+  direction = "wide"
+)
+par(mfrow=c(1, 1))
+util$plot_line_hists(data$x, data$y, -6, 7, 0.5, xlab="")
+
+ainc <- leafout_wide$leafoutGDD.ALNINC
+ball <- leafout_wide$leafoutGDD.BETALL
+bpap <- leafout_wide$leafoutGDD.BETPAP
+bpop <- leafout_wide$leafoutGDD.BETPOP
+
+jpeg(
+  filename = "figures/gddLeafout_empData/histSppgddleafoutmike.jpeg",
+  width = 2400,      
+  height = 2400,
+  res = 300          
+)
+par(mfrow=c(2, 2))
+util$plot_line_hist(ainc, 0, 750, 20, xlab="gdd at leafout", main="ALNINC")
+util$plot_line_hist(ball, 0, 750, 20, xlab="gdd at leafout", main="BETALL")
+util$plot_line_hist(bpap, 0, 750, 20, xlab="gdd at leafout", main="BETPAP")
+util$plot_line_hist(bpop, 0, 750, 20, xlab="gdd at leafout", main="BETPOP")
+dev.off()
