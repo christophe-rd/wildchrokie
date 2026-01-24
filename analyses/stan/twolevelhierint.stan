@@ -12,8 +12,6 @@ int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
 vector[N] gdd; 	// gdd (predictor for slope)
 array[N] real y; 		// ring width (response)
-
-
 }
 
 parameters{
@@ -45,11 +43,11 @@ for (i in 1:N){ // don't change this for reparameterization
 model{	
   a ~ normal(5, 3);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
-  aspp ~ normal(0, 2);
-  asite ~ normal(0, 0.8);
+  aspp ~ normal(0, 6);
+  asite ~ normal(0, 2);
   bsp ~ normal(0, 0.3);
   sigma_atreeid ~ normal(0, 0.5); 
-  sigma_y ~ normal(0, 1);
+  sigma_y ~ normal(0, 3);
   
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	

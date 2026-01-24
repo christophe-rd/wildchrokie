@@ -629,6 +629,36 @@ fit <- stan("stan/twolevelhierint.stan",
                    "gdd"),
             iter=4000, chains=4, cores=4)
 
+# fit stanlmer to check differences
+emp$gdd <- emp$pgsGDD/200
+emp$y <- emp$lengthCM*10
+
+emp$site_fac <- as.factor(emp$site_num)
+emp$spp_fac <- as.factor(emp$spp_num)
+emp$treeid_fac <- as.factor(emp$treeid_num)
+
+
+fitlmer <- stan_lmer(
+  y ~ 
+  0 + site_fac + spp_fac +              # NO pooling
+  # 0 + spp_fac +               # NO pooling
+  0 + gdd:spp_fac +           # NO pooling
+  (1 | spp_fac:treeid_fac),   # partial pooling
+  data = emp,
+  prior = normal(0, 0.3),
+  prior_intercept = normal(5, 3),
+  chains = 4,
+  adapt_delta = 0.99,
+  iter = 4000,
+  core=4
+)
+
+colnames(as.data.frame(fitlmer))
+fitlmer$stanfit
+pairs(fit, pars = c("a", "b",
+                    "sigma_atreeid",
+                    "sigma_y"))
+
 saveRDS(fit, "output/stanOutput/fit")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
@@ -845,11 +875,11 @@ sigma_long
 
 sigma_long$prior <- NA
 sigma_long$prior[which(sigma_long$parameter == "sigma_atreeid")] <- rnorm(8e3, 0, 0.5)
-sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 1)
+sigma_long$prior[which(sigma_long$parameter == "sigma_y")] <- rnorm(8e3, 0, 3)
 
 priorsigmas <- ggplot(sigma_long) +
   geom_density(aes(x = prior, colour = "Prior sigma_atreeid  at N(0, 0.5)
-Prior sigma_y at N(0,1)"),
+Prior sigma_y at N(0,3)"),
                linewidth = 0.8) +
   geom_density(aes(x = value, colour = "Posterior"),
                linewidth = 0.8) +
@@ -919,11 +949,11 @@ aspp_long <- reshape(
 aspp_long
 
 # aspp prior
-aspp_prior <- rnorm(1e4, 0, 2)
+aspp_prior <- rnorm(1e4, 0, 6)
 
 prioraspp <- ggplot() +
   geom_density(data = data.frame(aspp_prior = aspp_prior),
-               aes(x = aspp_prior, colour = "Prior at N(0,2)"),
+               aes(x = aspp_prior, colour = "Prior at N(0, 6)"),
                linewidth = 0.8) +
   geom_density(data = aspp_long,
                aes(x = value, colour = "Posterior", group = spp),
@@ -932,7 +962,7 @@ prioraspp <- ggplot() +
   labs(title = "priorVSposterior_aspp",
        x = "aspp", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  xlim(c(-6, 6)) +
+  xlim(c(-20, 20)) +
   theme_minimal()
 prioraspp
 
@@ -949,11 +979,11 @@ asite_long <- reshape(
 )
 asite_long
 
-asite_prior <- rnorm(1e4, 0, 0.8)
+asite_prior <- rnorm(1e4, 0, 2)
 
 priorasite <- ggplot() +
   geom_density(data = data.frame(asite_prior = asite_prior),
-               aes(x = asite_prior, colour = "Prior at N(0, 0.8)"),
+               aes(x = asite_prior, colour = "Prior at N(0, 2)"),
                linewidth = 0.8) +
   geom_density(data = asite_long,
                aes(x = value, colour = "Posterior", group = site),
@@ -1021,3 +1051,120 @@ util$plot_div_pairs("zasite[1]", "sigma_asite", samples, diagnostics, transforms
 util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 
 }
+
+
+# RECOVER FROM STAN_LMER ####
+df_fit <- as.data.frame(fitlmer)
+sigma_cols <- colnames(df_fit)[
+  grepl("igma", colnames(df_fit))
+]
+
+sigma_df_lmer <- df_fit[, colnames(df_fit) %in% sigma_cols]
+
+colnames(sigma_df_lmer) <- c("sigma_y", "sigma_atreeid")
+
+# SIGMAS
+sigma_df2 <- data.frame(
+  sigma = character(ncol(sigma_df_lmer)),
+  mean = numeric(ncol(sigma_df_lmer)),  
+  per5 = NA, 
+  per25 = NA,
+  per75 = NA,
+  per95 = NA
+)
+
+for (i in 1:ncol(sigma_df_lmer)) {
+  sigma_df2$sigma[i] <- colnames(sigma_df_lmer)[i]
+  sigma_df2$mean[i] <- round(mean(sigma_df_lmer[[i]]),3)
+  sigma_df2$per5[i] <- round(quantile(sigma_df_lmer[[i]], 0.05),3)
+  sigma_df2$per25[i] <- round(quantile(sigma_df_lmer[[i]], 0.25),3)
+  sigma_df2$per75[i] <- round(quantile(sigma_df_lmer[[i]], 0.75),3)
+  sigma_df2$per95[i] <- round(quantile(sigma_df_lmer[[i]], 0.95),3)
+}
+sigma_df2
+
+# BSPP
+bspp_cols <- colnames(df_fit)[
+  grepl(":gdd", colnames(df_fit))
+]
+
+bspp_df_lmer <- df_fit[, colnames(df_fit) %in% bspp_cols]
+
+colnames(bspp_df_lmer) <- 1:4
+
+bspp_df2_lmer <- data.frame(
+  spp = character(ncol(bspp_df_lmer)),
+  fit_bspp = numeric(ncol(bspp_df_lmer)),  
+  fit_bspp_per5 = NA, 
+  fit_bspp_per25 = NA,
+  fit_bspp_per75 = NA,
+  fit_bspp_per95 = NA
+)
+
+for (i in 1:ncol(bspp_df_lmer)) {
+  bspp_df2_lmer$spp[i] <- colnames(bspp_df_lmer)[i]
+  bspp_df2_lmer$fit_bspp[i] <- round(mean(bspp_df_lmer[[i]]),3)
+  bspp_df2_lmer$fit_bspp_per5[i] <- round(quantile(bspp_df_lmer[[i]], 0.05),3)
+  bspp_df2_lmer$fit_bspp_per25[i] <- round(quantile(bspp_df_lmer[[i]], 0.25),3)
+  bspp_df2_lmer$fit_bspp_per75[i] <- round(quantile(bspp_df_lmer[[i]], 0.75),3)
+  bspp_df2_lmer$fit_bspp_per95[i] <- round(quantile(bspp_df_lmer[[i]], 0.95),3)
+}
+bspp_df2_lmer
+
+# ASPP
+aspp_cols <- colnames(df_fit)[
+  !grepl(":gdd", colnames(df_fit))
+]
+aspp_cols <- aspp_cols[
+  grepl("spp_", aspp_cols) & !grepl("Intercept", aspp_cols)
+]
+
+aspp_df_lmer <- df_fit[, colnames(df_fit) %in% aspp_cols]
+colnames(aspp_df_lmer) <- 1:4
+
+aspp_df2_lmer <- data.frame(
+  spp = character(ncol(aspp_df_lmer)),
+  fit_aspp = numeric(ncol(aspp_df_lmer)),  
+  fit_aspp_per5 = NA, 
+  fit_aspp_per25 = NA,
+  fit_aspp_per75 = NA,
+  fit_aspp_per95 = NA
+)
+
+for (i in 1:ncol(aspp_df_lmer)) {
+  aspp_df2_lmer$spp[i] <- colnames(aspp_df_lmer)[i]
+  aspp_df2_lmer$fit_aspp[i] <- round(mean(aspp_df_lmer[[i]]),3)
+  aspp_df2_lmer$fit_aspp_per5[i] <- round(quantile(aspp_df_lmer[[i]], 0.05),3)
+  aspp_df2_lmer$fit_aspp_per25[i] <- round(quantile(aspp_df_lmer[[i]], 0.25),3)
+  aspp_df2_lmer$fit_aspp_per75[i] <- round(quantile(aspp_df_lmer[[i]], 0.75),3)
+  aspp_df2_lmer$fit_aspp_per95[i] <- round(quantile(aspp_df_lmer[[i]], 0.95),3)
+}
+aspp_df2_lmer
+
+# SITE
+site_cols <- colnames(df_fit)[
+  grepl("site_fac", colnames(df_fit))
+]
+
+site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+
+colnames(site_df) <- sub("^b\\[\\(Intercept\\) site_num:(\\d+)\\]", "\\1", colnames(site_df))
+
+site_df2 <- data.frame(
+  site = character(ncol(site_df)),
+  fit_asite = numeric(ncol(site_df)),  
+  fit_asite_per5 = NA, 
+  fit_asite_per25 = NA,
+  fit_asite_per75 = NA,
+  fit_asite_per95 = NA
+)
+
+for (i in 1:ncol(site_df)) {
+  site_df2$site[i] <- colnames(site_df)[i]
+  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)
+  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], 0.05),3)
+  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], 0.25),3)
+  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], 0.75),3)
+  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], 0.95),3)
+}
+site_df2
