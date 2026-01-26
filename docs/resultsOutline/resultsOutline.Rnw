@@ -1,0 +1,18 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{Simple Sweave Example}
+\author{Your Name}
+\date{\today}
+\maketitle
+
+\title{Results outline}
+Below I outline results
+<<>>=
+source("../../analyses/rcode/modelGrowthGDD_plots.R")
+@
+
+
+\end{document}
