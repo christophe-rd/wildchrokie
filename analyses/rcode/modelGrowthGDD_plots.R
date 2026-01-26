@@ -15,7 +15,6 @@ options(digits = 3)
 library(ggplot2)
 library(rstan)
 library(future)
-library(shinystan)
 library(wesanderson)
 library(patchwork)
 
@@ -205,19 +204,17 @@ site_df2
 # Gdd on the x axis and growth on y ####
 aspp_df2$a <- mean(df_fit[,"a"])
 aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_aspp
-aspp_df2$b <- mean(df_fit[,"b"])
 aspp_df2$bsp <- bspp_df2$fit_bspp
-aspp_df2$b_bsp <- aspp_df2$b + bspp_df2$fit_bspp
 
 colnames(aspp_df2)[colnames(aspp_df2) == "spp"] <- "spp_num"
 
 emp2 <- emp
-emp2 <- merge(emp2, aspp_df2[, c("spp_num", "a", "b", "b_bsp", "a_asp")], 
+emp2 <- merge(emp2, aspp_df2[, c("spp_num", "a", "bsp", "a_asp")], 
               by = "spp_num")
 # plot lines
 ggplot(emp2) +
   geom_point(aes(x = pgsGDD/200, y = lengthCM*10, colour = spp)) +
-  geom_abline(aes(intercept = a_asp, slope = b_bsp, colour = spp), 
+  geom_abline(aes(intercept = a_asp, slope = bsp, colour = spp), 
               linewidth = 0.5) +
   labs(title = "", x = "pgsGDD", y = "ring width in mm") +
   scale_colour_manual(values = wes_palette("AsteroidCity1")) +
@@ -593,37 +590,6 @@ legend(
 dev.off()
 
 # Mis ####
-# comparing with and without grand slopes. This requires running manually the stuff in main script
-bsp_withGrandSlope <- bspp_df2
-b <- mean(df_fit[, "b"])
-bsp_withGrandSlope$b_bsp <- bsp_withGrandSlope$fit_bspp + b
-
-bsp_noGrandSlope <- bspp_df2
-
-mer <- merge(bsp_withGrandSlope, bsp_noGrandSlope, by = "spp")
-
-ggplot(mer, aes(x = b_bsp, y = fit_bspp.y)) +
-  geom_errorbar(aes(xmin = fit_bspp_per25.x, xmax = fit_bspp_per75.x),
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_bspp_per25.y, ymax = fit_bspp_per75.y),
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_point(color = "#046C9A", size = 2, alpha = 1) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "with grand slope mean", y = "no grand slope mean", title = "bsp estimates with and without grand slope") +
-  theme_minimal()
-
-# Justifying priors of 0.3 ####
-hist(rnorm(1e4, 0, 0.3/200))
-
-# a slope of mean 0 and sd of 0.3 means it 
-quantile(rnorm(1e4, 0, 0.3), probs = 0.05)
-quantile(rnorm(1e4, 0, 0.3), probs = 0.95)
-
-# a slope of 0.5 back converted to gdd at original scale, at intercept of 0, would mean that a average pgs
-hist(emp$pgsGDD)
-mean(emp$pgsGDD)*quantile(rnorm(1e4, 0, 0.3), probs = 0.95)/200 + mean(aspp_df2$a_asp) + mean(site_df2$fit_a_site)
-aspp_df2
-hist(emp$lengthCM*10)
 
 # a prior of 0.3 is for the scale of a y in mm and a gdd divided by the constant 200. Therfore to back transform it, it should be divided by 200
 priorfornonconsgdd <- 0.3/200

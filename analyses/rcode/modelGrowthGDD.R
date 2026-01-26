@@ -20,6 +20,7 @@ library(future)
 library(shinystan)
 library(wesanderson)
 library(patchwork)
+library(rstanarm)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -637,23 +638,26 @@ emp$site_fac <- as.factor(emp$site_num)
 emp$spp_fac <- as.factor(emp$spp_num)
 emp$treeid_fac <- as.factor(emp$treeid_num)
 
+unique(emp$spp_fac)
+emp$gdd_c <- scale(emp$gdd, scale = FALSE)
 
 fitlmer <- stan_lmer(
   y ~ 
-  0 + site_fac + spp_fac +              # NO pooling
-  # 0 + spp_fac +               # NO pooling
-  0 + gdd:spp_fac +           # NO pooling
-  (1 | spp_fac:treeid_fac),   # partial pooling
+    1 +                           
+    (1|site_fac) +                    
+    (1|spp_fac) +                     
+    gdd:spp_fac +                 
+    (1 | spp_fac:treeid_fac),     
   data = emp,
   prior = normal(0, 0.3),
   prior_intercept = normal(5, 3),
   chains = 4,
   adapt_delta = 0.99,
   iter = 4000,
-  core=4
+  cores = 4 
 )
 
-colnames(as.data.frame(fitlmer))
+colnames(as.data.frame(fitlmer))[1:20]
 fitlmer$stanfit
 pairs(fit, pars = c("a", "b",
                     "sigma_atreeid",
@@ -824,6 +828,7 @@ site_df2
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Parameterization for treeid
+if (FALSE) { 
 samples <- util$extract_expectand_vals(fit)
 
 # atreeid
@@ -837,7 +842,7 @@ jpeg("figures/atreeidParameterization.jpeg",
      units = "px", res = 300)
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
-
+}
 # === === === === === === === #
 ##### Plot parameter recovery #####
 # === === === === === === === #
@@ -1059,12 +1064,12 @@ sigma_cols <- colnames(df_fit)[
   grepl("igma", colnames(df_fit))
 ]
 
-sigma_df_lmer <- df_fit[, colnames(df_fit) %in% sigma_cols]
+sigma_df_lmer <- df_fit[, colnames(df_fit) %in% sigma_cols][,1:2]
 
 colnames(sigma_df_lmer) <- c("sigma_y", "sigma_atreeid")
 
 # SIGMAS
-sigma_df2 <- data.frame(
+sigma_df2_lmer <- data.frame(
   sigma = character(ncol(sigma_df_lmer)),
   mean = numeric(ncol(sigma_df_lmer)),  
   per5 = NA, 
@@ -1074,18 +1079,18 @@ sigma_df2 <- data.frame(
 )
 
 for (i in 1:ncol(sigma_df_lmer)) {
-  sigma_df2$sigma[i] <- colnames(sigma_df_lmer)[i]
-  sigma_df2$mean[i] <- round(mean(sigma_df_lmer[[i]]),3)
-  sigma_df2$per5[i] <- round(quantile(sigma_df_lmer[[i]], 0.05),3)
-  sigma_df2$per25[i] <- round(quantile(sigma_df_lmer[[i]], 0.25),3)
-  sigma_df2$per75[i] <- round(quantile(sigma_df_lmer[[i]], 0.75),3)
-  sigma_df2$per95[i] <- round(quantile(sigma_df_lmer[[i]], 0.95),3)
+  sigma_df2_lmer$sigma[i] <- colnames(sigma_df_lmer)[i]
+  sigma_df2_lmer$mean[i] <- round(mean(sigma_df_lmer[[i]]),3)
+  sigma_df2_lmer$per5[i] <- round(quantile(sigma_df_lmer[[i]], 0.05),3)
+  sigma_df2_lmer$per25[i] <- round(quantile(sigma_df_lmer[[i]], 0.25),3)
+  sigma_df2_lmer$per75[i] <- round(quantile(sigma_df_lmer[[i]], 0.75),3)
+  sigma_df2_lmer$per95[i] <- round(quantile(sigma_df_lmer[[i]], 0.95),3)
 }
-sigma_df2
+sigma_df2_lmer
 
 # BSPP
 bspp_cols <- colnames(df_fit)[
-  grepl(":gdd", colnames(df_fit))
+  grepl("gdd:", colnames(df_fit))
 ]
 
 bspp_df_lmer <- df_fit[, colnames(df_fit) %in% bspp_cols]
@@ -1142,29 +1147,162 @@ for (i in 1:ncol(aspp_df_lmer)) {
 aspp_df2_lmer
 
 # SITE
-site_cols <- colnames(df_fit)[
-  grepl("site_fac", colnames(df_fit))
-]
+site_cols <- colnames(df_fit)[grepl("site_fac", colnames(df_fit))]
+site_cols <- site_cols[!grepl("Sigma", site_cols)]
+site_df_lmer <- df_fit[, colnames(df_fit) %in% site_cols]
 
-site_df <- df_fit[, colnames(df_fit) %in% site_cols]
+colnames(site_df_lmer) <- 1:4
 
-colnames(site_df) <- sub("^b\\[\\(Intercept\\) site_num:(\\d+)\\]", "\\1", colnames(site_df))
-
-site_df2 <- data.frame(
-  site = character(ncol(site_df)),
-  fit_asite = numeric(ncol(site_df)),  
+site_df2_lmer <- data.frame(
+  site = character(ncol(site_df_lmer)),
+  fit_asite = numeric(ncol(site_df_lmer)),  
   fit_asite_per5 = NA, 
   fit_asite_per25 = NA,
   fit_asite_per75 = NA,
   fit_asite_per95 = NA
 )
 
-for (i in 1:ncol(site_df)) {
-  site_df2$site[i] <- colnames(site_df)[i]
-  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)
-  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], 0.05),3)
-  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], 0.25),3)
-  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], 0.75),3)
-  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], 0.95),3)
+for (i in 1:ncol(site_df_lmer)) {
+  site_df2_lmer$site[i] <- colnames(site_df_lmer)[i]
+  site_df2_lmer$fit_asite[i] <- round(mean(site_df_lmer[[i]]),3)
+  site_df2_lmer$fit_asite_per5[i] <- round(quantile(site_df_lmer[[i]], 0.05),3)
+  site_df2_lmer$fit_asite_per25[i] <- round(quantile(site_df_lmer[[i]], 0.25),3)
+  site_df2_lmer$fit_asite_per75[i] <- round(quantile(site_df_lmer[[i]], 0.75),3)
+  site_df2_lmer$fit_asite_per95[i] <- round(quantile(site_df_lmer[[i]], 0.95),3)
 }
-site_df2
+site_df2_lmer
+
+# TREEID
+treeid_cols <- colnames(df_fit)[grepl("treeid", colnames(df_fit))]
+treeid_cols <- treeid_cols[!grepl("Sigma", treeid_cols)]
+treeid_df_lmer <- df_fit[, colnames(df_fit) %in% treeid_cols]
+
+colnames(treeid_df_lmer) <- unique(emp$treeid_num)
+
+treeid_df2_lmer <- data.frame(
+  treeid = character(ncol(treeid_df_lmer)),
+  fit_atreeid = numeric(ncol(treeid_df_lmer)),  
+  fit_atreeid_per5 = NA, 
+  fit_atreeid_per25 = NA,
+  fit_atreeid_per75 = NA,
+  fit_atreeid_per95 = NA
+)
+
+for (i in 1:ncol(treeid_df_lmer)) {
+  treeid_df2_lmer$treeid[i] <- colnames(treeid_df_lmer)[i]
+  treeid_df2_lmer$fit_atreeid[i] <- round(mean(treeid_df_lmer[[i]]),3)
+  treeid_df2_lmer$fit_atreeid_per5[i] <- round(quantile(treeid_df_lmer[[i]], 0.05),3)
+  treeid_df2_lmer$fit_atreeid_per25[i] <- round(quantile(treeid_df_lmer[[i]], 0.25),3)
+  treeid_df2_lmer$fit_atreeid_per75[i] <- round(quantile(treeid_df_lmer[[i]], 0.75),3)
+  treeid_df2_lmer$fit_atreeid_per95[i] <- round(quantile(treeid_df_lmer[[i]], 0.95),3)
+}
+treeid_df2_lmer
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Plot two model comparisons #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot sigmas ######
+colnames(sigma_df2_lmer)[2:ncol(sigma_df2_lmer)] <- paste(colnames(sigma_df2_lmer)[2:ncol(sigma_df2_lmer)], "lmer", sep = "_")
+
+sigmaforplot <- merge(sigma_df2, sigma_df2_lmer, by = "sigma")
+
+sigma_stanXstanlmer <- ggplot(sigmaforplot, aes(x = mean, y = mean_lmer)) +
+  geom_errorbar(aes(xmin = per25, xmax = per75),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_errorbar(aes(ymin = per25_lmer, ymax = per75_lmer),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+              color = "#B40F20", linewidth = 0.5) +
+  geom_point(color = "#046C9A", size = 3) +
+  ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
+  labs(x = "sim sigma", y = "fit sigma",
+       title = "") +
+  theme_minimal()
+sigma_stanXstanlmer
+ggsave("figures/sigma_stanXstanlmer.jpeg", sigma_stanXstanlmer, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot b spp ######
+colnames(bspp_df2_lmer)[2:ncol(bspp_df2_lmer)] <- paste(colnames(bspp_df2_lmer)[2:ncol(bspp_df2_lmer)], "lmer", sep = "_")
+
+bsppforplot <- merge(bspp_df2, bspp_df2_lmer, by = "spp")
+
+bspp_stanXstanlmer <- ggplot(bsppforplot, aes(x = fit_bspp, y = fit_bspp_lmer)) +
+  geom_errorbar(aes(xmin = fit_bspp_per25, xmax = fit_bspp_per75), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=1) +
+  geom_errorbar(aes(ymin = fit_bspp_per25_lmer, ymax = fit_bspp_per75_lmer), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 0.5) +
+  labs(x = "sim bspp", y = "fit bspp", title = "") +
+  theme_minimal()
+bspp_stanXstanlmer
+# ggsave!
+ggsave("figures/bspp_stanXstanlmer.jpeg", bspp_stanXstanlmer, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot treeid ######
+colnames(treeid_df2_lmer)[2:ncol(treeid_df2_lmer)] <- paste(colnames(treeid_df2_lmer)[2:ncol(treeid_df2_lmer)], "lmer", sep = "_")
+
+treeidforplot <- merge(treeid_df2, treeid_df2_lmer, by = "treeid")
+
+# plot treeid
+atreeid_stanXstanlmer <- ggplot(treeidforplot, aes(x = fit_atreeid, y = fit_atreeid_lmer)) +
+  geom_errorbar(aes(xmin = fit_atreeid_per25, xmax = fit_atreeid_per75), 
+                width = 0, linewidth = 0.7, color = "darkgray", alpha= 0.7) +
+  geom_errorbar(aes(ymin = fit_atreeid_per25_lmer, ymax = fit_atreeid_per75_lmer), 
+                width = 0, linewidth = 0.7, color = "darkgray", alpha = 0.7) +
+  geom_point(color = "#046C9A", size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 0.5) +
+  labs(x = "sim atreeid", y = "fit atreeid", title = "") +
+  theme_minimal()
+atreeid_stanXstanlmer
+# ggsave!
+ggsave("figures/atreeid_stanXstanlmer.jpeg", atreeid_stanXstanlmer, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot a spp ######
+colnames(aspp_df2_lmer)[2:ncol(aspp_df2_lmer)] <- paste(colnames(aspp_df2_lmer)[2:ncol(aspp_df2_lmer)], "lmer", sep = "_")
+
+asppforplot <- merge(aspp_df2, aspp_df2_lmer, by = "spp")
+
+aspp_stanXstanlmer <- ggplot(asppforplot, aes(x = fit_aspp, y = fit_aspp_lmer)) +
+  geom_errorbar(aes(xmin = fit_aspp_per5, xmax = fit_aspp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_aspp_per25_lmer, ymax = fit_aspp_per75_lmer), 
+                width = 0, linewidth = 0.5,  color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 0.5) +
+  labs(x = "sim aspp", y = "fit aspp", title = "") +
+  geom_point(color = "#046C9A", size = 2) +
+  theme_minimal()
+aspp_stanXstanlmer
+# ggsave!
+ggsave("figures/aspp_stanXstanlmer.jpeg", aspp_stanXstanlmer, width = 6, height = 6, units = "in", dpi = 300)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+###### Plot site ######
+colnames(site_df2_lmer)[2:ncol(site_df2_lmer)] <- paste(colnames(site_df2_lmer)[2:ncol(site_df2_lmer)], "lmer", sep = "_")
+
+asiteforplot <- merge(site_df2, site_df2_lmer, by = "site")
+
+asite_stanXstanlmer <- ggplot(asiteforplot, aes(x = fit_asite, y = fit_asite_lmer)) +
+  geom_errorbar(aes(xmin = fit_asite_per5, xmax = fit_asite_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_asite_per25_lmer, ymax = fit_asite_per75_lmer), 
+                width = 0, linewidth = 0.5,  color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 0.5) +
+  labs(x = "sim asite", y = "fit asite", title = "") +
+  geom_point(color = "#046C9A", size = 2) +
+  theme_minimal()
+asite_stanXstanlmer
+# ggsave!
+ggsave("figures/asite_stanXstanlmer.jpeg", asite_stanXstanlmer, width = 6, height = 6, units = "in", dpi = 300)
+
+###### Combine plots  ######
+combined_plot <- (atreeid_stanXstanlmer) /
+  (sigma_stanXstanlmer + bspp_stanXstanlmer ) /
+  (aspp_stanXstanlmer + asite_stanXstanlmer)
+combined_plot
+ggsave("figures/troubleShootingGrowthModel/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
+
