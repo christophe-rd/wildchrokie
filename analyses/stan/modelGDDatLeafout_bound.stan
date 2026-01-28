@@ -14,7 +14,7 @@ array[N] real y;
 }
 
 parameters{
-real a;
+real<lower=6> a;
 real<lower=0> sigma_atreeid;  
 real<lower=0> sigma_y;
 vector[Nspp] aspp; 		
