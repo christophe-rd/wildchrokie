@@ -1159,35 +1159,37 @@ ggplot(asppchecks, aes(x = leafout)) +
   theme_minimal()
 
 
-
-# how many days species leaf out different
-ag <- aggregate(leafout ~ spp + year, no_naleafout,  mean)
-
-### check how many gdd around those days
-vec <- c(min(ag$leafout) : max(ag$leafout))
-period <- subset(gdd, doy %in% vec)
-
-base_temp <- 10
-
-# average across years
-periodmean <- aggregate(GDD_10 ~ doy, period, FUN = mean)
-periodmean$GDD_10_diff <- NA
-
-# calculates gdd increment per day
-for (i in 2:nrow(periodmean)) {
-  periodmean$GDD_10_diff[i] <- periodmean$GDD_10[i] - periodmean$GDD_10[i - 1]
-}
-
-# averages gdd increment per day
-meangddperiod <- mean(periodmean$GDD_10_diff, na.rm = TRUE)
-
-(max(ag$leafout) - min(ag$leafout)) * meangddperiod 
-
-(max(ag$leafout) - min(ag$leafout)) * meangddperiod / 2
-
-quantile(rnorm(1e4, 0, 50), prob = 0.05)
-hist(rnorm(1e4, 0, 8)/20)
-hist(rnorm(1e4, 0, 8/20))
+# 
+# # how many days species leaf out different
+# ag <- aggregate(leafout ~ spp + year, no_naleafout,  mean)
+# 
+# ### check how many gdd around those days
+# vec <- c(min(ag$leafout): max(ag$leafout))
+# period$doy <- as.integer(period$doy)
+# period <- subset(gdd, doy %in% vec)
+# str(gdd)
+# class(vec)
+# base_temp <- 10
+# 
+# # average across years
+# periodmean <- aggregate(GDD_10 ~ doy, period, FUN = mean)
+# periodmean$GDD_10_diff <- NA
+# 
+# # calculates gdd increment per day
+# for (i in 2:nrow(periodmean)) {
+#   periodmean$GDD_10_diff[i] <- periodmean$GDD_10[i] - periodmean$GDD_10[i - 1]
+# }
+# 
+# # averages gdd increment per day
+# meangddperiod <- mean(periodmean$GDD_10_diff, na.rm = TRUE)
+# 
+# (max(ag$leafout) - min(ag$leafout)) * meangddperiod 
+# 
+# (max(ag$leafout) - min(ag$leafout)) * meangddperiod / 2
+# 
+# quantile(rnorm(1e4, 0, 50), prob = 0.05)
+# hist(rnorm(1e4, 0, 8)/20)
+# hist(rnorm(1e4, 0, 8/20))
 # across 3 years, for the period of doy 125 to doy 135, there is approximately 4 GDD per day, so my prior need to span at least 22 GDD 
 
 
@@ -1197,18 +1199,39 @@ ggplot(no_naleafout) +
 plot(no_naleafout$leafout)
 
 ##### Empirical data distribution #####
-ggplot(no_naleafout, aes(x = leafoutGDD)) +
+# by species
+ggplot(no_naleafout, aes(x = leafoutGDD, fill = spp)) +
   geom_histogram(binwidth = 20, alpha = 0.7) +
   facet_wrap(~spp, nrow = 2, ncol = 2) +
-  # geom_vline(aes(xintercept = a_aspp)) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  geom_vline(aes(xintercept = 100)) +
   # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
-  theme_classic()
+  scale_x_continuous(breaks = seq(0, 700, by = 100)) +
+  theme_minimal()
 ggsave("figures/gddLeafout_empData/histSppgddleafoutggplot.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
-par(mfrow=c(1, 2))
+# by year
+ggplot(no_naleafout, aes(x = leafoutGDD)) +
+  geom_histogram(binwidth = 20, alpha = 0.7) +
+  facet_wrap(~year, nrow = 4, ncol = 3) +
+  geom_vline(aes(xintercept = 100)) +
+  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
+  scale_x_continuous(breaks = seq(0, 700, by = 100)) +
+  theme_minimal()
+ggsave("figures/gddLeafout_empData/histYeargddleafoutggplot.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
-leafout_wide <- reshape(
+# by year
+ggplot(no_naleafout, aes(x = leafoutGDD, fill = spp)) +
+  geom_histogram(binwidth = 20, alpha = 0.7) +
+  facet_wrap(spp~year, nrow = 4, ncol = 3) +
+  geom_vline(aes(xintercept = 100)) +
+  # labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
+  scale_x_continuous(breaks = seq(0, 700, by = 100)) +
+  theme_minimal()
+ggsave("figures/gddLeafout_empData/histSppXyeargddleafoutggplot.jpeg", width = 10, height = 6, units = "in", dpi = 300)
+
+
+
+ leafout_wide <- reshape(
   no_naleafout[, c("year","treeid","spp","leafoutGDD")],
   idvar = c("year","treeid"),
   timevar = "spp",

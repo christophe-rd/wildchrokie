@@ -649,8 +649,24 @@ fitlmer <- stan_lmer(
     gdd:spp_fac +                 
     (1 | spp_fac:treeid_fac),     
   data = emp,
-  prior = normal(0, 0.3),
-  prior_intercept = normal(5, 3),
+  prior = normal(0, 1),
+  prior_intercept = normal(5, 6),
+  chains = 4,
+  adapt_delta = 0.99,
+  iter = 4000,
+  cores = 4 
+)
+
+fitlmer <- stan_lmer(
+  y ~ 
+    1 +                           
+    site_fac +                    
+    spp_fac +                     
+    gdd:spp_fac +                 
+    (1 | spp_fac:treeid_fac),     
+  data = emp,
+  prior = normal(0, 1),
+  prior_intercept = normal(5, 6),
   chains = 4,
   adapt_delta = 0.99,
   iter = 4000,

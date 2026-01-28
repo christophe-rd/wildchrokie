@@ -8,6 +8,7 @@ rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
+
 options(digits = 3)
 # quartz()
 
@@ -222,6 +223,125 @@ ggplot(emp2) +
   theme_minimal()
 ggsave("figures/empiricalData/slope_intercepts_varyingslopes.jpeg", 
        width = 8, height = 6, units = "in", dpi = 300)
+
+# Plot lines with quantiles ####
+
+subyvec <- vector()
+for (i in 1:length(unique(emp$treeid_num))) {
+  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
+}
+subyvec
+
+suby <- subset(df_fit, select = subyvec)
+
+colnames(suby) <- 1:length(subyvec)
+
+# start by filling a df with treeid intercepts only
+
+# get the spp and site identities for each tree id
+treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
+                                  "treeid", "spp", "site")])
+
+# the spp values for each tree id
+treeid_aspp <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
+colnames(treeid_aspp) <- colnames(suby)
+
+for (i in seq_len(ncol(treeid_aspp))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_aspp)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_aspp[, i] <- aspp_df[, spp_id]
+}
+treeid_aspp
+
+# the site values for each tree id
+treeid_asite <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
+colnames(treeid_asite) <- colnames(suby)
+
+for (i in seq_len(ncol(treeid_asite))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_asite)[i])
+  site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_asite[, i] <- site_df[, site_id]
+}
+treeid_asite
+
+# sum all 3 dfs together to get the full intercept for each treeid
+fullintercept <-
+  df_fit$a +
+  suby +
+  treeid_aspp +
+  treeid_asite
+fullintercept
+
+subintercept <- fulltreeid[, c(3,33,53,63)]
+
+# now get the slope for each treeid
+treeid_bspp <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
+colnames(treeid_bspp) <- colnames(suby)
+
+for (i in seq_len(ncol(treeid_bspp))) { # i = 30
+  tree_id <- as.integer(colnames(treeid_bspp)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_bspp[, i] <- bspp_df[, spp_id]
+}
+treeid_bspp
+
+
+subslope <- treeid_bspp[,just4treeid]
+
+str(subintercept)
+str(subslope)
+
+
+# Your settings
+just4treeid <- c(3,4, 33,34, 53,54, 63,64)
+just4treeid <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == c("1","2","3","4")]  
+
+x <- seq(min(gdd), max(gdd), length.out = 100)  
+y_post_list <- list()  # store posterior predictions
+cols <- c("red", "blue", "green", "purple")
+species <- "SpeciesA"
+
+# PDF output
+pdf(file = paste0(species, "_trees.pdf"), width = 10, height = 8)
+
+# Layout: 2 rows × 2 columns per page
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+
+# below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
+for (i in seq_along(just4treeid)) {
+  tree_col <- as.character(just4treeid[i])
+  # TO CHANGE: get the 8000 samples back
+  y_post <- sapply(1:50, function(f) {
+    subintercept[f, tree_col] + subslope[f, tree_col] * x
+  })
+  y_post_list[[tree_col]] <- y_post
+}
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(just4treeid)) { # i = 1
+  tree_col <- as.character(just4treeid[i])
+  y_post <- y_post_list[[tree_col]]
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post, 1, mean)
+  y_low  <- apply(y_post, 1, quantile, 0.25)
+  y_high <- apply(y_post, 1, quantile, 0.75)
+  
+  # empty plot first
+  plot(gdd, y, type = "n", 
+       ylim = range(y_low, y_high), 
+       xlab = "GDD", ylab = "Ring width",
+       main = paste("Tree ID:", tree_col))
+  
+  # shaded credible interval
+  polygon(c(x, rev(x)), c(y_low, rev(y_high)), 
+          col = rgb(0,0,0,0.1), border = NA)
+  
+  # mean line
+  lines(x, y_mean, col = cols[i], lwd = 2)
+}
+dev.off()
+
 
 ##### mu plots #####
 ###### asp ######
