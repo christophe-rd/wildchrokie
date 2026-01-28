@@ -186,7 +186,7 @@ asppEstimates_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = s
   scale_color_manual(values = wes_palette("AsteroidCity1")) +
   scale_fill_manual(values = wes_palette("AsteroidCity1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Species intercept values", color = "Tree Species", title = "Priors unchanged")+
+  labs(y = "Species", x = "Species intercept values", color = "Tree Species", title = "")+
   theme(
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -217,7 +217,7 @@ siteEstimates_plot <- ggplot(site_df2, aes(x = fit_asite, y = site_name, color =
   scale_color_manual(values = wes_palette("Darjeeling1")) +
   scale_fill_manual(values = wes_palette("Darjeeling1")) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Site", x = "Site intercept values", color = "Site", title = "Priors unchanged")+
+  labs(y = "Site", x = "Site intercept values", color = "Site", title = "")+
   theme(
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -685,74 +685,6 @@ asite_priorPosterior <- (asite_priorunchanged)/
   asite_priorunchanged_LP
 ggsave("figures/gddLeafout_empData/asite_priorPosterior.jpeg", asite_priorPosterior, width = 6, height = 10, units = "in", dpi = 300)
 
-# Prior differences mean comparisons ####
-colnames(treeid_df_largerPriors2)[2:ncol(treeid_df_largerPriors2)] <-
-  paste(colnames(treeid_df_largerPriors2)[2:ncol(treeid_df_largerPriors2)], "LP", sep = "_")
-
-treeidtoplot <- merge(treeid_df2, treeid_df_largerPriors2,
-  by = "treeid"
-)
-
-treeidtoplot
-# plot treeid
-atreeid_plot_priorComp <- ggplot(treeidtoplot, aes(x = fit_atreeid, y = fit_atreeid_LP)) +
-  geom_errorbar(aes(xmin = fit_atreeid_per25, xmax = fit_atreeid_per75), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_atreeid_per25_LP, ymax = fit_atreeid_per75_LP), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "priors unchanged", y = "priors 3x larger", title = "atreeid estimates") +
-  theme_minimal()
-atreeid_plot_priorComp
-
-# aspp
-aspp_df_largerPriors23 <- aspp_df_largerPriors2
-colnames(aspp_df_largerPriors23)[2:ncol(aspp_df_largerPriors23)] <-
-  paste(colnames(aspp_df_largerPriors23)[2:ncol(aspp_df_largerPriors23)], "LP", sep = "_")
-
-aspptoplot <- merge(aspp_df2, aspp_df_largerPriors23,
-                      by = "spp"
-)
-# plot aspp
-aspp_plot_priorComp <- ggplot(aspptoplot, aes(x = fit_aspp, y = fit_aspp_LP)) +
-  geom_errorbar(aes(xmin = fit_aspp_per25, xmax = fit_aspp_per75), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_aspp_per25_LP, ymax = fit_aspp_per75_LP), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "priors unchanged", y = "priors 3x larger", title = "aspp estimates") +
-  theme_minimal()
-aspp_plot_priorComp
-
-# asite
-site_df_largerPriors2 <- site_df_largerPriors2
-colnames(site_df_largerPriors2)[2:ncol(site_df_largerPriors2)] <-
-  paste(colnames(site_df_largerPriors2)[2:ncol(site_df_largerPriors2)], "LP", sep = "_")
-
-asitetoplot <- merge(site_df2, site_df_largerPriors2,
-                   by = "site"
-)
-
-# plot asite
-asite_plot_priorComp <- ggplot(asitetoplot, aes(x = fit_asite, y = fit_asite_LP)) +
-  geom_errorbar(aes(xmin = fit_asite_per25, xmax = fit_asite_per75), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_errorbar(aes(ymin = fit_asite_per25_LP, ymax = fit_asite_per75_LP), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
-  geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
-  labs(x = "priors unchanged", y = "priors 3x larger", title = "asite estimates") +
-  theme_minimal()
-asite_plot_priorComp
-
-prior11plot <- (atreeid_plot_priorComp + aspp_plot_priorComp + asite_plot_priorComp)
-prior11plot
-ggsave("figures/gddLeafout_empData/priorComp11plots.jpeg", prior11plot, width = 10, height = 6, units = "in", dpi = 300)
-
-
-}
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 

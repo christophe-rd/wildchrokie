@@ -572,15 +572,7 @@ fit <- stan("stan/modelGDDatLeafout.stan",
                    "Ntreeid", "treeid"),
             iter=4000, chains=4, cores=4)
 
-fit_largerPriors <- stan("stan/modelGDDatLeafout_largerPriors.stan", 
-            data=c("N","y",
-                   "Nspp","species",
-                   "Nsite","site",
-                   "Ntreeid", "treeid"),
-            iter=4000, chains=4, cores=4)
-
 saveRDS(fit, "output/stanOutput/gddLeafout_empData_fit")
-saveRDS(fit_largerPriors, "output/stanOutput/gddLeafout_empData_fit_largerPriors")
 
 # Diagnostics ####
 # Parameterization 
@@ -618,6 +610,7 @@ pdf("figures/gddLeafout_empData/atreeidParameterization.pdf", width = 6, height 
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
 }
+
 # === === === === === === === === === === === === === === === === === === === ==
 # Recover parameters ####
 # === === === === === === === === === === === === === === === === === === === ==
@@ -931,14 +924,14 @@ samples2 <- lapply(samples, function(x) x*scale)
 y2 <- y*scale
 
 jpeg(
-  filename = "figures/gddLeafout_empData/retrodictiveHist.jpeg",
+  filename = "figures/gddLeafout_empData/retrodictiveHist_lowerBound160.jpeg",
   width = 2400,      
   height = 2400,
   res = 300          
 )
 util$plot_hist_quantiles(samples2, "y_rep", 
-                         -20, # lower x axis limit
-                         680, # upper x axis limit
+                         -50, # lower x axis limit
+                         700, # upper x axis limit
                          20, # binning
                          baseline_values = y2,
                          xlab = "gdd at leafout")

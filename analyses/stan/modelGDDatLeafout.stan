@@ -14,7 +14,7 @@ array[N] real y;
 }
 
 parameters{
-real<lower=3> a;
+real<lower=8> a;
 real<lower=0> sigma_atreeid;  
 real<lower=0> sigma_y;
 vector[Nspp] aspp; 		
@@ -51,7 +51,8 @@ model{
 generated quantities {
   array[N] real y_rep;
   for (i in 1:N) {
-    y_rep[i] = normal_rng(a + 
+    y_rep[i] = normal_rng(
+        a + 
         aspp[species[i]] + 
         asite[site[i]] +
         atreeid[treeid[i]], sigma_y);
