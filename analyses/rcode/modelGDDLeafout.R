@@ -574,33 +574,11 @@ fit <- stan("stan/modelGDDatLeafout.stan",
 
 saveRDS(fit, "output/stanOutput/gddLeafout_empData_fit")
 
-# Diagnostics ####
-# Parameterization 
+# Diagnostics for partial pooling ####
 if (FALSE) {
-  
-
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
-
 samples <- util$extract_expectand_vals(fit)
-
-# aspp
-# aspp <- names(samples)[grepl("aspp", names(samples))]
-# aspp <- aspp[!grepl("sigma", aspp)]
-
-# jpeg("figures/gddLeafout_empData/asppParameterization.jpg", width = 2000, height = 2000, 
-#      units = "px", res = 300)
-# util$plot_div_pairs(aspp, "sigma_aspp", samples, diagnostics, transforms = list("sigma_aspp" = 1))
-# dev.off()
-
-# asite
-# asite <- names(samples)[grepl("asite", names(samples))]
-# asite <- asite[!grepl("sigma", asite)]
-# 
-# jpeg("figures/gddLeafout_empData/asiteParameterization.jpg", width = 2000, height = 2000, 
-#      units = "px", res = 300)
-# util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
-# dev.off()
 
 # atreeid
 atreeid <- names(samples)[grepl("zatreeid", names(samples))]
@@ -737,24 +715,6 @@ df_fit <- as.data.frame(fit)
 ###### a ######
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
-a_prior <- rnorm(1e4, 18, 2)
-
-mu18 <- ggplot() +
-  geom_density(data = data.frame(a = a_prior*20),
-               aes(x = a, colour = "Prior"),
-               linewidth = 0.8) +
-  geom_density(data = data.frame(value = a_posterior*20),
-               aes(x = value, colour = "Posterior"),
-               linewidth = 0.8) +
-  labs(title = "prior at mu = 360",
-       x = "a", y = "Density", color = "Curve") +
-  scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
-  theme_minimal()
-ggsave("figures/gddLeafout_simData/a_prior_mu18.jpeg", 
-       mu18, 
-       width = 8, height = 6, units = "in", dpi = 300)
-
-
 a_prior <- rnorm(1e4, 8, 2)
 
 mu8 <- ggplot() +
@@ -768,13 +728,10 @@ mu8 <- ggplot() +
        x = "a", y = "Density", color = "Curve") +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
+mu8
 ggsave("figures/gddLeafout_empData/a_prior_mu8.jpeg", 
        mu8,
        width = 8, height = 6, units = "in", dpi = 300)
-
-combined_plot <- (mu18 + mu8) 
-combined_plot
-ggsave("figures/gddLeafout_empData/priorsChecks_a.jpeg", combined_plot, width = 8, height = 6, units = "in", dpi = 300)
 
 ###### aspp ######
 
@@ -791,7 +748,7 @@ aspp_long <- reshape(
 aspp_long
 
 # aspp prior
-aspp_prior <- rnorm(1e4, 0, 0.5)
+aspp_prior <- rnorm(1e4, 0, 1)
 
 ggplot() +
   geom_density(data = data.frame(aspp_prior = aspp_prior),
