@@ -641,39 +641,19 @@ emp$treeid_fac <- as.factor(emp$treeid_num)
 unique(emp$spp_fac)
 emp$gdd_c <- scale(emp$gdd, scale = FALSE)
 
-fitlmer <- stan_lmer(
-  y ~ 
-    1 +                           
-    (1|site_fac) +                    
-    (1|spp_fac) +                     
-    gdd:spp_fac +                 
-    (1 | spp_fac:treeid_fac),     
+fitlmer_partialpooling <- stan_lmer(
+  y ~
+    (1|site_fac) +
+    (gdd | spp_fac),
   data = emp,
-  prior = normal(0, 1),
-  prior_intercept = normal(5, 6),
   chains = 4,
   adapt_delta = 0.99,
   iter = 4000,
-  cores = 4 
+  cores = 4
 )
 
-fitlmer <- stan_lmer(
-  y ~ 
-    1 +                           
-    site_fac +                    
-    spp_fac +                     
-    gdd:spp_fac +                 
-    (1 | spp_fac:treeid_fac),     
-  data = emp,
-  prior = normal(0, 1),
-  prior_intercept = normal(5, 6),
-  chains = 4,
-  adapt_delta = 0.99,
-  iter = 4000,
-  cores = 4 
-)
-
-colnames(as.data.frame(fitlmer))[1:20]
+colnames(as.data.frame(fitlmer_partialpooling))[1:20]
+colnames(as.data.frame(fitlmer_partialpooling))[80:300]
 fitlmer$stanfit
 pairs(fit, pars = c("a", "b",
                     "sigma_atreeid",
@@ -1075,7 +1055,7 @@ util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transfo
 
 
 # RECOVER FROM STAN_LMER ####
-df_fit <- as.data.frame(fitlmer)
+df_fit <- as.data.frame(fitlmer_partialpooling)
 sigma_cols <- colnames(df_fit)[
   grepl("igma", colnames(df_fit))
 ]
