@@ -1229,6 +1229,21 @@ ggplot(no_naleafout, aes(x = leafoutGDD, fill = spp)) +
   theme_minimal()
 ggsave("figures/gddLeafout_empData/histSppXyeargddleafoutggplot.jpeg", width = 10, height = 6, units = "in", dpi = 300)
 
+ggplot(no_naleafout, aes(x = leafoutGDD, color = factor(year))) +
+  geom_histogram(
+    binwidth = 20,
+    position = "identity",
+    alpha = 0,
+    linewidth = 0.8
+  ) +
+  facet_wrap(~ spp) +
+  geom_vline(xintercept = 100) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[c(1,3,4)]) +
+  # scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  scale_x_continuous(breaks = seq(0, 700, by = 100)) +
+  labs(fill = "Year") +
+  theme_minimal()
+ggsave("figures/gddLeafout_empData/histSppXyeargddleafoutggplot.jpeg", width = 10, height = 6, units = "in", dpi = 300)
 
 
  leafout_wide <- reshape(
@@ -1237,8 +1252,11 @@ ggsave("figures/gddLeafout_empData/histSppXyeargddleafoutggplot.jpeg", width = 1
   timevar = "spp",
   direction = "wide"
 )
-par(mfrow=c(1, 1))
-util$plot_line_hists(data$x, data$y, -6, 7, 0.5, xlab="")
+
+if (FALSE) {
+
+# par(mfrow=c(1, 1))
+# util$plot_line_hists(data$x, data$y, -6, 7, 0.5, xlab="")
 
 ainc <- leafout_wide$leafoutGDD.ALNINC
 ball <- leafout_wide$leafoutGDD.BETALL
@@ -1257,3 +1275,4 @@ util$plot_line_hist(ball, 0, 750, 20, xlab="gdd at leafout", main="BETALL")
 util$plot_line_hist(bpap, 0, 750, 20, xlab="gdd at leafout", main="BETPAP")
 util$plot_line_hist(bpop, 0, 750, 20, xlab="gdd at leafout", main="BETPOP")
 dev.off()
+}
