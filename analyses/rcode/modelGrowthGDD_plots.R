@@ -224,17 +224,18 @@ ggplot(emp2) +
 ggsave("figures/empiricalData/slope_intercepts_varyingslopes.jpeg", 
        width = 8, height = 6, units = "in", dpi = 300)
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
-
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
   subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
 }
 subyvec
 
-suby <- subset(df_fit, select = subyvec)
+atreeidsub <- subset(df_fit, select = subyvec)
 
-colnames(suby) <- 1:length(subyvec)
+colnames(atreeidsub) <- 1:length(subyvec)
 
 # start by filling a df with treeid intercepts only
 
@@ -243,8 +244,8 @@ treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
                                   "treeid", "spp", "site")])
 
 # the spp values for each tree id
-treeid_aspp <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
-colnames(treeid_aspp) <- colnames(suby)
+treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
+colnames(treeid_aspp) <- colnames(atreeidsub)
 
 for (i in seq_len(ncol(treeid_aspp))) { # i = 1
   tree_id <- as.integer(colnames(treeid_aspp)[i])
@@ -254,8 +255,8 @@ for (i in seq_len(ncol(treeid_aspp))) { # i = 1
 treeid_aspp
 
 # the site values for each tree id
-treeid_asite <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
-colnames(treeid_asite) <- colnames(suby)
+treeid_asite <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
+colnames(treeid_asite) <- colnames(atreeidsub)
 
 for (i in seq_len(ncol(treeid_asite))) { # i = 1
   tree_id <- as.integer(colnames(treeid_asite)[i])
@@ -267,16 +268,16 @@ treeid_asite
 # sum all 3 dfs together to get the full intercept for each treeid
 fullintercept <-
   df_fit$a +
-  suby +
+  atreeidsub +
   treeid_aspp +
   treeid_asite
 fullintercept
 
-subintercept <- fulltreeid[, c(3,33,53,63)]
+# subintercept <- fulltreeid[, c(3,33,53,63)]
 
 # now get the slope for each treeid
-treeid_bspp <- data.frame(matrix(ncol = ncol(suby), nrow = nrow(df_fit)))
-colnames(treeid_bspp) <- colnames(suby)
+treeid_bspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
+colnames(treeid_bspp) <- colnames(atreeidsub)
 
 for (i in seq_len(ncol(treeid_bspp))) { # i = 30
   tree_id <- as.integer(colnames(treeid_bspp)[i])
@@ -286,40 +287,40 @@ for (i in seq_len(ncol(treeid_bspp))) { # i = 30
 treeid_bspp
 
 
-subslope <- treeid_bspp[,just4treeid]
-
-str(subintercept)
-str(subslope)
-
-
 # Your settings
-just4treeid <- c(3,4, 33,34, 53,54, 63,64)
-just4treeid <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == c("1","2","3","4")]  
+# just4treeid <- c(3,4, 33,34, 53,54, 63,64)
+treeidvecnum <- 1:ncol(fullintercept)
+treeidvecname <- treeid_spp_site$treeid
+# just4treeid <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == c("1","2","3","4")]  
+# 
+# subslope <- treeid_bspp[,just4treeid]
 
 x <- seq(min(gdd), max(gdd), length.out = 100)  
-y_post_list <- list()  # store posterior predictions
-cols <- c("red", "blue", "green", "purple")
-species <- "SpeciesA"
+y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrix
+sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
+sppcols
 
 # PDF output
-pdf(file = paste0(species, "_trees.pdf"), width = 10, height = 8)
+pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
-for (i in seq_along(just4treeid)) {
-  tree_col <- as.character(just4treeid[i])
+for (i in seq_along(treeidvecnum)) { # i = 1
+  tree_col <- as.character(treeidvecnum[i]) 
   # TO CHANGE: get the 8000 samples back
-  y_post <- sapply(1:50, function(f) {
-    subintercept[f, tree_col] + subslope[f, tree_col] * x
+  y_post <- sapply(1:8000, function(f) {
+    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x
   })
   y_post_list[[tree_col]] <- y_post
 }
 
+spp_col<- 1:4
 # Loop over trees again to plot each tree individually
-for (i in seq_along(just4treeid)) { # i = 1
-  tree_col <- as.character(just4treeid[i])
+for (i in seq_along(treeidvecnum)) { # i = 1
+  tree_col <- as.character(treeidvecnum[i])
+  tree_col_name <- as.character(treeidvecname[i])
   y_post <- y_post_list[[tree_col]]
   
   # calculate mean and 50% credible interval (25%-75%)
@@ -329,18 +330,33 @@ for (i in seq_along(just4treeid)) { # i = 1
   
   # empty plot first
   plot(gdd, y, type = "n", 
-       ylim = range(y_low, y_high), 
-       xlab = "GDD", ylab = "Ring width",
-       main = paste("Tree ID:", tree_col))
+       ylim = range(2, 6), 
+       xlab = "Scaled GDD (/200)", ylab = "Ring width (mm)",
+       main = tree_col_name) # set the name for each plot
   
-  # shaded credible interval
-  polygon(c(x, rev(x)), c(y_low, rev(y_high)), 
-          col = rgb(0,0,0,0.1), border = NA)
+  # color line by spp
+  tree_id_num <- as.integer(tree_col)
+  spp_id <- treeid_spp_site$spp_num[
+    match(tree_id_num, treeid_spp_site$treeid_num)
+  ]
+  line_col <- sppcols[spp_id]
+  
+  # shaded interval
+  polygon(c(x, rev(x)), 
+          c(y_low, # lower interval
+            rev(y_high)), # high interval
+          col = adjustcolor(line_col, alpha.f = 0.3), 
+          border = NA)
   
   # mean line
-  lines(x, y_mean, col = cols[i], lwd = 2)
+  lines(x, y_mean,
+        col = line_col,
+        lwd = 2)
+  
 }
 dev.off()
+
+
 
 
 ##### mu plots #####
