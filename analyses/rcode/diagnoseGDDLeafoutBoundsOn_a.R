@@ -104,7 +104,7 @@ ggplot(binded, aes(x = vals, color = factor(model))) +
   xlim(-50, 400) +
   labs(color = "Model with bound at 120 or without bound", title = "Generated quantities") +
   theme_minimal()
-ggsave("figures/troubleShootingGrowthModel/genQuantitiesBoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("figures/troubleShootingLeafoutGDDmodel/genQuantitiesBoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # just the posterior of a
 fitNoBound_df <- as.data.frame(fitNoBound)
@@ -135,7 +135,7 @@ ggplot(abinded, aes(x = a, color = factor(model))) +
   # scale_x_continuous(breaks = seq(-50, 700, by = 20)) +
   labs(color = "Model with bound at 120 or without bound", title = "Posterior distributions of a") +
   theme_minimal()
-ggsave("figures/troubleShootingGrowthModel/post_a_BoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("figures/troubleShootingLeafoutGDDmodel/post_a_BoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
