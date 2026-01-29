@@ -93,13 +93,66 @@ binded <- rbind(nobound, bound)
 
 ggplot(binded, aes(x = vals, color = factor(model))) +
   geom_histogram(
-    binwidth = 20,
+    binwidth = 10,
     position = "identity",
     alpha = 0,
     linewidth = 1
   ) +
   geom_vline(xintercept = 100) +
   scale_color_manual(values = wes_palette("AsteroidCity1")[c(1,3)]) +
-  scale_x_continuous(breaks = seq(0, 700, by = 100)) +
-  labs(color = "Model with or without bound") +
+  # scale_x_continuous(breaks = seq(0, 700, by = 100)) +
+  xlim(-50, 400) +
+  labs(color = "Model with bound at 120 or without bound", title = "Generated quantities") +
   theme_minimal()
+ggsave("figures/troubleShootingGrowthModel/genQuantitiesBoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# just the posterior of a
+fitNoBound_df <- as.data.frame(fitNoBound)
+fitWithBound_df <- as.data.frame(fitWithBound)
+
+aNoBound <- data.frame(
+  a = fitNoBound_df["a"],
+  model = "nobound")
+
+aWithBound <- data.frame(
+  a = fitWithBound_df["a"],
+  model = "withbound")
+
+abinded <- rbind(aNoBound, aWithBound)
+abinded$a <- abinded$a* scale
+
+
+ggplot(abinded, aes(x = a, color = factor(model))) +
+  geom_histogram(
+    binwidth = 10,
+    position = "identity",
+    alpha = 0,
+    linewidth = 1
+  ) +
+  geom_vline(xintercept = 100) +
+  scale_color_manual(values = wes_palette("AsteroidCity1")[c(1,3)]) +
+  xlim(-50, 400) +
+  # scale_x_continuous(breaks = seq(-50, 700, by = 20)) +
+  labs(color = "Model with bound at 120 or without bound", title = "Posterior distributions of a") +
+  theme_minimal()
+ggsave("figures/troubleShootingGrowthModel/post_a_BoundVSnoBound.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Retrodictive checks ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+samplesNoBound <- util$extract_expectand_vals(fitNoBound)
+samplesWithBound <- util$extract_expectand_vals(fitWithBound)
+
+util$plot_hist_quantiles(samplesNoBound2, "y_rep", 
+                         -50, # lower x axis limit
+                         700, # upper x axis limit
+                         20, # binning
+                         baseline_values = y2,
+                         xlab = "gdd at leafout")
+
+util$plot_hist_quantiles(samplesWithBound2, "y_rep", 
+                         -50, # lower x axis limit
+                         700, # upper x axis limit
+                         20, # binning
+                         baseline_values = y2,
+                         xlab = "gdd at leafout")
