@@ -1,4 +1,3 @@
-
 # Wildchrokie model
 # CRD 23 April 2025
 # Started in Boston shortly after completing field work for the tree spotters
@@ -644,10 +643,9 @@ emp$gdd_c <- scale(emp$gdd, scale = FALSE)
 fitlmer_partialpooling <- stan_lmer(
   y ~
     (1|site_fac) +
-    (gdd | spp_fac),
+    (gdd | spp_fac:treeid_fac),
   data = emp,
   chains = 4,
-  adapt_delta = 0.99,
   iter = 4000,
   cores = 4
 )
@@ -820,7 +818,6 @@ for (i in 1:ncol(site_df)) { # i = 1
 site_df2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Parameterization for treeid
@@ -1055,7 +1052,60 @@ util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transfo
 
 
 # RECOVER FROM STAN_LMER ####
-df_fit <- as.data.frame(fitlmer_partialpooling)
+df_fit_lmer <- as.data.frame(fitlmer_partialpooling)
+
+# aspp
+fixef(fitlmer_partialpooling)
+ranef(fitlmer_partialpooling)
+mean(df_fit[,"a"])
+
+aspptest <- ranef(fitlmer_partialpooling)["spp_fac"]
+spp_lmer <- as.data.frame(aspptest)
+colnames(spp_lmer) <- c("aspp_lmer", "bspp_lmer")
+
+asppbspp <- cbind(aspp_df2, bspp_df2[, c("fit_bspp", "fit_bspp_per25", "fit_bspp_per75")], spp_lmer)
+
+aspplmer <- ggplot(asppbspp, aes(x = aspp_lmer, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+              color = "#B40F20", linewidth = 0.5) +
+  geom_point(color = "#046C9A", size = 3) +
+  labs(x = "aspp stan_lmer estimates", y = "aspp stan estimates") +
+  theme_minimal()
+
+bspplmer <- ggplot(asppbspp, aes(x = bspp_lmer, y = fit_bspp)) +
+  geom_errorbar(aes(ymin = fit_bspp_per25, ymax = fit_bspp_per75),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+              color = "#B40F20", linewidth = 0.5) +
+  geom_point(color = "#046C9A", size = 3) +
+  labs(x = "bspp stan_lmer estimates", y = "bspp stan estimates") +
+  theme_minimal()
+
+# asite
+asitetest <- ranef(fitlmer_partialpooling)["site_fac"]
+site_lmer <- as.data.frame(asitetest)
+colnames(site_lmer) <- c("asite_lmer")
+
+sitebind <- cbind(site_df2, site_lmer)
+
+asitelmer <- ggplot(sitebind, aes(x = asite_lmer, y = fit_asite)) +
+  geom_errorbar(aes(ymin = fit_asite_per25, ymax = fit_asite_per75),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+              color = "#B40F20", linewidth = 0.5) +
+  geom_point(color = "#046C9A", size = 3) +
+  labs(x = "asite stan_lmer estimates", y = "asite stan estimates") +
+  theme_minimal()
+
+combined_plot <- (aspplmer + bspplmer + asitelmer)
+combined_plot
+ggsave("figures/troubleShootingGrowthModel/combinedPlots_lmerVSStan.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
+
+
+fitlmer_partialpooling$coefficients["spp_fac"]
+
 sigma_cols <- colnames(df_fit)[
   grepl("igma", colnames(df_fit))
 ]
