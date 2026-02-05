@@ -23,19 +23,32 @@
   \item None of the four species grew more with more growing degree days (Figure \ref{fig:effects})
   \item Betpop is the species that grows the most
   \item We didn't find strong local adaptation signal across the four sites---they all overlap with 0 (Figure \ref{fig:provenanceIntercepts})
+  \item Life history strategy does not play a role. Fast growth, short-lived species (ALNINC, BETPAP, BETPOP) did repond more to increased GDD compared to slow-growth, long-lived species (BETALL).
+\end{enumerate}
 \end{enumerate}
 
+% Figure Growth X GDD
 \begin{figure}[h!]
 \includegraphics[width=0.5\textwidth]{growthModelSlopesperSppFacet.jpeg}
 \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals.}
 \label{fig:growthSlopes}
 \end{figure}
 
+% Figure provenances
 \begin{figure}[h!]
 \includegraphics[width=0.5\textwidth]{asite_mean_plot.jpeg}
 \caption{Provenances and stuff}
 \label{fig:provenanceIntercepts}
 \end{figure}
+
+\subsection*{coringTreespotters}
+\begin{enumerate}
+  \item 
+  \item
+  \item
+  \item 
+\end{enumerate}
+
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

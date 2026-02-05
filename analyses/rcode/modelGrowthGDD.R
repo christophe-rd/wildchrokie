@@ -1079,31 +1079,49 @@ treeid_lmer$treeid <- substr(rownames(treeid_lmer), 3,4)
 # calculate average per species
 aspp_aver <- aggregate(aspp_lmer ~ spp, treeid_lmer, FUN = mean)
 aspp_quan <- aggregate(aspp_lmer ~ spp, treeid_lmer, FUN = quantile)
-colnames(aspp_quan)
-merge(aspp_aver, aspp_quan[, c("spp", "aspp_lmer.25%", "aspp_lmer.75%")], by = "spp")
+aspp_lmer <- data.frame(
+  spp = aspp_aver$spp,
+  mean_lmer = aspp_aver$aspp_lmer,
+  per25_lmer = aspp_quan$aspp_lmer[, 1],
+  per75_lmer = aspp_quan$aspp_lmer[, 2]
+)
 
-asppbspp <- cbind(aspp_df2, bspp_df2[, c("fit_bspp", "fit_bspp_per25", "fit_bspp_per75")], spp_lmer)
+asppcomp <- merge(aspp_df2, aspp_lmer, by = "spp")
 
-aspplmer <- ggplot(asppbspp, aes(x = aspp_lmer, y = fit_aspp)) +
+asppcompplot <- ggplot(asppcomp, aes(x = mean_lmer, y = fit_aspp)) +
   geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75),
                 width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
               color = "#B40F20", linewidth = 0.5) +
   geom_point(color = "#046C9A", size = 3) +
-  labs(x = "aspp stan_lmer estimates", y = "aspp stan estimates") +
+  labs(x = "stanlmer", y = "rstan",title = "aspp") +
   theme_minimal()
+asppcompplot
 
-bspplmer <- ggplot(asppbspp, aes(x = bspp_lmer, y = fit_bspp)) +
+# bspp
+bspp_aver <- aggregate(bspp_lmer ~ spp, treeid_lmer, FUN = mean)
+bspp_quan <- aggregate(bspp_lmer ~ spp, treeid_lmer, FUN = quantile)
+bspp_lmer <- data.frame(
+  spp = bspp_aver$spp,
+  mean_lmer = bspp_aver$bspp_lmer,
+  per25_lmer = bspp_quan$bspp_lmer[, 1],
+  per75_lmer = bspp_quan$bspp_lmer[, 2]
+)
+
+bsppcomp <- merge(bspp_df2, bspp_lmer, by = "spp")
+
+bsppcompplot <- ggplot(bsppcomp, aes(x = mean_lmer, y = fit_bspp)) +
   geom_errorbar(aes(ymin = fit_bspp_per25, ymax = fit_bspp_per75),
                 width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
               color = "#B40F20", linewidth = 0.5) +
   geom_point(color = "#046C9A", size = 3) +
-  labs(x = "bspp stan_lmer estimates", y = "bspp stan estimates") +
+  labs(x = "stanlmer", y = "rstan", title = "bspp") +
   theme_minimal()
+bsppcompplot
 
 # asite
-asitetest <- ranef(fitlmer_partialpooling)["site_fac"]
+asitetest <- ranef(fitlmer_partialpooling1)["site_fac"]
 site_lmer <- as.data.frame(asitetest)
 colnames(site_lmer) <- c("asite_lmer")
 
@@ -1115,12 +1133,13 @@ asitelmer <- ggplot(sitebind, aes(x = asite_lmer, y = fit_asite)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
               color = "#B40F20", linewidth = 0.5) +
   geom_point(color = "#046C9A", size = 3) +
-  labs(x = "asite stan_lmer estimates", y = "asite stan estimates") +
+  labs(x = "stanlmer", y = "rstan", title = "asite") +
   theme_minimal()
+asitelmer
 
-combined_plot <- (aspplmer + bspplmer + asitelmer)
+combined_plot <- (asppcompplot + bsppcompplot + asitelmer)
 combined_plot
-ggsave("figures/troubleShootingGrowthModel/combinedPlots_lmerVSStan.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
+ggsave("figures/troubleShootingGrowthModel/combinedPlots_lmerVSStanM1.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
 
 fitlmer_partialpooling$coefficients["spp_fac"]
