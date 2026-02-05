@@ -1,21 +1,47 @@
 \documentclass{article}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
 
 \usepackage{Sweave}
 \begin{document}
 \input{resultsOutline-concordance}
 
-\title{Simple Sweave Example}
-\author{Your Name}
+\title{Results outline}
+\author{Christophe Rouleau-Desrochers}
 \date{\today}
 \maketitle
 
-\title{Results outline}
-Below I outline results
-\begin{Schunk}
-\begin{Sinput}
-> source("../../analyses/rcode/modelGrowthGDD_plots.R")
-\end{Sinput}
-\end{Schunk}
+%<<>>=
+%source("../../analyses/rcode/modelGrowthGDD_plots.R")
+%@
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Main results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Main results}
 
+\subsection*{Wildchrokie}
+\begin{enumerate}
+  \item None of the four species grew more with more growing degree days (Figure \ref{fig:effects})
+  \item Betpop is the species that grows the most
+  \item We didn't find strong local adaptation signal across the four sites---they all overlap with 0 (Figure \ref{fig:provenanceIntercepts})
+\end{enumerate}
+
+\begin{figure}[h!]
+\includegraphics[width=0.5\textwidth]{growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals.}
+\label{fig:growthSlopes}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics[width=0.5\textwidth]{asite_mean_plot.jpeg}
+\caption{Provenances and stuff}
+\label{fig:provenanceIntercepts}
+\end{figure}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplemental results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Supplemental results}
+
+\subsection*{Wildchrokie}
 
 \end{document}
