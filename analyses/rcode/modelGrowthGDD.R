@@ -640,10 +640,20 @@ emp$treeid_fac <- as.factor(emp$treeid_num)
 unique(emp$spp_fac)
 emp$gdd_c <- scale(emp$gdd, scale = FALSE)
 
-fitlmer_partialpooling <- stan_lmer(
+fitlmer_partialpooling1 <- stan_lmer(
   y ~
     (1|site_fac) +
     (gdd | spp_fac:treeid_fac),
+  data = emp,
+  chains = 4,
+  iter = 4000,
+  cores = 4
+)
+
+fitlmer_partialpooling3 <- stan_lmer(
+  y ~
+    (1|site_fac) +
+    (gdd | spp_fac),
   data = emp,
   chains = 4,
   iter = 4000,
@@ -1052,16 +1062,25 @@ util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transfo
 
 
 # RECOVER FROM STAN_LMER ####
-df_fit_lmer <- as.data.frame(fitlmer_partialpooling)
+df_fit_lmer <- as.data.frame(fitlmer_partialpooling1)
 
 # aspp
-fixef(fitlmer_partialpooling)
-ranef(fitlmer_partialpooling)
+fixef(fitlmer_partialpooling1)
+ranef(fitlmer_partialpooling1)
 mean(df_fit[,"a"])
 
-aspptest <- ranef(fitlmer_partialpooling)["spp_fac"]
-spp_lmer <- as.data.frame(aspptest)
-colnames(spp_lmer) <- c("aspp_lmer", "bspp_lmer")
+treeidtest <- ranef(fitlmer_partialpooling1)["spp_fac:treeid_fac"]
+treeid_lmer <- as.data.frame(treeidtest)
+
+colnames(treeid_lmer) <- c("aspp_lmer", "bspp_lmer")
+treeid_lmer$spp <- substr(rownames(treeid_lmer), 1,1)
+treeid_lmer$treeid <- substr(rownames(treeid_lmer), 3,4)
+
+# calculate average per species
+aspp_aver <- aggregate(aspp_lmer ~ spp, treeid_lmer, FUN = mean)
+aspp_quan <- aggregate(aspp_lmer ~ spp, treeid_lmer, FUN = quantile)
+colnames(aspp_quan)
+merge(aspp_aver, aspp_quan[, c("spp", "aspp_lmer.25%", "aspp_lmer.75%")], by = "spp")
 
 asppbspp <- cbind(aspp_df2, bspp_df2[, c("fit_bspp", "fit_bspp_per25", "fit_bspp_per75")], spp_lmer)
 
