@@ -11,7 +11,7 @@ array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
 vector[N] gdd; 	// gdd (predictor for slope)
-array[N] real y; 		// ring width (response)
+array[N] real y;
 }
 
 parameters{
@@ -51,3 +51,15 @@ model{
   
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
+
+generated quantities {
+  array[N] real y_rep;
+  for (i in 1:N) {
+    y_rep[i] = normal_rng(
+        a + 
+        aspp[species[i]] + 
+        asite[site[i]] +
+        atreeid[treeid[i]] + 
+        bsp[species[i]]*gdd[i], sigma_y);
+  }
+}

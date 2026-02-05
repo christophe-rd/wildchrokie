@@ -629,6 +629,8 @@ fit <- stan("stan/twolevelhierint.stan",
                    "gdd"),
             iter=4000, chains=4, cores=4)
 
+saveRDS(fit, "output/stanOutput/fitGrowthGDD")
+
 # fit stanlmer to check differences
 emp$gdd <- emp$pgsGDD/200
 emp$y <- emp$lengthCM*10
