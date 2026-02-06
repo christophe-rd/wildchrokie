@@ -56,7 +56,7 @@ Ntreeid <- length(unique(treeid))
 # === === === === === === === === === === === === #
 #### Recover parameters from the posterior ####
 # === === === === === === === === === === === === #
-fit <- readRDS("output/stanOutput/fit")
+fit <- readRDS("output/stanOutput/fitGrowthGDD")
 df_fit <- as.data.frame(fit)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -242,7 +242,7 @@ colnames(atreeidsub) <- 1:length(subyvec)
 
 # get the spp and site identities for each tree id
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
-                                  "treeid", "spp", "site")])
+                                  "treeid", "spp", "site", "latbi")])
 
 # the spp values for each tree id
 treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
@@ -266,15 +266,21 @@ for (i in seq_len(ncol(treeid_asite))) { # i = 1
 }
 treeid_asite
 
+# recover a
+treeid_a <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
+colnames(treeid_a) <- colnames(atreeidsub)
+
+for (i in seq_len(ncol(treeid_a))) { # i = 1
+  treeid_a[, i] <- df_fit[, "a"]
+}
+
 # sum all 3 dfs together to get the full intercept for each treeid
 fullintercept <-
-  df_fit$a +
+  treeid_a + # CHECK: convert to 75 cols
   atreeidsub +
   treeid_aspp +
   treeid_asite
 fullintercept
-
-# subintercept <- fulltreeid[, c(3,33,53,63)]
 
 # now get the slope for each treeid
 treeid_bspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
@@ -310,7 +316,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
   # TO CHANGE: get the 8000 samples back
   y_post <- sapply(1:8000, function(f) {
-    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x
+    rnorm(length(x), fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x, sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
 }
@@ -373,20 +379,22 @@ spp2vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 2]
 spp3vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 3]
 spp4vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 4]
 
-# Calculate average intercept value for each species
-sppintercept <- data.frame(
-  "1" = rowMeans(fullintercept[, spp1vec]),
-  "2" = rowMeans(fullintercept[, spp2vec]),
-  "3" = rowMeans(fullintercept[, spp3vec]),
-  "4" = rowMeans(fullintercept[, spp4vec])
+spp_list <- list(
+  "1" = spp1vec,
+  "2" = spp2vec,
+  "3" = spp3vec,
+  "4" = spp4vec
 )
-colnames(sppintercept) <- 1:4
+
+# Average each entry of the 75 treeids according to their species 
+spp_post_list <- lapply(spp_list, function(tree_vec) {
+  Reduce("+", y_post_list[tree_vec]) / length(tree_vec)
+})
 
 sppvecnum <- 1:4
-sppvecname <- unique(treeid_spp_site$spp)
+sppvecname <- unique(treeid_spp_site$latbi)
 
 x <- seq(min(emp$pgsGDD), max(emp$pgsGDD), length.out = 100)   
-y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrix
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
 
 # jpeg output
@@ -400,19 +408,19 @@ jpeg(
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
-for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i]) 
-  # TO CHANGE: get the 8000 samples back
-  y_post <- sapply(1:8000, function(f) {
-    sppintercept[f, spp_column] + bspp_df[f, spp_column] * x
-  })
-  y_post_list[[spp_column]] <- y_post
-}
+# for (i in seq_along(sppvecnum)) { # i = 1
+#   spp_column <- as.character(sppvecnum[i]) 
+#   # TO CHANGE: get the 8000 samples back
+#   y_post <- sapply(1:8000, function(f) {
+#     sppintercept[f, spp_column] + bspp_df[f, spp_column] * x
+#   })
+#   spp_post_list[[spp_column]] <- y_post
+# }
 
-str(y_post_list) # its good if x is the number of gdd and y the number of iterations
+# str(spp_post_list) # its good if x is the number of gdd and y the number of iterations
 
 # Loop over trees again to plot each tree individually
-for (i in seq_along(sppvecnum)) {
+for (i in seq_along(sppvecnum)) { # i = 1
   
   spp_column <- as.character(sppvecnum[i])
   spp_column_name <- as.character(sppvecname[i])
@@ -423,7 +431,8 @@ for (i in seq_along(sppvecnum)) {
   # subset empirical data correctly
   emp_spp <- emp[emp$spp_num == spp_num, ]
   
-  y_post <- y_post_list[[spp_column]]
+  spp_column <- as.character(sppvecnum[i]) 
+  y_post <- spp_post_list[[spp_column]]
   
   # summaries
   y_mean <- apply(y_post, 1, mean)
@@ -478,16 +487,6 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
-for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i]) 
-  # TO CHANGE: get the 8000 samples back
-  y_post <- sapply(1:8000, function(f) {
-    sppintercept[f, spp_column] + bspp_df[f, spp_column] * x
-  })
-  y_post_list[[spp_column]] <- y_post
-}
-
-str(y_post_list) # its good if x is the number of gdd and y the number of iterations
 
 plot(emp$pgsGDD, y, type = "n", 
      ylim = range(min(emp$lengthCM*10), max(emp$lengthCM*10)), 
@@ -498,7 +497,7 @@ plot(emp$pgsGDD, y, type = "n",
 for (i in seq_along(sppvecnum)) { # i = 1
   spp_column <- as.character(sppvecnum[i])
   spp_column_name <- as.character(sppvecname[i])
-  y_post <- y_post_list[[spp_column]]
+  y_post <- spp_post_list[[spp_column]]
   
   # color line by spp
   spp_num <- as.integer(spp_column)
