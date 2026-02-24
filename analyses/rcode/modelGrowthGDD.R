@@ -1066,6 +1066,19 @@ util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transfo
 # RECOVER FROM STAN_LMER ####
 df_fit_lmer <- as.data.frame(fitlmer_partialpooling1)
 
+coef(fitlmer_partialpooling1)$`spp_fac:treeid_fac`
+ranef(fitlmer_partialpooling1)$`spp_fac:treeid_fac`
+
+VarCorr(fitlmer_partialpooling1)$`spp_fac:treeid_fac`
+print(colnames(as.matrix(fitlmer_partialpooling1)))
+vcov(fitlmer_partialpooling1, correlation = TRUE)
+vcov(fitlmer_partialpooling1)
+
+cov_mat <- VarCorr(fitlmer_partialpooling1)$`spp_fac:treeid_fac`
+
+fitlmer_partialpooling1$stan_function
+fitlmer_partialpooling1$stanfit
+decov(fitlmer_partialpooling1)
 # aspp
 fixef(fitlmer_partialpooling1)
 ranef(fitlmer_partialpooling1)
