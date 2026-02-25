@@ -599,6 +599,10 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
+# checks
+nrow(emp[!is.na(emp$pgsGDDAVG),])
+emp <- emp[!is.na(emp$pgsGDD),]
+
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -627,7 +631,7 @@ fit <- stan("stan/twolevelhierint.stan",
                    "Nsite", "site", 
                    "Ntreeid", "treeid", 
                    "gdd"),
-            iter=4000, chains=4, cores=4)
+            iter = 2000, chains=4, cores=4)
 
 saveRDS(fit, "output/stanOutput/fitGrowthGDD")
 
@@ -1024,7 +1028,7 @@ bsp_prior <- rnorm(1e4, 0, 0.4)
 
 priorbsp <- ggplot() +
   geom_density(data = data.frame(bsp_prior = bsp_prior),
-               aes(x = bsp_prior, colour = "Prior at N(0, 0.4)"),
+               aes(x = bsp_prior, colour = "Prior at N(0, 0.3)"),
                linewidth = 0.8) +
   geom_density(data = bsp_long,
                aes(x = value, colour = "Posterior", group = spp),
