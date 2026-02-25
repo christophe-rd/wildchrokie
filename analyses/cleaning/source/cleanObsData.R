@@ -525,18 +525,29 @@ cg <- full_join(cg, cg20clean)
 cg$Plot <- NULL
 cg$risk <- NULL
 
+vec <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
+# get only 4 species
+cg <- subset(cg, spp %in% vec)
 
-
-
-lookupbb <- aggregate(cg[c("budburst")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupbb      <- aggregate(cg[c("budburst")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
 lookupflowers <- aggregate(cg[c("flowers")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookuplo <- aggregate(cg[c("leafout")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookupfbud <- aggregate(cg[c("flobuds")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookupfbb <- aggregate(cg[c("flobudburst")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookupfru <- aggregate(cg[c("fruit")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookupripe <- aggregate(cg[c("ripefruit")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookupbset <- aggregate(cg[c("budset")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
-lookuplcolor <- aggregate(cg[c("leafcolor")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookuplo      <- aggregate(cg[c("leafout")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupfbud    <- aggregate(cg[c("flobuds")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupfbb     <- aggregate(cg[c("flobudburst")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupfru     <- aggregate(cg[c("fruit")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupripe    <- aggregate(cg[c("ripefruit")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookupbset    <- aggregate(cg[c("budset")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+lookuplcolor  <- aggregate(cg[c("leafcolor")], cg[c("spp", "year", "site", "ind", "plot")], FUN=mean, na.rm=TRUE)
+
+lookupbb      <- lookupbb     [which(lookupbb     $budburst != "NaN"),]
+lookupflowers <- lookupflowers[which(lookupflowers$flowers != "NaN"),]
+lookuplo      <- lookuplo     [which(lookuplo     $leafout != "NaN"),]
+lookupfbud    <- lookupfbud   [which(lookupfbud   $flobuds != "NaN"),]
+lookupfbb     <- lookupfbb    [which(lookupfbb    $flobudburst != "NaN"),]
+lookupfru     <- lookupfru    [which(lookupfru    $fruit != "NaN"),]
+lookupripe    <- lookupripe   [which(lookupripe   $ripefruit != "NaN"),]
+lookupbset    <- lookupbset   [which(lookupbset   $budset != "NaN"),]
+lookuplcolor  <- lookuplcolor [which(lookuplcolor $leafcolor != "NaN"),]
 
 cgclean <- merge(lookupbb, lookupflowers, by=c("spp", "year", "site", "ind", "plot"), all.x=TRUE, all.y=TRUE)
 cgclean <- merge(cgclean, lookuplo, by=c("spp", "year", "site", "ind", "plot"), all.x=TRUE, all.y=TRUE)
@@ -546,6 +557,9 @@ cgclean <- merge(cgclean, lookupfru, by=c("spp", "year", "site", "ind", "plot"),
 cgclean <- merge(cgclean, lookupripe, by=c("spp", "year", "site", "ind", "plot"), all.x=TRUE, all.y=TRUE)
 cgclean <- merge(cgclean, lookupbset, by=c("spp", "year", "site", "ind", "plot"), all.x=TRUE, all.y=TRUE)
 cgclean <- merge(cgclean, lookuplcolor, by=c("spp", "year", "site", "ind", "plot"), all.x=TRUE, all.y=TRUE)
+
+nrow(cgclean[which(!is.na(cgclean$leafout) & !is.nan(cgclean$leafout)),])
+nrow(cgclean[which(!is.na(cgclean$budset) & !is.nan(cgclean$budset)),])
 
 cgclean$provenance.lat <- NA
 cgclean$provenance.long <- NA
@@ -580,14 +594,7 @@ foo <- foo[complete.cases(foo),]
 dtemp <- cgclean 
 str(dtemp)
 
-# grab a vec of interested species
-vec <- c("ALNINC", "BETALL", "BETPAP", "BETPOP")
-# get only 4 species
-dtemp2 <- subset(dtemp, spp %in% vec)
-# remove dupplicated rows 
-dtemp2 <- dtemp2[!duplicated(dtemp2),]
-# select columns
-dtemp3 <- dtemp2[, c(1:2, 6:ncol(dtemp2))]
+dtemp3 <- dtemp[, c(1:2, 6:ncol(dtemp))]
 # remove spp column because I will add it in the merge file
 dtemp4 <- dtemp3[, names(dtemp3) != "spp"]
 

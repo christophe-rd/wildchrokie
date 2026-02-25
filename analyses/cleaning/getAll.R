@@ -25,32 +25,33 @@ source("cleaning/source/cleanClimate.r")
 source("cleaning/source/calculateGrowingSeasonGDD.R")
 
 # merge dfs for ring width with phenology data 
+nrow(wildchrokie_rw)
+nrow(obsdata)
 temp <- merge(wildchrokie_rw, obsdata, by = c("treeid", "spp", "year"))
+rw <- subset(wildchrokie_rw, year %in% c(2018, 2019, 2020))
+nrow(rw)
 
 # get only the years we have data for
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
+nrow(temp2)
 
 temp3 <- merge(temp2,
-               obsdataWithGDD[, c("treeid", "year", "pgsGDD", "fgsGDD", "fullGDD")],
+               obsdataWithGDD[, c("treeid", "year", "pgsGDD", "pgsGDDAVG", "fgsGDD", "fullGDD")],
                by = c("treeid", "year")
                )
+nrow(temp3)
+temp3$idyear <- paste(temp3$treeid, temp3$year, sep = "_")
+temp4 <- temp3[!duplicated(temp3$idyear),] 
+nrow(temp4)
 
-# make some checks
-unique(temp3$sampleType)
-# remove 2 samples for a given individuals
-temp4 <- subset(temp3, sampleType != "coresWithCookies") 
-temp5 <- temp4[!is.na(temp4$pgsGDD),]
-temp5$idyear <- paste(temp5$treeid, temp5$year, sep = "_")
-temp6 <- temp5[!duplicated(temp5$idyear),] 
-
-temp6$latbi <- NA
-temp6$latbi[which(temp6$spp == "ALNINC")] <- "Alnus incana"
-temp6$latbi[which(temp6$spp == "BETPAP")] <- "Betula papyrifera"
-temp6$latbi[which(temp6$spp == "BETPOP")] <- "Betula populifolia"
-temp6$latbi[which(temp6$spp == "BETALL")] <- "Betula alleghaniensis"
+temp4$latbi <- NA
+temp4$latbi[which(temp4$spp == "ALNINC")] <- "Alnus incana"
+temp4$latbi[which(temp4$spp == "BETPAP")] <- "Betula papyrifera"
+temp4$latbi[which(temp4$spp == "BETPOP")] <- "Betula populifolia"
+temp4$latbi[which(temp4$spp == "BETALL")] <- "Betula alleghaniensis"
 
 # write csv
-write_csv(temp6, "output/empiricalDataMAIN.csv")
+write_csv(temp4, "output/empiricalDataMAIN.csv")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Now without tree rings!

@@ -334,13 +334,14 @@ d$site <- substr(d$siteplot, 0,2)
 d$plot <- substr(d$siteplot, 3,4)
 d$replicate <- sub(".*_", "", d$name)
 
-averagedlengths <- aggregate(d$lengthCM, by = list(d$name, d$yearCor), FUN = mean )
-colnames(averagedlengths) <- c("name", "yearCor", "avLengthCM")
+averagedlengths <- aggregate(d$lengthCM, by = list(d$name, d$yearCor, d$sampleType), FUN = mean )
+colnames(averagedlengths) <- c("name", "yearCor", "sampleType", "avLengthCM")
 
 # merge with averagelengths
-wildchrokie_rw <- merge(d, averagedlengths, by = c("name", "yearCor"), all.x = TRUE)
+wildchrokie_rw <- merge(d, averagedlengths, by = c("name", "yearCor", "sampleType"), all.x = TRUE)
 wildchrokie_rw$temp <- paste(wildchrokie_rw$name, wildchrokie_rw$year)
 # one row per id and year
+wildchrokie_rw <- subset(wildchrokie_rw, sampleType != "coresWithCookies")
 wildchrokie_rw <- wildchrokie_rw[!duplicated(wildchrokie_rw$temp),]
 
 # reorganize and create a new csv
