@@ -1024,7 +1024,7 @@ bsp_long <- reshape(
 bsp_long
 
 # aspp prior
-bsp_prior <- rnorm(1e4, 0, 0.4)
+bsp_prior <- rnorm(1e4, 0, 0.5)
 
 priorbsp <- ggplot() +
   geom_density(data = data.frame(bsp_prior = bsp_prior),

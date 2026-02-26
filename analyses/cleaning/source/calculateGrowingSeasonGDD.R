@@ -25,9 +25,9 @@ y19 <- subset(weldhillcomp, year=="2019")
 y20 <- subset(weldhillcomp, year=="2020")
 
 ###Calculate gdd
-y18$GDD_5 <- gdd(tmax = y18$maxT, tmin = y18$minT, tbase = 10, type = "B")
-y19$GDD_5 <- gdd(tmax = y19$maxT, tmin = y19$minT, tbase = 10, type = "B")
-y20$GDD_5 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 10, type = "B")
+y18$GDD_5 <- gdd(tmax = y18$maxT, tmin = y18$minT, tbase = 5, type = "B")
+y19$GDD_5 <- gdd(tmax = y19$maxT, tmin = y19$minT, tbase = 5, type = "B")
+y20$GDD_5 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 5, type = "B")
 
 gdd <- rbind(y18, y19, y20)
 str(gdd)

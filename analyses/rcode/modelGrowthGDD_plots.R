@@ -35,7 +35,7 @@ source('mcmc_visualization_tools.R', local=util)
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
-
+emp <- emp[!is.na(emp$pgsGDD),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -287,14 +287,15 @@ treeid_bspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
 colnames(treeid_bspp) <- colnames(atreeidsub)
 
 # back convert the slopes to their original scales
-for (i in 1:ncol(bspp_df)){
-  bspp_df[[i]] <- bspp_df[[i]] / 200
+bspp_df4 <- bspp_df
+for (i in 1:ncol(bspp_df4)){
+  bspp_df4[[i]] <- bspp_df4[[i]] / 200
 }
 
 for (i in seq_len(ncol(treeid_bspp))) { # i = 30
   tree_id <- as.integer(colnames(treeid_bspp)[i])
   spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_bspp[, i] <- bspp_df[, spp_id]
+  treeid_bspp[, i] <- bspp_df4[, spp_id]
 }
 treeid_bspp
 
@@ -315,7 +316,7 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
   # TO CHANGE: get the 8000 samples back
-  y_post <- sapply(1:8000, function(f) {
+  y_post <- sapply(1:nrow(df_fit), function(f) {
     rnorm(length(x), fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x, sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
@@ -406,18 +407,6 @@ jpeg(
 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
-
-# below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
-# for (i in seq_along(sppvecnum)) { # i = 1
-#   spp_column <- as.character(sppvecnum[i]) 
-#   # TO CHANGE: get the 8000 samples back
-#   y_post <- sapply(1:8000, function(f) {
-#     sppintercept[f, spp_column] + bspp_df[f, spp_column] * x
-#   })
-#   spp_post_list[[spp_column]] <- y_post
-# }
-
-# str(spp_post_list) # its good if x is the number of gdd and y the number of iterations
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
