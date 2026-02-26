@@ -302,25 +302,27 @@ treeid_bspp
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
 x <- seq(min(emp$pgsGDD), max(emp$pgsGDD), length.out = 100)  
-y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrix
+y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
 sppcols
-
-# PDF output
-pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
-
-# Layout: 2 rows × 2 columns per page
-par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
 for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
   # TO CHANGE: get the 8000 samples back
   y_post <- sapply(1:nrow(df_fit), function(f) {
-    rnorm(length(x), fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x, sigma_df$sigma_y[f])
+    rnorm(length(x), 
+          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x,
+          sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
 }
+
+# PDF output
+pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
+
+# Layout: 2 rows × 2 columns per page
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(treeidvecnum)) { # i = 1
@@ -533,123 +535,142 @@ for (i in seq_along(sppvecnum)) { # i = 1
 dev.off()
 
 
-##### mu plots #####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Mu plots #####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+n_spp <- nrow(bspp_df2)
+n_site <- nrow(site_df2)
+y_pos <- 1:n_spp 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
-aspp_df2$spp <- as.numeric(aspp_df2$spp)
-aspp_df2$spp_name <- emp$spp[match(aspp_df2$spp, emp$spp_num)]
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 
-aspp_mean_plot <- ggplot(aspp_df2, aes(x = fit_aspp, y = spp_name, color = spp_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_aspp_per5, 
-                     xmax = fit_aspp_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_aspp_per25, 
-                     xmax = fit_aspp_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Species", x = "Intercept change in ring width (mm)") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-aspp_mean_plot
-ggsave("figures/empiricalData/aspp_mean_plot.jpeg",
-       aspp_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
+jpeg("figures/empiricalData/aspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
+par(mar = c(5, 10, 2, 2)) 
+
+plot(aspp_df2$fit_aspp, y_pos,
+     xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
+     ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width intercept values (mm)",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sppcols,
+     frame.plot = FALSE)
+
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = aspp_df2$spp_name[i],
+       las = 2,
+       col.axis = sppcols[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
+
+# error bars and dashed line
+segments(aspp_df2$fit_aspp_per5,  y_pos,
+         aspp_df2$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2$fit_aspp_per25, y_pos,
+         aspp_df2$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+
+abline(v = 0, lty = 2, col = "black")
+
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asite ######
-site_df2$site <- as.numeric(site_df2$site)
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
+sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
-site_mean_plot <- ggplot(site_df2, 
-                         aes(x = fit_a_site, 
-                             y = site_name, 
-                             color = site_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_a_site_per5, 
-                     xmax = fit_a_site_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_a_site_per25, 
-                     xmax = fit_a_site_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("Darjeeling1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  labs(y = "Site", x = "Intercept change in ring width (mm)") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-site_mean_plot
-ggsave("figures/empiricalData/asite_mean_plot.jpeg",
-       site_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
+jpeg("figures/empiricalData/asite_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
-###### bsp ###### 
-bspp_df2$spp <- as.numeric(bspp_df2$spp)
-bspp_df2$spp_name <- emp$spp[match(bspp_df2$spp, emp$spp_num)]
+par(mar = c(5, 10, 2, 2)) 
 
-bsp_mean_plot <- ggplot(bspp_df2, 
-                        aes(x = fit_bspp, 
-                            y = spp_name, 
-                            color = spp_name)) +
-  geom_point(size = 6, alpha = 1) + 
-  geom_errorbarh(aes(xmin = fit_bspp_per5, 
-                     xmax = fit_bspp_per95), 
-                 width = 0, alpha = 1, linewidth = 0.7) +
-  geom_errorbarh(aes(xmin = fit_bspp_per25, 
-                     xmax = fit_bspp_per75), 
-                 width = 0, alpha = 1, linewidth = 2) +
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  # scale_fill_manual(values = wes_palette("AsteroidCity1")) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  geom_vline(xintercept = bspp_df2$meanbsp, linetype = "dashed", color = "blue", linewidth = 1) +
-  labs(y = "Species", x = "Slope change in ring width (mm)") +
-  # facet_wrap(~ model, nrow =2) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    legend.title = element_text(size = 12, face = "bold"),  
-    legend.text = element_text(size = 10),                  
-    legend.key.size = unit(1.5, "lines"),                   
-    legend.position = "right"                               
-  ) +
-  theme_minimal() +
-  scale_y_discrete(limits = rev)  
-bsp_mean_plot
-ggsave("figures/empiricalData/bsp_mean_plot.jpeg",
-       bsp_mean_plot,
-       width = 8, height = 6, 
-       units = "in", dpi = 300)
+plot(site_df2$fit_asite, y_pos,
+     xlim = range(c(site_df2$fit_asite_per5, site_df2$fit_asite_per95)),
+     ylim = c(0.5, n_site + 0.5),
+     xlab = "Ring width intercept values (mm)",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sitecolors,
+     frame.plot = FALSE)
 
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = site_df2$site_name[i],
+       las = 2,
+       col.axis = sitecolors[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
 
-combined_plot <- (aspp_mean_plot) /
-                  (site_mean_plot) / 
-                  (bsp_mean_plot)
-combined_plot
-ggsave("figures/empiricalData/combinedMeanPlots.jpeg", combined_plot, width = 6, height = 8, units = "in", dpi = 300)
+# error bars and dashed line
+segments(site_df2$fit_asite_per5,  y_pos,
+         site_df2$fit_asite_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2$fit_asite_per25, y_pos,
+         site_df2$fit_asite_per75, y_pos,
+         col = sitecolors, lwd = 3)
 
+abline(v = 0, lty = 2, col = "black")
 
-# full treeid mu plots ####
+dev.off()
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+###### asp ######
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
+
+jpeg("figures/empiricalData/bspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
+
+par(mar = c(5, 10, 2, 2)) 
+
+plot(bspp_df2$fit_bspp, y_pos,
+     xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
+     ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change/200 GDD",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sppcols,
+     frame.plot = FALSE)
+
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = bspp_df2$spp_name[i],
+       las = 2,
+       col.axis = sppcols[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
+
+# error bars and dashed line
+segments(bspp_df2$fit_bspp_per5,  y_pos,
+         bspp_df2$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2$fit_bspp_per25, y_pos,
+         bspp_df2$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+
+abline(v = 0, lty = 2, col = "black")
+
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### full treeid mu plots #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Mean plots with atreeid ####
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
@@ -667,37 +688,32 @@ table(treeid_df2$spp)
 
 sub <- subset(emp, select = c("treeid_num", "spp_num", "site_num"))
 sub <- sub[!duplicated(sub$treeid_num),]
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# sum atreeid, asp, asite
-aspp_df3 <- as.matrix(aspp_df)
-site_df3 <- as.matrix(site_df)
-treeid_df3 <- as.matrix(treeid_df)
 
-fullatreeid <-
-  treeid_df3[, sub$treeid_num] +
-  aspp_df3[, sub$spp_num] +
-  site_df3[, sub$site_num] 
-fullatreeid
+# recalculate the full intercept without the grand mean
+fullintercept2 <-
+  atreeidsub +
+  treeid_aspp +
+  treeid_asite
+fullintercept2
 
-fullatreeid2 <- as.data.frame(fullatreeid)
 # get posterior means and quantiles
 
 # empty treeid dataframe
 treeid_df4 <- data.frame(
-  treeid = character(ncol(fullatreeid2)),
-  fit_atreeid = numeric(ncol(fullatreeid2)),  
+  treeid = character(ncol(fullintercept2)),
+  fit_atreeid = numeric(ncol(fullintercept2)),  
   fit_atreeid_per5 = NA, 
   fit_atreeid_per25 = NA,
   fit_atreeid_per75 = NA,
   fit_atreeid_per95 = NA
 )
-for (i in 1:ncol(fullatreeid2)) { # i = 1
-  treeid_df4$treeid[i] <- colnames(fullatreeid2)[i]         
-  treeid_df4$fit_atreeid[i] <- round(mean(fullatreeid2[[i]]),3)  
-  treeid_df4$fit_atreeid_per5[i] <- round(quantile(fullatreeid2[[i]], probs = 0.05), 3)
-  treeid_df4$fit_atreeid_per25[i] <- round(quantile(fullatreeid2[[i]], probs = 0.25), 3)
-  treeid_df4$fit_atreeid_per75[i] <- round(quantile(fullatreeid2[[i]], probs = 0.75), 3)
-  treeid_df4$fit_atreeid_per95[i] <- round(quantile(fullatreeid2[[i]], probs = 0.95), 3)
+for (i in 1:ncol(fullintercept2)) { # i = 1
+  treeid_df4$treeid[i] <- colnames(fullintercept2)[i]         
+  treeid_df4$fit_atreeid[i] <- round(mean(fullintercept2[[i]]),3)  
+  treeid_df4$fit_atreeid_per5[i] <- round(quantile(fullintercept2[[i]], probs = 0.05), 3)
+  treeid_df4$fit_atreeid_per25[i] <- round(quantile(fullintercept2[[i]], probs = 0.25), 3)
+  treeid_df4$fit_atreeid_per75[i] <- round(quantile(fullintercept2[[i]], probs = 0.75), 3)
+  treeid_df4$fit_atreeid_per95[i] <- round(quantile(fullintercept2[[i]], probs = 0.95), 3)
 }
 treeid_df4
 
@@ -705,39 +721,29 @@ treeid_df4
 treeid_df4$treeid <- as.numeric(treeid_df4$treeid)
 treeid_df4$treeid_name <- emp$treeid[match(treeid_df4$treeid,
                                                     emp$treeid_num)]
-treeid_df4$spp_name <- emp$spp[match(treeid_df4$treeid,
+treeid_df4$spp_name <- emp$latbi[match(treeid_df4$treeid,
                                               emp$treeid_num)]
+treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid,
+                                       emp$treeid_num)]
 treeid_df4$site_name <- emp$site[match(treeid_df4$treeid,
                                                 emp$treeid_num)]
-treeid_df4
+treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid,
+                                       emp$treeid_num)]
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
-# open device
-jpeg(
-  filename = "figures/empiricalData/meanPlotGrowthGDD_treeidBYspp.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
-  height = 2400,
-  res = 300          # good print-quality resolution
-)
-par(mar = c(
-  4, 
-  6, 
-  4, 
-  5))
+# Prep for the figure
 
 # define a gap between species clusters
 gap <- 3
 
 # y positions
-treeid_df4$y_pos <- NA
+# treeid_df4$y_pos <- NA
 current_y <- 1
 
 species_order <- c(
-  "ALNINC", 
-  "BETALL", 
-  "BETPAP", 
-  "BETPOP")
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
 # site_order <- c("SH", "GR", "WM", "HF")
 site_order <- c(
   "HF",
@@ -747,10 +753,10 @@ site_order <- c(
 
 # col
 my_colors <- c(
-  ALNINC = wes_palette("AsteroidCity1")[1],
-  BETALL = wes_palette("AsteroidCity1")[2],
-  BETPAP = wes_palette("AsteroidCity1")[3],
-  BETPOP = wes_palette("AsteroidCity1")[4]
+  "Alnus incana" = wes_palette("AsteroidCity1")[1],
+  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
+  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
+  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
 )
 # shapes for sites
 my_shapes <- c(
@@ -761,37 +767,51 @@ my_shapes <- c(
 )
 
 
-treeid_df4$spp  <- factor(treeid_df4$spp, levels = species_order)
-treeid_df4$site <- factor(treeid_df4$site, levels = site_order)
+# open device
+pdf(
+  file = "figures/empiricalData/meanPlotGrowthGDD_treeidBYspp.pdf",
+  width = 8,  
+  height = 8
+)
+par(mar = c(
+  4, # lower margin 
+  6, 
+  4, # upper margin  
+  6)) # right margin
+
+treeid_df4$spp_name  <- factor(treeid_df4$spp_name, levels = species_order)
+treeid_df4$site_num <- factor(treeid_df4$site_num, levels = site_order)
 
 treeid_df4 <- treeid_df4[
-  order(treeid_df4$spp, treeid_df4$site, treeid_df4$treeid),
+  order(treeid_df4$spp_name, treeid_df4$site_num, treeid_df4$treeid),
 ]
 
 treeid_df4$y_pos <- seq_len(nrow(treeid_df4))
 
-for(sp in species_order){
-  idx <- which(treeid_df4$spp == sp)
+total_rows <- nrow(treeid_df4) + (length(species_order) - 1) * gap
+current_y <- total_rows 
+
+for(sp in species_order){ # sp = "Alnus incana"
+  idx <- which(treeid_df4$spp_name == sp)
   n <- length(idx)
   
   # assign sequential positions for this species
-  treeid_df4$y_pos[idx] <- current_y:(current_y + n - 1)
+  treeid_df4$y_pos[idx] <- current_y:(current_y - n + 1)
   
   # move cursor down with a gap before next species cluster
-  current_y <- current_y + n + gap
+  current_y <- current_y - n - gap
 }
-
-treeid_df4$y_pos
 
 # Set up empty plot
 plot(
   NA, NA,
-  xlim = range(c(treeid_df4$fit_atreeid_per5-0.5,
-                 treeid_df4$fit_atreeid_per95+0.5)),
+  xlim = range(c(treeid_df4$fit_atreeid_per5-2,
+                 treeid_df4$fit_atreeid_per95+2)),
   ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
   xlab = "treeid intercept values",
   ylab = "",
-  yaxt = "n"  
+  yaxt = "n",
+  bty = "l"
 )
 
 
@@ -800,7 +820,7 @@ segments(
   x0 = treeid_df4$fit_atreeid_per5,
   x1 = treeid_df4$fit_atreeid_per95,
   y0 = treeid_df4$y_pos,
-  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
+  col = adjustcolor(my_colors[treeid_df4$spp_name], alpha.f = 0.7),
   lwd = 1
 )
 
@@ -809,7 +829,7 @@ segments(
   x0 = treeid_df4$fit_atreeid_per25,
   x1 = treeid_df4$fit_atreeid_per75,
   y0 = treeid_df4$y_pos,
-  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4),
+  col = adjustcolor(my_colors[treeid_df4$spp_name], alpha.f = 0.7),
   lwd = 1.5
 )
 
@@ -818,22 +838,18 @@ points(
   treeid_df4$fit_atreeid,
   treeid_df4$y_pos,
   cex = 0.8,
-  pch = my_shapes[treeid_df4$site],
-  col = adjustcolor(my_colors[treeid_df4$spp], alpha.f = 0.4)
+  pch = my_shapes[treeid_df4$site_name],
+  col = adjustcolor(my_colors[treeid_df4$spp_name], alpha.f = 0.7)
 )
 
-aspp_df2$spp <- aspp_df2$spp_name
-
-spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
-
-aspp_df2$y_pos <- spp_y[aspp_df2$spp]
-
+spp_y_top <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, max)
+aspp_df2$y_pos <- spp_y_top[aspp_df2$spp_name] + 1
 
 segments(
   x0 = aspp_df2$fit_aspp_per5,
   x1 = aspp_df2$fit_aspp_per95,
   y0 = aspp_df2$y_pos,
-  col = adjustcolor(my_colors[aspp_df2$spp], alpha.f = 0.9),
+  col = adjustcolor(my_colors[aspp_df2$spp_name], alpha.f = 0.9),
   lwd = 2
 )
 
@@ -841,18 +857,17 @@ segments(
   x0 = aspp_df2$fit_aspp_per25,
   x1 = aspp_df2$fit_aspp_per75,
   y0 = aspp_df2$y_pos,
-  col = my_colors[aspp_df2$spp],
-  lwd = 4
+  col = my_colors[aspp_df2$spp_name],
+  lwd = 3
 )
 points(
   aspp_df2$fit_aspp,
   aspp_df2$y_pos,
-  pch = 21,
-  bg  = my_colors[aspp_df2$spp],
-  col = "black",
+  pch = 16,
+  bg  = my_colors[aspp_df2$spp_name],
+  col = my_colors[aspp_df2$spp_name],
   cex = 1.5
 )
-
 
 # --- Add vertical line at 0 ---
 abline(v = 0, lty = 2)
@@ -865,9 +880,9 @@ axis(
   cex.axis = 0.5,
   las = 1
 )
-# spp mean
-spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp, mean)
-site_y <- tapply(treeid_df4$y_pos, treeid_df4$site, max)
+# spp_name mean
+spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, mean)
+site_y <- tapply(treeid_df4$y_pos, treeid_df4$site_num, max)
 
 ## order species by mean y descending (top of plot first)
 species_legend_order <- names(sort(spp_y, decreasing = TRUE))
@@ -875,7 +890,7 @@ site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
 legend(
-  x = max(treeid_df4$fit_atreeid_per95) - 0.1,
+  x = max(treeid_df4$fit_atreeid_per95) - 5,
   y = max(treeid_df4$y_pos) + 1,
   legend = species_legend_order,
   col = my_colors[species_legend_order],    # index so colors match
@@ -886,9 +901,9 @@ legend(
 )
 
 site_legend_order <- c("SH", "GR", "WM", "HF")
-# site legen
+# site_num legen
 legend(
-  x = max(treeid_df4$fit_atreeid_per95) - 0.1,
+  x = max(treeid_df4$fit_atreeid_per95) - 2,
   y = max(treeid_df4$y_pos) - 15,
   legend = site_legend_order,
   pch = my_shapes[site_legend_order],
@@ -896,7 +911,6 @@ legend(
   title = "Sites",
   bty = "n"
 )
-
 dev.off()
 
 # Mis ####
