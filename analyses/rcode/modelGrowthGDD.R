@@ -34,6 +34,7 @@ source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 
 runSimData <- FALSE
+fitlmer <- FALSE
 if (runSimData) {
 # === === === === === === === === === === === === === === === === 
 #### SIMULATED DATA ####
@@ -631,9 +632,11 @@ fit <- stan("stan/twolevelhierint.stan",
                    "Nsite", "site", 
                    "Ntreeid", "treeid", 
                    "gdd"),
-            iter = 2000, chains=4, cores=4)
+            warmup = 1000, iter = 2000, chains=4, save_dso = FALSE)
 
 saveRDS(fit, "output/stanOutput/fitGrowthGDD")
+
+if (fitlmer) {
 
 # fit stanlmer to check differences
 emp$gdd <- emp$pgsGDD/200
@@ -673,7 +676,8 @@ pairs(fit, pars = c("a", "b",
                     "sigma_atreeid",
                     "sigma_y"))
 
-saveRDS(fit, "output/stanOutput/fit")
+}
+
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
@@ -683,7 +687,7 @@ util$check_all_hmc_diagnostics(diagnostics)
 # jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
      # units = "px", res = 300)
 
-fit@model_pars
+# fit@model_pars
 
 # pairs(fit, pars = c("a", "b",
 #                     "sigma_atreeid",
@@ -748,7 +752,6 @@ for (i in 1:ncol(bspp_df)) { # i = 1
   bspp_df2$fit_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
 }
 bspp_df2
-
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Recover treeid ######
@@ -1409,3 +1412,21 @@ combined_plot <- (atreeid_stanXstanlmer) /
 combined_plot
 ggsave("figures/troubleShootingGrowthModel/combinedPlots.jpeg", combined_plot, width = 10, height = 8, units = "in", dpi = 300)
 
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Retrodictive checks ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+samples <- util$extract_expectand_vals(fit)
+jpeg(
+  filename = "figures/modelGrowthGDD/retrodictiveCheckHist.jpeg",
+  width = 2400,      
+  height = 2400,
+  res = 300          
+)
+util$plot_hist_quantiles(samples, "y_rep", 
+                         -5, # lower x axis limit
+                         15, # upper x axis limit
+                         0.5, # binning
+                         baseline_values = y,
+                         xlab = "Ring width (mm)")
+dev.off()

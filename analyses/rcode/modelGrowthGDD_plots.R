@@ -8,16 +8,14 @@ rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
-
 options(digits = 3)
-# quartz()
 
 # Load library 
 library(ggplot2)
 library(rstan)
 library(future)
 library(wesanderson)
-library(patchwork)
+library(patchwork) 
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -198,29 +196,6 @@ for (i in 1:ncol(site_df)) { # i = 1
 }
 site_df2
 
-#### Plot lines ####
-# Gdd on the x axis and growth on y ####
-aspp_df2$a <- mean(df_fit[,"a"])
-aspp_df2$a_asp <- aspp_df2$a + aspp_df2$fit_aspp
-aspp_df2$bsp <- bspp_df2$fit_bspp
-
-colnames(aspp_df2)[colnames(aspp_df2) == "spp"] <- "spp_num"
-
-emp2 <- emp
-emp2 <- merge(emp2, aspp_df2[, c("spp_num", "a", "bsp", "a_asp")], 
-              by = "spp_num")
-# plot lines
-ggplot(emp2) +
-  geom_point(aes(x = pgsGDD/200, y = lengthCM*10, colour = spp)) +
-  geom_abline(aes(intercept = a_asp, slope = bsp, colour = spp), 
-              linewidth = 0.5) +
-  labs(title = "", x = "pgsGDD", y = "ring width in mm") +
-  scale_colour_manual(values = wes_palette("AsteroidCity1")) +
-  # facet_wrap(~ spp) +
-  theme_minimal()
-ggsave("figures/empiricalData/slope_intercepts_varyingslopes.jpeg", 
-       width = 8, height = 6, units = "in", dpi = 300)
-
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -276,7 +251,7 @@ for (i in seq_len(ncol(treeid_a))) { # i = 1
 
 # sum all 3 dfs together to get the full intercept for each treeid
 fullintercept <-
-  treeid_a + # CHECK: convert to 75 cols
+  treeid_a + 
   atreeidsub +
   treeid_aspp +
   treeid_asite
@@ -303,8 +278,6 @@ treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
 x <- seq(min(emp$pgsGDD), max(emp$pgsGDD), length.out = 100)  
 y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
-sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
-sppcols
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
 for (i in seq_along(treeidvecnum)) { # i = 1
@@ -319,6 +292,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
 }
 
 # PDF output
+sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
+
 pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
@@ -389,9 +364,25 @@ spp_list <- list(
   "4" = spp4vec
 )
 
-# Average each entry of the 75 treeids according to their species 
-spp_post_list <- lapply(spp_list, function(tree_vec) {
-  Reduce("+", y_post_list[tree_vec]) / length(tree_vec)
+mean_post_list <- list()
+for (i in seq_along(treeidvecnum)) {
+  tree_col <- as.character(treeidvecnum[i])
+  mean_post_list[[tree_col]] <- sapply(1:nrow(df_fit), function(f) {
+    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x
+    # no sigma_y yet
+  })
+}
+
+# average the mean predictions across trees within species
+spp_mean_list <- lapply(spp_list, function(tree_vec) {
+  Reduce("+", mean_post_list[as.character(tree_vec)]) / length(tree_vec)
+})
+
+# re-simulate sigma on the averaged mean
+spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
+  sapply(1:nrow(df_fit), function(f) {
+    rnorm(length(x), mean_mat[, f], sigma_df$sigma_y[f])
+  })
 })
 
 sppvecnum <- 1:4
