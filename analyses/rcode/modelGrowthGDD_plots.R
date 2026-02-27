@@ -4,12 +4,12 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-rm(list=ls())  
+rm(list=ls())
 options(stringsAsFactors = FALSE)
-options(max.print = 150) 
+options(max.print = 150)
 options(mc.cores = parallel::detectCores())
 options(digits = 3)
-
+cat("SCRIPT STARTED\n")
 # Load library 
 library(ggplot2)
 library(rstan)
@@ -29,10 +29,22 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 
+# flags
+makeplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
+
+commonNames <- c(
+  "Alnus incana"          = "Grey alder",
+  "Betula alleghaniensis" = "Yellow birch",
+  "Betula papyrifera"     = "Paper birch",
+  "Betula populifolia"    = "Gray birch"
+)
+
+emp$commonName <- commonNames[emp$latbi]
+
 emp <- emp[!is.na(emp$pgsGDD),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
@@ -54,7 +66,7 @@ Ntreeid <- length(unique(treeid))
 # === === === === === === === === === === === === #
 #### Recover parameters from the posterior ####
 # === === === === === === === === === === === === #
-fit <- readRDS("output/stanOutput/fitGrowthGDD")
+fit <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGDD")
 df_fit <- as.data.frame(fit)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -199,7 +211,8 @@ site_df2
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
+if(makeplots){
+ 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Per treeid #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -217,7 +230,7 @@ colnames(atreeidsub) <- 1:length(subyvec)
 
 # get the spp and site identities for each tree id
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
-                                  "treeid", "spp", "site", "latbi")])
+                                  "treeid", "spp", "site", "commonName")])
 
 # the spp values for each tree id
 treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
@@ -386,7 +399,7 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
 })
 
 sppvecnum <- 1:4
-sppvecname <- unique(treeid_spp_site$latbi)
+sppvecname <- unique(treeid_spp_site$commonName)
 
 x <- seq(min(emp$pgsGDD), max(emp$pgsGDD), length.out = 100)   
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
@@ -429,7 +442,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = ylim_spp,
        xlab = "Primary growing season GDD",
        ylab = "Ring width (mm)",
-       main = spp_column_name)
+       main = spp_column_name,
+       frame = FALSE)
   
   # color
   line_col <- sppcols[spp_num]
@@ -535,7 +549,7 @@ y_pos <- 1:n_spp
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
+aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
 
 jpeg("figures/empiricalData/aspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
@@ -578,14 +592,24 @@ dev.off()
 ###### asite ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
+
+sitefull <- c(
+  "GR" = "Dartmouth College (NH)",
+  "HF" = "Harvard Forest (MA)",
+  "SH" = "St-Hyppolyte (Qc)",
+  "WM" = "White Mountains (NH)"
+)
+
+emp$sitefull <- sitefull[emp$site]
+site_df2$sitefull <- sitefull[site_df2$site_name]
 sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 jpeg("figures/empiricalData/asite_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
 par(mar = c(5, 10, 2, 2)) 
 
-plot(site_df2$fit_asite, y_pos,
-     xlim = range(c(site_df2$fit_asite_per5, site_df2$fit_asite_per95)),
+plot(site_df2$fit_a_site, y_pos,
+     xlim = range(c(site_df2$fit_a_site_per5, site_df2$fit_a_site_per95)),
      ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)",
      ylab = "",
@@ -598,7 +622,7 @@ plot(site_df2$fit_asite, y_pos,
 # color labels
 for (i in seq_along(y_pos)) {
   axis(2, at = y_pos[i],
-       labels = site_df2$site_name[i],
+       labels = site_df2$sitefull[i],
        las = 2,
        col.axis = sitecolors[i],
        tick = FALSE,
@@ -606,11 +630,11 @@ for (i in seq_along(y_pos)) {
 }
 
 # error bars and dashed line
-segments(site_df2$fit_asite_per5,  y_pos,
-         site_df2$fit_asite_per95, y_pos,
+segments(site_df2$fit_a_site_per5,  y_pos,
+         site_df2$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_asite_per25, y_pos,
-         site_df2$fit_asite_per75, y_pos,
+segments(site_df2$fit_a_site_per25, y_pos,
+         site_df2$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 abline(v = 0, lty = 2, col = "black")
@@ -618,9 +642,9 @@ abline(v = 0, lty = 2, col = "black")
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asp ######
+###### bsp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
+bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
 
 jpeg("figures/empiricalData/bspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
@@ -712,7 +736,7 @@ treeid_df4
 treeid_df4$treeid <- as.numeric(treeid_df4$treeid)
 treeid_df4$treeid_name <- emp$treeid[match(treeid_df4$treeid,
                                                     emp$treeid_num)]
-treeid_df4$spp_name <- emp$latbi[match(treeid_df4$treeid,
+treeid_df4$spp_name <- emp$commonName[match(treeid_df4$treeid,
                                               emp$treeid_num)]
 treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid,
                                        emp$treeid_num)]
@@ -731,10 +755,10 @@ gap <- 3
 current_y <- 1
 
 species_order <- c(
-  "Alnus incana", 
-  "Betula alleghaniensis", 
-  "Betula papyrifera", 
-  "Betula populifolia")
+  "Grey alder", 
+  "Yellow birch", 
+  "Paper birch", 
+  "Gray birch")
 # site_order <- c("SH", "GR", "WM", "HF")
 site_order <- c(
   "HF",
@@ -745,9 +769,9 @@ site_order <- c(
 # col
 my_colors <- c(
   "Alnus incana" = wes_palette("AsteroidCity1")[1],
-  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
-  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
-  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
+  "Yellow birch" = wes_palette("AsteroidCity1")[2],
+  "Paper birch" = wes_palette("AsteroidCity1")[3],
+  "Gray birch" = wes_palette("AsteroidCity1")[4]
 )
 # shapes for sites
 my_shapes <- c(
@@ -904,12 +928,4 @@ legend(
 )
 dev.off()
 
-# Mis ####
-
-# a prior of 0.3 is for the scale of a y in mm and a gdd divided by the constant 200. Therfore to back transform it, it should be divided by 200
-priorfornonconsgdd <- 0.3/200
-quantile(rnorm(1e4, 0, 0.3)/200*10, probs = 0.05)
-quantile(rnorm(1e4, 0, 0.3)/200*10, probs = 0.95)
-
-hist(rnorm(1e4, 0, 0.3)/200*10)
-# 
+}

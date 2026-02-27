@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{Sweave}
+\begin{document}
+\input{resultsOutline-concordance}
+
+\title{Results outline}
+\author{Christophe Rouleau-Desrochers}
+\date{\today}
+\maketitle
+
+\begin{Schunk}
+\begin{Soutput}
+before setwd
+\end{Soutput}
+\begin{Soutput}
+after setwd
+\end{Soutput}
+\end{Schunk}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Main results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Main results}
+
+\subsection*{Wildchrokie}
+\begin{enumerate}
+  \item ALNINC, BETALL, BETPAP grew more with more growing degree days, while BETPOP did not respond to growing degree days (Figure \ref{fig:wcgrowthSlopes}).
+  \item BETPAP had the highest growth rate and BETALL the lowest (Figure \ref{fig:wcmuplotbspp})
+  \item For the provenance we did not detect a growth difference between WM, SH GR and only HF grew less (Figure \ref{fig:wcmuplotbsppasite})
+\end{enumerate}
+
+
+
+% Figure Growth X GDD
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\label{fig:wcgrowthSlopes}
+\end{figure}
+
+% Figure mu plot bspp
+\begin{figure}[!ht]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+\caption{Slope values across the different species}
+\label{fig:wcmuplotbspp}
+\end{figure}
+
+% Figure provenances
+\begin{figure}[h!]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+\caption{Site intercept values}
+\label{fig:wcmuplotbsppasite}
+\end{figure}
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+\subsection*{coringTreespotters}
+\begin{enumerate}
+  \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Yellow birch grew less.(Figure \ref{fig:growthSlopes})
+  \item
+  \item
+  \item 
+\end{enumerate}
+
+
+% Figure Growth X GDD
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\label{fig:tsgrowthSlopes}
+\end{figure}
+
+% Figure mu plot bspp
+\begin{figure}[!ht]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+\caption{Slope values across the different species}
+\label{fig:tsmuplotbspp}
+\end{figure}
+
+% Figure provenances
+\begin{figure}[h!]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+\caption{Site intercept values}
+\label{fig:tsmuplotbsppasite}
+\end{figure}
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplemental results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Supplemental results}
+
+\subsection*{Wildchrokie}
+
+\end{document}
