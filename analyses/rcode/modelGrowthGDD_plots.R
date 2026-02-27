@@ -9,7 +9,7 @@ options(stringsAsFactors = FALSE)
 options(max.print = 150)
 options(mc.cores = parallel::detectCores())
 options(digits = 3)
-cat("SCRIPT STARTED\n")
+
 # Load library 
 library(ggplot2)
 library(rstan)
