@@ -1,18 +1,17 @@
 \documentclass{article}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
-
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+\SweaveOpts{concordance=FALSE}
 
 \title{Results outline}
 \author{Christophe Rouleau-Desrochers}
 \date{\today}
 \maketitle
-
-%<<>>=
-%source("../../analyses/rcode/modelGrowthGDD_plots.R")
-%@
+<<setup, echo=FALSE>>=
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+source("rcode/modelGrowthGDD_plots.R")
+@
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Main results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -20,34 +19,65 @@
 
 \subsection*{Wildchrokie}
 \begin{enumerate}
-  \item None of the four species grew more with more growing degree days (Figure \ref{fig:effects})
-  \item Betpop is the species that grows the most
-  \item We didn't find strong local adaptation signal across the four sites---they all overlap with 0 (Figure \ref{fig:provenanceIntercepts})
-  \item Life history strategy does not play a role. Fast growth, short-lived species (ALNINC, BETPAP, BETPOP) did repond more to increased GDD compared to slow-growth, long-lived species (BETALL).
-\end{enumerate}
+  \item ALNINC, BETALL, BETPAP grew more with more growing degree days, while BETPOP did not respond to growing degree days (Figure \ref{fig:wcgrowthSlopes}).
+  \item BETPAP had the highest growth rate and BETALL the lowest (Figure \ref{fig:wcmuplotbspp})
+  \item For the provenance we did not detect a growth difference between WM, SH GR and only HF grew less (Figure \ref{fig:wcmuplotbsppasite})
 \end{enumerate}
 
+I want to invoke y: \Sexpr{round(y[1], 3)}, now if I want to invoke the difference between bspp 1 and bspp 2: \Sexpr{bspp_df2$fit_bspp_per25[2] - bspp_df2$fit_bspp[1]}
+
+
 % Figure Growth X GDD
-\begin{figure}[h!]
-\includegraphics[width=0.5\textwidth]{growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals.}
-\label{fig:growthSlopes}
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\label{fig:wcgrowthSlopes}
+\end{figure}
+
+% Figure mu plot bspp
+\begin{figure}[!ht]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+\caption{Slope values across the different species}
+\label{fig:wcmuplotbspp}
 \end{figure}
 
 % Figure provenances
 \begin{figure}[h!]
-\includegraphics[width=0.5\textwidth]{asite_mean_plot.jpeg}
-\caption{Provenances and stuff}
-\label{fig:provenanceIntercepts}
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+\caption{Site intercept values}
+\label{fig:wcmuplotbsppasite}
 \end{figure}
-
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 \subsection*{coringTreespotters}
 \begin{enumerate}
-  \item 
+  \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Yellow birch grew less.(Figure \ref{fig:growthSlopes})
   \item
   \item
   \item 
 \end{enumerate}
+
+
+% Figure Growth X GDD
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\label{fig:tsgrowthSlopes}
+\end{figure}
+
+% Figure mu plot bspp
+\begin{figure}[!ht]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+\caption{Slope values across the different species}
+\label{fig:tsmuplotbspp}
+\end{figure}
+
+% Figure provenances
+\begin{figure}[h!]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+\caption{Site intercept values}
+\label{fig:tsmuplotbsppasite}
+\end{figure}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
