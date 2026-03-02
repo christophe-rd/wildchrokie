@@ -614,8 +614,8 @@ emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 # transform data in vectors
 y <- emp$lengthCM*10 # ring width in mm
 N <- nrow(emp)
-# gdd <- emp$pgsGDD5/200
-gdd <- emp$pgsGDD10/200
+gdd <- emp$pgsGDD5/200
+# gdd <- emp$pgsGDD10/200
 Nspp <- length(unique(emp$spp_num))
 Nsite <- length(unique(emp$site_num))
 site <- as.numeric(as.character(emp$site_num))

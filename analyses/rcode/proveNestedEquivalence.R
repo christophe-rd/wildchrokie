@@ -12,11 +12,8 @@ options(digits = 3)
 # Load library 
 library(ggplot2)
 library(rstan)
-library(future)
-library(shinystan)
 library(wesanderson)
 library(patchwork)
-library(rstanarm)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -33,86 +30,59 @@ source('mcmc_visualization_tools.R', local=util)
 # === === === === === === === === === === === === === === === === 
 #### SIMULATED DATA ####
 # === === === === === === === === === === === === === === === ===
+set.seed(124)
 
 # set parameters
-set.seed(124)
+n_spp <- 5 # number of species
+n_perspp <- 6 # number of individuals per species
+n_treeid <- n_perspp * n_spp # number of treeid
+n_meas <- 3 # repeated measurements per id
+N <- n_treeid * n_meas # total number of measurements
+
 a <- 5
 sigma_y <- 1
 sigma_atreeid <- 0.15
-
-n_site <- 4 # number of sites
-n_spp <- 5 # number of species
-n_perspp <- 6 # number of individuals per species
-n_treeid <- n_perspp * n_spp * n_site # number of treeid
-n_meas <- 3 # repeated measurements per id
-N <- n_treeid * n_meas # total number of measurements
-N
+sigma_aspp <- 1
 
 # get replicated treeid
 treeid <- rep(1:n_treeid, each = n_meas)
-# non replicated treeid
-treeidnonrep <- rep(rep(1:n_perspp, times = n_spp), times = n_site)
 # replicated spp
-spp <- rep(rep(rep(1:n_spp, each = n_perspp), times = n_site), each = n_meas) 
-# non replicated spp
-spp_nonrep <- rep(rep(1:n_spp, each = n_perspp), each = n_site) 
-# replicated site
-site <- rep(rep(rep(1:n_site, each = n_spp), each = n_perspp), each = n_meas)
-# non replicated site
-site_nonrep <- rep(rep(1:n_site, each = n_spp), each = n_perspp)
-# quick check 
-table(treeidnonrep, site_nonrep)
+spp <- rep(rep(1:n_spp, each = n_perspp), each = n_meas) 
 
-simcoef <- data.frame(
-  site = site,
-  spp = spp,
-  treeid = treeid
+sim <- data.frame(
+  treeid = treeid,
+  spp = spp
 )
 
 # get intercept values for each species
 aspp <- rnorm(n_spp, 0, 0.5)
-asite <- rnorm(n_site, 0, 0.5)
 atreeid <- rnorm(n_treeid, 0, sigma_atreeid)
- 
-# get slope values for each speciess
-bspp <- rnorm(n_spp, 0.4, 0.3)
 
 # Add my parameters to the df
-simcoef$atreeid <- atreeid[treeid]
-simcoef$asite <- asite[simcoef$site]
-simcoef$aspp <- aspp[simcoef$spp]
-simcoef$bspp <- bspp[simcoef$spp]
+sim$atreeid <- atreeid[treeid]
+sim$aspp <- aspp[sim$spp]
 
-# add the rest of the boring stuff 
-simcoef$a <- a
-simcoef$b <- b
-simcoef$sigma_y <- sigma_y
-simcoef$sigma_atreeid <- sigma_atreeid
-simcoef$sigma_aspp <- sigma_aspp
-simcoef$sigma_asite <- sigma_asite
-simcoef$error <- rnorm(N, 0, sigma_y)
-simcoef$gdd <- rnorm(N, 1800, 100)
-simcoef$gddcons <- simcoef$gdd/200
+# add the rest
+sim$a <- a
+sim$sigma_y <- sigma_y
+sim$sigma_atreeid <- sigma_atreeid
+sim$sigma_aspp <- sigma_aspp
+sim$error <- rnorm(N, 0, sigma_y)
 
 # adding both options of tree rings
-simcoef$ringwidth <- 
-  simcoef$asite + 
-  simcoef$aspp + 
-  simcoef$atreeid + 
-  simcoef$a +
-  (simcoef$bspp*simcoef$gddcons)+
-  simcoef$error
+sim$ringwidth <- 
+  sim$a +
+  sim$atreeid + 
+  sim$aspp + 
+  sim$error
 
 # === === === === === #
 ##### Run model #####
 # === === === === === #
-y <- simcoef$ringwidth
-N <- nrow(simcoef)
-gdd <- simcoef$gddcons
-Nspp <- length(unique(simcoef$spp))
-Nsite <- length(unique(simcoef$site))
-site <- as.numeric(as.character(simcoef$site))
-species <- as.numeric(as.character(simcoef$spp))
+y <- sim$ringwidth
+N <- nrow(sim)
+Nspp <- length(unique(sim$spp))
+species <- as.numeric(as.character(sim$spp))
 treeid <- treeid
 Ntreeid <- length(unique(treeid))
 table(treeid)
@@ -316,7 +286,7 @@ ggsave("figures/sigma_simXfit_plot.jpeg", sigma_simXfit_plot, width = 6, height 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot b spp ######
 bspptoplot <- merge(
-  simcoef[!duplicated(simcoef$spp), 
+  sim[!duplicated(sim$spp), 
           c("spp", "bspp")], 
   bspp_df2[!duplicated(bspp_df2$spp), 
            c("spp", "fit_bspp", "fit_bspp_per25", "fit_bspp_per75", "fit_bspp_per5", "fit_bspp_per95")], 
@@ -341,7 +311,7 @@ ggsave("figures/bspp_simXfit_plot2.jpeg", bspp_simXfit_plot, width = 6, height =
 ###### Plot treeid ######
 # add sim to fit treeid df
 treeidtoplot <- merge(
-  simcoef[!duplicated(simcoef$treeid), 
+  sim[!duplicated(sim$treeid), 
           c("treeid", "atreeid")], 
   treeid_df2[!duplicated(treeid_df2$treeid), 
              c("treeid", "fit_atreeid", 
@@ -367,7 +337,7 @@ ggsave("figures/atreeid_simXfit_plot.jpeg", atreeid_simXfit_plot, width = 6, hei
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot a spp ######
 aspptoplot <- merge(
-  simcoef[!duplicated(simcoef$spp), 
+  sim[!duplicated(sim$spp), 
           c("spp", "aspp")], 
   aspp_df2[!duplicated(aspp_df2$spp), 
            c("spp", "fit_aspp", 
@@ -395,7 +365,7 @@ ggsave("figures/aspp_simXfit_plot.jpeg", aspp_simXfit_plot, width = 6, height = 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot site ######
 sitetoplot <- merge(
-  simcoef[!duplicated(simcoef$site), 
+  sim[!duplicated(sim$site), 
           c("site", "asite")], 
   site_df2[!duplicated(site_df2$site), 
            c("site", "fit_asite", 
