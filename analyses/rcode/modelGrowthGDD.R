@@ -32,6 +32,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
+# my function to extract parameters
+source('rcode/utilExtractParam.R')
 
 runSimData <- FALSE
 fitlmer <- FALSE
@@ -601,8 +603,8 @@ ggplot(sigma_long_atreeid, aes(x = value, color = source, fill = source)) +
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
 # checks
-nrow(emp[!is.na(emp$pgsGDDAVG),])
-emp <- emp[!is.na(emp$pgsGDD),]
+# nrow(emp[!is.na(emp$pgsGDDAVG),])
+emp <- emp[!is.na(emp$pgsGDD5),]
 
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
@@ -612,7 +614,8 @@ emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 # transform data in vectors
 y <- emp$lengthCM*10 # ring width in mm
 N <- nrow(emp)
-gdd <- emp$pgsGDD/200
+# gdd <- emp$pgsGDD5/200
+gdd <- emp$pgsGDD10/200
 Nspp <- length(unique(emp$spp_num))
 Nsite <- length(unique(emp$site_num))
 site <- as.numeric(as.character(emp$site_num))
@@ -626,13 +629,14 @@ table(treeid,species)
 rstan_options(auto_write = TRUE)
  
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fit <- stan("stan/twolevelhierint.stan", 
-            data=c("N","y",
-                   "Nspp","species",
-                   "Nsite", "site", 
-                   "Ntreeid", "treeid", 
-                   "gdd"),
-            warmup = 1000, iter = 2000, chains=4, save_dso = FALSE)
+wcmodel <- stan_model("stan/twolevelhierint.stan")
+fit <- sampling(wcmodel, data = c("N","y",
+                                "Nspp","species",
+                                "Nsite", "site", 
+                                "Ntreeid", "treeid", 
+                                "gdd"),
+            warmup = 1000, iter = 2000, 
+            chains=4)
 
 saveRDS(fit, "output/stanOutput/fitGrowthGDD")
 
@@ -698,143 +702,12 @@ util$check_all_hmc_diagnostics(diagnostics)
 # === === === === === === === === === === === === #
 df_fit <- as.data.frame(fit)
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover sigmas ######
-unique(colnames(df_fit))
-sigma_cols <- colnames(df_fit)[grepl("sigma", colnames(df_fit))]
-
-sigma_df <- df_fit[, colnames(df_fit) %in% sigma_cols]
-
-sigma_df2 <- data.frame(
-  sigma = character(ncol(sigma_df)),
-  mean = numeric(ncol(sigma_df)),  
-  per5 = NA, 
-  per25 = NA,
-  per75 = NA,
-  per95 = NA
-)
-sigma_df2
-
-for (i in 1:ncol(sigma_df)) { # i = 1
-  sigma_df2$sigma[i] <- colnames(sigma_df)[i]         
-  sigma_df2$mean[i] <- round(mean(sigma_df[[i]]),3)  
-  sigma_df2$per5[i] <- round(quantile(sigma_df[[i]], probs = 0.05), 3)
-  sigma_df2$per25[i] <- round(quantile(sigma_df[[i]], probs = 0.25), 3)
-  sigma_df2$per75[i] <- round(quantile(sigma_df[[i]], probs = 0.75), 3)
-  sigma_df2$per95[i] <- round(quantile(sigma_df[[i]], probs = 0.95), 3)
-}
-sigma_df2
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover b spp ######
-bspp_cols <- colnames(df_fit)[grepl("bsp", colnames(df_fit))]
-# remove sigma_bspp for now
-# bspp_cols <- bspp_cols[2:length(bspp_cols)]
-
-bspp_df <- df_fit[, colnames(df_fit) %in% bspp_cols]
-# change their names
-colnames(bspp_df) <- sub("bsp\\[(\\d+)\\]", "\\1", colnames(bspp_df))
-#empty spp df
-bspp_df2 <- data.frame(
-  spp = character(ncol(bspp_df)),
-  fit_bspp = numeric(ncol(bspp_df)),  
-  fit_bspp_per5 = NA, 
-  fit_bspp_per25 = NA,
-  fit_bspp_per75 = NA,
-  fit_bspp_per95 = NA
-)
-for (i in 1:ncol(bspp_df)) { # i = 1
-  bspp_df2$spp[i] <- colnames(bspp_df)[i]         
-  bspp_df2$fit_bspp[i] <- round(mean(bspp_df[[i]]),3)  
-  bspp_df2$fit_bspp_per5[i] <- round(quantile(bspp_df[[i]], probs = 0.05), 3)
-  bspp_df2$fit_bspp_per25[i] <- round(quantile(bspp_df[[i]], probs = 0.25), 3)
-  bspp_df2$fit_bspp_per75[i] <- round(quantile(bspp_df[[i]], probs = 0.75), 3)
-  bspp_df2$fit_bspp_per95[i] <- round(quantile(bspp_df[[i]], probs = 0.95), 3)
-}
-bspp_df2
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover treeid ######
-
-# grab treeid 
-treeid_cols <- colnames(df_fit)[grepl("atreeid", colnames(df_fit))]
-treeid_cols <- treeid_cols[!grepl("zatreeid", treeid_cols)]
-treeid_cols <- treeid_cols[!grepl("sigma", treeid_cols)]
-
-treeid_df <- df_fit[, colnames(df_fit) %in% treeid_cols]
-
-# change their names
-colnames(treeid_df) <- sub("atreeid\\[(\\d+)\\]", "\\1", colnames(treeid_df))
-# empty treeid dataframe
-treeid_df2 <- data.frame(
-  treeid = character(ncol(treeid_df)),
-  fit_atreeid = numeric(ncol(treeid_df)),  
-  fit_atreeid_per5 = NA, 
-  fit_atreeid_per25 = NA,
-  fit_atreeid_per75 = NA,
-  fit_atreeid_per95 = NA
-)
-for (i in 1:ncol(treeid_df)) { # i = 1
-  treeid_df2$treeid[i] <- colnames(treeid_df)[i]         
-  treeid_df2$fit_atreeid[i] <- round(mean(treeid_df[[i]]),3)  
-  treeid_df2$fit_atreeid_per5[i] <- round(quantile(treeid_df[[i]], probs = 0.05), 3)
-  treeid_df2$fit_atreeid_per25[i] <- round(quantile(treeid_df[[i]], probs = 0.25), 3)
-  treeid_df2$fit_atreeid_per75[i] <- round(quantile(treeid_df[[i]], probs = 0.75), 3)
-  treeid_df2$fit_atreeid_per95[i] <- round(quantile(treeid_df[[i]], probs = 0.95), 3)
-}
-treeid_df2
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover a spp  ######
-aspp_cols <- colnames(df_fit)[grepl("aspp", colnames(df_fit))]
-
-aspp_df <- df_fit[, colnames(df_fit) %in% aspp_cols]
-# change their names
-colnames(aspp_df) <- sub("aspp\\[(\\d+)\\]", "\\1", colnames(aspp_df))
-#empty aspp df
-aspp_df2 <- data.frame(
-  spp = character(ncol(aspp_df)),
-  fit_aspp = numeric(ncol(aspp_df)),  
-  fit_aspp_per5 = NA, 
-  fit_aspp_per25 = NA,
-  fit_aspp_per75 = NA,
-  fit_aspp_per95 = NA
-)
-for (i in 1:ncol(aspp_df)) { # i = 1
-  aspp_df2$spp[i] <- colnames(aspp_df)[i]         
-  aspp_df2$fit_aspp[i] <- round(mean(aspp_df[[i]]),3)  
-  aspp_df2$fit_aspp_per5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
-  aspp_df2$fit_aspp_per25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
-  aspp_df2$fit_aspp_per75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
-  aspp_df2$fit_aspp_per95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
-}
-aspp_df2
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-###### Recover a site ######
-site_cols <- colnames(df_fit)[grepl("asite", colnames(df_fit))]
-
-site_df <- df_fit[, colnames(df_fit) %in% site_cols]
-# change their names
-colnames(site_df) <- sub("asite\\[(\\d+)\\]", "\\1", colnames(site_df))
-# empty site df
-site_df2 <- data.frame(
-  site = character(ncol(site_df)),
-  fit_asite = numeric(ncol(site_df)),  
-  fit_asite_per5 = NA, 
-  fit_asite_per25 = NA,
-  fit_asite_per75 = NA,
-  fit_asite_per95 = NA
-)
-for (i in 1:ncol(site_df)) { # i = 1
-  site_df2$site[i] <- colnames(site_df)[i]         
-  site_df2$fit_asite[i] <- round(mean(site_df[[i]]),3)  
-  site_df2$fit_asite_per5[i] <- round(quantile(site_df[[i]], probs = 0.05), 3)
-  site_df2$fit_asite_per25[i] <- round(quantile(site_df[[i]], probs = 0.25), 3)
-  site_df2$fit_asite_per75[i] <- round(quantile(site_df[[i]], probs = 0.75), 3)
-  site_df2$fit_asite_per95[i] <- round(quantile(site_df[[i]], probs = 0.95), 3)
-}
-site_df2
+sigma_df2  <- extract_params(df_fit, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fit, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fit, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z", treeid))
+aspp_df2   <- extract_params(df_fit, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+site_df2   <- extract_params(df_fit, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
