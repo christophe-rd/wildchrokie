@@ -29,6 +29,11 @@ y18$GDD_5 <- gdd(tmax = y18$maxT, tmin = y18$minT, tbase = 5, type = "B")
 y19$GDD_5 <- gdd(tmax = y19$maxT, tmin = y19$minT, tbase = 5, type = "B")
 y20$GDD_5 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 5, type = "B")
 
+###Calculate gdd
+y18$GDD_10 <- gdd(tmax = y18$maxT, tmin = y18$minT, tbase = 10, type = "B")
+y19$GDD_10 <- gdd(tmax = y19$maxT, tmin = y19$minT, tbase = 10, type = "B")
+y20$GDD_10 <- gdd(tmax = y20$maxT, tmin = y20$minT, tbase = 10, type = "B")
+
 gdd <- rbind(y18, y19, y20)
 str(gdd)
 
@@ -49,10 +54,15 @@ unique(obsdata2$leafout)
 unique(obsdata2$leafcolor)
 
 # create new GDD empty columns
-obsdata2$budburstGDD <- NA
-obsdata2$budsetGDD <- NA
-obsdata2$leafoutGDD <- NA
-obsdata2$leafcolorGDD <- NA
+obsdata2$budburstGDD5 <- NA
+obsdata2$budsetGDD5 <- NA
+obsdata2$leafoutGDD5 <- NA
+obsdata2$leafcolorGDD5 <- NA
+
+obsdata2$budburstGDD10 <- NA
+obsdata2$budsetGDD10 <- NA
+obsdata2$leafoutGDD10 <- NA
+obsdata2$leafcolorGDD10 <- NA
 
 
 gdd$year <- as.numeric(gdd$year)
@@ -63,28 +73,59 @@ for(i in 1:nrow(obsdata2)) {
   # Budburst
   if(!is.na(obsdata2$budburst[i])) {
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$budburst[i])
-    if(length(idx) == 1) obsdata2$budburstGDD[i] <- gdd$GDD_5[idx]
+    if(length(idx) == 1) obsdata2$budburstGDD5[i] <- gdd$GDD_5[idx]
   }
   
   # Budset
   if(!is.na(obsdata2$budset[i])) {
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$budset[i])
-    if(length(idx) == 1) obsdata2$budsetGDD[i] <- gdd$GDD_5[idx]
+    if(length(idx) == 1) obsdata2$budsetGDD5[i] <- gdd$GDD_5[idx]
   }
   
   # Leafout
   if(!is.na(obsdata2$leafout[i])) { # 49
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafout[i])
-    if(length(idx) == 1) obsdata2$leafoutGDD[i] <- gdd$GDD_5[idx]
+    if(length(idx) == 1) obsdata2$leafoutGDD5[i] <- gdd$GDD_5[idx]
   }
   
   # Leafcolor
   if(!is.na(obsdata2$leafcolor[i])) {
     idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafcolor[i])
-    if(length(idx) == 1) obsdata2$leafcolorGDD[i] <- gdd$GDD_5[idx]
+    if(length(idx) == 1) obsdata2$leafcolorGDD5[i] <- gdd$GDD_5[idx]
   }
   
 }
+
+# Loop over rows
+for(i in 1:nrow(obsdata2)) {
+  yr <- obsdata2$year[i]
+  
+  # Budburst
+  if(!is.na(obsdata2$budburst[i])) {
+    idx <- which(gdd$year == yr & gdd$doy == obsdata2$budburst[i])
+    if(length(idx) == 1) obsdata2$budburstGDD10[i] <- gdd$GDD_10[idx]
+  }
+  
+  # Budset
+  if(!is.na(obsdata2$budset[i])) {
+    idx <- which(gdd$year == yr & gdd$doy == obsdata2$budset[i])
+    if(length(idx) == 1) obsdata2$budsetGDD10[i] <- gdd$GDD_10[idx]
+  }
+  
+  # Leafout
+  if(!is.na(obsdata2$leafout[i])) { # 49
+    idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafout[i])
+    if(length(idx) == 1) obsdata2$leafoutGDD10[i] <- gdd$GDD_10[idx]
+  }
+  
+  # Leafcolor
+  if(!is.na(obsdata2$leafcolor[i])) {
+    idx <- which(gdd$year == yr & gdd$doy == obsdata2$leafcolor[i])
+    if(length(idx) == 1) obsdata2$leafcolorGDD10[i] <- gdd$GDD_10[idx]
+  }
+  
+}
+
 str(obsdata2)
 
 # check that the loop didn't miss any rows
@@ -101,9 +142,11 @@ nrow(obsdata2[!is.na(obsdata2$leafcolor),])
 nrow(obsdata2[!is.na(obsdata2$leafcolorGDD),])
 
 # add primary GS and full GS cols
-obsdata2$pgsGDD <- obsdata2$budsetGDD - obsdata2$leafoutGDD
+obsdata2$pgsGDD5 <- obsdata2$budsetGDD5 - obsdata2$leafoutGDD5
+obsdata2$fgsGDD5 <- obsdata2$leafcolorGDD5 - obsdata2$leafoutGDD5
+obsdata2$pgsGDD10 <- obsdata2$budsetGDD10 - obsdata2$leafoutGDD10
+obsdata2$fgsGDD10 <- obsdata2$leafcolorGDD10 - obsdata2$leafoutGDD10
 nrow(obsdata2[!is.na(obsdata2$pgsGDD),]) 
-obsdata2$fgsGDD <- obsdata2$leafcolorGDD - obsdata2$leafoutGDD
 
 # NEW WAY TO CALCULATE GDD
 # calculate leaf colouring avg per species
@@ -134,7 +177,7 @@ nrow(obsdata2[!is.na(obsdata2$budsetAVG),]) # gives me 21 extra rows...
 nrow(obsdata2[!is.na(obsdata2$budsetGDD),])
 nrow(obsdata2[!is.na(obsdata2$budsetGDDAVG),])
 
-obsdata2$pgsGDDAVG <- obsdata2$budsetGDDAVG - obsdata2$leafoutGDD
+# obsdata2$pgsGDDAVG <- obsdata2$budsetGDDAVG - obsdata2$leafoutGDD
 
 nrow(obsdata2[!is.na(obsdata2$pgsGDD),])
 nrow(obsdata2[!is.na(obsdata2$pgsGDDAVG),])
@@ -151,3 +194,4 @@ obsdataWithGDD <- obsdata2
 
 pgslookup <- obsdataWithGDD[!is.na(obsdataWithGDD$pgsGDD),]
 nrow(pgslookup)
+

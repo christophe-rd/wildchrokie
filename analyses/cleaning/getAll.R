@@ -36,7 +36,7 @@ temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
 nrow(temp2)
 
 temp3 <- merge(temp2,
-               obsdataWithGDD[, c("treeid", "year", "pgsGDD", "pgsGDDAVG", "fgsGDD", "fullGDD")],
+               obsdataWithGDD[, c("treeid", "year", "pgsGDD5", "pgsGDD10", "fgsGDD10", "fullGDD")],
                by = c("treeid", "year")
                )
 nrow(temp3)
