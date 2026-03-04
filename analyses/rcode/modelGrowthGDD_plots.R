@@ -4,11 +4,11 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(mc.cores = parallel::detectCores())
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(mc.cores = parallel::detectCores())
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -48,7 +48,7 @@ commonNames <- c(
 
 emp$commonName <- commonNames[emp$latbi]
 
-emp <- emp[!is.na(emp$pgsGDD),]
+emp <- emp[!is.na(emp$pgsGDD5),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -84,8 +84,13 @@ site_df2   <- extract_params(df_fit, "asite", "fit_a_site", "site", "asite\\[(\\
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
+treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
+bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
+site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
+aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+
 if(makeplots){
- 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Per treeid #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -422,7 +427,7 @@ y_pos <- 1:n_spp
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+
 
 jpeg("figures/empiricalData/aspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
@@ -464,7 +469,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asite ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
 
 sitefull <- c(
   "GR" = "Dartmouth College (NH)",
@@ -517,7 +521,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### bsp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
 
 jpeg("figures/empiricalData/bspp_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
@@ -560,8 +563,6 @@ dev.off()
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Mean plots with atreeid ####
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
 
 # now do the same, but for species
 treeid_df2$spp <- emp$spp[match(treeid_df2$treeid, emp$treeid_num)]
