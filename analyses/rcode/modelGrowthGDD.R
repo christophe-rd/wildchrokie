@@ -8,7 +8,7 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
-options(mc.cores = parallel::detectCores())
+# options(mc.cores = parallel::detectCores())
 options(digits = 3)
 # quartz()
 
@@ -41,84 +41,95 @@ source('rcode/utilExtractParam.R')
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
 # checks
-# nrow(emp[!is.na(emp$pgsGDDAVG),])
-emp <- emp[!is.na(emp$pgsGDD5),]
+nrow(emp[!is.na(emp$pgsGDDAVG),]) - nrow(emp[!is.na(emp$pgsGDD5),])
+
+
+# Fit model GDD
+emp2 <- emp[!is.na(emp$pgsGDD5),]
 
 # transform my groups to numeric values
-emp$site_num <- match(emp$site, unique(emp$site))
-emp$spp_num <- match(emp$spp, unique(emp$spp))
-emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+emp2$site_num <- match(emp2$site, unique(emp2$site))
+emp2$spp_num <- match(emp2$spp, unique(emp2$spp))
+emp2$treeid_num <- match(emp2$treeid, unique(emp2$treeid))
 
 # transform data in vectors for GDD
-y <- emp$lengthCM*10 # ring width in mm
-N <- nrow(emp)
-x <- emp$pgsGDD5/200
-# gdd <- emp$pgsGDD10/200
-Nspp <- length(unique(emp$spp_num))
-Nsite <- length(unique(emp$site_num))
-site <- as.numeric(as.character(emp$site_num))
-species <- as.numeric(as.character(emp$spp_num))
-treeid <- as.numeric(emp$treeid_num)
+y <- emp2$lengthCM*10 # ring width in mm
+N <- nrow(emp2)
+Nspp <- length(unique(emp2$spp_num))
+Nsite <- length(unique(emp2$site_num))
+site <- as.numeric(as.character(emp2$site_num))
+species <- as.numeric(as.character(emp2$spp_num))
+treeid <- as.numeric(emp2$treeid_num)
 Ntreeid <- length(unique(treeid))
-
-# check that everything is fine
-table(treeid,species)
+gdd <- emp2$pgsGDD5/200
+# gdd <- emp$pgsGDD10/200
 
 rstan_options(auto_write = TRUE)
- 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 wcmodel <- stan_model("stan/twolevelhierint.stan")
 fit <- sampling(wcmodel, data = c("N","y",
                                 "Nspp","species",
                                 "Nsite", "site", 
                                 "Ntreeid", "treeid", 
-                                "x"),
-            warmup = 1000, iter = 2000, 
-            chains=4)
+                                "gdd"),
+                iter=4000, chains=4, cores=4)
 
 saveRDS(fit, "output/stanOutput/fitGrowthGDD")
 
-if (fitlmer) {
+# Fit model GSL
+emp2 <- emp[!is.na(emp$pgsGSL),]
 
-# fit stanlmer to check differences
-emp$gdd <- emp$pgsGDD/200
-emp$y <- emp$lengthCM*10
+# transform my groups to numeric values
+emp2$site_num <- match(emp2$site, unique(emp2$site))
+emp2$spp_num <- match(emp2$spp, unique(emp2$spp))
+emp2$treeid_num <- match(emp2$treeid, unique(emp2$treeid))
 
-emp$site_fac <- as.factor(emp$site_num)
-emp$spp_fac <- as.factor(emp$spp_num)
-emp$treeid_fac <- as.factor(emp$treeid_num)
+y <- emp2$lengthCM*10 # ring width in mm
+N <- nrow(emp2)
+Nspp <- length(unique(emp2$spp_num))
+Nsite <- length(unique(emp2$site_num))
+site <- as.numeric(as.character(emp2$site_num))
+species <- as.numeric(as.character(emp2$spp_num))
+treeid <- as.numeric(emp2$treeid_num)
+Ntreeid <- length(unique(treeid))
+gsl <- as.numeric(emp2$pgsGSL/10)
 
-unique(emp$spp_fac)
-emp$gdd_c <- scale(emp$gdd, scale = FALSE)
+rstan_options(auto_write = TRUE)
+gslmodel <- stan_model("stan/modelGrowthGSL.stan")
+fitgsl <- sampling(gslmodel, data = c("N","y",
+                                  "Nspp","species",
+                                  "Nsite", "site", 
+                                  "Ntreeid", "treeid", 
+                                  "gsl"),
+                warmup = 1000, iter = 2000, 
+                chains = 4)
 
-fitlmer_partialpooling1 <- stan_lmer(
-  y ~
-    (1|site_fac) +
-    (gdd | spp_fac:treeid_fac),
-  data = emp,
-  chains = 4,
-  iter = 4000,
-  cores = 4
-)
+saveRDS(fit, "output/stanOutput/fitGrowthGSL")
 
-fitlmer_partialpooling3 <- stan_lmer(
-  y ~
-    (1|site_fac) +
-    (gdd | spp_fac),
-  data = emp,
-  chains = 4,
-  iter = 4000,
-  cores = 4
-)
+# Fit model SOS
+sos <- emp2$pgsGDD5/200
+rstan_options(auto_write = TRUE)
+wcmodel <- stan_model("stan/modelGrowthSOS.stan")
+fit <- sampling(wcmodel, data = c("N","y",
+                                  "Nspp","species",
+                                  "Nsite", "site", 
+                                  "Ntreeid", "treeid", 
+                                  "sos"),
+                warmup = 1000, iter = 2000, 
+                chains=4)
+saveRDS(fit, "output/stanOutput/fitGrowthSOS")
 
-colnames(as.data.frame(fitlmer_partialpooling))[1:20]
-colnames(as.data.frame(fitlmer_partialpooling))[80:300]
-fitlmer$stanfit
-pairs(fit, pars = c("a", "b",
-                    "sigma_atreeid",
-                    "sigma_y"))
-
-}
+# Fit model EOS
+eos <- emp2$pgsGDD5/200
+rstan_options(auto_write = TRUE)
+wcmodel <- stan_model("stan/modelGrowthEOS.stan")
+fit <- sampling(wcmodel, data = c("N","y",
+                                  "Nspp","species",
+                                  "Nsite", "site", 
+                                  "Ntreeid", "treeid", 
+                                  "eos"),
+                warmup = 1000, iter = 2000, 
+                chains=4)
+saveRDS(fit, "output/stanOutput/fitGrowthEOS")
 
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fit) 
@@ -727,7 +738,7 @@ ggsave("figures/troubleShootingGrowthModel/combinedPlots.jpeg", combined_plot, w
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-samples <- util$extract_expectand_vals(fit)
+samples <- util$extract_expectand_vals(fitgsl)
 jpeg(
   filename = "figures/modelGrowthGDD/retrodictiveCheckHist.jpeg",
   width = 2400,      

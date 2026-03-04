@@ -35,8 +35,10 @@ nrow(rw)
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
 nrow(temp2)
 
+obsdataWithGDD$pgsGDDAVG <- obsdataWithGDD$budsetGDDAVG - obsdataWithGDD$leafoutGDD10
+
 temp3 <- merge(temp2,
-               obsdataWithGDD[, c("treeid", "year", "pgsGDD5", "pgsGDD10", "fgsGDD10", "fullGDD", "pgsGSL")],
+               obsdataWithGDD[, c("treeid", "year", "pgsGDD5", "pgsGDD10", "fgsGDD10", "fullGDD", "pgsGSL", "pgsGDDAVG")],
                by = c("treeid", "year")
                )
 nrow(temp3)
@@ -68,3 +70,4 @@ obsdataWithGDD <- obsdataWithGDD[order(
 ), ]
 
 write_csv(obsdataWithGDD, "output/empiricalDataNORing.csv")
+
