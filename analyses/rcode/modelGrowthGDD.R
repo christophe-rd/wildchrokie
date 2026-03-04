@@ -177,14 +177,14 @@ jpeg("figures/atreeidParameterization.jpeg",
 util$plot_div_pairs(atreeid, "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
 dev.off()
 }
-# === === === === === === === #
-##### Plot parameter recovery #####
-# === === === === === === === #
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot posterior vs priors for gdd fit ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 ###### Plot a prior vs posterior ######
 a_posterior <- df_fit[, colnames(df_fit) %in% "a"]
 
-a_prior <- rnorm(1e4, 5, 3)
+a_prior <- rnorm(1e4, 2, 3)
 
 priora <- ggplot() +
   geom_density(data = data.frame(a = a_prior),
@@ -198,9 +198,10 @@ priora <- ggplot() +
   scale_color_manual(values = wes_palette("AsteroidCity1")[3:4]) +
   theme_minimal()
 priora
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ###### Plot sigmas prior vs posterior ######
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 sigma_long <- reshape(
   sigma_df,
   direction = "long",
@@ -368,7 +369,6 @@ priorbsp
 #  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 priorcombined <- (priorsigmas) / (priora) / (prioraspp) / (priorasite) / (priorbsp)
 ggsave("figures/priorVSposteriorCombined.jpeg", priorcombined, width = 8, height = 12, units = "in", dpi = 300)
-
 #  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
