@@ -190,6 +190,12 @@ obsdata2$fullGDD[which(obsdata2$year == "2018")] <- y18maxGDD
 obsdata2$fullGDD[which(obsdata2$year == "2019")] <- y19maxGDD
 obsdata2$fullGDD[which(obsdata2$year == "2020")] <- y20maxGDD
 
+# Add other metric of growing season length #### 
+# GSL: days from leafout --> budset
+obsdata2$pgsGSL <- obsdata2$budset - obsdata2$leafout
+nrow(obsdata2[!is.na(obsdata2$pgsGDD5),])
+nrow(obsdata2[!is.na(obsdata2$pgsGSL),])
+
 obsdataWithGDD <- obsdata2
 
 pgslookup <- obsdataWithGDD[!is.na(obsdataWithGDD$pgsGDD),]

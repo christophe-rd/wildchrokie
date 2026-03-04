@@ -9,11 +9,6 @@
 \author{Christophe Rouleau-Desrochers}
 \date{\today}
 \maketitle
-\begin{Schunk}
-\begin{Soutput}
-SCRIPT STARTED
-\end{Soutput}
-\end{Schunk}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Main results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -21,34 +16,35 @@ SCRIPT STARTED
 
 \subsection*{Wildchrokie}
 \begin{enumerate}
-  \item ALNINC, BETALL, BETPAP grew more with more growing degree days, while BETPOP did not respond to growing degree days (Figure \ref{fig:wcgrowthSlopes}).
-  \item BETPAP had the highest growth rate and BETALL the lowest (Figure \ref{fig:wcmuplotbspp})
-  \item For the provenance we did not detect a growth difference between WM, SH GR and only HF grew less (Figure \ref{fig:wcmuplotbsppasite})
+  \item ALNINC (b = 0.276), BETALL (b = 0.171), BETPAP (b = 0.28) grew more with more growing degree days, while BETPOP (b = 0.088) did not respond to growing degree days (Figure \ref{fig:wcgrowthSlopes}).
+  \item Of the species not overlapping zero, BETPAP had the highest growth rate and BETALL the lowest (Figure \ref{fig:wcmuplotbspp})
+  \item For the provenance we detected a weak growth difference between GR (asite = -0.355), SH (asite = -0.053) or WM (asite = 0.488), only HF grew less (asite = -0.752) (Figure \ref{fig:wcmuplotbsppasite})
 \end{enumerate}
 
-I want to invoke y: 5.977, now if I want to invoke the difference between bspp 1 and bspp 2: -0.273
+
+I want to invoke y: 5.977, now if I want to invoke the difference between bspp 1 and bspp 2: -0.27
 
 
 % Figure Growth X GDD
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-\label{fig:wcgrowthSlopes}
-\end{figure}
+% \begin{figure}[!ht]
+% \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+% \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+% \label{fig:wcgrowthSlopes}
+% \end{figure}
 
 % Figure mu plot bspp
-\begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-\caption{Slope values across the different species}
-\label{fig:wcmuplotbspp}
-\end{figure}
+% \begin{figure}[!ht]
+% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+% \caption{Slope values across the different species}
+% \label{fig:wcmuplotbspp}
+% \end{figure}
 
 % Figure provenances
-\begin{figure}[h!]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-\caption{Site intercept values}
-\label{fig:wcmuplotbsppasite}
-\end{figure}
+% \begin{figure}[h!]
+% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+% \caption{Site intercept values}
+% \label{fig:wcmuplotbsppasite}
+% \end{figure}
 %-------------------------------------------------------------------------------
 %-------------------------------------------------------------------------------
 \subsection*{coringTreespotters}
@@ -61,25 +57,25 @@ I want to invoke y: 5.977, now if I want to invoke the difference between bspp 1
 
 
 % Figure Growth X GDD
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-\label{fig:tsgrowthSlopes}
-\end{figure}
+% \begin{figure}[!ht]
+% \includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+% \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+% \label{fig:tsgrowthSlopes}
+% \end{figure}
 
 % Figure mu plot bspp
-\begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-\caption{Slope values across the different species}
-\label{fig:tsmuplotbspp}
-\end{figure}
+% \begin{figure}[!ht]
+% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
+% \caption{Slope values across the different species}
+% \label{fig:tsmuplotbspp}
+% \end{figure}
 
 % Figure provenances
-\begin{figure}[h!]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-\caption{Site intercept values}
-\label{fig:tsmuplotbsppasite}
-\end{figure}
+% \begin{figure}[h!]
+% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
+% \caption{Site intercept values}
+% \label{fig:tsmuplotbsppasite}
+% \end{figure}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
