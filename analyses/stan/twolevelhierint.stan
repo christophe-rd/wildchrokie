@@ -53,6 +53,7 @@ model{
 }	
 
 generated quantities {
+  // --- Posterior predictive (existing) ---
   array[N] real y_rep;
   for (i in 1:N) {
     y_rep[i] = normal_rng(
@@ -62,4 +63,19 @@ generated quantities {
         atreeid[treeid[i]] + 
         bsp[species[i]]*gdd[i], sigma_y);
   }
+
+  // --- Prior predictive samples ---
+  // Draw all parameters fresh from their priors
+  real a_prior                        = normal_rng(5, 3);
+  real sigma_atreeid_prior            = abs(normal_rng(0, 0.5));  // half-normal
+  real sigma_y_prior                  = abs(normal_rng(0, 3));    // half-normal
+  // Do this (one scalar draw per iteration, representing the common prior):
+  real aspp_prior   = normal_rng(0, 6);
+  real bsp_prior    = normal_rng(0, 0.5);
+  real asite_prior  = normal_rng(0, 2);
+  
+  // And for the non-centered treeid:
+  real zatreeid_prior  = normal_rng(0, 1);
+  real atreeid_prior   = abs(normal_rng(0, 0.5)) * zatreeid_prior;
+
 }

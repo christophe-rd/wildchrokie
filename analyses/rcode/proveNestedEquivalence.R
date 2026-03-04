@@ -27,16 +27,16 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 
-# === === === === === === === === === === === === === === === === 
-#### SIMULATED DATA ####
-# === === === === === === === === === === === === === === === ===
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+#### Simulate data ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 set.seed(124)
 
 # set parameters
-n_spp <- 5 # number of species
-n_perspp <- 6 # number of individuals per species
+n_spp <- 20 # number of species
+n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp # number of treeid
-n_meas <- 3 # repeated measurements per id
+n_meas <- 10 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 a <- 5
@@ -46,36 +46,72 @@ sigma_aspp <- 1
 
 # get replicated treeid
 treeid <- rep(1:n_treeid, each = n_meas)
+
 # replicated spp
 spp <- rep(rep(1:n_spp, each = n_perspp), each = n_meas) 
 
-sim <- data.frame(
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Simulate data in the nested way #####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+simnest <- data.frame(
   treeid = treeid,
   spp = spp
 )
 
 # get intercept values for each species
-aspp <- rnorm(n_spp, 0, 0.5)
-atreeid <- rnorm(n_treeid, 0, sigma_atreeid)
+aspp <- rnorm(n_spp, 0, sigma_aspp)
+atreeid <- rnorm(N, aspp[spp], sigma_atreeid)
 
 # Add my parameters to the df
-sim$atreeid <- atreeid[treeid]
-sim$aspp <- aspp[sim$spp]
+simnest$atreeid <- atreeid[treeid]
+simnest$aspp <- aspp[simnest$spp]
 
 # add the rest
-sim$a <- a
-sim$sigma_y <- sigma_y
-sim$sigma_atreeid <- sigma_atreeid
-sim$sigma_aspp <- sigma_aspp
-sim$error <- rnorm(N, 0, sigma_y)
+simnest$a <- a
+simnest$sigma_y <- sigma_y
+simnest$sigma_atreeid <- sigma_atreeid
+simnest$sigma_aspp <- sigma_aspp
+simnest$error <- rnorm(N, 0, sigma_y)
 
 # adding both options of tree rings
-sim$ringwidth <- 
-  sim$a +
-  sim$atreeid + 
-  sim$aspp + 
-  sim$error
+simnest$ringwidth <- 
+  simnest$a +
+  simnest$atreeid + 
+  simnest$aspp + 
+  simnest$error
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Simulate data in the additive way #####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+simadd <- data.frame(
+  treeid = treeid,
+  spp = spp
+)
+
+# get intercept values for each species
+aspp <- rnorm(n_spp, 0, sigma_aspp)
+atreeid <- rnorm(N, 0, sigma_atreeid)
+
+# Add my parameters to the df
+simadd$atreeid <- atreeid[treeid]
+simadd$aspp <- aspp[simadd$spp]
+
+# add the rest
+simadd$a <- a
+simadd$sigma_y <- sigma_y
+simadd$sigma_atreeid <- sigma_atreeid
+simadd$sigma_aspp <- sigma_aspp
+simadd$error <- rnorm(N, 0, sigma_y)
+
+# adding both options of tree rings
+simadd$ringwidth <- 
+  simadd$a +
+  simadd$atreeid + 
+  simadd$aspp + 
+  simadd$error
+
+plot(simnest$ringwidth ~ simadd$ringwidth)
+abline(0, 1)
 # === === === === === #
 ##### Run model #####
 # === === === === === #
