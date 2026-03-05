@@ -21,19 +21,15 @@ vector[Nspp] aspp;
 
 transformed parameters{
 vector[Ntreeid] atreeid;
-atreeid = 0 + sigma_atreeid*zatreeid; 
-    for (t in 1:Ntreeid) {
-        atreeid[t] = aspp[treeid_species[t]] + sigma_atreeid * zatreeid[t];
-    }
+atreeid = 0 + sigma_atreeid*zatreeid;
     
 array[N] real ypred;
 for (i in 1:N){ 
-    ypred[i]=
+    ypred[i] =
         a + 
         aspp[species[i]] + 
-        atreeid[treeid[i]] 
-
-    }
+        atreeid[treeid[i]];  
+        }
 }
 
 model{	
@@ -51,6 +47,6 @@ generated quantities {
     y_rep[i] = normal_rng(
         a + 
         aspp[species[i]] + 
-        atreeid[treeid[i]]
+        atreeid[treeid[i]], sigma_y);  
   }
 }
