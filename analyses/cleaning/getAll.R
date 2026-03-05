@@ -28,8 +28,6 @@ source("cleaning/source/calculateGrowingSeasonGDD.R")
 nrow(wildchrokie_rw)
 nrow(obsdata)
 temp <- merge(wildchrokie_rw, obsdata, by = c("treeid", "spp", "year"))
-rw <- subset(wildchrokie_rw, year %in% c(2018, 2019, 2020))
-nrow(rw)
 
 # get only the years we have data for
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))

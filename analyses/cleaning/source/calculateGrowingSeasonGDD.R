@@ -146,7 +146,7 @@ obsdata2$pgsGDD5 <- obsdata2$budsetGDD5 - obsdata2$leafoutGDD5
 obsdata2$fgsGDD5 <- obsdata2$leafcolorGDD5 - obsdata2$leafoutGDD5
 obsdata2$pgsGDD10 <- obsdata2$budsetGDD10 - obsdata2$leafoutGDD10
 obsdata2$fgsGDD10 <- obsdata2$leafcolorGDD10 - obsdata2$leafoutGDD10
-nrow(obsdata2[!is.na(obsdata2$pgsGDD),]) 
+nrow(obsdata2[!is.na(obsdata2$pgsGDD5),]) 
 
 # NEW WAY TO CALCULATE GDD
 # calculate leaf colouring avg per species
@@ -195,7 +195,7 @@ obsdata2$fullGDD[which(obsdata2$year == "2020")] <- y20maxGDD
 obsdata2$pgsGSL <- obsdata2$budset - obsdata2$leafout
 nrow(obsdata2[!is.na(obsdata2$pgsGDD5),])
 nrow(obsdata2[!is.na(obsdata2$pgsGSL),])
-
+nrow(obsdata2[!is.na(obsdata2$leafout),])
 obsdataWithGDD <- obsdata2
 
 pgslookup <- obsdataWithGDD[!is.na(obsdataWithGDD$pgsGDD),]

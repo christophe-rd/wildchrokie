@@ -40,9 +40,9 @@ source('rcode/utilExtractParam.R')
 # === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### Most restricted amount of data #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Most restricted amount of data ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit model GDD
 emp2 <- emp[!is.na(emp$pgsGDD5),]
 
@@ -564,3 +564,122 @@ if (FALSE) {
 }
 
 }
+
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Full data ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Fit model GDD
+empgdd <- emp[!is.na(emp$pgsGDD5),]
+nrow(emp[!is.na(emp$pgsGDD5),])
+nrow(emp[!is.na(emp$pgsGSL),])
+nrow(emp[!is.na(emp$leafout),])
+nrow(emp[!is.na(emp$budset),])
+
+# transform my groups to numeric values
+empgdd$site_num <- match(empgdd$site, unique(empgdd$site))
+empgdd$spp_num <- match(empgdd$spp, unique(empgdd$spp))
+empgdd$treeid_num <- match(empgdd$treeid, unique(empgdd$treeid))
+
+# transform data in vectors for GDD
+y <- empgdd$lengthCM*10 # ring width in mm
+N <- nrow(empgdd)
+Nspp <- length(unique(empgdd$spp_num))
+Nsite <- length(unique(empgdd$site_num))
+site <- as.numeric(as.character(empgdd$site_num))
+species <- as.numeric(as.character(empgdd$spp_num))
+treeid <- as.numeric(empgdd$treeid_num)
+Ntreeid <- length(unique(treeid))
+gdd <- empgdd$pgsGDD5/200
+
+# Fit model GDD
+rstan_options(auto_write = TRUE)
+gddmodel <- stan_model("stan/twolevelhierint.stan")
+fitgdd <- sampling(gddmodel, data = c("N","y",
+                                      "Nspp","species",
+                                      "Nsite", "site", 
+                                      "Ntreeid", "treeid", 
+                                      "gdd"),
+                   warmup = 1000, iter=2000, 
+                   chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDFull")
+
+# check warnings
+diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+# Fit model GSL
+empgsl <- emp[!is.na(emp$pgsGSL),]
+
+# transform my groups to numeric values
+empgsl$site_num <- match(empgsl$site, unique(empgsl$site))
+empgsl$spp_num <- match(empgsl$spp, unique(empgsl$spp))
+empgsl$treeid_num <- match(empgsl$treeid, unique(empgsl$treeid))
+
+# transform data in vectors for gsl
+y <- empgsl$lengthCM*10 # ring width in mm
+N <- nrow(empgsl)
+Nspp <- length(unique(empgsl$spp_num))
+Nsite <- length(unique(empgsl$site_num))
+site <- as.numeric(as.character(empgsl$site_num))
+species <- as.numeric(as.character(empgsl$spp_num))
+treeid <- as.numeric(empgsl$treeid_num)
+Ntreeid <- length(unique(treeid))
+gsl <- empgsl$pgsGSL/10
+
+rstan_options(auto_write = TRUE)
+gslmodel <- stan_model("stan/modelGrowthGSL.stan")
+fitgsl <- sampling(gslmodel, data = c("N","y",
+                                      "Nspp","species",
+                                      "Nsite", "site", 
+                                      "Ntreeid", "treeid", 
+                                      "gsl"),
+                   warmup = 1000, iter = 2000, 
+                   chains = 4)
+saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLFull")
+
+# Fit model SOS
+empsos <- emp[!is.na(emp$leafout),]
+nrow(emp2) - nrow(empsos)
+nrow(empgdd)
+setdiff(emp2$treeid, emp$treeid)
+nrow(subset(emp2, treeid %in% setdiff(emp2$treeid, emp$treeid)))
+nrow(empgsl)
+nrow(emp)
+# transform my groups to numeric values
+empgsl$site_num <- match(empgsl$site, unique(empgsl$site))
+empgsl$spp_num <- match(empgsl$spp, unique(empgsl$spp))
+empgsl$treeid_num <- match(empgsl$treeid, unique(empgsl$treeid))
+
+# transform data in vectors for gsl
+y <- empgsl$lengthCM*10 # ring width in mm
+N <- nrow(empgsl)
+Nspp <- length(unique(empgsl$spp_num))
+Nsite <- length(unique(empgsl$site_num))
+site <- as.numeric(as.character(empgsl$site_num))
+species <- as.numeric(as.character(empgsl$spp_num))
+treeid <- as.numeric(empgsl$treeid_num)
+Ntreeid <- length(unique(treeid))
+gsl <- empgsl$pgsGSL/10
+rstan_options(auto_write = TRUE)
+sosmodel <- stan_model("stan/modelGrowthSOS.stan")
+fitsos <- sampling(sosmodel, data = c("N","y",
+                                      "Nspp","species",
+                                      "Nsite", "site",
+                                      "Ntreeid", "treeid",
+                                      "sos"),
+                   warmup = 1000, iter = 2000,
+                   chains=4)
+saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
+
+# Fit model EOS
+rstan_options(auto_write = TRUE)
+eosmodel <- stan_model("stan/modelGrowthEOS.stan")
+fiteos <- sampling(eosmodel, data = c("N","y",
+                                      "Nspp","species",
+                                      "Nsite", "site",
+                                      "Ntreeid", "treeid",
+                                      "eos"),
+                   warmup = 1000, iter = 2000,
+                   chains=4)
+saveRDS(fiteos, "output/stanOutput/fitGrowthEOSFull")
