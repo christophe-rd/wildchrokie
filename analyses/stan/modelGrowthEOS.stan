@@ -10,7 +10,7 @@ int<lower=0> Nsite;  // number of sites (grouping factor)
 array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
-vector[N] gdd; 	// gdd (predictor for slope)
+vector[N] eos; 	// eos (predictor for slope)
 array[N] real y;
 }
 
@@ -35,15 +35,15 @@ for (i in 1:N){ // don't change this for reparameterization
         aspp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
-        bsp[species[i]]*gdd[i];
+        bsp[species[i]]*eos[i];
 
     }
 }
 
 model{	
-  a ~ normal(5, 3);
+  a ~ normal(10, 5);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
-  aspp ~ normal(0, 6);
+  aspp ~ normal(0, 8);
   asite ~ normal(0, 2);
   bsp ~ normal(0, 0.5);
   sigma_atreeid ~ normal(0, 0.5); 
@@ -52,7 +52,9 @@ model{
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
+
 generated quantities {
+  // posterior predictive samples
   array[N] real y_rep;
   for (i in 1:N) {
     y_rep[i] = normal_rng(
@@ -60,6 +62,17 @@ generated quantities {
         aspp[species[i]] + 
         asite[site[i]] +
         atreeid[treeid[i]] + 
-        bsp[species[i]]*gdd[i], sigma_y);
+        bsp[species[i]]*eos[i], sigma_y);
   }
+
+  // prior predictive samples
+  real a_prior = normal_rng(15, 5);
+  real sigma_atreeid_prior = abs(normal_rng(0, 0.5));  
+  real sigma_y_prior = abs(normal_rng(0, 3));    
+  real aspp_prior = normal_rng(0, 8);
+  real bsp_prior = normal_rng(0, 0.5);
+  real asite_prior = normal_rng(0, 2);
+
+  real zatreeid_prior  = normal_rng(0, 1);
+  real atreeid_prior   = abs(normal_rng(0, 0.5)) * zatreeid_prior;
 }
