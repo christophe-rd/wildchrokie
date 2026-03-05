@@ -133,16 +133,9 @@ fit <- stan("stan/twolevelhierint_nested.stan",
                            "Ntreeid", "treeid"),
                     warmup = 1000, iter = 2000, chains=4)
 
-# saveRDS(fit, "output/stanOutput/GDDleafout/fit")
+saveRDS(fit, "output/stanOutput/fitSimNested")
 # fit <- readRDS("output/stanOutput/GDDleafout/fit")
 
-fit_with_b <- stan("stan/twolevelhierint_only_inter_bsp.stan", 
-                   data=c("N","y", 
-                          "Ntreeid", "treeid",
-                          "Nspp","species",
-                          "Nsite","site",
-                          "gdd"),
-                   iter=4000, chains=4, cores=4)
 # === === === === === === === === === === === === #
 ##### Recover parameters from the posterior #####
 # === === === === === === === === === === === === #
