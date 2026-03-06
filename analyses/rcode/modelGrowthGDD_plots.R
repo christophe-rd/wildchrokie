@@ -4,11 +4,11 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-# rm(list=ls())
-# options(stringsAsFactors = FALSE)
-# options(max.print = 150)
-# options(mc.cores = parallel::detectCores())
-# options(digits = 3)
+rm(list=ls())
+options(stringsAsFactors = FALSE)
+options(max.print = 150)
+options(mc.cores = parallel::detectCores())
+options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -34,7 +34,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
@@ -820,8 +820,6 @@ legend(
 )
 dev.off()
 
-}
-
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD mu plots Together ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1500,3 +1498,4 @@ legend("bottomright",
        cex    = 1,
        title  = "Year (PDSI MarchAprilMay)")
 dev.off()
+}
