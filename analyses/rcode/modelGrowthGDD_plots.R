@@ -16,6 +16,7 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
+library(cartography)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -37,6 +38,7 @@ makeplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
+climatesumm <- read.csv("output/climateSummariesYear.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
 commonNames <- c(
@@ -1422,4 +1424,79 @@ segments(bspp_df2$fit_bspp_per25, y_pos,
 
 abline(v = 0, lty = 2, col = "black")
 
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Climate data #### 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+climatesumm
+emp$sppyear <- paste(emp$spp, emp$year, sep = "_")
+emp$lengthMM <- emp$lengthCM*10
+empclim <- aggregate(lengthMM ~ sppyear, emp, mean)
+q25 <- aggregate(lengthMM ~ sppyear, emp, function(x) quantile(x, 0.25))
+q75 <- aggregate(lengthMM ~ sppyear, emp, function(x) quantile(x, 0.75))
+
+empclim$q25 <- q25$lengthMM[match(empclim$sppyear, q25$sppyear)]
+empclim$q75 <- q75$lengthMM[match(empclim$sppyear, q75$sppyear)]
+
+empclim$spp <- substr(empclim$sppyear, 1,6)
+empclim$year <- substr(empclim$sppyear, 8,11)
+
+n_spp <- length(unique(empclim$spp))
+n_year <- length(unique(empclim$year))
+y_pos <- 1:n_year 
+
+
+empclim$pdsimam <- climatesumm$pdsi_MAM[match(empclim$year, climatesumm$year)]
+
+pal <- colorRampPalette(MetBrewer::MetPalettes$VanGogh3[[1]])
+year_cols <- setNames(pal(n_year), unique(empclim$year))
+
+year_pdsi <- unique(empclim[, c("year", "pdsimam")])
+year_pdsi <- year_pdsi[order(year_pdsi$pdsimam), ]
+
+green_pal <- carto.pal(pal1 = "blue.pal", n1 = n_year)
+year_cols <- setNames(green_pal, year_pdsi$year)
+
+
+jpeg(
+  filename = "figures/climate/rwPDSI.jpeg",
+  width = 3600,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+par(mfrow = c(1, 4))
+y_pos <- rev(1:n_year)
+
+for (i in unique(empclim$spp)) { # i = "ALNINC"
+  sub <- empclim[empclim$spp == i, ]
+  
+  plot(sub$lengthMM, y_pos,
+       xlim = range(c(sub$q25-0.5, sub$q75+0.5)),
+       ylim = c(0.5, n_year + 0.5),
+       xlab = "Ring width (mm)",
+       ylab = "",
+       yaxt = "n",
+       pch = 16,
+       cex = 2,
+       col = year_cols[sub$year],
+       frame.plot = FALSE,
+       main = i)
+  
+  axis(2, at = y_pos, labels = sub$year, las = 2, tick = FALSE, cex.axis = 1)
+  
+  abline(v = mean(sub$lengthMM), lty = 2)
+  # error bars and dashed line
+  segments(sub$q25, y_pos,
+           sub$q75, y_pos,
+           col = year_cols[sub$year],
+           lwd = 3)
+}
+legend("bottomright",
+       legend = paste(year_pdsi$year, round(year_pdsi$pdsimam, 2), sep = " PDSI: "),
+       col    = year_cols[year_pdsi$year],
+       pch    = 16,
+       bty    = "n",
+       cex    = 1,
+       title  = "Year (PDSI MarchAprilMay)")
 dev.off()

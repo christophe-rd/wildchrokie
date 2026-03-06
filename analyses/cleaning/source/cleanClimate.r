@@ -143,4 +143,72 @@ ggplot(weldhillcomp2, aes(x = doy, y = meanTempC, color = source, fill = source)
 # save ggplot!
 ggsave("figures/climate/climateComparisonMultipleyears.jpeg", width = 8, height = 5, dpi = 300)
 }
- 
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# PDSI ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+readLines("input/_notcookies/terraclimate_42.2960N_71.1206W.csv", n = 20)
+terra <- read.csv("input/_notcookies/terraclimate_42.2960N_71.1206W.csv", skip = 14)
+str(terra)
+
+# change colnames 
+colnames(terra) <- c(
+  "year",
+  "month",
+  "tmax",
+  "tmin",
+  "ppt",
+  "soilMoisture",
+  "vpd",
+  "pdsi",
+  "downwardRadiation"
+  )
+terra
+
+terra$tmean <- (terra$tmax + terra$tmin)/2
+
+terra_mam <- subset(terra, year > 2015 & month >2 & month <6 )
+terra_jja <- subset(terra, year > 2015 & month >5 & month <9 )
+
+# pdsi
+pdsimam <- aggregate(pdsi ~ year, terra_mam, mean)
+pdsijja <- aggregate(pdsi ~ year, terra_jja, mean)
+colnames(pdsimam) <- c("year", "pdsi_MAM")
+colnames(pdsijja) <- c("year", "pdsi_JJA")
+
+# mean max
+meanmaxmam <- aggregate(tmax ~ year, terra_mam, mean)
+meanmaxjja <- aggregate(tmax ~ year, terra_jja, mean)
+colnames(meanmaxmam) <- c("year", "tmeanmax_MAM")
+colnames(meanmaxjja) <- c("year", "tmeanmax_JJA")
+
+# mean mean 
+meanmeanmam <- aggregate(tmean ~ year, terra_mam, mean)
+meanmeanjja <- aggregate(tmean ~ year, terra_jja, mean)
+colnames(meanmeanmam) <- c("year", "tmeanmean_MAM")
+colnames(meanmeanjja) <- c("year", "tmeanmean_JJA")
+
+# mean min
+meanminmam <- aggregate(tmin ~ year, terra_mam, mean)
+meanminjja <- aggregate(tmin ~ year, terra_jja, mean)
+colnames(meanminmam) <- c("year", "tmeanmin_MAM")
+colnames(meanminjja) <- c("year", "tmeanmin_JJA")
+
+# precipitation
+pptmam <- aggregate(ppt ~ year, terra_mam, mean)
+pptjja <- aggregate(ppt ~ year, terra_jja, mean)
+colnames(pptmam) <- c("year", "ppt_MAM")
+colnames(pptjja) <- c("year", "ppt_JJA")
+
+# radiation
+radmam <- aggregate(downwardRadiation ~ year, terra_mam, mean)
+radjja <- aggregate(downwardRadiation ~ year, terra_jja, mean)
+colnames(radmam) <- c("year", "rad_MAM")
+colnames(radjja) <- c("year", "rad_JJA")
+
+merged <- Reduce(function(x, y) merge(x, y, by = "year"),
+                 list(pdsimam, pdsijja, meanmaxmam, meanmaxjja,
+                      meanmeanmam, meanmeanjja, meanminmam, meanminjja,
+                      pptmam, pptjja, radmam, radjja))
+
+write_csv(merged, "output/climateSummariesYear.csv")
