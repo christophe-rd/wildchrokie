@@ -1,58 +1,11 @@
-\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
-% maxwidth is the original width if it is less than linewidth
-% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
+\documentclass{article}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\usepackage{booktabs}
+
+
 \begin{document}
+% \SweaveOpts{concordance=TRUE}
 
 \title{Results outline}
 \author{Christophe Rouleau-Desrochers}
@@ -60,85 +13,6 @@
 \maketitle
 
 
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% Main results
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Main results}
-
-\subsection {Climate}
-\begin{enumerate}
-% \item From 2016 to 24, the highest spring temperature was 2021 (mean maximum temperature from March to May max(climatesum$tmeanmax_MAM)))
-\end{enumerate}
-
-\subsection*{Wildchrokie}
-\begin{enumerate}
-\item ALNINC (b = 0.277), BETALL (b = 0.175), BETPAP (b = 0.284) grew more with more growing degree days, while BETPOP (b = 0.087) did not respond to growing degree days (Figure \ref{fig:wcgrowthSlopes}).
-\item Of the species not overlapping zero, BETPAP had the highest growth rate and BETALL the lowest (Figure \ref{fig:wcmuplotbspp})
-\item For the provenance we detected a weak growth difference between GR (asite = -0.379), SH (asite = -0.07) or WM (asite = 0.471), only HF grew less (asite = -0.768) (Figure \ref{fig:wcmuplotbsppasite})
-\item Across the three years 
-\end{enumerate}
 
 
 
-
-
-% Figure Growth X GDD
-% \begin{figure}[!ht]
-% \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-% \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-% \label{fig:wcgrowthSlopes}
-% \end{figure}
-
-% Figure mu plot bspp
-% \begin{figure}[!ht]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-% \caption{Slope values across the different species}
-% \label{fig:wcmuplotbspp}
-% \end{figure}
-
-% Figure provenances
-% \begin{figure}[h!]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-% \caption{Site intercept values}
-% \label{fig:wcmuplotbsppasite}
-% \end{figure}
-%-------------------------------------------------------------------------------
-%-------------------------------------------------------------------------------
-\subsection*{coringTreespotters}
-% \begin{enumerate}
-%   \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Yellow birch grew less.(Figure \ref{fig:growthSlopes})
-%   \item
-%   \item
-%   \item 
-% \end{enumerate}
-
-
-% Figure Growth X GDD
-% \begin{figure}[!ht]
-% \includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-% \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-% \label{fig:tsgrowthSlopes}
-% \end{figure}
-
-% Figure mu plot bspp
-% \begin{figure}[!ht]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-% \caption{Slope values across the different species}
-% \label{fig:tsmuplotbspp}
-% \end{figure}
-
-% Figure provenances
-% \begin{figure}[h!]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-% \caption{Site intercept values}
-% \label{fig:tsmuplotbsppasite}
-% \end{figure}
-
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% Supplemental results
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Supplemental results}
-
-\subsection*{Wildchrokie}
-
-\end{document}
