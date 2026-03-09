@@ -36,7 +36,7 @@ model{
   a ~ normal(5, 3);
   zatreeid ~ normal(0, 1);
   aspp ~ normal(0, 6);
-  sigma_atreeid ~ normal(0, 0.5); 
+  sigma_atreeid ~ normal(0, 1); 
   sigma_y ~ normal(0, 3);
   y ~ normal(ypred, sigma_y); 
 }	

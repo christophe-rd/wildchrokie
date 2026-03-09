@@ -34,16 +34,16 @@ source('rcode/utilExtractParam.R')
 set.seed(124)
 
 # set parameters
-n_spp <- 20 # number of species
+n_spp <- 15 # number of species
 n_perspp <- 10 # number of individuals per species
 n_treeid <- n_perspp * n_spp # number of treeid
-n_meas <- 10 # repeated measurements per id
+n_meas <- 12 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 a <- 5
 sigma_y <- 1
 sigma_atreeid <- 0.5
-sigma_aspp <- 0.5
+sigma_aspp <- 2
 error <- rnorm(N, 0, sigma_y)
 
 # get replicated treeid
@@ -67,7 +67,7 @@ atreeid <- rnorm(N, aspp[spp], sigma_atreeid)
 
 # Add my parameters to the df
 simnest$aspp <- aspp[simnest$spp]
-simnest$atreeid <- atreeid[treeid]
+simnest$atreeid <- atreeid[simnest$treeid]
 simnest$atreeid <- simnest$atreeid - simnest$aspp
 
 # add the rest
@@ -97,7 +97,7 @@ simadd <- data.frame(
 atreeid <- rnorm(N, 0, sigma_atreeid)
 
 # Add my parameters to the df
-simadd$atreeid <- atreeid[treeid]
+simadd$atreeid <- atreeid[simnest$treeid]
 simadd$aspp <- aspp[simadd$spp]
 
 # add the rest
@@ -110,7 +110,7 @@ simadd$error <- error
 # adding both options of tree rings
 simadd$ringwidth <- 
   simadd$a +
-  simadd$atreeid + 
+  simadd$atreeid +
   simadd$aspp + 
   simadd$error
 
@@ -121,6 +121,7 @@ jpeg(
   res = 300          # good print-quality resolution
 )
 plot(simnest$ringwidth ~ simadd$ringwidth, xlab = "rw additive", ylab = "rw nested")
+# plot(simnest$aspp ~ simadd$aspp, xlab = "rw additive", ylab = "rw nested")
 abline(0, 1)
 dev.off()
 
@@ -132,11 +133,13 @@ for (i in unique(simnest$spp)) { # i = 3
   
   plot(0, type="n",
        xlim=c(0, 10), xlab="RW",
-       ylim=c(0, 50), ylab="Counts",
+       ylim=c(0, 100), ylab="Counts",
        main = paste("Species", i))
   
-  util$plot_line_hist(nest_sub$ringwidth, 0, 10, 0.6, col="black", add=TRUE)
-  util$plot_line_hist(add_sub$ringwidth, 0, 10, 0.6, col=util$c_mid_teal, add=TRUE)
+  util$plot_line_hist(nest_sub$ringwidth, 0, 25, 0.6, col="black", 
+                      add=TRUE)
+  util$plot_line_hist(add_sub$ringwidth, 0, 25, 0.6, col=util$c_mid_teal, 
+                      add=TRUE)
   
   # abline(v = sum(unique(nest_sub$a), unique(nest_sub$aspp)), col = "black")
   abline(v = sum(unique(add_sub$a), unique(add_sub$aspp)), col = util$c_mid_teal)
@@ -285,10 +288,8 @@ aspp_df2   <- extract_params(df_fit, "aspp", "fit_aspp",
 
 # Plot parameter recovery
 sigma_df2$sim_sigma <- c(sigma_atreeid, sigma_y)
-aspp_df2$sim_aspp <- simnest$aspp[match(aspp_df2$spp, simnest$spp)]
-treeid_df2$sim_atreeid <- simnest$atreeid[match(treeid_df2$treeid, simnest$treeid)]
-
-treeid_df2
+aspp_df2$sim_aspp <- simadd$aspp[match(aspp_df2$spp, simadd$spp)]
+treeid_df2$sim_atreeid <- simadd$atreeid[match(treeid_df2$treeid, simadd$treeid)]
 
 # Plot sigmas
 sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +

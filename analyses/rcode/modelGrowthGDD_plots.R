@@ -4,11 +4,11 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(mc.cores = parallel::detectCores())
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(mc.cores = parallel::detectCores())
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -34,11 +34,12 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
-climatesumm <- read.csv("output/climateSummariesYear.csv")
+climatesum <- read.csv("output/climateSummariesYear.csv")
+gddyr <- read.csv("output/gddByYear.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
 commonNames <- c(
@@ -106,11 +107,10 @@ site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site",
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
+bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 
-if(makeplots){
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Per treeid #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -128,7 +128,7 @@ colnames(atreeidsub) <- 1:length(subyvec)
 
 # get the spp and site identities for each tree id
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
-                                  "treeid", "spp", "site", "commonName")])
+                                  "treeid", "spp", "site", "latbi")])
 
 # the spp values for each tree id
 treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
@@ -297,7 +297,7 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
 })
 
 sppvecnum <- 1:4
-sppvecname <- unique(treeid_spp_site$commonName)
+sppvecname <- unique(treeid_spp_site$latbi)
 
 x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)   
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
@@ -580,6 +580,8 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+if(F){
+  
 # Mean plots with atreeid ####
 
 # now do the same, but for species
@@ -628,7 +630,7 @@ treeid_df4
 treeid_df4$treeid <- as.numeric(treeid_df4$treeid)
 treeid_df4$treeid_name <- emp$treeid[match(treeid_df4$treeid,
                                                     emp$treeid_num)]
-treeid_df4$spp_name <- emp$commonName[match(treeid_df4$treeid,
+treeid_df4$spp_name <- emp$latbi[match(treeid_df4$treeid,
                                               emp$treeid_num)]
 treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid,
                                        emp$treeid_num)]
@@ -820,6 +822,9 @@ legend(
 )
 dev.off()
 
+} 
+
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD mu plots Together ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -945,6 +950,7 @@ segments(bspp_df2$fit_bspp_per25, y_pos,
 abline(v = 0, lty = 2, col = "black")
 dev.off()
 
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL mu plots ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -968,26 +974,35 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
+sigma_df2_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
+bspp_df2_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
                              "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
+treeid_df2_gsl <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
                              "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
+treeid_df2_gsl <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
-site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
+site_df2_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
+
+treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
+treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
+bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
+site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
+aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
+
+
+if (makeplots){
 
 n_spp <- nrow(bspp_df2)
 n_site <- nrow(site_df2)
 y_pos <- 1:n_spp 
 
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
+treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
+bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
+site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
+aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
@@ -997,8 +1012,8 @@ jpeg(file = "figures/empiricalData/muGSL.jpeg",
 par(mfrow = c(1, 3))
 par(mar = c(5, 10, 2, 2)) 
 
-plot(aspp_df2$fit_aspp, y_pos,
-     xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
+plot(aspp_df2_gsl$fit_aspp, y_pos,
+     xlim = range(c(aspp_df2_gsl$fit_aspp_per5, aspp_df2_gsl$fit_aspp_per95)),
      ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)",
      ylab = "",
@@ -1011,7 +1026,7 @@ plot(aspp_df2$fit_aspp, y_pos,
 # color labels
 for (i in seq_along(y_pos)) {
   axis(2, at = y_pos[i],
-       labels = aspp_df2$spp_name[i],
+       labels = aspp_df2_gsl$spp_name[i],
        las = 2,
        col.axis = sppcols[i],
        tick = FALSE,
@@ -1019,11 +1034,11 @@ for (i in seq_along(y_pos)) {
 }
 
 # error bars and dashed line
-segments(aspp_df2$fit_aspp_per5,  y_pos,
-         aspp_df2$fit_aspp_per95, y_pos,
+segments(aspp_df2_gsl$fit_aspp_per5,  y_pos,
+         aspp_df2_gsl$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(aspp_df2$fit_aspp_per25, y_pos,
-         aspp_df2$fit_aspp_per75, y_pos,
+segments(aspp_df2_gsl$fit_aspp_per25, y_pos,
+         aspp_df2_gsl$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 abline(v = 0, lty = 2, col = "black")
@@ -1031,13 +1046,13 @@ abline(v = 0, lty = 2, col = "black")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asite ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-site_df2$sitefull <- sitefull[site_df2$site_name]
+site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
 sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 par(mar = c(5, 10, 2, 2)) 
 
-plot(site_df2$fit_a_site, y_pos,
-     xlim = range(c(site_df2$fit_a_site_per5, site_df2$fit_a_site_per95)),
+plot(site_df2_gsl$fit_a_site, y_pos,
+     xlim = range(c(site_df2_gsl$fit_a_site_per5, site_df2_gsl$fit_a_site_per95)),
      ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)",
      ylab = "",
@@ -1050,7 +1065,7 @@ plot(site_df2$fit_a_site, y_pos,
 # color labels
 for (i in seq_along(y_pos)) {
   axis(2, at = y_pos[i],
-       labels = site_df2$sitefull[i],
+       labels = site_df2_gsl$sitefull[i],
        las = 2,
        col.axis = sitecolors[i],
        tick = FALSE,
@@ -1058,11 +1073,11 @@ for (i in seq_along(y_pos)) {
 }
 
 # error bars and dashed line
-segments(site_df2$fit_a_site_per5,  y_pos,
-         site_df2$fit_a_site_per95, y_pos,
+segments(site_df2_gsl$fit_a_site_per5,  y_pos,
+         site_df2_gsl$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos,
-         site_df2$fit_a_site_per75, y_pos,
+segments(site_df2_gsl$fit_a_site_per25, y_pos,
+         site_df2_gsl$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 abline(v = 0, lty = 2, col = "black")
@@ -1071,8 +1086,8 @@ abline(v = 0, lty = 2, col = "black")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = c(5, 10, 2, 2)) 
 
-plot(bspp_df2$fit_bspp, y_pos,
-     xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
+plot(bspp_df2_gsl$fit_bspp, y_pos,
+     xlim = range(c(bspp_df2_gsl$fit_bspp_per5, bspp_df2_gsl$fit_bspp_per95)),
      ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 20 days",
      ylab = "",
@@ -1085,7 +1100,7 @@ plot(bspp_df2$fit_bspp, y_pos,
 # color labels
 for (i in seq_along(y_pos)) {
   axis(2, at = y_pos[i],
-       labels = bspp_df2$spp_name[i],
+       labels = bspp_df2_gsl$spp_name[i],
        las = 2,
        col.axis = sppcols[i],
        tick = FALSE,
@@ -1093,11 +1108,11 @@ for (i in seq_along(y_pos)) {
 }
 
 # error bars and dashed line
-segments(bspp_df2$fit_bspp_per5,  y_pos,
-         bspp_df2$fit_bspp_per95, y_pos,
+segments(bspp_df2_gsl$fit_bspp_per5,  y_pos,
+         bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos,
-         bspp_df2$fit_bspp_per75, y_pos,
+segments(bspp_df2_gsl$fit_bspp_per25, y_pos,
+         bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 abline(v = 0, lty = 2, col = "black")
@@ -1146,9 +1161,9 @@ y_pos <- 1:n_spp
 
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
+bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
@@ -1305,9 +1320,9 @@ y_pos <- 1:n_spp
 
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$commonName[match(bspp_df2$spp, emp$spp_num)]
+bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$commonName[match(aspp_df2$spp, emp$spp_num)]
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
@@ -1424,10 +1439,54 @@ abline(v = 0, lty = 2, col = "black")
 
 dev.off()
 
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate data #### 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-climatesumm
+emp4 <- emp[!is.na(emp$leafout),]
+emp
+gddyr$yeardoy <- paste(gddyr$year, gddyr$doy, sep = "_")
+emp4$yeardoyleafout <- paste(emp4$year, emp4$leafout, sep = "_")
+emp4$yeardoybudset <- paste(emp4$year, emp4$budset, sep = "_")
+
+# leafout vs gdd
+emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
+plot(emp4$gddLeafout, emp4$leafout,
+     xlab = "gddLeafout", ylab = "leafout",
+     pch = 16, col = as.factor(emp4$year))
+
+# fit and draw the smooth line
+loess_fit <- loess(leafout ~ gddLeafout, data = emp2)
+x_seq <- seq(min(emp4$gddLeafout), max(emp4$gddLeafout), length.out = 200)
+pred <- predict(loess_fit, newdata = data.frame(gddLeafout = x_seq), se = TRUE)
+
+lines(x_seq, pred$fit, col = "blue", lwd = 2)
+
+ggsave("figures/climate/leafoutGDD.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# leafout vs gdd
+emp$gddBudset <- gddyr$GDD_5[match(emp$yeardoybudset, gddyr$yeardoy)]
+ggplot(emp) +
+  geom_point(aes(x = gddLeafout, y = leafout)) +
+  facet_wrap(~year) + theme_minimal()
+ggsave("figures/climate/leafoutGDD.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+# budset vs pdsi mam
+emp$pdsiMAM <- climatesum$pdsi_MAM[match(emp$year, climatesum$year)]
+ggplot(emp) +
+  geom_point(aes(x = pdsiMAM, y = budset, color = year)) +
+  # facet_wrap(~year) + 
+  theme_minimal()
+
+# budset vs pdsi jja
+emp$pdsiJJA <- climatesum$pdsi_JJA[match(emp$year, climatesum$year)]
+ggplot(emp, aes(x = pdsiJJA, y = budset)) +
+  geom_point() +
+  geom_line() +
+  # facet_wrap(~year) + 
+  theme_minimal()
+
+
 emp$sppyear <- paste(emp$spp, emp$year, sep = "_")
 emp$lengthMM <- emp$lengthCM*10
 empclim <- aggregate(lengthMM ~ sppyear, emp, mean)
@@ -1445,7 +1504,7 @@ n_year <- length(unique(empclim$year))
 y_pos <- 1:n_year 
 
 
-empclim$pdsimam <- climatesumm$pdsi_MAM[match(empclim$year, climatesumm$year)]
+empclim$pdsimam <- climatesum$pdsi_MAM[match(empclim$year, climatesum$year)]
 
 pal <- colorRampPalette(MetBrewer::MetPalettes$VanGogh3[[1]])
 year_cols <- setNames(pal(n_year), unique(empclim$year))
@@ -1457,6 +1516,7 @@ green_pal <- carto.pal(pal1 = "blue.pal", n1 = n_year)
 year_cols <- setNames(green_pal, year_pdsi$year)
 
 
+if (makeplots){
 jpeg(
   filename = "figures/climate/rwPDSI.jpeg",
   width = 3600,      # wider image (pixels) → more horizontal room
@@ -1498,4 +1558,5 @@ legend("bottomright",
        cex    = 1,
        title  = "Year (PDSI MarchAprilMay)")
 dev.off()
+}
 }
