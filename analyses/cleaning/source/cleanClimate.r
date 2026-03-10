@@ -26,6 +26,7 @@ yr15TO19$date <- as.Date(yr15TO19$date, format = "%m/%d/%Y")
 
 # convert far to celcius: https://www.metric-conversions.org/temperature/fahrenheit-to-celsius.htm
 yr15TO19$tempCelcius <- (yr15TO19$Temp..F-32)/1.8
+yr15TO19$pptMM <- yr15TO19$Rain.in * 25.4
 
 # summarize with min mean and max
 yr15TO19_2 <- aggregate(
@@ -43,9 +44,26 @@ yr15TO19_3 <- data.frame(
   minTempC = yr15TO19_2$tempCelcius[, "min"]
 )
 
+# summarize for precipitation
+# summarize with min mean and max
+yr15TO19_ppt <- aggregate(
+  pptMM ~ date,
+  data = yr15TO19,
+  FUN = sum)
+
+yr15TO19_3 <- data.frame(
+  date = yr15TO19_2$date,
+  maxTempC = yr15TO19_2$tempCelcius[, "max"],
+  meanTempC = yr15TO19_2$tempCelcius[, "mean"],
+  minTempC = yr15TO19_2$tempCelcius[, "min"]
+)
+
+yr15TO19_3$pptMM <- yr15TO19_ppt$pptMM[match(yr15TO19_3$date, yr15TO19_ppt$date)]
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
 # Then follow with years 2020 to 2024
 # From https://newa.cornell.edu/all-weather-data-query/
+# precipitation in inches
 files <- list.files(pattern = "\\.csv$")[2:6] # 2 and 10 is wrong
 
 # Read them all in as a list of data.frames
@@ -58,13 +76,15 @@ yr20TO25 <- do.call(rbind, df_list)
 yr20TO25_2 <- yr20TO25[,c("date", 
                           "Avg.Air.Temp...F.", 
                           "Max.Air.Temp...F.", 
-                          "Min.Air.Temp...F.")]
+                          "Min.Air.Temp...F.",
+                          "Total.Precipitation")]
 
 yr20TO25_3 <- data.frame(
   date      = yr20TO25_2$date,
   maxTempC  = (yr20TO25_2$Max.Air.Temp...F. - 32) * 5/9,
   meanTempC = (yr20TO25_2$Avg.Air.Temp...F. - 32) * 5/9,
-  minTempC  = (yr20TO25_2$Min.Air.Temp...F. - 32) * 5/9
+  minTempC  = (yr20TO25_2$Min.Air.Temp...F. - 32) * 5/9,
+  pptMM  = yr20TO25_2$Total.Precipitation * 25.4
 )
 
 yr20TO25_3$date <- as.Date(yr20TO25_3$date, format = "%m/%d/%Y")
