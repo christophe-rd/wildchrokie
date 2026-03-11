@@ -41,6 +41,7 @@ makeplots <- TRUE
 climatesum <- read.csv("output/climateSummariesYear.csv")
 gddyr <- read.csv("output/gddByYear.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
+weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
 commonNames <- c(
   "Alnus incana"          = "Grey alder",
@@ -1444,28 +1445,139 @@ dev.off()
 # Climate data #### 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 emp4 <- emp[!is.na(emp$leafout),]
-emp
+emp4$leafout <- as.integer(emp4$leafout)
+emp4$budset <- as.integer(emp4$budset)
+
 gddyr$yeardoy <- paste(gddyr$year, gddyr$doy, sep = "_")
+emp4$yeardoybudburst <- paste(emp4$year, emp4$budburst, sep = "_")
 emp4$yeardoyleafout <- paste(emp4$year, emp4$leafout, sep = "_")
 emp4$yeardoybudset <- paste(emp4$year, emp4$budset, sep = "_")
 
+yearcolors <- c("#931e18", "#da7901", "#247d3f")
+par(mfrow = c(1,1))
+years <- sort(unique(emp4$year))
+
 # leafout vs gdd
 emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
+
 plot(emp4$gddLeafout, emp4$leafout,
      xlab = "gddLeafout", ylab = "leafout",
-     pch = 16, col = as.factor(emp4$year))
+     pch = 16, 
+     col = yearcolors[match(emp4$year, years)],
+     main = "leafout X gdd at leafout")
 
-# fit and draw the smooth line
-loess_fit <- loess(leafout ~ gddLeafout, data = emp2)
-x_seq <- seq(min(emp4$gddLeafout), max(emp4$gddLeafout), length.out = 200)
-pred <- predict(loess_fit, newdata = data.frame(gddLeafout = x_seq), se = TRUE)
+for (i in seq_along(years)) {
+  year_dat <- emp4[emp4$year == years[i], ]
+  
+  lm_fit <- lm(leafout ~ gddLeafout, data = year_dat)
+  x_seq  <- seq(min(year_dat$gddLeafout, na.rm = TRUE), 
+                max(year_dat$gddLeafout, na.rm = TRUE), length.out = 200)
+  pred   <- predict(lm_fit, newdata = data.frame(gddLeafout = x_seq))
+  
+  lines(x_seq, pred, 
+        col = yearcolors[i],
+        lwd = 2)
+}
 
-lines(x_seq, pred$fit, col = "blue", lwd = 2)
+legend("bottomright",
+       legend = years,
+       col    = yearcolors,
+       pch    = 16,
+       lty    = 1,
+       lwd    = 2,
+       title  = "Year")
 
-ggsave("figures/climate/leafoutGDD.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+# max temp MAM vs leafout 
+emp4$tmeanmax_MAM <- climatesum$tmeanmax_MAM[match(emp4$year, climatesum$year)]
 
-# leafout vs gdd
-emp$gddBudset <- gddyr$GDD_5[match(emp$yeardoybudset, gddyr$yeardoy)]
+plot(emp4$tmeanmax_MAM, emp4$leafout,
+     xlab = "tmeanmax_MAM", ylab = "leafout",
+     pch = 16, 
+     col = yearcolors[match(emp4$year, years)],
+     main = "leafout X gdd at leafout")
+
+  lm_fit <- lm(leafout ~ tmeanmax_MAM, data = emp4)
+  x_seq  <- seq(min(emp4$tmeanmax_MAM, na.rm = TRUE), 
+                max(emp4$tmeanmax_MAM, na.rm = TRUE), length.out = 200)
+  pred   <- predict(lm_fit, newdata = data.frame(tmeanmax_MAM = x_seq))
+  
+  lines(x_seq, pred, 
+        col = "black",
+        lwd = 2)
+}
+
+# min temp MAM vs leafout 
+emp4$tmeanmin_MAM <- climatesum$tmeanmin_MAM[match(emp4$year, climatesum$year)]
+
+plot(emp4$tmeanmin_MAM, emp4$leafout,
+     xlab = "tmeanmin_MAM", ylab = "leafout",
+     pch = 16, 
+     col = yearcolors[match(emp4$year, years)],
+     main = "leafout X gdd at leafout")
+
+lm_fit <- lm(leafout ~ tmeanmin_MAM, data = emp4)
+x_seq  <- seq(min(emp4$tmeanmin_MAM, na.rm = TRUE), 
+              max(emp4$tmeanmin_MAM, na.rm = TRUE), length.out = 200)
+pred   <- predict(lm_fit, newdata = data.frame(tmeanmin_MAM = x_seq))
+
+lines(x_seq, pred, 
+      col = "black",
+      lwd = 2)
+
+# number of frost free days before leafout
+weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, FUN = function(x)
+  {sapply(seq_along(x), function(i) sum(x[seq_len(i-1)] < 0, na.rm = TRUE))
+  })
+
+weldhillclim$yeardoy <- paste(weldhillclim$year, gddyr$doy, sep = "_")
+emp5 <- emp4[!is.na(emp4$budburst),]
+emp5$frostFbudburst <- weldhillclim$frostFreeDays[match(emp5$yeardoybudburst, 
+                                                       weldhillclim$yeardoy)]
+unique(emp5$budburst)
+plot(emp5$frostFbudburst, emp5$budburst,
+     xlab = "number of frost free days at budburst", ylab = "budburst",
+     pch = 16, 
+     col = yearcolors[match(emp5$year, years)],
+     main = "leafout X frost free days at budburst")
+
+for (i in seq_along(years)) {
+  year_dat <- emp5[emp5$year == years[i], ]  # <-- years[i] not i
+  
+  lm_fit <- lm(budburst ~ frostFbudburst, data = year_dat)
+  x_seq  <- seq(min(year_dat$frostFbudburst, na.rm = TRUE), 
+                max(year_dat$frostFbudburst, na.rm = TRUE), length.out = 200)
+  pred   <- predict(lm_fit, newdata = data.frame(frostFbudburst = x_seq))
+  
+  lines(x_seq, pred, 
+        col = yearcolors[i],
+        lwd = 2)
+}
+
+# precipitation at leafout
+emp4$ppmMM <- weldhillclim$ppm[match(emp4$yeardoyleafout, weldhillclim$yeardoy)]
+
+plot(emp4$budburst, emp4$leafout,
+     xlab = "number of frost free days at budburst", ylab = "leafout",
+     pch = 16, 
+     col = yearcolors[match(emp4$year, years)],
+     main = "leafout X frost free days at budburst")
+
+for (i in seq_along(years)) {
+  year_dat <- emp4[emp4$year == years[i], ]
+  
+  lm_fit <- lm(leafout ~ budburst, data = year_dat)
+  x_seq  <- seq(min(year_dat$budburst, na.rm = TRUE), 
+                max(year_dat$budburst, na.rm = TRUE), length.out = 200)
+  pred   <- predict(lm_fit, newdata = data.frame(budburst = x_seq))
+  
+  lines(x_seq, pred, 
+        col = yearcolors[i],
+        lwd = 2)
+}
+
+
+
+
 ggplot(emp) +
   geom_point(aes(x = gddLeafout, y = leafout)) +
   facet_wrap(~year) + theme_minimal()
@@ -1479,12 +1591,22 @@ ggplot(emp) +
   theme_minimal()
 
 # budset vs pdsi jja
-emp$pdsiJJA <- climatesum$pdsi_JJA[match(emp$year, climatesum$year)]
-ggplot(emp, aes(x = pdsiJJA, y = budset)) +
-  geom_point() +
-  geom_line() +
-  # facet_wrap(~year) + 
-  theme_minimal()
+emp4$pdsiJJA <- climatesum$pdsi_JJA[match(emp4$year, climatesum$year)]
+
+plot(emp4$pdsiJJA, emp4$budset,
+     xlab = "pdsiJJA", ylab = "budset",
+     pch = 16, 
+     col = yearcolors[match(emp4$year, years)],
+     main = "budset X summer PDSI")
+
+lm_fit <- lm(budset ~ pdsiJJA, data = emp4)
+x_seq  <- seq(min(emp4$pdsiJJA, na.rm = TRUE), 
+              max(emp4$pdsiJJA, na.rm = TRUE), length.out = 200)
+pred   <- predict(lm_fit, newdata = data.frame(pdsiJJA = x_seq))
+
+lines(x_seq, pred, 
+      col = "black",
+      lwd = 2)
 
 
 emp$sppyear <- paste(emp$spp, emp$year, sep = "_")

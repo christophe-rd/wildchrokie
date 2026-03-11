@@ -34,10 +34,10 @@ source('rcode/utilExtractParam.R')
 set.seed(124)
 
 # set parameters
-n_spp <- 15 # number of species
-n_perspp <- 10 # number of individuals per species
+n_spp <- 12 # number of species
+n_perspp <- 8 # number of individuals per species
 n_treeid <- n_perspp * n_spp # number of treeid
-n_meas <- 12 # repeated measurements per id
+n_meas <- 10 # repeated measurements per id
 N <- n_treeid * n_meas # total number of measurements
 
 a <- 5
@@ -68,7 +68,11 @@ atreeid <- rnorm(N, aspp[spp], sigma_atreeid)
 # Add my parameters to the df
 simnest$aspp <- aspp[simnest$spp]
 simnest$atreeid <- atreeid[simnest$treeid]
-simnest$atreeid <- simnest$atreeid - simnest$aspp
+# simnest$atreeid <- simnest$atreeid - simnest$aspp
+
+###
+# it was the way I was reconstructing treeid from atreeidspp that was wrong. We didnt try to reconstruct it, but instead of reconstructing atreeid in the simulated data, we recovered  atreeidspp from aspp and atreeid, by summing the two parameters together (like a transformed parameter)
+###
 
 # add the rest
 simnest$a <- a
@@ -81,7 +85,7 @@ simnest$error <- error
 simnest$ringwidth <- 
   simnest$a +
   simnest$atreeid + 
-  simnest$aspp +
+  # simnest$aspp +
   simnest$error
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -217,6 +221,10 @@ treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
 aspp_df2   <- extract_params(df_fit, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
 
+treeid_df2$spp <- simnest$spp[match(treeid_df2$treeid, simnest$treeid)]
+treeid_df2$fit_aspp <- aspp_df2$fit_aspp[match(treeid_df2$spp, aspp_df2$spp)]
+
+treeid_df2$diffmean <- treeid_df2$fit_atreeid + treeid_df2$fit_aspp
 # Plot parameter recovery
 sigma_df2$sim_sigma <- c(sigma_atreeid, sigma_y)
 aspp_df2$sim_aspp <- simnest$aspp[match(aspp_df2$spp, simnest$spp)]
@@ -238,9 +246,9 @@ sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
 sigma_simXfit_plot
 
 # Plot treeid 
-atreeid_simXfit_plot <- ggplot(treeid_df2, aes(x = sim_atreeid, y = fit_atreeid)) +
-  geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95), 
-                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+atreeid_simXfit_plot <- ggplot(treeid_df2, aes(x = sim_atreeid, y = diffmean)) +
+  # geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95), 
+                # width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
   geom_point(color = "#046C9A", size = 2, alpha = 0.7) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
   labs(x = "sim atreeid", y = "fit atreeid", title = "") +
