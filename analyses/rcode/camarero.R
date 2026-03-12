@@ -3,18 +3,17 @@ setwd("/Users/christophe_rouleau-desrochers/Downloads/chronicle-of-nature-calend
 p <- read.csv("phenology.csv")
 
 # which phenoevents are present in this dataset:
-message(print(unique(p$eventtype)))
-
-spp <- c("Pinus halepensis", "Pinus sylvestris")
 
 
+p2 <- subset(p, taxon %in% "Pinus sylvestris" & dataset %in% dataset[grepl("Stolby", p$dataset)])
+print(unique(p2$eventtype))
+message("Number years with of budburst observations:", 
+        length(unique(p2$year[which(p2$eventtype %in% "onset of budburst")])))
+message("Number years with of leaf colouring observations:", 
+        length(unique(p2$year[which(p2$eventtype %in% "onset of autumn colouring")])))
 
-
-p$taxon[grepl("halepensis", p$taxon)]
-
-p2 <- subset(p, taxon %in% spp)
-
-p3 <- subset(p2, dataset %in% p2$dataset[grepl("Stolby", p2$dataset)])
+length(unique (p2$))
+p3 <- subset(p2, dataset %in% )
 
 unique(p3$eventtype)
 View(p3)
