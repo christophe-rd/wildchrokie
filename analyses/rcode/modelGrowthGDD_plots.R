@@ -104,7 +104,7 @@ site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site",
                              "site", "asite\\[(\\d+)\\]")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot lines with quantiles ####
+# Plot lines with quantiles GDD####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
