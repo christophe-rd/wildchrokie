@@ -187,48 +187,111 @@ terra
 
 terra$tmean <- (terra$tmax + terra$tmin)/2
 
-terra_mam <- subset(terra, year > 2015 & month >2 & month <6 )
-terra_jja <- subset(terra, year > 2015 & month >5 & month <9 )
+# create a new column that attributes december as the following season winter
+terra$season_year <- ifelse(terra$month == 12, terra$year + 1, terra$year)
+
+# dec, jan, feb
+terra_djf <- subset(terra, season_year > 2015 & month %in% c(12, 1, 2))
+# march, apr, may
+terra_mam <- subset(terra, year > 2015 & month %in% c(3, 4, 5))
+# june, july, aug
+terra_jja <- subset(terra, year > 2015 & month %in% c(6, 7, 8))
+# sept, oct, nov
+terra_son <- subset(terra, year > 2015 & month %in% c(9, 10, 11))
 
 # pdsi
+pdsidjf <- aggregate(pdsi ~ year, terra_djf, mean)
 pdsimam <- aggregate(pdsi ~ year, terra_mam, mean)
 pdsijja <- aggregate(pdsi ~ year, terra_jja, mean)
-colnames(pdsimam) <- c("year", "pdsi_MAM")
-colnames(pdsijja) <- c("year", "pdsi_JJA")
+pdsison <- aggregate(pdsi ~ year, terra_son, mean)
+colnames(pdsidjf) <- c("year", "pdsi")
+colnames(pdsimam) <- c("year", "pdsi")
+colnames(pdsijja) <- c("year", "pdsi")
+colnames(pdsison) <- c("year", "pdsi")
+pdsidjf$period <- "DJD"
+pdsimam$period <- "MAM"
+pdsijja$period <- "JJA"
+pdsison$period <- "SON"
+meanpdsi <- rbind(pdsidjf,pdsimam,pdsijja,pdsison)
 
 # mean max
+meanmaxdjf <- aggregate(tmax ~ year, terra_djf, mean)
 meanmaxmam <- aggregate(tmax ~ year, terra_mam, mean)
 meanmaxjja <- aggregate(tmax ~ year, terra_jja, mean)
-colnames(meanmaxmam) <- c("year", "tmeanmax_MAM")
-colnames(meanmaxjja) <- c("year", "tmeanmax_JJA")
+meanmaxson <- aggregate(tmax ~ year, terra_son, mean)
+colnames(meanmaxdjf) <- c("year", "tmeanmax")
+colnames(meanmaxmam) <- c("year", "tmeanmax")
+colnames(meanmaxjja) <- c("year", "tmeanmax")
+colnames(meanmaxson) <- c("year", "tmeanmax")
+meanmaxdjf$period <- "DJD"
+meanmaxmam$period <- "MAM"
+meanmaxjja$period <- "JJA"
+meanmaxson$period <- "SON"
+meanmax <- rbind(meanmaxdjf,meanmaxmam,meanmaxjja,meanmaxson)
 
 # mean mean 
+meanmeandjf <- aggregate(tmean ~ year, terra_djf, mean)
 meanmeanmam <- aggregate(tmean ~ year, terra_mam, mean)
 meanmeanjja <- aggregate(tmean ~ year, terra_jja, mean)
-colnames(meanmeanmam) <- c("year", "tmeanmean_MAM")
-colnames(meanmeanjja) <- c("year", "tmeanmean_JJA")
+meanmeanson <- aggregate(tmean ~ year, terra_son, mean)
+colnames(meanmeandjf) <- c("year", "tmeanmean")
+colnames(meanmeanmam) <- c("year", "tmeanmean")
+colnames(meanmeanjja) <- c("year", "tmeanmean")
+colnames(meanmeanson) <- c("year", "tmeanmean")
+meanmeandjf$period <- "DJD"
+meanmeanmam$period <- "MAM"
+meanmeanjja$period <- "JJA"
+meanmeanson$period <- "SON"
+meanmean <- rbind(meanmeandjf,meanmeanmam,meanmeanjja,meanmeanson)
 
 # mean min
+meanmindjf <- aggregate(tmin ~ year, terra_djf, mean)
 meanminmam <- aggregate(tmin ~ year, terra_mam, mean)
 meanminjja <- aggregate(tmin ~ year, terra_jja, mean)
-colnames(meanminmam) <- c("year", "tmeanmin_MAM")
-colnames(meanminjja) <- c("year", "tmeanmin_JJA")
+meanminson <- aggregate(tmin ~ year, terra_son, mean)
+colnames(meanmindjf) <- c("year", "tmeanmin")
+colnames(meanminmam) <- c("year", "tmeanmin")
+colnames(meanminjja) <- c("year", "tmeanmin")
+colnames(meanminson) <- c("year", "tmeanmin")
+meanmindjf$period <- "DJD"
+meanminmam$period <- "MAM"
+meanminjja$period <- "JJA"
+meanminson$period <- "SON"
+meanmin <- rbind(meanmindjf,meanminmam,meanminjja,meanminson)
 
 # precipitation
-pptmam <- aggregate(ppt ~ year, terra_mam, mean)
-pptjja <- aggregate(ppt ~ year, terra_jja, mean)
-colnames(pptmam) <- c("year", "ppt_MAM")
-colnames(pptjja) <- c("year", "ppt_JJA")
+meanpptdjf <- aggregate(ppt ~ year, terra_djf, mean)
+meanpptmam <- aggregate(ppt ~ year, terra_mam, mean)
+meanpptjja <- aggregate(ppt ~ year, terra_jja, mean)
+meanpptson <- aggregate(ppt ~ year, terra_son, mean)
+colnames(meanpptdjf) <- c("year", "ppt")
+colnames(meanpptmam) <- c("year", "ppt")
+colnames(meanpptjja) <- c("year", "ppt")
+colnames(meanpptson) <- c("year", "ppt")
+meanpptdjf$period <- "DJD"
+meanpptmam$period <- "MAM"
+meanpptjja$period <- "JJA"
+meanpptson$period <- "SON"
+meanppt <- rbind(meanpptdjf,meanpptmam,meanpptjja,meanpptson)
 
 # radiation
-radmam <- aggregate(downwardRadiation ~ year, terra_mam, mean)
-radjja <- aggregate(downwardRadiation ~ year, terra_jja, mean)
-colnames(radmam) <- c("year", "rad_MAM")
-colnames(radjja) <- c("year", "rad_JJA")
+meanraddjf <- aggregate(downwardRadiation ~ year, terra_djf, mean)
+meanradmam <- aggregate(downwardRadiation ~ year, terra_mam, mean)
+meanradjja <- aggregate(downwardRadiation ~ year, terra_jja, mean)
+meanradson <- aggregate(downwardRadiation ~ year, terra_son, mean)
+colnames(meanraddjf) <- c("year", "rad")
+colnames(meanradmam) <- c("year", "rad")
+colnames(meanradjja) <- c("year", "rad")
+colnames(meanradson) <- c("year", "rad")
+meanraddjf$period <- "DJD"
+meanradmam$period <- "MAM"
+meanradjja$period <- "JJA"
+meanradson$period <- "SON"
+meanrad <- rbind(meanraddjf,meanradmam,meanradjja,meanradson)
 
-merged <- Reduce(function(x, y) merge(x, y, by = "year"),
-                 list(pdsimam, pdsijja, meanmaxmam, meanmaxjja,
-                      meanmeanmam, meanmeanjja, meanminmam, meanminjja,
-                      pptmam, pptjja, radmam, radjja))
+merged <- Reduce(function(x, y) merge(x, y, by = c("year", "period")),
+                 list(meanpdsi, meanmax, meanmean, meanmin,
+                      meanppt, meanrad))
+merged <- subset(merged, year != 2015)
 
 write_csv(merged, "output/climateSummariesYear.csv")
