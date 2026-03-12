@@ -35,9 +35,6 @@ source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
 source('rcode/utilExtractParam.R')
 
-# === === === === === === === === === === === === === === === === 
-# EMPIRICAL DATA ####
-# === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -119,16 +116,6 @@ fiteos <- sampling(eosmodel, data = c("N","y",
                 chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
-# jpeg("figures/pairs.jpg", width = 5000, height = 5000, 
-     # units = "px", res = 300)
-
-# fit@model_pars
-
-# pairs(fit, pars = c("a", "b",
-#                     "sigma_atreeid",
-#                     "sigma_y"))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
@@ -505,6 +492,8 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
+
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -567,103 +556,30 @@ if (FALSE) {
 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Full data ####
+# FULL DATA ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Fit model GDD
-empgdd <- emp[!is.na(emp$pgsGDD5),]
-nrow(emp[!is.na(emp$pgsGDD5),])
-nrow(emp[!is.na(emp$pgsGSL),])
-nrow(emp[!is.na(emp$leafout),])
-nrow(emp[!is.na(emp$budset),])
-
-# transform my groups to numeric values
-empgdd$site_num <- match(empgdd$site, unique(empgdd$site))
-empgdd$spp_num <- match(empgdd$spp, unique(empgdd$spp))
-empgdd$treeid_num <- match(empgdd$treeid, unique(empgdd$treeid))
-
-# transform data in vectors for GDD
-y <- empgdd$lengthCM*10 # ring width in mm
-N <- nrow(empgdd)
-Nspp <- length(unique(empgdd$spp_num))
-Nsite <- length(unique(empgdd$site_num))
-site <- as.numeric(as.character(empgdd$site_num))
-species <- as.numeric(as.character(empgdd$spp_num))
-treeid <- as.numeric(empgdd$treeid_num)
-Ntreeid <- length(unique(treeid))
-gdd <- empgdd$pgsGDD5/200
-
-# Fit model GDD
-rstan_options(auto_write = TRUE)
-gddmodel <- stan_model("stan/twolevelhierint.stan")
-fitgdd <- sampling(gddmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site", 
-                                      "Ntreeid", "treeid", 
-                                      "gdd"),
-                   warmup = 1000, iter=2000, 
-                   chains=4)
-saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDFull")
-
-# check warnings
-diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
-util$check_all_hmc_diagnostics(diagnostics)
-
-# Fit model GSL
-empgsl <- emp[!is.na(emp$pgsGSL),]
-
-# transform my groups to numeric values
-empgsl$site_num <- match(empgsl$site, unique(empgsl$site))
-empgsl$spp_num <- match(empgsl$spp, unique(empgsl$spp))
-empgsl$treeid_num <- match(empgsl$treeid, unique(empgsl$treeid))
-
-# transform data in vectors for gsl
-y <- empgsl$lengthCM*10 # ring width in mm
-N <- nrow(empgsl)
-Nspp <- length(unique(empgsl$spp_num))
-Nsite <- length(unique(empgsl$site_num))
-site <- as.numeric(as.character(empgsl$site_num))
-species <- as.numeric(as.character(empgsl$spp_num))
-treeid <- as.numeric(empgsl$treeid_num)
-Ntreeid <- length(unique(treeid))
-gsl <- empgsl$pgsGSL/10
-
-rstan_options(auto_write = TRUE)
-gslmodel <- stan_model("stan/modelGrowthGSL.stan")
-fitgsl <- sampling(gslmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site", 
-                                      "Ntreeid", "treeid", 
-                                      "gsl"),
-                   warmup = 1000, iter = 2000, 
-                   chains = 4)
-saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLFull")
-
-# Fit model SOS
+# Fit model SOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 empsos <- emp[!is.na(emp$leafout),]
-nrow(emp2) - nrow(empsos)
-nrow(empgdd)
-setdiff(emp2$treeid, emp$treeid)
-nrow(subset(emp2, treeid %in% setdiff(emp2$treeid, emp$treeid)))
-nrow(empgsl)
-nrow(emp)
+
 # transform my groups to numeric values
-empgsl$site_num <- match(empgsl$site, unique(empgsl$site))
-empgsl$spp_num <- match(empgsl$spp, unique(empgsl$spp))
-empgsl$treeid_num <- match(empgsl$treeid, unique(empgsl$treeid))
+empsos$site_num <- match(empsos$site, unique(empsos$site))
+empsos$spp_num <- match(empsos$spp, unique(empsos$spp))
+empsos$treeid_num <- match(empsos$treeid, unique(empsos$treeid))
 
 # transform data in vectors for gsl
-y <- empgsl$lengthCM*10 # ring width in mm
-N <- nrow(empgsl)
-Nspp <- length(unique(empgsl$spp_num))
-Nsite <- length(unique(empgsl$site_num))
-site <- as.numeric(as.character(empgsl$site_num))
-species <- as.numeric(as.character(empgsl$spp_num))
-treeid <- as.numeric(empgsl$treeid_num)
+y <- empsos$lengthCM*10 # ring width in mm
+N <- nrow(empsos)
+Nspp <- length(unique(empsos$spp_num))
+Nsite <- length(unique(empsos$site_num))
+site <- as.numeric(as.character(empsos$site_num))
+species <- as.numeric(as.character(empsos$spp_num))
+treeid <- as.numeric(empsos$treeid_num)
 Ntreeid <- length(unique(treeid))
-gsl <- empgsl$pgsGSL/10
+sos <- empsos$leafout/10
+
 rstan_options(auto_write = TRUE)
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsos <- sampling(sosmodel, data = c("N","y",
+fitsosfull <- sampling(sosmodel, data = c("N","y",
                                       "Nspp","species",
                                       "Nsite", "site",
                                       "Ntreeid", "treeid",
@@ -672,10 +588,28 @@ fitsos <- sampling(sosmodel, data = c("N","y",
                    chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
 
-# Fit model EOS
+# Fit model EOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+empeos <- emp[!is.na(emp$budset),]
+
+# transform my groups to numeric values
+empeos$site_num <- match(empeos$site, unique(empeos$site))
+empeos$spp_num <- match(empeos$spp, unique(empeos$spp))
+empeos$treeid_num <- match(empeos$treeid, unique(empeos$treeid))
+
+# transform data in vectors for gsl
+y <- empeos$lengthCM*10 # ring width in mm
+N <- nrow(empeos)
+Nspp <- length(unique(empeos$spp_num))
+Nsite <- length(unique(empeos$site_num))
+site <- as.numeric(as.character(empeos$site_num))
+species <- as.numeric(as.character(empeos$spp_num))
+treeid <- as.numeric(empeos$treeid_num)
+Ntreeid <- length(unique(treeid))
+eos <- empeos$budset/10
+
 rstan_options(auto_write = TRUE)
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteos <- sampling(eosmodel, data = c("N","y",
+fiteosfull <- sampling(eosmodel, data = c("N","y",
                                       "Nspp","species",
                                       "Nsite", "site",
                                       "Ntreeid", "treeid",
@@ -683,3 +617,216 @@ fiteos <- sampling(eosmodel, data = c("N","y",
                    warmup = 1000, iter = 2000,
                    chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSFull")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Recover and plot parameters SOS restricted vs full #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# SOS restricted
+df_fitsos <- as.data.frame(fitsos)
+
+# posterior summaries
+sigma_df2  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
+site_df2   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# SOS full
+df_fitsos <- as.data.frame(fitsosfull)
+
+# posterior summaries
+sigma_df2_full  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_full   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_full <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_full <- subset(treeid_df2_full, !grepl("z|sigma", treeid))
+aspp_df2_full   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_full <- subset(treeid_df2_full, !grepl("prior", treeid))
+site_df2_full   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# Open device
+jpeg("figures/empiricalData/SOSFullVSRestricted.jpeg", width = 6, height = 6, units = "in", res = 300)
+par(mfrow = c(2,2))
+
+plot(sigma_df2$mean, sigma_df2_full$mean,
+     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2_full$mean_per25, sigma_df2_full$mean_per75)),
+     xlim = range(c(sigma_df2$mean_per25, sigma_df2$mean_per75)))
+arrows(x0 = sigma_df2$mean, y0 = sigma_df2_full$mean_per25,
+       x1 = sigma_df2$mean, y1 = sigma_df2_full$mean_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2$mean_per25, y0 = sigma_df2_full$mean,
+       x1 = sigma_df2$mean_per75, y1 = sigma_df2_full$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+
+points(sigma_df2$mean, sigma_df2_full$mean,
+       pch = 16, col = "#046C9A", cex = 1.5)
+
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+points(sigma_df2$mean, sigma_df2_full$mean, pch = 16, col = "#046C9A", cex = 1.5)
+text(sigma_df2$mean_per75, sigma_df2_full$mean_per25, labels = sigma_df2$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2_full$fit_bspp_per25, bspp_df2_full$fit_bspp_per75)),
+     xlim = range(c(bspp_df2$fit_bspp_per25, bspp_df2$fit_bspp_per75)))
+arrows(x0 = bspp_df2$fit_bspp, y0 = bspp_df2_full$fit_bspp_per25,
+       x1 = bspp_df2$fit_bspp, y1 = bspp_df2_full$fit_bspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2$fit_bspp_per25, y0 = bspp_df2_full$fit_bspp,
+       x1 = bspp_df2$fit_bspp_per75, y1 = bspp_df2_full$fit_bspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+# aspp
+plot(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2_full$fit_aspp_per25, aspp_df2_full$fit_aspp_per75)),
+     xlim = range(c(aspp_df2$fit_aspp_per25, aspp_df2$fit_aspp_per75)))
+arrows(x0 = aspp_df2$fit_aspp, y0 = aspp_df2_full$fit_aspp_per25,
+       x1 = aspp_df2$fit_aspp, y1 = aspp_df2_full$fit_aspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2$fit_aspp_per25, y0 = aspp_df2_full$fit_aspp,
+       x1 = aspp_df2$fit_aspp_per75, y1 = aspp_df2_full$fit_aspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+###### Plot treeid ######
+treeid_df2_full <- subset(treeid_df2_full, !treeid %in% setdiff(treeid_df2_full$treeid, treeid_df2$treeid))
+plot(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
+     xlab = "restricted", ylab = "full", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2_full$fit_atreeid_per25, treeid_df2_full$fit_atreeid_per75)),
+     xlim = range(c(treeid_df2$fit_atreeid_per25, treeid_df2$fit_atreeid_per75)))
+arrows(x0 = treeid_df2$fit_atreeid, y0 = treeid_df2_full$fit_atreeid_per25,
+       x1 = treeid_df2$fit_atreeid, y1 = treeid_df2_full$fit_atreeid_per75,
+       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
+arrows(x0 = treeid_df2$fit_atreeid_per25, y0 = treeid_df2_full$fit_atreeid,
+       x1 = treeid_df2$fit_atreeid_per75, y1 = treeid_df2_full$fit_atreeid,
+       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
+points(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
+       pch = 16, col = "#046C9A", cex = 0.8)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+dev.off()
+
+# check which tree ids differ and if it's the result 
+treeid_df2$fit_atreeid_full <- treeid_df2_full$fit_atreeid[match(treeid_df2$treeid, treeid_df2_full$treeid)]
+
+treeid_df2$meandiff <- treeid_df2$fit_atreeid - treeid_df2$fit_atreeid_full
+min(treeid_df2$meandiff)
+max(treeid_df2$meandiff)
+treeiddiffs <- c(head(treeid_df2[order(treeid_df2$meandiff), ], 3)$treeid, 
+                 head(treeid_df2[order(-treeid_df2$meandiff), ], 3)$treeid)
+fulleosleafout <- aggregate(leafout ~ treeid_num, empsos, FUN = length)
+restreosleafout <- aggregate(leafout ~ treeid_num, emp2, FUN = length)
+# checks
+sum(fulleosleafout$leafout)
+sum(restreosleafout$leafout)
+
+fulleosleafout$restr <- restreosleafout$leafout[match(fulleosleafout$treeid_num, 
+                                                      restreosleafout$treeid_num)]
+
+checkleafout <- subset(fulleosleafout, treeid_num %in% treeiddiffs)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Recover and plot parameters EOS restricted vs full #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# EOS restricted
+df_fiteos <- as.data.frame(fiteos)
+
+# posterior summaries
+sigma_df2  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
+site_df2   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# EOS full
+df_fiteos <- as.data.frame(fiteosfull)
+
+# posterior summaries
+sigma_df2_full  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_full   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_full <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_full <- subset(treeid_df2_full, !grepl("z|sigma", treeid))
+aspp_df2_full   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_full <- subset(treeid_df2_full, !grepl("prior", treeid))
+site_df2_full   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# Open device
+jpeg("figures/empiricalData/EOSFullVSRestricted.jpeg", width = 6, height = 6, units = "in", res = 300)
+par(mfrow = c(2,2))
+
+plot(sigma_df2$mean, sigma_df2_full$mean,
+     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2_full$mean_per25, sigma_df2_full$mean_per75)),
+     xlim = range(c(sigma_df2$mean_per25, sigma_df2$mean_per75)))
+arrows(x0 = sigma_df2$mean, y0 = sigma_df2_full$mean_per25,
+       x1 = sigma_df2$mean, y1 = sigma_df2_full$mean_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2$mean_per25, y0 = sigma_df2_full$mean,
+       x1 = sigma_df2$mean_per75, y1 = sigma_df2_full$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+
+points(sigma_df2$mean, sigma_df2_full$mean,
+       pch = 16, col = "#046C9A", cex = 1.5)
+
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+points(sigma_df2$mean, sigma_df2_full$mean, pch = 16, col = "#046C9A", cex = 1.5)
+text(sigma_df2$mean_per75, sigma_df2_full$mean_per25, labels = sigma_df2$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2_full$fit_bspp_per25, bspp_df2_full$fit_bspp_per75)),
+     xlim = range(c(bspp_df2$fit_bspp_per25, bspp_df2$fit_bspp_per75)))
+arrows(x0 = bspp_df2$fit_bspp, y0 = bspp_df2_full$fit_bspp_per25,
+       x1 = bspp_df2$fit_bspp, y1 = bspp_df2_full$fit_bspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2$fit_bspp_per25, y0 = bspp_df2_full$fit_bspp,
+       x1 = bspp_df2$fit_bspp_per75, y1 = bspp_df2_full$fit_bspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+# aspp
+plot(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2_full$fit_aspp_per25, aspp_df2_full$fit_aspp_per75)),
+     xlim = range(c(aspp_df2$fit_aspp_per25, aspp_df2$fit_aspp_per75)))
+arrows(x0 = aspp_df2$fit_aspp, y0 = aspp_df2_full$fit_aspp_per25,
+       x1 = aspp_df2$fit_aspp, y1 = aspp_df2_full$fit_aspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2$fit_aspp_per25, y0 = aspp_df2_full$fit_aspp,
+       x1 = aspp_df2$fit_aspp_per75, y1 = aspp_df2_full$fit_aspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+###### Plot treeid ######
+treeid_df2_full <- subset(treeid_df2_full, !treeid %in% setdiff(treeid_df2_full$treeid, treeid_df2$treeid))
+plot(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
+     xlab = "restricted", ylab = "full", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2_full$fit_atreeid_per25, treeid_df2_full$fit_atreeid_per75)),
+     xlim = range(c(treeid_df2$fit_atreeid_per25, treeid_df2$fit_atreeid_per75)))
+arrows(x0 = treeid_df2$fit_atreeid, y0 = treeid_df2_full$fit_atreeid_per25,
+       x1 = treeid_df2$fit_atreeid, y1 = treeid_df2_full$fit_atreeid_per75,
+       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
+arrows(x0 = treeid_df2$fit_atreeid_per25, y0 = treeid_df2_full$fit_atreeid,
+       x1 = treeid_df2$fit_atreeid_per75, y1 = treeid_df2_full$fit_atreeid,
+       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
+points(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
+       pch = 16, col = "#046C9A", cex = 0.8)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+dev.off()
