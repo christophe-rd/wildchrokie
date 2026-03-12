@@ -24,7 +24,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 }
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
