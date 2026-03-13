@@ -92,52 +92,6 @@ legend("bottomright",
        col= yearcolors, pch = 16, lty = 1, lwd = 2,
        title  = "Year")
 
-# max temp MAM vs leafout 
-emp4$tmeanmax_MAM <- climatesum$tmeanmax_MAM[match(emp4$year, climatesum$year)]
-
-jpeg(
-  filename = "figures/climate/leafoutXtmeanmax.jpeg", 
-  width = 2400, height = 2400, res = 300)
-plot(emp4$tmeanmax_MAM, emp4$leafout,
-     xlab = "tmeanmax_MAM", ylab = "leafout",
-     pch = 16, frame = FALSE,
-     col = yearcolors[match(emp4$year, years)],
-     main = "leafout X temperature mean max for March/April/May")
-
-lm_fit <- lm(leafout ~ tmeanmax_MAM, data = emp4)
-x_seq  <- seq(min(emp4$tmeanmax_MAM, na.rm = TRUE), 
-              max(emp4$tmeanmax_MAM, na.rm = TRUE), length.out = 200)
-pred   <- predict(lm_fit, newdata = data.frame(tmeanmax_MAM = x_seq))
-
-lines(x_seq, pred, 
-      col = "black",
-      lwd = 2)
-
-legend("bottomright",
-       legend = years, 
-       col= yearcolors, pch = 16, lty = 1, lwd = 2,
-       title  = "Year")
-dev.off()
-
-}
-
-# min temp MAM vs leafout 
-emp4$tmeanmin_MAM <- climatesum$tmeanmin_MAM[match(emp4$year, climatesum$year)]
-
-plot(emp4$tmeanmin_MAM, emp4$leafout,
-     xlab = "tmeanmin_MAM", ylab = "leafout",
-     pch = 16, 
-     col = yearcolors[match(emp4$year, years)],
-     main = "leafout X gdd at leafout")
-
-lm_fit <- lm(leafout ~ tmeanmin_MAM, data = emp4)
-x_seq  <- seq(min(emp4$tmeanmin_MAM, na.rm = TRUE), 
-              max(emp4$tmeanmin_MAM, na.rm = TRUE), length.out = 200)
-pred   <- predict(lm_fit, newdata = data.frame(tmeanmin_MAM = x_seq))
-
-lines(x_seq, pred, 
-      col = "black",
-      lwd = 2)
 
 # number of frost free days before leafout
 weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, FUN = function(x)
@@ -199,67 +153,126 @@ for (i in seq_along(years)) {
 }
 dev.off()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Climate summaries ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# common objects across budset and leafout
+years      <- sort(unique(emp$year))
+firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
+clim_vars  <- c("pdsi", "tmeanmax", "tmeanmean", "tmeanmin", "ppt", "rad")
+emp_clim <- merge(emp, climatesum, by = "year", all.x = TRUE)
+emp$anomleafout <- emp$leafout - mean(emp$leafout)
+emp$anombudset <- emp$budset - mean(emp$budset)
 
-# 
-# ggplot(emp) +
-#   geom_point(aes(x = gddLeafout, y = leafout)) +
-#   facet_wrap(~year) + theme_minimal()
-# ggsave("figures/climate/leafoutGDD.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-# 
-# # budset vs pdsi mam
-# emp$pdsiMAM <- climatesum$pdsi_MAM[match(emp$year, climatesum$year)]
-# ggplot(emp) +
-#   geom_point(aes(x = pdsiMAM, y = budset, color = year)) +
-#   # facet_wrap(~year) + 
-#   theme_minimal()
-# 
-# # budset vs pdsi jja
-# emp4$pdsiJJA <- climatesum$pdsi_JJA[match(emp4$year, climatesum$year)]
-# 
-# plot(emp4$pdsiJJA, emp4$budset,
-#      xlab = "pdsiJJA", ylab = "budset",
-#      pch = 16, 
-#      col = yearcolors[match(emp4$year, years)],
-#      main = "budset X summer PDSI")
-# 
-# lm_fit <- lm(budset ~ pdsiJJA, data = emp4)
-# x_seq  <- seq(min(emp4$pdsiJJA, na.rm = TRUE), 
-#               max(emp4$pdsiJJA, na.rm = TRUE), length.out = 200)
-# pred   <- predict(lm_fit, newdata = data.frame(pdsiJJA = x_seq))
-# 
-# lines(x_seq, pred, 
-#       col = "black",
-#       lwd = 2)
-# 
-# 
-# emp$sppyear <- paste(emp$spp, emp$year, sep = "_")
-# emp$lengthMM <- emp$lengthCM*10
-# empclim <- aggregate(lengthMM ~ sppyear, emp, mean)
-# q25 <- aggregate(lengthMM ~ sppyear, emp, function(x) quantile(x, 0.25))
-# q75 <- aggregate(lengthMM ~ sppyear, emp, function(x) quantile(x, 0.75))
-# 
-# empclim$q25 <- q25$lengthMM[match(empclim$sppyear, q25$sppyear)]
-# empclim$q75 <- q75$lengthMM[match(empclim$sppyear, q75$sppyear)]
-# 
-# empclim$spp <- substr(empclim$sppyear, 1,6)
-# empclim$year <- substr(empclim$sppyear, 8,11)
-# 
-# n_spp <- length(unique(empclim$spp))
-# n_year <- length(unique(empclim$year))
-# y_pos <- 1:n_year 
-# 
-# 
-# empclim$pdsimam <- climatesum$pdsi_MAM[match(empclim$year, climatesum$year)]
-# 
-# pal <- colorRampPalette(MetBrewer::MetPalettes$VanGogh3[[1]])
-# year_cols <- setNames(pal(n_year), unique(empclim$year))
-# 
-# year_pdsi <- unique(empclim[, c("year", "pdsimam")])
-# year_pdsi <- year_pdsi[order(year_pdsi$pdsimam), ]
-# 
-# green_pal <- carto.pal(pal1 = "blue.pal", n1 = n_year)
-# year_cols <- setNames(green_pal, year_pdsi$year)
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Leafout ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(
+  filename = "figures/climate/climSumLeafout.jpeg", 
+  width = 2400, height = 3600, res = 300)
 
+periods    <- c("DJF", "MAM")
+
+par(mfrow = c(6, 2), 
+    mar = c(4, 4, 2, 1),   
+    oma = c(0, 0, 4, 8))
+
+for (i in seq_along(clim_vars)) { # i = "tmeanmin"
+  for (j in seq_along(periods)) { # j = "MAM"
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
+                      !is.na(emp_clim$anomleafout), ]
+    
+    plot(dat[[var]], dat$anomleafout,
+         xlab = var, ylab  = "leafout",
+         ylim = c(min(emp$anomleafout), max(emp$anomleafout)),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    abline(h = 0, lty = 2, col = "gray50")
+    
+    # Add column headers 
+    if (i == 1) {
+      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    }
+    
+    if (nrow(dat) > 1) {
+      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout)
+      lm_fit <- lm(y ~ x, data = tmp)
+      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
+                    length.out = 200)
+      pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
+      lines(x_seq, pred, col = "black", lwd = 2)
+      slope <- round(coef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), side = 3, line = -2, cex = 0.7, adj = 0.95)
+    }
+  }
+}
+
+# Legend in outer right margin
+par(xpd = NA)
+legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
+       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+       title = "Year", bty = "y", xjust = 0, yjust = -7)
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Budset ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(
+  filename = "figures/climate/climSumBudset.jpeg", 
+  width = 2400, height = 3600, res = 300)
+
+periods    <- c("MAM", "JJA", "SON")
+
+par(mfrow = c(6, 3), 
+    mar = c(4, 4, 2, 1),   
+    oma = c(0, 0, 4, 8))
+
+for (i in seq_along(clim_vars)) { # i = "tmeanmin"
+  for (j in seq_along(periods)) { # j = "MAM"
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
+                      !is.na(emp_clim$anombudset), ]
+    
+    plot(dat[[var]], dat$anombudset,
+         xlab = var, ylab  = "budset",
+         ylim = c(min(emp$anombudset), max(emp$anombudset)),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    abline(h = 0, lty = 2, col = "gray50")
+    
+    # Add column headers 
+    if (i == 1) {
+      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    }
+    
+    if (nrow(dat) > 1) {
+      tmp    <- data.frame(x = dat[[var]], y = dat$anombudset)
+      lm_fit <- lm(y ~ x, data = tmp)
+      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
+                    length.out = 200)
+      pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
+      lines(x_seq, pred, col = "black", lwd = 2)
+      slope <- round(coef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), side = 3, line = -2, cex = 0.7, adj = 0.95)
+    }
+  }
+}
+
+# Legend in outer right margin
+par(xpd = NA)
+legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
+       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+       title = "Year", bty = "y", xjust = 0, yjust = -7)
+dev.off()
 
 if (makeplots){
   jpeg(
