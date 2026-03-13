@@ -962,11 +962,11 @@ df_fitgsl <- as.data.frame(fitgsl)
 
 # full posterior
 columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
-sigma_df <- df_fitgsl[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fitgsl[, columns[grepl("bsp", columns)]]
-treeid_df <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df <- df_fitgsl[, columns[grepl("aspp", columns)]]
-site_df <- df_fitgsl[, columns[grepl("asite", columns)]]
+sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
+bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
+treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
+site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
@@ -1234,5 +1234,165 @@ legend("center",
        col    = sitecolors,
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Sites", title.font = 2)
+
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot lines with quantiles GSL ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+subyvec <- vector()
+for (i in 1:length(unique(emp$treeid_num))) {
+  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
+}
+subyvec
+
+atreeidsub_gsl <- subset(df_fitgsl, select = subyvec)
+
+colnames(atreeidsub_gsl) <- 1:length(subyvec)
+
+# the spp values for each tree id
+treeid_aspp_gsl <- data.frame(matrix(ncol = ncol(atreeidsub_gsl), nrow = nrow(df_fitgsl)))
+colnames(treeid_aspp_gsl) <- colnames(atreeidsub_gsl)
+
+for (i in seq_len(ncol(treeid_aspp_gsl))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_aspp_gsl)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_aspp_gsl[, i] <- aspp_df_gsl[, spp_id]
+}
+treeid_aspp_gsl
+
+# the site values for each tree id
+treeid_asite_gsl <- data.frame(matrix(ncol = ncol(atreeidsub_gsl), nrow = nrow(df_fitgsl)))
+colnames(treeid_asite_gsl) <- colnames(atreeidsub_gsl)
+
+for (i in seq_len(ncol(treeid_asite_gsl))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_asite_gsl)[i])
+  site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_asite_gsl[, i] <- site_df_gsl[, site_id]
+}
+treeid_asite_gsl
+
+# recover a
+treeid_a_gsl <- data.frame(matrix(ncol = ncol(atreeidsub_gsl), nrow = nrow(df_fitgsl)))
+colnames(treeid_a_gsl) <- colnames(atreeidsub_gsl)
+
+for (i in seq_len(ncol(treeid_a_gsl))) { # i = 1
+  treeid_a_gsl[, i] <- df_fitgsl[, "a"]
+}
+
+# sum all 3 dfs together to get the full intercept for each treeid
+fullintercept_gsl <-
+  treeid_a_gsl + 
+  atreeidsub_gsl +
+  treeid_aspp_gsl +
+  treeid_asite_gsl
+fullintercept_gsl
+
+# now get the slope for each treeid
+treeid_bspp_gsl <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgsl)))
+colnames(treeid_bspp_gsl) <- colnames(atreeidsub)
+
+# back convert the slopes to their original scales
+bspp_df4_gsl <- bspp_df_gsl
+for (i in 1:ncol(bspp_df4_gsl)){
+  bspp_df4_gsl[[i]] <- bspp_df4_gsl[[i]] / 10
+}
+
+for (i in seq_len(ncol(treeid_bspp_gsl))) { # i = 30
+  tree_id <- as.integer(colnames(treeid_bspp_gsl)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_bspp_gsl[, i] <- bspp_df4_gsl[, spp_id]
+}
+treeid_bspp_gsl
+
+treeidvecnum <- 1:ncol(fullintercept_gsl)
+treeidvecname <- treeid_spp_site$treeid
+x <- seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)  
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Per Spp, facet #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+mean_post_list_gsl <- list()
+for (i in seq_along(treeidvecnum)) {
+  tree_col <- as.character(treeidvecnum[i])
+  mean_post_list_gsl[[tree_col]] <- sapply(1:nrow(df_fitgsl), function(f) {
+    fullintercept_gsl[f, tree_col] + treeid_bspp_gsl[f, tree_col] * x
+    # no sigma_y yet
+  })
+}
+
+# average the mean predictions across trees within species
+spp_mean_list <- lapply(spp_list, function(tree_vec) {
+  Reduce("+", mean_post_list_gsl[as.character(tree_vec)]) / length(tree_vec)
+})
+
+# re-simulate sigma on the averaged mean
+spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
+  sapply(1:nrow(df_fitgsl), function(f) {
+    rnorm(length(x), mean_mat[, f], sigma_df_gsl$sigma_y[f])
+  })
+})
+
+# jpeg output
+jpeg(
+  filename = "figures/empiricalData/growthModelSlopesperSppFacet.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+# Layout: 2 rows × 2 columns per page
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  
+  # define spp num
+  spp_num <- as.integer(spp_column)
+  
+  # subset empirical data correctly
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+  
+  spp_column <- as.character(sppvecnum[i]) 
+  y_post <- spp_post_list[[spp_column]]
+  
+  # summaries
+  y_mean <- apply(y_post, 1, mean)
+  y_low  <- apply(y_post, 1, quantile, 0.25)
+  y_high <- apply(y_post, 1, quantile, 0.75)
+  
+  # species-specific ylim
+  # ylim_spp <- range(c(emp_spp$lengthCM * 10, y_low, y_high), na.rm = TRUE)
+  
+  plot(emp_spp$pgsGSL, emp_spp$lengthCM * 10,
+       type = "n",
+       ylim = c(0,14),
+       xlab = "Primary growing season GSL",
+       ylab = "Ring width (mm)",
+       main = spp_column_name,
+       frame = FALSE)
+  
+  # color
+  line_col <- sppcols[spp_num]
+  
+  polygon(
+    c(x, rev(x)),
+    c(y_low, rev(y_high)),
+    col = adjustcolor(line_col, alpha.f = 0.3),
+    border = NA
+  )
+  
+  lines(x, y_mean, col = line_col, lwd = 2)
+  
+  points(
+    emp_spp$pgsGSL,
+    emp_spp$lengthCM * 10,
+    pch = 16,
+    cex = 1,
+    col = line_col
+  )
+}
 
 dev.off()
