@@ -35,6 +35,7 @@ source('rcode/utilExtractParam.R')
 
 # flags
 makeplots <- TRUE
+interceptmuplots <- FALSE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
@@ -581,7 +582,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-if(F){
+if(interceptmuplots){
   
 # Mean plots with atreeid ####
 
@@ -1322,12 +1323,12 @@ for (i in seq_along(treeidvecnum)) {
 }
 
 # average the mean predictions across trees within species
-spp_mean_list <- lapply(spp_list, function(tree_vec) {
+spp_mean_list_gsl <- lapply(spp_list, function(tree_vec) {
   Reduce("+", mean_post_list_gsl[as.character(tree_vec)]) / length(tree_vec)
 })
 
 # re-simulate sigma on the averaged mean
-spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
+spp_post_list_gsl <- lapply(spp_mean_list_gsl, function(mean_mat) {
   sapply(1:nrow(df_fitgsl), function(f) {
     rnorm(length(x), mean_mat[, f], sigma_df_gsl$sigma_y[f])
   })
@@ -1335,7 +1336,7 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
 
 # jpeg output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppFacet.jpeg",
+  filename = "figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -1352,16 +1353,19 @@ for (i in seq_along(sppvecnum)) { # i = 1
   # define spp num
   spp_num <- as.integer(spp_column)
   
+  # spp color
+  line_col <- sppcols[spp_num]
+  
   # subset empirical data correctly
   emp_spp <- emp[emp$spp_num == spp_num, ]
   
   spp_column <- as.character(sppvecnum[i]) 
-  y_post <- spp_post_list[[spp_column]]
+  y_post_gsl <- spp_post_list_gsl[[spp_column]]
   
   # summaries
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean_gsl <- apply(y_post_gsl, 1, mean)
+  y_low_gsl  <- apply(y_post_gsl, 1, quantile, 0.25)
+  y_high_gsl <- apply(y_post_gsl, 1, quantile, 0.75)
   
   # species-specific ylim
   # ylim_spp <- range(c(emp_spp$lengthCM * 10, y_low, y_high), na.rm = TRUE)
@@ -1373,18 +1377,15 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylab = "Ring width (mm)",
        main = spp_column_name,
        frame = FALSE)
-  
-  # color
-  line_col <- sppcols[spp_num]
-  
+
   polygon(
     c(x, rev(x)),
-    c(y_low, rev(y_high)),
+    c(y_low_gsl, rev(y_high_gsl)),
     col = adjustcolor(line_col, alpha.f = 0.3),
     border = NA
   )
   
-  lines(x, y_mean, col = line_col, lwd = 2)
+  lines(x, y_mean_gsl, col = line_col, lwd = 2)
   
   points(
     emp_spp$pgsGSL,
