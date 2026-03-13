@@ -834,6 +834,7 @@ jpeg(file = "figures/empiricalData/muGDD.jpeg",
 par(mfrow = c(1, 3))
 par(mar = c(5, 10, 2, 2)) 
 
+##### asp ####
 plot(aspp_df2$fit_aspp, y_pos,
      xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
      ylim = c(0.5, n_spp + 0.5),
@@ -916,7 +917,6 @@ abline(v = 0, lty = 2, col = "black")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### bsp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
 par(mar = c(5, 10, 2, 2)) 
 
 plot(bspp_df2$fit_bspp, y_pos,
@@ -1005,122 +1005,6 @@ bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
 site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
 aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg(file = "figures/empiricalData/muGSL.jpeg", 
-     width = 3000, height = 1000, res = 300)
-par(mfrow = c(1, 3))
-par(mar = c(5, 10, 2, 2)) 
-
-plot(aspp_df2_gsl$fit_aspp, y_pos,
-     xlim = range(c(aspp_df2_gsl$fit_aspp_per5, aspp_df2_gsl$fit_aspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = aspp_df2_gsl$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(aspp_df2_gsl$fit_aspp_per5,  y_pos,
-         aspp_df2_gsl$fit_aspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(aspp_df2_gsl$fit_aspp_per25, y_pos,
-         aspp_df2_gsl$fit_aspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asite ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
-
-par(mar = c(5, 10, 2, 2)) 
-
-plot(site_df2_gsl$fit_a_site, y_pos,
-     xlim = range(c(site_df2_gsl$fit_a_site_per5, site_df2_gsl$fit_a_site_per95)),
-     ylim = c(0.5, n_site + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sitecolors,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = site_df2_gsl$sitefull[i],
-       las = 2,
-       col.axis = sitecolors[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(site_df2_gsl$fit_a_site_per5,  y_pos,
-         site_df2_gsl$fit_a_site_per95, y_pos,
-         col = sitecolors, lwd = 1.5)
-segments(site_df2_gsl$fit_a_site_per25, y_pos,
-         site_df2_gsl$fit_a_site_per75, y_pos,
-         col = sitecolors, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### bsp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(5, 10, 2, 2)) 
-
-plot(bspp_df2_gsl$fit_bspp, y_pos,
-     xlim = range(c(bspp_df2_gsl$fit_bspp_per5, bspp_df2_gsl$fit_bspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 20 days",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = bspp_df2_gsl$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(bspp_df2_gsl$fit_bspp_per5,  y_pos,
-         bspp_df2_gsl$fit_bspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(bspp_df2_gsl$fit_bspp_per25, y_pos,
-         bspp_df2_gsl$fit_bspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-dev.off()
-
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS mu plots ####
@@ -1145,141 +1029,26 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
+sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
                              "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
+treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
                              "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
+aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
-site_df2   <- extract_params(df_fitsos, "asite", "fit_a_site", 
+site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
-n_spp <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
+n_spp <- nrow(bspp_df2_sos)
+n_site <- nrow(site_df2_sos)
 y_pos <- 1:n_spp 
 
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg(file = "figures/empiricalData/muSOS.jpeg", 
-     width = 3000, height = 1000, res = 300)
-par(mfrow = c(1, 3))
-par(mar = c(5, 10, 2, 2)) 
-
-plot(aspp_df2$fit_aspp, y_pos,
-     xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = aspp_df2$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(aspp_df2$fit_aspp_per5,  y_pos,
-         aspp_df2$fit_aspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(aspp_df2$fit_aspp_per25, y_pos,
-         aspp_df2$fit_aspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asite ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-site_df2$sitefull <- sitefull[site_df2$site_name]
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
-
-par(mar = c(5, 10, 2, 2)) 
-
-plot(site_df2$fit_a_site, y_pos,
-     xlim = range(c(site_df2$fit_a_site_per5, site_df2$fit_a_site_per95)),
-     ylim = c(0.5, n_site + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sitecolors,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = site_df2$sitefull[i],
-       las = 2,
-       col.axis = sitecolors[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(site_df2$fit_a_site_per5,  y_pos,
-         site_df2$fit_a_site_per95, y_pos,
-         col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos,
-         site_df2$fit_a_site_per75, y_pos,
-         col = sitecolors, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### bsp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(5, 10, 2, 2)) 
-
-plot(bspp_df2$fit_bspp, y_pos,
-     xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 20 days",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = bspp_df2$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(bspp_df2$fit_bspp_per5,  y_pos,
-         bspp_df2$fit_bspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos,
-         bspp_df2$fit_bspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-dev.off()
+treeid_df2_sos$treeid <- as.numeric(treeid_df2_sos$treeid)
+treeid_df2_sos$treeid_name <- emp$treeid[match(treeid_df2_sos$treeid, emp$treeid_num)]
+bspp_df2_sos$spp_name <- emp$latbi[match(bspp_df2_sos$spp, emp$spp_num)]
+site_df2_sos$site_name <- emp$site[match(site_df2_sos$site, emp$site_num)]
+aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS mu plots ####
@@ -1304,139 +1073,27 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
+sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
                              "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
+treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
                              "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
+aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
-site_df2   <- extract_params(df_fiteos, "asite", "fit_a_site", 
+site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
-n_spp <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
+n_spp <- nrow(bspp_df2_eos)
+n_site <- nrow(site_df2_eos)
 y_pos <- 1:n_spp 
 
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg(file = "figures/empiricalData/muEOS.jpeg", 
-     width = 3000, height = 1000, res = 300)
-par(mfrow = c(1, 3))
-par(mar = c(5, 10, 2, 2)) 
-
-plot(aspp_df2$fit_aspp, y_pos,
-     xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = aspp_df2$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
+treeid_df2_eos$treeid <- as.numeric(treeid_df2_eos$treeid)
+treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid_num)]
+bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
+site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
+aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
 }
-
-# error bars and dashed line
-segments(aspp_df2$fit_aspp_per5,  y_pos,
-         aspp_df2$fit_aspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(aspp_df2$fit_aspp_per25, y_pos,
-         aspp_df2$fit_aspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### asite ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-site_df2$sitefull <- sitefull[site_df2$site_name]
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
-
-par(mar = c(5, 10, 2, 2)) 
-
-plot(site_df2$fit_a_site, y_pos,
-     xlim = range(c(site_df2$fit_a_site_per5, site_df2$fit_a_site_per95)),
-     ylim = c(0.5, n_site + 0.5),
-     xlab = "Ring width intercept values (mm)",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sitecolors,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = site_df2$sitefull[i],
-       las = 2,
-       col.axis = sitecolors[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(site_df2$fit_a_site_per5,  y_pos,
-         site_df2$fit_a_site_per95, y_pos,
-         col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos,
-         site_df2$fit_a_site_per75, y_pos,
-         col = sitecolors, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-###### bsp ######
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(5, 10, 2, 2)) 
-
-plot(bspp_df2$fit_bspp, y_pos,
-     xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
-     ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 20 days",
-     ylab = "",
-     yaxt = "n",
-     pch = 16,
-     cex = 2,
-     col = sppcols,
-     frame.plot = FALSE)
-
-# color labels
-for (i in seq_along(y_pos)) {
-  axis(2, at = y_pos[i],
-       labels = bspp_df2$spp_name[i],
-       las = 2,
-       col.axis = sppcols[i],
-       tick = FALSE,
-       cex.axis = 1)
-}
-
-# error bars and dashed line
-segments(bspp_df2$fit_bspp_per5,  y_pos,
-         bspp_df2$fit_bspp_per95, y_pos,
-         col = sppcols, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos,
-         bspp_df2$fit_bspp_per75, y_pos,
-         col = sppcols, lwd = 3)
-
-abline(v = 0, lty = 2, col = "black")
-
-dev.off()
-
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# All 4 predictors together #### 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
