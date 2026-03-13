@@ -584,8 +584,7 @@ fitsosfull <- sampling(sosmodel, data = c("N","y",
                                       "Nsite", "site",
                                       "Ntreeid", "treeid",
                                       "sos"),
-                   warmup = 1000, iter = 2000,
-                   chains=4)
+                   warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
 
 # Fit model EOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
