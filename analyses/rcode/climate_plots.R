@@ -65,6 +65,12 @@ yearcolors <- c("#931e18", "#da7901", "#247d3f")
 par(mfrow = c(1,1))
 years <- sort(unique(emp4$year))
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+years      <- sort(unique(emp$year))
+firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
+emp$anomleafout <- emp$leafout - mean(emp$leafout)
+emp$anombudset <- emp$budset - mean(emp$budset)
+
 # leafout vs gdd
 emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
 
@@ -105,7 +111,7 @@ emp5$frostFbudburst <- weldhillclim$frostFreeDays[match(emp5$yeardoybudburst,
 unique(emp5$budburst)
 plot(emp5$frostFbudburst, emp5$budburst,
      xlab = "number of frost free days at budburst", ylab = "budburst",
-     pch = 16, 
+     pch = 16, frame = FALSE,
      col = yearcolors[match(emp5$year, years)],
      main = "leafout X frost free days at budburst")
 
@@ -120,28 +126,34 @@ for (i in seq_along(years)) {
   lines(x_seq, pred, 
         col = yearcolors[i],
         lwd = 2)
+  legend("bottomright",
+         legend = years, 
+         col= yearcolors, pch = 16, lty = 1, lwd = 2,
+         title  = "Year")
 }
 
 # precipitation at leafout
-emp4$ppmMM <- weldhillclim$ppm[match(emp4$yeardoyleafout, weldhillclim$yeardoy)]
+emp4$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
+  # takes the previous year accumulation of ppt in december
+  sub <- weldhillclim[(weldhillclim$year == obs_year - 1 & weldhillclim$doy >= 335) |
+                        # then going into the current year condition
+                        (weldhillclim$year == obs_year & weldhillclim$doy <= leafout_doy), ]
+  sum(sub$pptMM, na.rm = TRUE) # sum the ppt over our period of interest
+}, emp4$leafout, emp4$year) # apply the function to each of those 2 arguments
 
-jpeg(
-  filename = "figures/climate/leafoutXfrostFdays.jpeg", 
-  width = 2400, height = 2400, res = 300
-)
-plot(emp4$budburst, emp4$leafout,
-     xlab = "number of frost free days at budburst", ylab = "leafout",
+plot(emp4$winterPptLeafout, emp4$leafout,
+     xlab = "precipitation accumulation (mm) at leafout", ylab = "leafout",
      pch = 16, frame = FALSE,
      col = yearcolors[match(emp4$year, years)],
-     main = "leafout X frost free days at budburst")
+     main = "leafout X precipitation accumulation (mm) at leafout")
 
-for (i in seq_along(years)) {
+for (i in seq_along(years)) { # i = 2018
   year_dat <- emp4[emp4$year == years[i], ]
   
-  lm_fit <- lm(leafout ~ budburst, data = year_dat)
-  x_seq  <- seq(min(year_dat$budburst, na.rm = TRUE), 
-                max(year_dat$budburst, na.rm = TRUE), length.out = 200)
-  pred   <- predict(lm_fit, newdata = data.frame(budburst = x_seq))
+  lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)
+  x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
+                max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
+  pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
   
   lines(x_seq, pred, 
         col = yearcolors[i],
@@ -157,12 +169,20 @@ dev.off()
 # Climate summaries ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # common objects across budset and leafout
-years      <- sort(unique(emp$year))
-firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-clim_vars  <- c("pdsi", "tmeanmax", "tmeanmean", "tmeanmin", "ppt", "rad")
+clim_vars  <- c("PDSI", 
+                "TempMeanMax    ", 
+                "TempMeanMean   ", 
+                "TempMeanMin .  ", 
+                "Precip"      , 
+                "Radiation    ")
 emp_clim <- merge(emp, climatesum, by = "year", all.x = TRUE)
-emp$anomleafout <- emp$leafout - mean(emp$leafout)
-emp$anombudset <- emp$budset - mean(emp$budset)
+
+colnames(emp_clim)[which(colnames(emp_clim) %in% "pdsi")] <- "PDSI"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "ppt")] <- "Precip"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "rad")] <- "Radiation"
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
@@ -201,7 +221,7 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     
     if (nrow(dat) > 1) {
       tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout)
-      lm_fit <- lm(y ~ x, data = tmp)
+      lm_fit <- lm(y ~ scale(x), data = tmp)
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
       pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
@@ -211,6 +231,7 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     }
   }
 }
+
 
 # Legend in outer right margin
 par(xpd = NA)
@@ -256,7 +277,7 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     
     if (nrow(dat) > 1) {
       tmp    <- data.frame(x = dat[[var]], y = dat$anombudset)
-      lm_fit <- lm(y ~ x, data = tmp)
+      lm_fit <- lm(y ~ scale(x), data = tmp)
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
       pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
