@@ -208,7 +208,7 @@ colnames(pdsidjf) <- c("year", "pdsi")
 colnames(pdsimam) <- c("year", "pdsi")
 colnames(pdsijja) <- c("year", "pdsi")
 colnames(pdsison) <- c("year", "pdsi")
-pdsidjf$period <- "DJD"
+pdsidjf$period <- "DJF"
 pdsimam$period <- "MAM"
 pdsijja$period <- "JJA"
 pdsison$period <- "SON"
@@ -223,7 +223,7 @@ colnames(meanmaxdjf) <- c("year", "tmeanmax")
 colnames(meanmaxmam) <- c("year", "tmeanmax")
 colnames(meanmaxjja) <- c("year", "tmeanmax")
 colnames(meanmaxson) <- c("year", "tmeanmax")
-meanmaxdjf$period <- "DJD"
+meanmaxdjf$period <- "DJF"
 meanmaxmam$period <- "MAM"
 meanmaxjja$period <- "JJA"
 meanmaxson$period <- "SON"
@@ -238,7 +238,7 @@ colnames(meanmeandjf) <- c("year", "tmeanmean")
 colnames(meanmeanmam) <- c("year", "tmeanmean")
 colnames(meanmeanjja) <- c("year", "tmeanmean")
 colnames(meanmeanson) <- c("year", "tmeanmean")
-meanmeandjf$period <- "DJD"
+meanmeandjf$period <- "DJF"
 meanmeanmam$period <- "MAM"
 meanmeanjja$period <- "JJA"
 meanmeanson$period <- "SON"
@@ -253,7 +253,7 @@ colnames(meanmindjf) <- c("year", "tmeanmin")
 colnames(meanminmam) <- c("year", "tmeanmin")
 colnames(meanminjja) <- c("year", "tmeanmin")
 colnames(meanminson) <- c("year", "tmeanmin")
-meanmindjf$period <- "DJD"
+meanmindjf$period <- "DJF"
 meanminmam$period <- "MAM"
 meanminjja$period <- "JJA"
 meanminson$period <- "SON"
@@ -268,7 +268,7 @@ colnames(meanpptdjf) <- c("year", "ppt")
 colnames(meanpptmam) <- c("year", "ppt")
 colnames(meanpptjja) <- c("year", "ppt")
 colnames(meanpptson) <- c("year", "ppt")
-meanpptdjf$period <- "DJD"
+meanpptdjf$period <- "DJF"
 meanpptmam$period <- "MAM"
 meanpptjja$period <- "JJA"
 meanpptson$period <- "SON"
@@ -283,7 +283,7 @@ colnames(meanraddjf) <- c("year", "rad")
 colnames(meanradmam) <- c("year", "rad")
 colnames(meanradjja) <- c("year", "rad")
 colnames(meanradson) <- c("year", "rad")
-meanraddjf$period <- "DJD"
+meanraddjf$period <- "DJF"
 meanradmam$period <- "MAM"
 meanradjja$period <- "JJA"
 meanradson$period <- "SON"
