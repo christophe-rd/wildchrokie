@@ -170,11 +170,11 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # common objects across budset and leafout
 clim_vars  <- c("PDSI", 
-                "TempMeanMax    ", 
-                "TempMeanMean   ", 
-                "TempMeanMin .  ", 
+                "TempMeanMax", 
+                "TempMeanMean", 
+                "TempMeanMin", 
                 "Precip"      , 
-                "Radiation    ")
+                "Radiation")
 emp_clim <- merge(emp, climatesum, by = "year", all.x = TRUE)
 
 colnames(emp_clim)[which(colnames(emp_clim) %in% "pdsi")] <- "PDSI"
@@ -222,12 +222,15 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     if (nrow(dat) > 1) {
       tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout)
       lm_fit <- lm(y ~ scale(x), data = tmp)
+      sum <- summary(lm_fit)
+      significance <- ifelse(sum$coefficients[2,4]<0.05, "signif", "nonsignif")
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
       pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
       lines(x_seq, pred, col = "black", lwd = 2)
       slope <- round(coef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope), side = 3, line = -2, cex = 0.7, adj = 0.95)
+      mtext(paste0("β = ", slope, ifelse(significance == "signif", " *", "")), 
+            side = 3, line = -2, cex = 0.7, adj = 0.95)
     }
   }
 }
@@ -278,12 +281,15 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     if (nrow(dat) > 1) {
       tmp    <- data.frame(x = dat[[var]], y = dat$anombudset)
       lm_fit <- lm(y ~ scale(x), data = tmp)
+      sum <- summary(lm_fit)
+      significance <- ifelse(sum$coefficients[2,4]<0.001, "signif", "nonsignif")
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
       pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
       lines(x_seq, pred, col = "black", lwd = 2)
       slope <- round(coef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope), side = 3, line = -2, cex = 0.7, adj = 0.95)
+      mtext(paste0("β = ", slope, ifelse(significance == "signif", " *", "")), 
+            side = 3, line = -2, cex = 0.7, adj = 0.95)
     }
   }
 }
