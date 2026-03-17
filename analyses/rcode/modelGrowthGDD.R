@@ -328,13 +328,13 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
-site_df2   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
+aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
+site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/empiricalData/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -421,13 +421,13 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
-site_df2   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
+aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
+site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/empiricalData/eosModelPriorVSPosterior.pdf", width = 8, height = 10)

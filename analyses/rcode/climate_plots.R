@@ -2,10 +2,10 @@
 # CRD 12 March 2026
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -73,7 +73,7 @@ emp$anombudset <- emp$budset - mean(emp$budset)
 
 # leafout vs gdd
 emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
-
+if (makeplots){
 plot(emp4$gddLeafout, emp4$leafout,
      xlab = "gddLeafout", ylab = "leafout",
      pch = 16, 
@@ -163,7 +163,8 @@ for (i in seq_along(years)) { # i = 2018
          col= yearcolors, pch = 16, lty = 1, lwd = 2,
          title  = "Year")
 }
-dev.off()
+
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
@@ -187,6 +188,8 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "rad")] <- "Radiation"
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+if (makeplots) {
+
 jpeg(
   filename = "figures/climate/climSumLeafout.jpeg", 
   width = 2400, height = 3600, res = 300)
@@ -343,4 +346,6 @@ if (makeplots){
          cex    = 1,
          title  = "Year (PDSI MarchAprilMay)")
   dev.off()
+}
+
 }

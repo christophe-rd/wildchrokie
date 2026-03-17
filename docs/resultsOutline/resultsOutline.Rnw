@@ -14,9 +14,9 @@
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/modelGrowthGDD_plots.R")
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 # get some useful objects
 yrwc <- c(2018:2020)
-climatesum <- climatesum[, 1:4]
 @
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Wildchrokie}
@@ -40,49 +40,55 @@ with
 \Sexpr{round(aggregate(pgsGSL ~ year, emp, mean)[which.min(aggregate(pgsGSL ~ year, emp, mean)$pgsGSL),2], 2)} days.
 
 % Temperature spring
-\item The hottest spring period of the three years (MAM) was 
-\Sexpr{climatesum$year[which(climatesum$tmeanmean_MAM %in% max(climatesum$tmeanmean_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$tmeanmean_MAM[which(climatesum$tmeanmean_MAM %in% max(climatesum$tmeanmean_MAM[which(climatesum$year %in% yrwc)]))], 2)}$^\circ$C,
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$tmeanmean_MAM %in% min(climatesum$tmeanmean_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$tmeanmean_MAM[which(climatesum$tmeanmean_MAM %in% min(climatesum$tmeanmean_MAM[which(climatesum$year %in% yrwc)]))], 2)}$^\circ$C. 
+\item The hottest spring period of the three years (MAM) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, 
+                                 climatesum$tmeanmean, NA))]} with a mean mean temperature of 
+\Sexpr{round(climatesum$tmeanmean[which.max(ifelse(climatesum$period == "MAM" & 
+                                 climatesum$year %in% yrwc, climatesum$tmeanmean, NA))], 2)}$^\circ$C,
+and the coldest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc,
+                                 climatesum$tmeanmean, NA))]} with a mean mean temperature of
+\Sexpr{round(climatesum$tmeanmean[which.min(ifelse(climatesum$period == "MAM" &
+                                 climatesum$year %in% yrwc, climatesum$tmeanmean, NA))], 2)}$^\circ$C.
 
 % Temperature summer
-\item The hottest summer period of the three years (JJA) was 
-\Sexpr{climatesum$year[which(climatesum$tmeanmean_JJA %in% max(climatesum$tmeanmean_JJA[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$tmeanmean_JJA[which(climatesum$tmeanmean_JJA %in% max(climatesum$tmeanmean_JJA[which(climatesum$year %in% yrwc)]))], 2)}$^\circ$C,
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$tmeanmean_JJA %in% min(climatesum$tmeanmean_JJA[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$tmeanmean_JJA[which(climatesum$tmeanmean_JJA %in% min(climatesum$tmeanmean_JJA[which(climatesum$year %in% yrwc)]))], 2)}$^\circ$C. 
+\item The hottest summer period of the three years (JJA) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean temperature of \Sexpr{round(climatesum$tmeanmean[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))], 2)}$^\circ$C,
+and the coldest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean temperature of \Sexpr{round(climatesum$tmeanmean[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))], 2)}$^\circ$C.
 
 % PDSI spring
-\item The driest spring period of the three years (MAM) was 
-\Sexpr{climatesum$year[which(climatesum$pdsi_MAM %in% max(climatesum$pdsi_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$pdsi_MAM[which(climatesum$pdsi_MAM %in% max(climatesum$pdsi_MAM[which(climatesum$year %in% yrwc)]))], 2)},
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$pdsi_MAM %in% min(climatesum$pdsi_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$pdsi_MAM[which(climatesum$pdsi_MAM %in% min(climatesum$pdsi_MAM[which(climatesum$year %in% yrwc)]))], 2)}. 
+\item The driest spring period of the three years (MAM) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{round(climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))], 2)},
+and the wettest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{round(climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))], 2)}.
 
 % PDSI summer
-\item The driest summer period (PDSI) of the three years (JJA) was 
-\Sexpr{climatesum$year[which(climatesum$pdsi_JJA %in% max(climatesum$pdsi_JJA[which(climatesum$year %in% yrwc)]))]} with a PDSI value of \Sexpr{round(climatesum$pdsi_JJA[which(climatesum$pdsi_JJA %in% max(climatesum$pdsi_JJA[which(climatesum$year %in% yrwc)]))], 2)},
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$pdsi_JJA %in% min(climatesum$pdsi_JJA[which(climatesum$year %in% yrwc)]))]} with a PDSI value of \Sexpr{round(climatesum$pdsi_JJA[which(climatesum$pdsi_JJA %in% min(climatesum$pdsi_JJA[which(climatesum$year %in% yrwc)]))], 2)}. 
+\item The driest summer period (PDSI) of the three years (JJA) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{round(climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))], 2)},
+and the wettest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{round(climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))], 2)}.
 
 % PPT spring
-\item The spring period with the highest precipitation of the three years (MAM) was 
-\Sexpr{climatesum$year[which(climatesum$ppt_MAM %in% max(climatesum$ppt_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$ppt_MAM[which(climatesum$ppt_MAM %in% max(climatesum$ppt_MAM[which(climatesum$year %in% yrwc)]))], 2)},
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$ppt_MAM %in% min(climatesum$ppt_MAM[which(climatesum$year %in% yrwc)]))]} with a mean mean temperature of \Sexpr{round(climatesum$ppt_MAM[which(climatesum$ppt_MAM %in% min(climatesum$ppt_MAM[which(climatesum$year %in% yrwc)]))], 2)}. 
+\item The spring period with the highest precipitation of the three years (MAM) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{round(climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))], 2)},
+and the lowest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{round(climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))], 2)}.
 
 % PPT summer
-\item The summer period with the highest precipitation of the three years (JJA) was 
-\Sexpr{climatesum$year[which(climatesum$ppt_JJA %in% max(climatesum$ppt_JJA[which(climatesum$year %in% yrwc)]))]} with a PDSI value of \Sexpr{round(climatesum$ppt_JJA[which(climatesum$ppt_JJA %in% max(climatesum$ppt_JJA[which(climatesum$year %in% yrwc)]))], 2)},
-and the coldest, 
-\Sexpr{climatesum$year[which(climatesum$ppt_JJA %in% min(climatesum$ppt_JJA[which(climatesum$year %in% yrwc)]))]} with a PDSI value of \Sexpr{round(climatesum$ppt_JJA[which(climatesum$ppt_JJA %in% min(climatesum$ppt_JJA[which(climatesum$year %in% yrwc)]))], 2)}. 
-
+\item The summer period with the highest precipitation of the three years (JJA) was
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{round(climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))], 2)},
+and the lowest,
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{round(climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))], 2)}.
 \end{enumerate}
 
-<<my_table, results='asis', echo=FALSE>>=
-  climatesum
-kable(climatesum, caption = "Sample Fruit Prices", booktabs = TRUE)
-@
-  \end{enumerate}
-  
+%-------------------------------------------------------------------------------
+\subsection{Phenology observations}
+%-------------------------------------------------------------------------------
+\begin{enumerate}
+\item 
+\end{enumerate}
+
 %-------------------------------------------------------------------------------
 \subsection{Ring widths}
 %-------------------------------------------------------------------------------
@@ -93,7 +99,7 @@ kable(climatesum, caption = "Sample Fruit Prices", booktabs = TRUE)
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-Our results show similar trends in response to the thermal versus the calendar growing season, with a slightly stronger response to longer growing season compared to the increased growing degree days. 
+Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a slightly stronger response to longer GSL compared to increased GDD. 
 
 % Figure Growth X GDD
 \begin{figure}[!ht]
@@ -104,62 +110,61 @@ Our results show similar trends in response to the thermal versus the calendar g
 
 \begin{enumerate}
 % GDD
-\item G. alder ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Grey alder")]}),
-Y. birch ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Yellow birch")]}) and
-P. Birch ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Paper birch")]}) 
+\item A. incana ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Alnus incana")]}]),
+B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}]) and
+B. papyrifera ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}]) 
 show a weak response, but seem to grow more with more GDD, while 
-G. birch  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Gray birch")]})  
+B. populifolia  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula populifolia")]}])  
 did not respond to increased GDD 
-(Figure \ref{fig:wcmuplotbsppGDD}).
+(Figure \ref{fig:wcmuplotbspp}).
 
 % Figure mu plot bspp GDD
 \begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-\caption{Slope values across the different species for GDD}
-\label{fig:wcmuplotbsppGDD}
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
+\caption{Model parameters across the different predictors}
+\label{fig:wcmuplotbspp}
 \end{figure}
 
 % GSL
-\item G. alder ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Grey alder")]}) is the only species for which its 90\% intervals don't overlap with zero. 
-Y. birch ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Yellow birch")]}) and
-P. Birch ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Paper birch")]}) 
+\item A. incana ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season.
+B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}]) and
+B. papyrifera ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}]) 
 show a weaker response, but seem to grow more in response to longer seasons, while 
-G. birch  ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Gray birch")]})  
+B. populifolia  ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}])  
 did not respond to the GSL 
-(Figure \ref{fig:wcmuplotbsppGSL}).
+(Figure \ref{fig:wcmuplotbspp}).
 
+% SOS
+\item Ring width decreased with a later SOS for A. incana ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}]) and B. populifolia ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]). Whereas 
+B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}]) and
+B. papyrifera ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}]) 
+show a weaker response, but seem to grow less with later SOS.
+(Figure \ref{fig:wcmuplotbspp}).
+
+% EOS
+\item Ring width decreased with a later EOS for A. incana ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]). B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}]). 
+B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}]) and
+B. papyrifera ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}]) 
+didn't respond to EOS.
+(Figure \ref{fig:wcmuplotbspp}).
+
+% site
 \item For the provenance with the GDD model, we detected a weak growth difference between 
-G. College ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "GR")]}), 
-S. Hypolyte ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "SH")]}) or 
-W. Mountains ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "WM")]}).
-Only HF grew less ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "HF")]}) 
-(Figure \ref{fig:wcmuplotbsppasite})
+G. College ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "GR")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "GR")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "GR")]}]), 
+S. Hypolyte ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "SH")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "SH")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "SH")]}]) or 
+W. Mountains ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "WM")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "WM")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "WM")]}]).
+Only HF grew less ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "HF")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "HF")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "HF")]}]) 
+(Figure \ref{fig:wcmuplotbspp})
+
 
 
 \end{enumerate}
 
-% I want to invoke y: \Sexpr{round(y[1], 3)}, now if I want to invoke the difference between bspp 1 and bspp 2: \Sexpr{bspp_df2$fit_bspp_per25[2] - bspp_df2$fit_bspp[1]}
-
-
-% Figure mu plot bspp GSL
-\begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plotGSL.jpeg}
-\caption{Slope values across the different species for GDD}
-\label{fig:wcmuplotbsppGSL}
-\end{figure}
-
-
-% Figure provenances
-\begin{figure}[h!]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-\caption{Site intercept values}
-\label{fig:wcmuplotbsppasite}
-\end{figure}
 %-------------------------------------------------------------------------------
 %-------------------------------------------------------------------------------
 \subsection*{coringTreespotters}
 % \begin{enumerate}
-%   \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Yellow birch grew less.(Figure \ref{fig:growthSlopes})
+%   \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Betula alleghaniensis grew less.(Figure \ref{fig:growthSlopes})
 %   \item
 %   \item
 %   \item 

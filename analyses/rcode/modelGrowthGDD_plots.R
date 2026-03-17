@@ -34,7 +34,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 interceptmuplots <- FALSE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -52,7 +52,7 @@ commonNames <- c(
 )
 
 emp$commonName <- commonNames[emp$latbi]
-
+emp$lengthMM <- emp$lengthCM*10
 emp <- emp[!is.na(emp$pgsGDD5),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
@@ -60,7 +60,7 @@ emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 
 # transform data in vectors
-y <- emp$lengthCM*10 # ring width in mm
+y <- emp$lengthMM # ring width in mm
 N <- nrow(emp)
 gdd <- emp$pgsGDD5/200
 Nspp <- length(unique(emp$spp_num))
@@ -113,24 +113,53 @@ bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
 aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### Per treeid #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Define objects used throught the models ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+sitefull <- c(
+  "GR" = "Dartmouth College (NH)",
+  "HF" = "Harvard Forest (MA)",
+  "SH" = "St-Hyppolyte (Qc)",
+  "WM" = "White Mountains (NH)"
+)
+
+sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
+
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
   subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
 }
 subyvec
 
-atreeidsub <- subset(df_fitgdd, select = subyvec)
-
-colnames(atreeidsub) <- 1:length(subyvec)
-
-# start by filling a df with treeid intercepts only
-
 # get the spp and site identities for each tree id
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
                                   "treeid", "spp", "site", "latbi")])
+
+atreeidsub <- subset(df_fitgdd, select = subyvec)
+colnames(atreeidsub) <- 1:length(subyvec)
+
+# get a vector for each treeid for each species
+spp1vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 1]
+spp2vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 2]
+spp3vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 3]
+spp4vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 4]
+
+spp_list <- list(
+  "1" = spp1vec,
+  "2" = spp2vec,
+  "3" = spp3vec,
+  "4" = spp4vec
+)
+
+sppvecnum <- 1:4
+sppvecname <- unique(treeid_spp_site$latbi)
+
+if(makeplots) {
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Per treeid #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
+# start by filling a df with treeid intercepts only
 
 # the spp values for each tree id
 treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
@@ -205,8 +234,6 @@ for (i in seq_along(treeidvecnum)) { # i = 1
 }
 
 # PDF output
-sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
-
 pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
@@ -264,19 +291,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Per Spp, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# get a vector for each treeid for each species
-spp1vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 1]
-spp2vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 2]
-spp3vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 3]
-spp4vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 4]
-
-spp_list <- list(
-  "1" = spp1vec,
-  "2" = spp2vec,
-  "3" = spp3vec,
-  "4" = spp4vec
-)
-
 mean_post_list <- list()
 for (i in seq_along(treeidvecnum)) {
   tree_col <- as.character(treeidvecnum[i])
@@ -297,9 +311,6 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
     rnorm(length(x), mean_mat[, f], sigma_df$sigma_y[f])
   })
 })
-
-sppvecnum <- 1:4
-sppvecname <- unique(treeid_spp_site$latbi)
 
 x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)   
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
@@ -489,14 +500,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asite ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-sitefull <- c(
-  "GR" = "Dartmouth College (NH)",
-  "HF" = "Harvard Forest (MA)",
-  "SH" = "St-Hyppolyte (Qc)",
-  "WM" = "White Mountains (NH)"
-)
-
 emp$sitefull <- sitefull[emp$site]
 site_df2$sitefull <- sitefull[site_df2$site_name]
 sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
@@ -582,7 +585,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-if(interceptmuplots){
   
 # Mean plots with atreeid ####
 
@@ -651,11 +653,11 @@ gap <- 3
 current_y <- 1
 
 species_order <- c(
-  "Grey alder", 
-  "Yellow birch", 
-  "Paper birch", 
-  "Gray birch")
-# site_order <- c("SH", "GR", "WM", "HF")
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
+
 site_order <- c(
   "HF",
   "WM",
@@ -665,9 +667,9 @@ site_order <- c(
 # col
 my_colors <- c(
   "Alnus incana" = wes_palette("AsteroidCity1")[1],
-  "Yellow birch" = wes_palette("AsteroidCity1")[2],
-  "Paper birch" = wes_palette("AsteroidCity1")[3],
-  "Gray birch" = wes_palette("AsteroidCity1")[4]
+  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
+  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
+  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
 )
 # shapes for sites
 my_shapes <- c(
@@ -824,8 +826,6 @@ legend(
 )
 dev.off()
 
-} 
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD mu plots Together ####
@@ -953,6 +953,7 @@ abline(v = 0, lty = 2, col = "black")
 dev.off()
 
 
+}
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL mu plots ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -992,9 +993,6 @@ treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid
 bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
 site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
 aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
-
-
-if (makeplots){
 
 n_spp <- nrow(bspp_df2)
 n_site <- nrow(site_df2)
@@ -1094,7 +1092,7 @@ treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid
 bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
 site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
 aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
-}
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Combined mu plots (GDD / GSL / SOS / EOS) ####
@@ -1241,6 +1239,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles GSL ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (makeplots) {
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
   subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
@@ -1397,3 +1396,5 @@ for (i in seq_along(sppvecnum)) { # i = 1
 }
 
 dev.off()
+
+}
