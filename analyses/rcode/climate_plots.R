@@ -349,3 +349,11 @@ if (makeplots){
 }
 
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Phenology ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
+leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
+budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
+budsetbyyr$budset <- round(budsetbyyr$budset, 2)

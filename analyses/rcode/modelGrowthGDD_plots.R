@@ -16,7 +16,6 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
-library(cartography)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -34,8 +33,8 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- FALSE
-interceptmuplots <- FALSE
+makeplots <- TRUE
+interceptmuplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
@@ -71,9 +70,9 @@ treeid <- as.numeric(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 
-# === === === === === === === === === === === === #
-#### Recover parameters from the posterior ####
-# === === === === === === === === === === === === #
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# GDD posterior distribution recovery ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fitgdd <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGDD")
 
 df_fitgdd <- as.data.frame(fitgdd)
@@ -103,6 +102,126 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                              "spp", "aspp\\[(\\d+)\\]")
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# GSL mu plots ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Recover posterior distribution #####
+fitgsl <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGSL")
+
+df_fitgsl <- as.data.frame(fitgsl)
+
+# full posterior
+columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
+sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
+bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
+treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
+site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_gsl) <- 1:ncol(bspp_df)
+colnames(treeid_df_gsl) <- 1:ncol(treeid_df)
+colnames(aspp_df_gsl) <- 1:ncol(aspp_df)
+colnames(site_df_gsl) <- 1:ncol(site_df)
+
+# posterior summaries
+sigma_df2_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
+bspp_df2_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
+                                 "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_gsl <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
+                                 "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_gsl <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
+                                 "spp", "aspp\\[(\\d+)\\]")
+site_df2_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
+                                 "site", "asite\\[(\\d+)\\]")
+
+treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
+treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
+bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
+site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
+aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# SOS mu plots ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Recover posterior distribution #####
+fitsos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthSOS")
+
+df_fitsos <- as.data.frame(fitsos)
+
+# full posterior
+columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
+sigma_df_sos <- df_fitsos[, columns[grepl("sigma", columns)]]
+bspp_df_sos <- df_fitsos[, columns[grepl("bsp", columns)]]
+treeid_df_sos <- df_fitsos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df_sos <- df_fitsos[, columns[grepl("aspp", columns)]]
+site_df_sos <- df_fitsos[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_sos) <- 1:ncol(bspp_df_sos)
+colnames(treeid_df_sos) <- 1:ncol(treeid_df_sos)
+colnames(aspp_df_sos) <- 1:ncol(aspp_df_sos)
+colnames(site_df_sos) <- 1:ncol(site_df_sos)
+
+# posterior summaries
+sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
+                                 "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
+                                 "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
+aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
+                                 "spp", "aspp\\[(\\d+)\\]")
+site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
+                                 "site", "asite\\[(\\d+)\\]")
+
+treeid_df2_sos$treeid <- as.numeric(treeid_df2_sos$treeid)
+treeid_df2_sos$treeid_name <- emp$treeid[match(treeid_df2_sos$treeid, emp$treeid_num)]
+bspp_df2_sos$spp_name <- emp$latbi[match(bspp_df2_sos$spp, emp$spp_num)]
+site_df2_sos$site_name <- emp$site[match(site_df2_sos$site, emp$site_num)]
+aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# EOS mu plots ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Recover posterior distribution #####
+fiteos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthEOS")
+
+df_fiteos <- as.data.frame(fiteos)
+
+# full posterior
+columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
+sigma_df_eos <- df_fiteos[, columns[grepl("sigma", columns)]]
+bspp_df_eos <- df_fiteos[, columns[grepl("bsp", columns)]]
+treeid_df_eos <- df_fiteos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df_eos <- df_fiteos[, columns[grepl("aspp", columns)]]
+site_df_eos <- df_fiteos[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_eos) <- 1:ncol(bspp_df_eos)
+colnames(treeid_df_eos) <- 1:ncol(treeid_df_eos)
+colnames(aspp_df_eos) <- 1:ncol(aspp_df_eos)
+colnames(site_df_eos) <- 1:ncol(site_df_eos)
+
+# posterior summaries
+sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
+                                 "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
+                                 "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
+aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
+                                 "spp", "aspp\\[(\\d+)\\]")
+site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
+                                 "site", "asite\\[(\\d+)\\]")
+
+treeid_df2_eos$treeid <- as.numeric(treeid_df2_eos$treeid)
+treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid_num)]
+bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
+site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
+aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles GDD####
@@ -153,6 +272,12 @@ spp_list <- list(
 
 sppvecnum <- 1:4
 sppvecname <- unique(treeid_spp_site$latbi)
+
+n_spp <- nrow(bspp_df2)
+n_site <- nrow(site_df2)
+y_pos <- 1:n_spp 
+
+sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 if(makeplots) {
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -454,9 +579,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Mu plots #####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-n_spp <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
-y_pos <- 1:n_spp 
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ###### asp ######
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -502,7 +625,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 emp$sitefull <- sitefull[emp$site]
 site_df2$sitefull <- sitefull[site_df2$site_name]
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 jpeg("figures/empiricalData/asite_mean_plot.jpeg", width = 8, height = 6, units = "in", res = 300)
 
@@ -880,7 +1002,6 @@ sitefull <- c(
 
 emp$sitefull <- sitefull[emp$site]
 site_df2$sitefull <- sitefull[site_df2$site_name]
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 par(mar = c(5, 10, 2, 2)) 
 
@@ -954,144 +1075,6 @@ dev.off()
 
 
 }
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# GSL mu plots ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover posterior distribution #####
-fitgsl <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGSL")
-
-df_fitgsl <- as.data.frame(fitgsl)
-
-# full posterior
-columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
-sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
-bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
-treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
-site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df) <- 1:ncol(bspp_df)
-colnames(treeid_df) <- 1:ncol(treeid_df)
-colnames(aspp_df) <- 1:ncol(aspp_df)
-colnames(site_df) <- 1:ncol(site_df)
-
-# posterior summaries
-sigma_df2_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
-bspp_df2_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
-                             "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_gsl <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
-                             "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_gsl <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
-                             "spp", "aspp\\[(\\d+)\\]")
-site_df2_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
-                             "site", "asite\\[(\\d+)\\]")
-
-treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
-treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
-bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
-site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
-aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
-
-n_spp <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
-y_pos <- 1:n_spp 
-
-treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
-treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
-bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
-site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
-aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
-
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# SOS mu plots ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover posterior distribution #####
-fitsos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthSOS")
-
-df_fitsos <- as.data.frame(fitsos)
-
-# full posterior
-columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
-sigma_df <- df_fitsos[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fitsos[, columns[grepl("bsp", columns)]]
-treeid_df <- df_fitsos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df <- df_fitsos[, columns[grepl("aspp", columns)]]
-site_df <- df_fitsos[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df) <- 1:ncol(bspp_df)
-colnames(treeid_df) <- 1:ncol(treeid_df)
-colnames(aspp_df) <- 1:ncol(aspp_df)
-colnames(site_df) <- 1:ncol(site_df)
-
-# posterior summaries
-sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
-                             "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
-                             "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
-aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
-                             "spp", "aspp\\[(\\d+)\\]")
-site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
-                             "site", "asite\\[(\\d+)\\]")
-
-n_spp <- nrow(bspp_df2_sos)
-n_site <- nrow(site_df2_sos)
-y_pos <- 1:n_spp 
-
-treeid_df2_sos$treeid <- as.numeric(treeid_df2_sos$treeid)
-treeid_df2_sos$treeid_name <- emp$treeid[match(treeid_df2_sos$treeid, emp$treeid_num)]
-bspp_df2_sos$spp_name <- emp$latbi[match(bspp_df2_sos$spp, emp$spp_num)]
-site_df2_sos$site_name <- emp$site[match(site_df2_sos$site, emp$site_num)]
-aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# EOS mu plots ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover posterior distribution #####
-fiteos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthEOS")
-
-df_fiteos <- as.data.frame(fiteos)
-
-# full posterior
-columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
-sigma_df <- df_fiteos[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fiteos[, columns[grepl("bsp", columns)]]
-treeid_df <- df_fiteos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df <- df_fiteos[, columns[grepl("aspp", columns)]]
-site_df <- df_fiteos[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df) <- 1:ncol(bspp_df)
-colnames(treeid_df) <- 1:ncol(treeid_df)
-colnames(aspp_df) <- 1:ncol(aspp_df)
-colnames(site_df) <- 1:ncol(site_df)
-
-# posterior summaries
-sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
-                             "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
-                             "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
-aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
-                             "spp", "aspp\\[(\\d+)\\]")
-site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
-                             "site", "asite\\[(\\d+)\\]")
-
-n_spp <- nrow(bspp_df2_eos)
-n_site <- nrow(site_df2_eos)
-y_pos <- 1:n_spp 
-
-treeid_df2_eos$treeid <- as.numeric(treeid_df2_eos$treeid)
-treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid_num)]
-bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
-site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
-aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1177,12 +1160,6 @@ plot_row <- function(aspp_df2, site_df2, bspp_df2,
   abline(v = 0, lty = 2, col = "black")
   
 }
-
-# shared dims and colors
-n_spp  <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
-y_pos  <- 1:n_spp
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
 # attach sitefull to all site_df2 variants
 site_df2$sitefull     <- sitefull[site_df2$site_name]
