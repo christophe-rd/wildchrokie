@@ -24,7 +24,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 }
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -259,6 +259,10 @@ par(mfrow = c(6, 3),
     mar = c(4, 4, 2, 1),   
     oma = c(0, 0, 4, 8))
 
+# test linear model
+test <- subset(emp_clim, period %in% "MAM")
+lm(anomleafout ~ TempMeanMax + spp + year, data = test)
+
 for (i in seq_along(clim_vars)) { # i = "tmeanmin"
   for (j in seq_along(periods)) { # j = "MAM"
     
@@ -304,49 +308,51 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
        title = "Year", bty = "y", xjust = 0, yjust = -7)
 dev.off()
 
-if (makeplots){
-  jpeg(
-    filename = "figures/climate/rwPDSI.jpeg",
-    width = 3600,      # wider image (pixels) → more horizontal room
-    height = 2400,
-    res = 300          # good print-quality resolution
-  )
-  par(mfrow = c(1, 4))
-  y_pos <- rev(1:n_year)
-  
-  for (i in unique(empclim$spp)) { # i = "ALNINC"
-    sub <- empclim[empclim$spp == i, ]
-    
-    plot(sub$lengthMM, y_pos,
-         xlim = range(c(sub$q25-0.5, sub$q75+0.5)),
-         ylim = c(0.5, n_year + 0.5),
-         xlab = "Ring width (mm)",
-         ylab = "",
-         yaxt = "n",
-         pch = 16,
-         cex = 2,
-         col = year_cols[sub$year],
-         frame.plot = FALSE,
-         main = i)
-    
-    axis(2, at = y_pos, labels = sub$year, las = 2, tick = FALSE, cex.axis = 1)
-    
-    abline(v = mean(sub$lengthMM), lty = 2)
-    # error bars and dashed line
-    segments(sub$q25, y_pos,
-             sub$q75, y_pos,
-             col = year_cols[sub$year],
-             lwd = 3)
-  }
-  legend("bottomright",
-         legend = paste(year_pdsi$year, round(year_pdsi$pdsimam, 2), sep = " PDSI: "),
-         col    = year_cols[year_pdsi$year],
-         pch    = 16,
-         bty    = "n",
-         cex    = 1,
-         title  = "Year (PDSI MarchAprilMay)")
-  dev.off()
-}
+
+# if (makeplots){
+#   n_year <- length(unique(emp$year))
+#   jpeg(
+#     filename = "figures/climate/rwPDSI.jpeg",
+#     width = 3600,      # wider image (pixels) → more horizontal room
+#     height = 2400,
+#     res = 300          # good print-quality resolution
+#   )
+#   par(mfrow = c(1, 4))
+#   y_pos <- rev(1:n_year)
+#   
+#   for (i in unique(empclim$spp)) { # i = "ALNINC"
+#     sub <- empclim[empclim$spp == i, ]
+#     
+#     plot(sub$lengthMM, y_pos,
+#          xlim = range(c(sub$q25-0.5, sub$q75+0.5)),
+#          ylim = c(0.5, n_year + 0.5),
+#          xlab = "Ring width (mm)",
+#          ylab = "",
+#          yaxt = "n",
+#          pch = 16,
+#          cex = 2,
+#          col = year_cols[sub$year],
+#          frame.plot = FALSE,
+#          main = i)
+#     
+#     axis(2, at = y_pos, labels = sub$year, las = 2, tick = FALSE, cex.axis = 1)
+#     
+#     abline(v = mean(sub$lengthMM), lty = 2)
+#     # error bars and dashed line
+#     segments(sub$q25, y_pos,
+#              sub$q75, y_pos,
+#              col = year_cols[sub$year],
+#              lwd = 3)
+#   }
+#   legend("bottomright",
+#          legend = paste(year_pdsi$year, round(year_pdsi$pdsimam, 2), sep = " PDSI: "),
+#          col    = year_cols[year_pdsi$year],
+#          pch    = 16,
+#          bty    = "n",
+#          cex    = 1,
+#          title  = "Year (PDSI MarchAprilMay)")
+#   dev.off()
+# }
 
 }
 
