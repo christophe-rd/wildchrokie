@@ -17,6 +17,10 @@ source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/m
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 # get some useful objects
 yrwc <- c(2018:2020)
+
+pgsGSLagg <- aggregate(pgsGSL ~ year, emp, mean)
+pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL,2)
+
 @
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Wildchrokie}
@@ -31,13 +35,9 @@ yrwc <- c(2018:2020)
 
 % GSL length
 \item The year with longest growing season length on average was 
-\Sexpr{aggregate(pgsGSL ~ year, emp, mean)[which.max(aggregate(pgsGSL ~ year, emp, mean)$pgsGSL),1]} 
-with
-\Sexpr{round(aggregate(pgsGSL ~ year, emp, mean)[which.max(aggregate(pgsGSL ~ year, emp, mean)$pgsGSL),2], 2)} days,
+\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]} with \Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),2]} days,
 and the shortest was 
-\Sexpr{aggregate(pgsGSL ~ year, emp, mean)[which.min(aggregate(pgsGSL ~ year, emp, mean)$pgsGSL),1]} 
-with
-\Sexpr{round(aggregate(pgsGSL ~ year, emp, mean)[which.min(aggregate(pgsGSL ~ year, emp, mean)$pgsGSL),2], 2)} days.
+\Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),1]} with \Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),2]} days.
 
 % Temperature spring
 \item The hottest spring period of the three years (MAM) was
@@ -86,7 +86,29 @@ and the lowest,
 \subsection{Phenology observations}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item 
+\item Leafout dates across all years and species varied from \Sexpr{min(emp$leafout)} to \Sexpr{max(emp$leafout)}
+\item On average, the earliest leafout date was in 2019 for all species (
+A. incana: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Alnus incana"])}, 
+B alleghaniensis:\Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula alleghaniensis"])}, 
+B. papyrifera: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula papyrifera"])} and 
+B. populifolia: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula populifolia"])}. 
+The latest leafout date for all species was in 2020 (
+A. incana: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Alnus incana"])}, 
+B alleghaniensis:\Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula alleghaniensis"])}, 
+B. papyrifera: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula papyrifera"])} and 
+B. populifolia: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula populifolia"])}).
+
+\item On average, the earliest budset date was in 2019 for A. incana(
+A. incana: \Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Alnus incana"])} and 
+B alleghaniensis: \Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}), but in 2018 for
+B. papyrifera: \Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula papyrifera"])} and 
+B. populifolia: \Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula populifolia"])}. 
+The latest budset date for all species was in 2020 (
+A. incana: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Alnus incana"])}, 
+B alleghaniensis:\Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}, 
+B. papyrifera: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula papyrifera"])} and 
+B. populifolia: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula populifolia"])}).
+
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -120,7 +142,7 @@ did not respond to increased GDD
 
 % Figure mu plot bspp GDD
 \begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
 \caption{Model parameters across the different predictors}
 \label{fig:wcmuplotbspp}
 \end{figure}
