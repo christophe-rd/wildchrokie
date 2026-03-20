@@ -2,8 +2,8 @@
 # CRD 12 March 2026
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
 options(max.print = 150)
 options(digits = 3)
 
@@ -25,9 +25,9 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 }
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 
-emp <- read.csv("output/empiricalDataMAIN.csv")
+empir <- read.csv("output/empiricalDataMAIN.csv")
 climatesum <- read.csv("output/climateSummariesYear.csv")
 gddyr <- read.csv("output/gddByYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
@@ -39,18 +39,18 @@ commonNames <- c(
   "Betula populifolia"    = "Gray birch"
 )
 
-emp$commonName <- commonNames[emp$latbi]
+empir$commonName <- commonNames[empir$latbi]
 
-emp <- emp[!is.na(emp$pgsGDD5),]
+empir <- empir[!is.na(empir$pgsGDD5),]
 # transform my groups to numeric values
-emp$site_num <- match(emp$site, unique(emp$site))
-emp$spp_num <- match(emp$spp, unique(emp$spp))
-emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+empir$site_num <- match(empir$site, unique(empir$site))
+empir$spp_num <- match(empir$spp, unique(empir$spp))
+empir$treeid_num <- match(empir$treeid, unique(empir$treeid))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate data #### 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp4 <- emp[!is.na(emp$leafout),]
+emp4 <- empir[!is.na(empir$leafout),]
 emp4$leafout <- as.integer(emp4$leafout)
 emp4$budset <- as.integer(emp4$budset)
 
@@ -64,10 +64,10 @@ par(mfrow = c(1,1))
 years <- sort(unique(emp4$year))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-years      <- sort(unique(emp$year))
+years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-emp$anomleafout <- emp$leafout - mean(emp$leafout)
-emp$anombudset <- emp$budset - mean(emp$budset)
+empir$anomleafout <- empir$leafout - mean(empir$leafout)
+empir$anombudset <- empir$budset - mean(empir$budset)
 
 # leafout vs gdd
 emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
@@ -96,7 +96,8 @@ legend("bottomright",
        col= yearcolors, pch = 16, lty = 1, lwd = 2,
        title  = "Year")
 
-
+if (makeplots) {
+  
 # number of frost free days before leafout
 weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, FUN = function(x)
 {sapply(seq_along(x), function(i) sum(x[seq_len(i-1)] < 0, na.rm = TRUE))
@@ -164,6 +165,7 @@ for (i in seq_along(years)) { # i = 2018
 
 }
 
+}
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -174,7 +176,7 @@ clim_vars  <- c("PDSI",
                 "TempMeanMin", 
                 "Precip")
 
-emp_clim <- merge(emp, climatesum, by = "year", all.x = TRUE)
+emp_clim <- merge(empir, climatesum, by = "year", all.x = TRUE)
 
 colnames(emp_clim)[which(colnames(emp_clim) %in% "pdsi")] <- "PDSI"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
@@ -185,6 +187,7 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "ppt")] <- "Precip"
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+if(makeplots) {
 jpeg(
   filename = "figures/climate/climSumLeafout.jpeg", 
   width = 2400, height = 3600, res = 300)
@@ -206,7 +209,7 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     
     plot(dat[[var]], dat$anomleafout,
          xlab = var, ylab  = "leafout",
-         ylim = c(min(emp$anomleafout), max(emp$anomleafout)),
+         ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
          pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
          main = "")
     
@@ -266,7 +269,7 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     
     plot(dat[[var]], dat$anombudset,
          xlab = var, ylab  = "budset",
-         ylim = c(min(emp$anombudset), max(emp$anombudset)),
+         ylim = c(min(empir$anombudset), max(empir$anombudset)),
          pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
          main = "")
     
@@ -304,15 +307,6 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
        legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
        title = "Year", bty = "y", xjust = 0, yjust = -7)
 dev.off()
-
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Phenology ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
-leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
-budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
-budsetbyyr$budset <- round(budsetbyyr$budset, 2)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # CoringTreespotters ####
@@ -454,3 +448,13 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
        title = "Year", bty = "y", xjust = 0, yjust = -7)
 
 dev.off()
+
+}
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Phenology ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
+leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
+budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
+budsetbyyr$budset <- round(budsetbyyr$budset, 2)

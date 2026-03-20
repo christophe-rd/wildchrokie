@@ -4,11 +4,11 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(mc.cores = parallel::detectCores())
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(mc.cores = parallel::detectCores())
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -33,7 +33,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 interceptmuplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -1231,14 +1231,146 @@ segments(bspp_df2$fit_bspp_per25, y_pos,
 abline(v = 0, lty = 2, col = "black")
 dev.off()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Combined mu plots (GDD / GSL / SOS / EOS) ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot!
+jpeg(file = "figures/empiricalData/muALL.jpeg",
+     width = 3000, height = 4000, res = 300)  
+layout(matrix(c(
+  1,  2,  3, 13,
+  4,  5,  6, 13,
+  7,  8,  9, 14,
+  10, 11, 12, 14
+), nrow = 4, byrow = TRUE),
+widths = c(1, 1, 1, 
+           0.8)) # legend column
+
+plot_row <- function(aspp_df2, site_df2, bspp_df2,
+                     n_spp, n_site, y_pos,
+                     sppcols, sitecolors,
+                     bspp_xlab,
+                     row_label) {
+  # aspp  
+  par(mar = c(5, 2, 2, 2))
+  plot(aspp_df2$fit_aspp, y_pos,
+       xlim = c(-15, 15),
+       ylim = c(0.5, n_spp + 0.5),
+       xlab = "Ring width intercept values (mm)",
+       ylab = "",
+       yaxt = "n",
+       pch = 16, cex = 2, col = sppcols,
+       frame.plot = FALSE)
+  segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
+           col = sppcols, lwd = 1.5)
+  segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
+           col = sppcols, lwd = 3)
+  abline(v = 0, lty = 2, col = "black")
+  mtext(row_label, side = 3, line = 0.5, adj = 0, font = 2, cex = 1.1)
+  
+  # --- asite ---
+  par(mar = c(5, 2, 2, 2))
+  plot(site_df2$fit_a_site, y_pos,
+       xlim = c(-2, 2),
+       ylim = c(0.5, n_site + 0.5),
+       xlab = "Ring width intercept values (mm)",
+       ylab = "",
+       yaxt = "n",
+       pch = 16, cex = 2, col = sitecolors,
+       frame.plot = FALSE)
+  segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
+           col = sitecolors, lwd = 1.5)
+  segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
+           col = sitecolors, lwd = 3)
+  abline(v = 0, lty = 2, col = "black")
+  
+  # bspp
+  par(mar = c(5, 2, 2, 2))
+  plot(bspp_df2$fit_bspp, y_pos,
+       xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
+       ylim = c(0.5, n_spp + 0.5),
+       xlab = bspp_xlab,
+       ylab = "",
+       yaxt = "n",
+       pch = 16, cex = 2, col = sppcols,
+       frame.plot = FALSE)
+  segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
+           col = sppcols, lwd = 1.5)
+  segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
+           col = sppcols, lwd = 3)
+  abline(v = 0, lty = 2, col = "black")
+  
+}
+
+# attach sitefull to all site_df2 variants
+site_df2$sitefull     <- sitefull[site_df2$site_name]
+site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
+
+# Row 1: GDD
+plot_row(aspp_df2, site_df2, bspp_df2,
+         n_spp, n_site, y_pos,
+         sppcols, sitecolors,
+         bspp_xlab = "Ring width (mm) change/200 GDD",
+         row_label = "GDD")
+
+# Row 2: GSL
+plot_row(aspp_df2_gsl, site_df2_gsl, bspp_df2_gsl,
+         n_spp, n_site, y_pos,
+         sppcols, sitecolors,
+         bspp_xlab = "Ring width (mm) change per GSL in days",
+         row_label = "GSL")
+
+# Row 3: SOS  (re-load objects as in your original SOS block first)
+plot_row(aspp_df2_sos, site_df2_sos, bspp_df2_sos,   # after the SOS extraction block
+         n_spp, n_site, y_pos,
+         sppcols, sitecolors,
+         bspp_xlab = "Ring width (mm) change per days in leafout date",
+         row_label = "SOS")
+
+# Row 4: EOS  (re-load objects as in your original EOS block first)
+plot_row(aspp_df2_eos, site_df2_eos, bspp_df2_eos,   # after the EOS extraction block
+         n_spp, n_site, y_pos,
+         sppcols, sitecolors,
+         bspp_xlab = "Ring width (mm) change per days in budset date",
+         row_label = "EOS")
+
+# slot 13 - species legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("center",
+       legend = unique(aspp_df2$spp_name),
+       col    = unique(sppcols),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
+# slot 14 - sites legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("center",
+       legend = unique(site_df2$sitefull),
+       col    = sitecolors,
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Sites", title.font = 2)
+
+dev.off()
+
+
 }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-plot(budset ~ leafout, emp)
-lm <- lmer(budset ~ leafout + (1 | year), data = emp)
-sum <- summary(lm)
-new_data <- data.frame(leafout = x_seq)
-pred <- predict(lm, newdata = new_data, re.form = NA)  
-lines(x_seq, pred, col = "black", lwd = 2)
+# plot(budset ~ leafout, emp)
+# lm <- lmer(budset ~ leafout + (1 | year), data = emp)
+# sum <- summary(lm)
+# new_data <- data.frame(leafout = x_seq)
+# pred <- predict(lm, newdata = new_data, re.form = NA)  
+# lines(x_seq, pred, col = "black", lwd = 2)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Ring width summaries ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+rwmin <- aggregate(lengthMM ~ spp, emp, FUN = min)
+rwmax <- aggregate(lengthMM ~ spp, emp, FUN = max)
+rwsum <- merge(rwmin, rwmax, by = "spp")
+colnames(rwsum) <- c("spp","min", "max")
