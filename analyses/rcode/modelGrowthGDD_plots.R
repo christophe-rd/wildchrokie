@@ -52,6 +52,10 @@ commonNames <- c(
 
 emp$commonName <- commonNames[emp$latbi]
 emp$lengthMM <- emp$lengthCM*10
+
+# copy of emp with no row removal
+empfull <- emp
+
 emp <- emp[!is.na(emp$pgsGDD5),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
