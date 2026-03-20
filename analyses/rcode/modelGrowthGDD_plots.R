@@ -33,7 +33,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 interceptmuplots <- TRUE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -473,7 +473,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$pgsGDD5, emp_spp$lengthCM * 10,
        type = "n",
-       ylim = ylim_spp,
+       # ylim = ylim_spp,
+       ylim = c(0,14),
        xlab = "Primary growing season GDD",
        ylab = "Ring width (mm)",
        main = spp_column_name,
