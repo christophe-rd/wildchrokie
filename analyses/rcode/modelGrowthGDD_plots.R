@@ -1231,6 +1231,14 @@ segments(bspp_df2$fit_bspp_per25, y_pos,
 abline(v = 0, lty = 2, col = "black")
 dev.off()
 
-
 }
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Phenology carry-over ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+plot(budset ~ leafout, emp)
+lm <- lmer(budset ~ leafout + (1 | year), data = emp)
+sum <- summary(lm)
+new_data <- data.frame(leafout = x_seq)
+pred <- predict(lm, newdata = new_data, re.form = NA)  
+lines(x_seq, pred, col = "black", lwd = 2)
