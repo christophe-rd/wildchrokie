@@ -65,6 +65,26 @@
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Wildchrokie}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Fri Mar 20 16:13:26 2026
+\begin{table}[ht]
+\centering
+\caption{\textbf{Table Whatever} This table is just produced with somerandom data and does not mean anything. Just to show you how things work.} 
+\label{Test_table}
+\begingroup\footnotesize
+\begin{tabular}{rrrrr}
+  \toprule 
+ Model & $\alpha$ & $\beta$ & t-value & $R^2$ \\
+ \midrule 
+   1 & 1.96 & 0.97 & 0.03 & 0.49 \\ 
+    2 & 1.95 & 0.01 & 0.04 & -0.00 \\ 
+    3 & 1.95 & 0.01 & 0.04 & -0.00 \\ 
+   \bottomrule 
+\end{tabular}
+\endgroup
+\end{table}
+
 %-------------------------------------------------------------------------------
 \subsection{Growing season length and conditions}
 %-------------------------------------------------------------------------------
@@ -95,15 +115,15 @@ and the coldest,
 
 % PDSI spring
 \item The driest spring period of the three years (MAM) was
-2019 with a PDSI value of 2.74,
+2020 with a PDSI value of 1.32,
 and the wettest,
-2020 with a PDSI value of 1.32.
+2019 with a PDSI value of 2.74.
 
 % PDSI summer
 \item The driest summer period (PDSI) of the three years (JJA) was
-2019 with a PDSI value of 4.02,
+2020 with a PDSI value of -2.35,
 and the wettest,
-2020 with a PDSI value of -2.35.
+2019 with a PDSI value of 4.02.
 
 % PPT spring
 \item The spring period with the highest precipitation of the three years (MAM) was
@@ -122,28 +142,29 @@ and the lowest,
 \subsection{Phenology observations}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item Leafout dates across all years and species varied from 112 to 157
-\item On average, the earliest leafout date was in 2019 for all species (
-A. incana: 120.86, 
-B alleghaniensis:123, 
+\item Leafout dates across all years and species varied from 112 to 157 and budset date varied from 225 to 297.
+\item On average, the earliest leafout date was in 2019 for all species (A. incana: 120.86, 
+B alleghaniensis: 123, 
 B. papyrifera: 123.33 and 
 B. populifolia: 121. 
 The latest leafout date for all species was in 2020 (
 A. incana: 148.68, 
-B alleghaniensis:141.32, 
+B alleghaniensis: 141.32, 
 B. papyrifera: 136.57 and 
 B. populifolia: 133.83).
+No species was consistently the earliest nor the latest one to leafout.
 
-\item On average, the earliest budset date was in 2019 for A. incana(
-A. incana: 263.29 and 
-B alleghaniensis: 258), but in 2018 for
-B. papyrifera: 266.83 and 
-B. populifolia: 266.29. 
+\item On average, the earliest budset date was in 2019 for A. incana (
+263.29) and 
+B alleghaniensis (258), but in 2018 for
+B. papyrifera (266.83) and 
+B. populifolia (266.29). 
 The latest budset date for all species was in 2020 (
 A. incana: 280.88, 
-B alleghaniensis:264.05, 
+B alleghaniensis: 264.05, 
 B. papyrifera: 279.43 and 
 B. populifolia: 282).
+No species was consistently the earliest nor the latest set bud.
 
 \end{enumerate}
 
@@ -151,68 +172,83 @@ B. populifolia: 282).
 \subsection{Ring widths}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item The ring width of our species vary from \ensuremath{\infty{}}mm to \ensuremath{-\infty{}}mm. 
+\item The ring width of our species vary from 0.39mm to 13.55mm. 
+\item Ring widths for A. incana varied from 0.61 to 7.81, 
+from 0.39 to 6.92 for B. alleghaniensis, 
+from 0.65 to 6.42 for B. papyrifera and 
+from 0.75 to 13.55 for B. populifolia.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a slightly stronger response to longer GSL compared to increased GDD. 
+Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a stronger response to longer GSL compared to increased GDD. Especially for A. incana not shifting its growth in response to GDD but showing a strong response to GSL, as well as the start and end of season.
+
+% Figure mu across all species and climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
+\caption{Model parameters across the different predictors}
+\label{fig:wcmuplot}
+\end{figure}
+
+\begin{enumerate}
+
+% GDD
+\item A. incana ($\beta = $ 0.28, $UI_{90}$[-0.1, 0.65]),
+B. alleghaniensis ($\beta = $ 0.18, $UI_{90}$[-0.24, 0.59]) and
+B. papyrifera ($\beta = $ 0.29, $UI_{90}$[-0.27, 0.83]) 
+show a weak response, but seem to grow more with more GDD, while 
+B. populifolia  ($\beta = $ 0.08, $UI_{90}$[-0.36, 0.52])  
+did not respond to increased GDD 
+(Figure \ref{fig:wcmuplot}).
 
 % Figure Growth X GDD
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
 \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-\label{fig:wcgrowthSlopes}
+\label{fig:wcgrowthSlopesGDD}
 \end{figure}
 
-\begin{enumerate}
-% GDD
-\item A. incana ($\beta = $ 0.001385, $UI_{90}$[\ensuremath{-4.05\times 10^{-4}}, 0.003215]),
-B. alleghaniensis ($\beta = $ \ensuremath{8.75\times 10^{-4}}, $UI_{90}$[-0.00123, 0.00293]) and
-B. papyrifera ($\beta = $ 0.00142, $UI_{90}$[-0.001365, 0.00423]) 
-show a weak response, but seem to grow more with more GDD, while 
-B. populifolia  ($\beta = $ \ensuremath{4.35\times 10^{-4}}, $UI_{90}$[-0.00175, 0.002615])  
-did not respond to increased GDD 
-(Figure \ref{fig:wcmuplotbspp}).
-
-% Figure mu plot bspp GDD
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
-\caption{Model parameters across the different predictors}
-\label{fig:wcmuplotbspp}
-\end{figure}
 
 % GSL
-\item A. incana ($\beta = $ 0.0374, $UI_{90}$[0.0132, 0.0615]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season.
-B. alleghaniensis ($\beta = $ 0.019, $UI_{90}$[-0.0095, 0.0477]) and
-B. papyrifera ($\beta = $ 0.0327, $UI_{90}$[-0.0122, 0.0783]) 
+\item A. incana ($\beta = $ 0.38, $UI_{90}$[0.14, 0.62]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season (GSL).
+B. alleghaniensis ($\beta = $ 0.19, $UI_{90}$[-0.11, 0.5]) and
+B. papyrifera ($\beta = $ 0.33, $UI_{90}$[-0.11, 0.78]) 
 show a weaker response, but seem to grow more in response to longer seasons, while 
-B. populifolia  ($\beta = $ 0.0017, $UI_{90}$[-0.0336, 0.0354])  
+B. populifolia  ($\beta = $ 0.02, $UI_{90}$[-0.32, 0.36])  
 did not respond to the GSL 
-(Figure \ref{fig:wcmuplotbspp}).
+(Figure \ref{fig:wcmuplot}).
+
+% Figure Growth X GSL
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width responses to length of the primary growing season (days). The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\label{fig:wcgrowthSlopesGSL}
+\end{figure}
 
 % SOS
-\item Ring width decreased with a later SOS for A. incana ($\beta = $ -0.0666, $UI_{90}$[-0.0899, -0.0428]) and B. populifolia ($\beta = $ -0.0451, $UI_{90}$[-0.0857, -0.0049]). Whereas 
-B. alleghaniensis ($\beta = $ -0.02, $UI_{90}$[-0.0554, 0.0149]) and
-B. papyrifera ($\beta = $ -0.0208, $UI_{90}$[-0.0682, 0.0275]) 
+\item Ring width decreased with a later start of season (SOS) for 
+A. incana ($\beta = $ -0.66, $UI_{90}$[-0.9, -0.43]) and 
+B. populifolia ($\beta = $ -0.45, $UI_{90}$[-0.83, -0.05]). 
+Whereas B. alleghaniensis ($\beta = $ -0.2, $UI_{90}$[-0.55, 0.14]) and
+B. papyrifera ($\beta = $ -0.21, $UI_{90}$[-0.69, 0.27]) 
 show a weaker response, but seem to grow less with later SOS.
-(Figure \ref{fig:wcmuplotbspp}).
+(Figure \ref{fig:wcmuplot}).
 
 % EOS
-\item Ring width decreased with a later EOS for A. incana ($\beta = $ -0.0272, $UI_{90}$[-0.0525, -0.0015]). B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ -0.0239, $UI_{90}$[-0.0542, 0.0058]). 
-B. alleghaniensis ($\beta = $ 0.0046, $UI_{90}$[-0.0241, 0.0325]) and
-B. papyrifera ($\beta = $ 0.0071, $UI_{90}$[-0.031, 0.0465]) 
+\item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ -0.27, $UI_{90}$[-0.52, -0.02]). B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ -0.25, $UI_{90}$[-0.54, 0.05]). 
+B. alleghaniensis ($\beta = $ 0.04, $UI_{90}$[-0.25, 0.33]) and
+B. papyrifera ($\beta = $ 0.06, $UI_{90}$[-0.33, 0.45]) 
 didn't respond to EOS.
-(Figure \ref{fig:wcmuplotbspp}).
+(Figure \ref{fig:wcmuplot}).
 
-% site
-\item For the provenance with the GDD model, we detected a weak growth difference between 
-G. College ($\alpha_{site} = $ -0.379, $UI_{90}$[-2.097, 1.299]), 
-S. Hypolyte ($\alpha_{site} = $ -0.07, $UI_{90}$[-1.784, 1.635]) or 
-W. Mountains ($\alpha_{site} = $ 0.471, $UI_{90}$[-1.208, 2.187]).
-Only HF grew less ($\alpha_{site} = $ = -0.768, $UI_{90}$[-2.439, 0.936]) 
-(Figure \ref{fig:wcmuplotbspp})
+% Site
+\item For the provenance with the GDD model, the estimates didn't shift much across climate predictors. We detected a weak growth difference between 
+G. College ($\alpha_{site} = $ -0.33, $UI_{90}$[-1.96, 1.27]), 
+S. Hypolyte ($\alpha_{site} = $ -0.03, $UI_{90}$[-1.7, 1.6]) or 
+W. Mountains ($\alpha_{site} = $ 0.51, $UI_{90}$[-1.17, 2.09]).
+Only HF grew less ($\alpha_{site} = $ = -0.72, $UI_{90}$[-2.39, 0.92]) 
+(Figure \ref{fig:wcmuplot})
 
 
 
@@ -229,12 +265,7 @@ Only HF grew less ($\alpha_{site} = $ = -0.768, $UI_{90}$[-2.439, 0.936])
 % \end{enumerate}
 
 
-% Figure Growth X GDD
-% \begin{figure}[!ht]
-% \includegraphics[width=1\textwidth]{../../../coringtreespotters/analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-% \caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-% \label{fig:tsgrowthSlopes}
-% \end{figure}
+
 
 % Figure mu plot bspp
 % \begin{figure}[!ht]
@@ -255,6 +286,29 @@ Only HF grew less ($\alpha_{site} = $ = -0.768, $UI_{90}$[-2.439, 0.936])
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Supplemental results}
 
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
 \subsection*{Wildchrokie}
+\begin {enumerate}
+\item Fitting start of season (leafout) adds 12 rows of data out of the 227 when removing both NA entries for leafout and budset. Fitting end of season (budset) adds 3 rows of data out of the 227 when removing both NA entries for leafout and budset.
+\item Fitting with the maximum number of rows of data didn't change the parameter estimates by much for SOS (Figure \ref{fig:wcSOScomparison}) and EOS (Figure \ref{fig:wcEOScomparison}).
+\end {enumerate}
+
+% SOS data comparison
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/SOSFullVSRestricted.jpeg}
+\caption{Full vs most restricted rows of data for the model with SOS as the predictor.}
+\label{fig:wcSOScomparison}
+\end{figure}
+
+% EOS data comparison 
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/EOSFullVSRestricted.jpeg}
+\caption{Full vs most restricted rows of data for the model with EOS as the predictor.}
+\label{fig:wcEOScomparison}
+\end{figure}
 
 \end{document}
