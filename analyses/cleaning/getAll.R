@@ -69,3 +69,4 @@ obsdataWithGDD <- obsdataWithGDD[order(
 
 write_csv(obsdataWithGDD, "output/empiricalDataNORing.csv")
 
+write_csv(wildchrokie_rw, "output/wildchrokieRingWidth.csv")

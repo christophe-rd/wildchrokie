@@ -378,7 +378,7 @@ wildchrokie_rw
 
 
 
-# write csv!
-setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
-write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
+# # write csv!
+# setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+# write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
 
