@@ -40,14 +40,12 @@ emp <- read.csv("output/empiricalDataMAIN.csv")
 rw <- read.csv("output/wildchrokieRingWidth.csv")
 gdd <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/output/gddByYear.csv")
 
-commonNames <- c(
-  "ALNINC" = "Alnus incana",           
-  "BETALL" = "Betula alleghaniensis",
-  "BETPAP" = "Betula papyrifera",      
-  "BETPOP" = "Betula populifolia"     
-)
+rw$latbi <- NA
+rw$latbi[which(rw$spp == "ALNINC")] <- "Alnus incana"        
+rw$latbi[which(rw$spp == "BETALL")] <- "Betula alleghaniensis"   
+rw$latbi[which(rw$spp == "BETPAP")] <- "Betula papyrifera"       
+rw$latbi[which(rw$spp == "BETPOP")] <- "Betula populifolia"       
 
-emp$commonName <- commonNames[emp$latbi]
 # calculate gdd by year between 1st april (91) and 1st august (213)  
 gddsub <- subset(gdd, doy >90 & doy < 214)
 agg <- aggregate(GDD_5 ~ year, gddsub, FUN = min)
@@ -121,7 +119,6 @@ site_df2   <- extract_params(df_fit, "asite", "fit_a_site",
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
 treeid_df2$treeid_name <- rw$treeid[match(treeid_df2$treeid, rw$treeid_num)]
 bspp_df2$spp_name <- rw$latbi[match(bspp_df2$spp, rw$spp_num)]
 site_df2$site_name <- rw$site[match(site_df2$site, rw$site_num)]
@@ -236,7 +233,7 @@ treeid_bspp
 
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
-x <- seq(min(rw$pgsGDD5), max(rw$pgsGDD5), length.out = 100)  
+x <- seq(min(rw$gdd), max(rw$gdd), length.out = 100)  
 y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
@@ -255,7 +252,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
 ##### GDD: per treeid, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
-pdf(file = "figures/rwiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
+pdf(file = "figures/empiricalData/slopesperTreeidPrvsYr.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -278,8 +275,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # rwty plot first
-  plot(rw$pgsGDD5, y, type = "n", 
-       ylim = range(c(rw_treeid$lengthCM * 10, y_low, y_high), na.rm = TRUE),
+  plot(rw$gdd, y, type = "n", 
+       ylim = range(c(rw_treeid$lengthMM, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name) # set the name for each plot
   
@@ -301,8 +298,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
         lwd = 2)
   
   points(
-    rw_treeid$pgsGDD5,
-    rw_treeid$lengthCM * 10,
+    rw_treeid$gdd,
+    rw_treeid$lengthMM,
     pch = 16,
     cex = 2,
     col = line_col)
@@ -333,12 +330,12 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
   })
 })
 
-x <- seq(min(rw$pgsGDD5), max(rw$pgsGDD5), length.out = 100)   
+x <- seq(min(rw$gdd), max(rw$gdd), length.out = 100)   
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
 
 # jpeg output
 jpeg(
-  filename = "figures/rwiricalData/growthModelSlopesperSppFacet.jpeg",
+  filename = "figures/empiricalData/SlopesperSppFacetPrvsYr.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -356,7 +353,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   spp_num <- as.integer(spp_column)
   
   # subset rwirical data correctly
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- rw[rw$spp_num == spp_num, ]
   
   spp_column <- as.character(sppvecnum[i]) 
   y_post <- spp_post_list[[spp_column]]
@@ -367,12 +364,13 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(emp_spp$lengthCM * 10, y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, emp_spp$lengthCM * 10,
+  plot(emp_spp$gdd, emp_spp$lengthMM,
        type = "n",
-       ylim = ylim_spp,
-       xlab = "Primary growing season GDD",
+       # ylim = ylim_spp,
+       ylim = c(),
+       xlab = "Previous year GDD",
        ylab = "Ring width (mm)",
        main = spp_column_name,
        frame = FALSE)
@@ -390,8 +388,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
   lines(x, y_mean, col = line_col, lwd = 2)
   
   points(
-    emp_spp$pgsGDD5,
-    emp_spp$lengthCM * 10,
+    emp_spp$gdd,
+    emp_spp$lengthMM,
     pch = 16,
     cex = 1,
     col = line_col
@@ -405,7 +403,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # PDF output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSpp.jpeg",
+  filename = "figures/empiricalData/SlopesperSppPrvsYr.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -416,8 +414,8 @@ par(mar = c(4, 4, 2, 1))
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
 
-plot(emp$pgsGDD5, y, type = "n", 
-     ylim = range(min(emp$lengthCM*10), max(emp$lengthCM*10)), 
+plot(rw$gdd, y, type = "n", 
+     ylim = range(min(rw$lengthCM*10), max(rw$lengthCM*10)), 
      xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
      main = "species growth responses")
 
@@ -449,11 +447,11 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- rw[rw$spp_num == spp_num, ]
 
   points(
-    emp_spp$pgsGDD5,
-    emp_spp$lengthCM * 10,
+    emp_spp$gdd,
+    emp_spp$lengthMM,
     pch = 16,
     cex = 1,
     col = line_col)
@@ -471,5 +469,130 @@ for (i in seq_along(sppvecnum)) { # i = 1
 }
 dev.off()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# GDD mu plots Together ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+jpeg(file = "figures/empiricalData/muGDDPrvsYr.jpeg", 
+     width = 3000, height = 1000, res = 300)
+par(mfrow = c(1, 3))
+par(mar = c(5, 10, 2, 2)) 
 
+##### asp #####
+plot(aspp_df2$fit_aspp, y_pos,
+     xlim = range(c(aspp_df2$fit_aspp_per5, aspp_df2$fit_aspp_per95)),
+     ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width intercept values (mm)",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sppcols,
+     frame.plot = FALSE)
+
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = aspp_df2$spp_name[i],
+       las = 2,
+       col.axis = sppcols[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
+
+# error bars and dashed line
+segments(aspp_df2$fit_aspp_per5,  y_pos,
+         aspp_df2$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2$fit_aspp_per25, y_pos,
+         aspp_df2$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+
+abline(v = 0, lty = 2, col = "black")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### asite #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+sitefull <- c(
+  "GR" = "Dartmouth College (NH)",
+  "HF" = "Harvard Forest (MA)",
+  "SH" = "St-Hyppolyte (Qc)",
+  "WM" = "White Mountains (NH)"
+)
+
+emp$sitefull <- sitefull[emp$site]
+site_df2$sitefull <- sitefull[site_df2$site_name]
+
+par(mar = c(5, 10, 2, 2)) 
+
+plot(site_df2$fit_a_site, y_pos,
+     xlim = range(c(site_df2$fit_a_site_per5, site_df2$fit_a_site_per95)),
+     ylim = c(0.5, n_site + 0.5),
+     xlab = "Ring width intercept values (mm)",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sitecolors,
+     frame.plot = FALSE)
+
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = site_df2$sitefull[i],
+       las = 2,
+       col.axis = sitecolors[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
+
+# error bars and dashed line
+segments(site_df2$fit_a_site_per5,  y_pos,
+         site_df2$fit_a_site_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2$fit_a_site_per25, y_pos,
+         site_df2$fit_a_site_per75, y_pos,
+         col = sitecolors, lwd = 3)
+
+abline(v = 0, lty = 2, col = "black")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### bsp #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+par(mar = c(5, 10, 2, 2)) 
+
+plot(bspp_df2$fit_bspp, y_pos,
+     xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
+     ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change/200 GDD",
+     ylab = "",
+     yaxt = "n",
+     pch = 16,
+     cex = 2,
+     col = sppcols,
+     frame.plot = FALSE)
+
+# color labels
+for (i in seq_along(y_pos)) {
+  axis(2, at = y_pos[i],
+       labels = bspp_df2$spp_name[i],
+       las = 2,
+       col.axis = sppcols[i],
+       tick = FALSE,
+       cex.axis = 1)
+}
+
+# error bars and dashed line
+segments(bspp_df2$fit_bspp_per5,  y_pos,
+         bspp_df2$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2$fit_bspp_per25, y_pos,
+         bspp_df2$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+
+abline(v = 0, lty = 2, col = "black")
+dev.off()
+
+
+}
 
