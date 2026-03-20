@@ -2,10 +2,10 @@
 # CRD 12 March 2026
 
 # housekeeping
-# rm(list=ls())
-# options(stringsAsFactors = FALSE)
-# options(max.print = 150)
-# options(digits = 3)
+rm(list=ls())
+options(stringsAsFactors = FALSE)
+options(max.print = 150)
+options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -13,7 +13,8 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
-library(cartography)
+library(lme4)
+library(lmerTest)  
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -26,9 +27,6 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 # flags
 makeplots <- TRUE
 
-# === === === === === === === === === === === === === === === === 
-# EMPIRICAL DATA ####
-# === === === === === === === === === === === === === === === === 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 climatesum <- read.csv("output/climateSummariesYear.csv")
 gddyr <- read.csv("output/gddByYear.csv")
@@ -174,8 +172,8 @@ clim_vars  <- c("PDSI",
                 "TempMeanMax", 
                 "TempMeanMean", 
                 "TempMeanMin", 
-                "Precip"      , 
-                "Radiation")
+                "Precip")
+
 emp_clim <- merge(emp, climatesum, by = "year", all.x = TRUE)
 
 colnames(emp_clim)[which(colnames(emp_clim) %in% "pdsi")] <- "PDSI"
@@ -183,20 +181,17 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "ppt")] <- "Precip"
-colnames(emp_clim)[which(colnames(emp_clim) %in% "rad")] <- "Radiation"
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-if (makeplots) {
-
 jpeg(
   filename = "figures/climate/climSumLeafout.jpeg", 
   width = 2400, height = 3600, res = 300)
 
 periods    <- c("DJF", "MAM")
 
-par(mfrow = c(6, 2), 
+par(mfrow = c(5, 2), 
     mar = c(4, 4, 2, 1),   
     oma = c(0, 0, 4, 8))
 
@@ -215,29 +210,30 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
          pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
          main = "")
     
-    abline(h = 0, lty = 2, col = "gray50")
-    
     # Add column headers 
     if (i == 1) {
       mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
     }
     
     if (nrow(dat) > 1) {
-      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout)
-      lm_fit <- lm(y ~ scale(x), data = tmp)
+      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
+      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
       sum <- summary(lm_fit)
       significance <- ifelse(sum$coefficients[2,4]<0.05, "signif", "nonsignif")
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
-      pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
+      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
       lines(x_seq, pred, col = "black", lwd = 2)
-      slope <- round(coef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope, ifelse(significance == "signif", " *", "")), 
-            side = 3, line = -2, cex = 0.7, adj = 0.95)
+      slope <- round(fixef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), 
+            side = 3, line = -2, cex = 1, adj = 0.8)
+      if (significance == "signif") {
+        mtext(" *", 
+              side = 3, line = -2, cex = 2, adj = 0.95)
+      }
     }
   }
 }
-
 
 # Legend in outer right margin
 par(xpd = NA)
@@ -255,13 +251,9 @@ jpeg(
 
 periods    <- c("MAM", "JJA", "SON")
 
-par(mfrow = c(6, 3), 
+par(mfrow = c(5, 3), 
     mar = c(4, 4, 2, 1),   
     oma = c(0, 0, 4, 8))
-
-# test linear model
-test <- subset(emp_clim, period %in% "MAM")
-lm(anomleafout ~ TempMeanMax + spp + year, data = test)
 
 for (i in seq_along(clim_vars)) { # i = "tmeanmin"
   for (j in seq_along(periods)) { # j = "MAM"
@@ -285,18 +277,23 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
       mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
     }
     
+    
     if (nrow(dat) > 1) {
-      tmp    <- data.frame(x = dat[[var]], y = dat$anombudset)
-      lm_fit <- lm(y ~ scale(x), data = tmp)
+      tmp    <- data.frame(x = dat[[var]], y = dat$anombudset, year = dat$year)
+      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
       sum <- summary(lm_fit)
-      significance <- ifelse(sum$coefficients[2,4]<0.001, "signif", "nonsignif")
+      significance <- ifelse(sum$coefficients[2,4]<0.05, "signif", "nonsignif")
       x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
                     length.out = 200)
-      pred   <- predict(lm_fit, newdata = data.frame(x = x_seq))
+      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
       lines(x_seq, pred, col = "black", lwd = 2)
-      slope <- round(coef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope, ifelse(significance == "signif", " *", "")), 
-            side = 3, line = -2, cex = 0.7, adj = 0.95)
+      slope <- round(fixef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), 
+            side = 3, line = -2, cex = 1, adj = 0.8)
+      if (significance == "signif") {
+        mtext(" *", 
+              side = 3, line = -2, cex = 2, adj = 0.95)
+      }
     }
   }
 }
@@ -309,53 +306,6 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
 dev.off()
 
 
-# if (makeplots){
-#   n_year <- length(unique(emp$year))
-#   jpeg(
-#     filename = "figures/climate/rwPDSI.jpeg",
-#     width = 3600,      # wider image (pixels) → more horizontal room
-#     height = 2400,
-#     res = 300          # good print-quality resolution
-#   )
-#   par(mfrow = c(1, 4))
-#   y_pos <- rev(1:n_year)
-#   
-#   for (i in unique(empclim$spp)) { # i = "ALNINC"
-#     sub <- empclim[empclim$spp == i, ]
-#     
-#     plot(sub$lengthMM, y_pos,
-#          xlim = range(c(sub$q25-0.5, sub$q75+0.5)),
-#          ylim = c(0.5, n_year + 0.5),
-#          xlab = "Ring width (mm)",
-#          ylab = "",
-#          yaxt = "n",
-#          pch = 16,
-#          cex = 2,
-#          col = year_cols[sub$year],
-#          frame.plot = FALSE,
-#          main = i)
-#     
-#     axis(2, at = y_pos, labels = sub$year, las = 2, tick = FALSE, cex.axis = 1)
-#     
-#     abline(v = mean(sub$lengthMM), lty = 2)
-#     # error bars and dashed line
-#     segments(sub$q25, y_pos,
-#              sub$q75, y_pos,
-#              col = year_cols[sub$year],
-#              lwd = 3)
-#   }
-#   legend("bottomright",
-#          legend = paste(year_pdsi$year, round(year_pdsi$pdsimam, 2), sep = " PDSI: "),
-#          col    = year_cols[year_pdsi$year],
-#          pch    = 16,
-#          bty    = "n",
-#          cex    = 1,
-#          title  = "Year (PDSI MarchAprilMay)")
-#   dev.off()
-# }
-
-}
-
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -363,3 +313,144 @@ leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
 leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
 budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
 budsetbyyr$budset <- round(budsetbyyr$budset, 2)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# CoringTreespotters ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+empts <- read.csv("/Users/christophe_rouleau-desrochers/github/coringTreespotters/analyses/output/empiricalDataMAIN.csv")
+
+empts$anomleafcolor <- empts$coloredLeaves - mean(empts$coloredLeaves)
+
+emp_climts <- merge(empts, climatesum, by = "year", all.y = TRUE)
+
+colnames(emp_climts)[which(colnames(emp_climts) %in% "pdsi")] <- "PDSI"
+colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmax")] <- "TempMeanMax"
+colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmean")] <- "TempMeanMean"
+colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmin")] <- "TempMeanMin"
+colnames(emp_climts)[which(colnames(emp_climts) %in% "ppt")] <- "Precip"
+
+years <- sort(unique(empts$year))
+firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Leafout ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+emp_climtslo <- emp_climts[!is.na(emp_climts$leafout),]
+emp_climtslo$anomleafout <- emp_climtslo$leafout - mean(emp_climtslo$leafout)
+jpeg("figures/climate/climSumLeafoutTS.jpeg",
+     width = 2400, height = 3600, res = 300)
+periods <- c("DJF", "MAM") 
+par(mfrow = c(5, 2), 
+    mar = c(4, 4, 2, 1),   
+    oma = c(0, 0, 4, 8))
+
+for (i in seq_along(clim_vars)) {
+  for (j in seq_along(periods)) {
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_climtslo[emp_climtslo$period == p & !is.na(emp_climtslo[[var]]) & 
+                        !is.na(emp_climtslo$anomleafout), ]
+    
+    plot(dat[[var]], dat$anomleafout,
+         xlab = var, ylab  = "leafout",
+         ylim = c(min(emp_climtslo$anomleafout), max(emp_climtslo$anomleafout)),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    if (i == 1) {
+      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    }
+    
+    if (nrow(dat) > 1) {
+      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
+      lm_fit <- lmer(y ~ x + (1 | year), data = tmp)
+      sum <- summary(lm_fit)
+      significance <- ifelse(sum$coefficients[2,4] < 0.05, "signif", "nonsignif")
+      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), length.out = 200)
+      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
+      lines(x_seq, pred, col = "black", lwd = 2)
+      slope <- round(fixef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), side = 3, line = -2, cex = 1, adj = 0.8)
+      if (significance == "signif") {
+        mtext(" *", side = 3, line = -2, cex = 2, adj = 0.95)
+      }
+    }
+  }
+}
+par(xpd = NA)
+legend(x = 0, y = 0,
+       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+       title = "Year", bty = "y", xjust = -9, yjust = -3)
+
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### coloredLeaves ####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+emp_climtscl <- emp_climts[!is.na(emp_climts$coloredLeaves),]
+emp_climtscl$anomleafcolor <- emp_climtscl$coloredLeaves - 
+  mean(emp_climtscl$coloredLeaves)
+
+jpeg(
+  filename = "figures/climate/climSumLeafColTS.jpeg", 
+  width = 2400, height = 3600, res = 300)
+
+periods    <- c("MAM", "JJA", "SON")
+
+par(mfrow = c(5, 3), 
+    mar = c(4, 4, 2, 1),   
+    oma = c(0, 0, 4, 8))
+
+for (i in seq_along(clim_vars)) { # i = "tmeanmin"
+  for (j in seq_along(periods)) { # j = "MAM"
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_climtscl[emp_climtscl$period == p & !is.na(emp_climtscl[[var]]) & 
+                          !is.na(emp_climtscl$anomleafcolor), ]
+    
+    plot(dat[[var]], dat$anomleafcolor,
+         xlab = var, ylab  = "leaf color",
+         ylim = c(min(emp_climtscl$anomleafcolor), 
+                  max(emp_climtscl$anomleafcolor)+20),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    abline(h = 0, lty = 2, col = "gray50")
+    
+    # Add column headers 
+    if (i == 1) {
+      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    }
+    
+    
+    if (nrow(dat) > 1) {
+      tmp    <- data.frame(x = dat[[var]], y = dat$coloredLeaves, year = dat$year)
+      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
+      sum <- summary(lm_fit)
+      significance <- ifelse(sum$coefficients[2,4]<0.05, "signif", "nonsignif")
+      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
+                    length.out = 200)
+      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
+      lines(x_seq, pred, col = "black", lwd = 2)
+      slope <- round(fixef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), 
+            side = 3, line = -2, cex = 1, adj = 0.8)
+      if (significance == "signif") {
+        mtext(" *", 
+              side = 3, line = -2, cex = 2, adj = 0.95)
+      }
+    }
+  }
+}
+
+# Legend in outer right margin
+par(xpd = NA)
+legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
+       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+       title = "Year", bty = "y", xjust = 0, yjust = -7)
+
+dev.off()
