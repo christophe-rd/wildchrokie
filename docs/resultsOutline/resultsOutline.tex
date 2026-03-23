@@ -66,24 +66,6 @@
 \section{Wildchrokie}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-% latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri Mar 20 16:13:26 2026
-\begin{table}[ht]
-\centering
-\caption{\textbf{Table Whatever} This table is just produced with somerandom data and does not mean anything. Just to show you how things work.} 
-\label{Test_table}
-\begingroup\footnotesize
-\begin{tabular}{rrrrr}
-  \toprule 
- Model & $\alpha$ & $\beta$ & t-value & $R^2$ \\
- \midrule 
-   1 & 1.96 & 0.97 & 0.03 & 0.49 \\ 
-    2 & 1.95 & 0.01 & 0.04 & -0.00 \\ 
-    3 & 1.95 & 0.01 & 0.04 & -0.00 \\ 
-   \bottomrule 
-\end{tabular}
-\endgroup
-\end{table}
 
 %-------------------------------------------------------------------------------
 \subsection{Growing season length and conditions}
@@ -91,7 +73,7 @@
 \begin{enumerate}
 
 % GSL length
-\item Across the three years and all species, the growing season length varied from 90 days to 173 days. 
+\item Across the three years and all species, the growing season length varied from 90 to 173 days. 
 
 % GSL length
 \item The year with longest growing season length on average was 
@@ -109,9 +91,9 @@ and the coldest,
 
 % Temperature summer
 \item The hottest summer period of the three years (JJA) was
-2020 with a mean temperature of 23.07$^\circ$C,
+2020 with a mean mean temperature of 23.07$^\circ$C,
 and the coldest,
-2019 with a mean temperature of 22.38$^\circ$C.
+2019 with a mean mean temperature of 22.38$^\circ$C.
 
 % PDSI spring
 \item The driest spring period of the three years (MAM) was
@@ -127,16 +109,45 @@ and the wettest,
 
 % PPT spring
 \item The spring period with the highest precipitation of the three years (MAM) was
-2018 with a precipitation of 120.87,
+2018 with a total precipitation of 362.6,
 and the lowest,
-2020 with a precipitation of 91.77.
+2020 with a total precipitation of 275.3.
 
 % PPT summer
 \item The summer period with the highest precipitation of the three years (JJA) was
-2019 with a precipitation of 115.33,
+2019 with a total precipitation of 346,
 and the lowest,
-2020 with a precipitation of 66.37.
+2020 with a total precipitation of 199.1.
 \end{enumerate}
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Mon Mar 23 13:07:44 2026
+\begin{table}[ht]
+\centering
+\caption{Climate variables for each year and seasons.} 
+\label{tab:climate_summary}
+\begingroup\footnotesize
+\begin{tabular}{rlrrrrr}
+  \toprule 
+ Year & Season & PDSI & T\textsubscript{max} ($^\circ$C) & T\textsubscript{mean} ($^\circ$C) & T\textsubscript{min} ($^\circ$C) & PPT (mm) \\
+ \midrule 
+ 2018 & DJF & 2.48 & 5.77 & 0.73 & -4.30 & 301 \\ 
+  2018 & JJA & 1.92 & 28.40 & 22.85 & 17.30 & 308 \\ 
+  2018 & MAM & 2.44 & 14.33 & 8.90 & 3.47 & 363 \\ 
+  2018 & SON & 3.31 & 17.17 & 12.13 & 7.10 & 483 \\ 
+  2019 & DJF & 3.79 & 4.67 & -0.12 & -4.90 & 412 \\ 
+  2019 & JJA & 4.02 & 28.13 & 22.38 & 16.63 & 346 \\ 
+  2019 & MAM & 2.74 & 14.03 & 8.72 & 3.40 & 328 \\ 
+  2019 & SON & 3.45 & 17.77 & 12.07 & 6.37 & 316 \\ 
+  2020 & DJF & 1.29 & 6.37 & 1.78 & -2.80 & 304 \\ 
+  2020 & JJA & -2.35 & 28.90 & 23.07 & 17.23 & 199 \\ 
+  2020 & MAM & 1.32 & 14.57 & 9.05 & 3.53 & 275 \\ 
+  2020 & SON & -2.87 & 19.23 & 13.30 & 7.37 & 278 \\ 
+   \bottomrule 
+\end{tabular}
+\endgroup
+\end{table}
+
 
 %-------------------------------------------------------------------------------
 \subsection{Phenology observations}
@@ -146,7 +157,7 @@ and the lowest,
 \item On average, the earliest leafout date was in 2019 for all species (A. incana: 120.86, 
 B alleghaniensis: 123, 
 B. papyrifera: 123.33 and 
-B. populifolia: 121. 
+B. populifolia: 121). 
 The latest leafout date for all species was in 2020 (
 A. incana: 148.68, 
 B alleghaniensis: 141.32, 
@@ -166,6 +177,8 @@ B. papyrifera: 279.43 and
 B. populifolia: 282).
 No species was consistently the earliest nor the latest set bud.
 
+\item Across all species and for our three years, we found that PDSI and the total precipitation over the winter and spring were the only two significant climate predictors. Temperature did not affect leafout.
+\item We found similar relationships with budset with the spring, summer and autumn PDSI and precipitation affecting this phenophase with no effect of temperature over these periods.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -173,7 +186,8 @@ No species was consistently the earliest nor the latest set bud.
 %-------------------------------------------------------------------------------
 \begin{enumerate}
 \item The ring width of our species vary from 0.39mm to 13.55mm. 
-\item Ring widths for A. incana varied from 0.61 to 7.81, 
+\item Ring widths for A. incana varied 
+from 0.61 to 7.81, 
 from 0.39 to 6.92 for B. alleghaniensis, 
 from 0.65 to 6.42 for B. papyrifera and 
 from 0.75 to 13.55 for B. populifolia.
@@ -182,31 +196,29 @@ from 0.75 to 13.55 for B. populifolia.
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a stronger response to longer GSL compared to increased GDD. Especially for A. incana not shifting its growth in response to GDD but showing a strong response to GSL, as well as the start and end of season.
+Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a stronger response to GSL. Specifically, A. incana shows a marked shift in its response strength with longer GSL compared to GDD.
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
-\caption{Model parameters across the different predictors}
+\caption{Model parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independant variable changing (see \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS and \ref{fig:wcEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplot}
 \end{figure}
 
 \begin{enumerate}
 
 % GDD
-\item A. incana ($\beta = $ 0.28, $UI_{90}$[-0.1, 0.65]),
+\item Though the effects are weak, all species appear to slightly grow more with increased GDD (A. incana ($\beta = $ 0.28, $UI_{90}$[-0.1, 0.65]),
 B. alleghaniensis ($\beta = $ 0.18, $UI_{90}$[-0.24, 0.59]) and
-B. papyrifera ($\beta = $ 0.29, $UI_{90}$[-0.27, 0.83]) 
-show a weak response, but seem to grow more with more GDD, while 
-B. populifolia  ($\beta = $ 0.08, $UI_{90}$[-0.36, 0.52])  
-did not respond to increased GDD 
+B. papyrifera ($\beta = $ 0.29, $UI_{90}$[-0.27, 0.83])),
+with the weakest effect being on
+B. populifolia  ($\beta = $ 0.08, $UI_{90}$[-0.36, 0.52])
 (Figure \ref{fig:wcmuplot}).
 
 % Figure Growth X GDD
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-\label{fig:wcgrowthSlopesGDD}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \end{figure}
 
 
@@ -214,15 +226,14 @@ did not respond to increased GDD
 \item A. incana ($\beta = $ 0.38, $UI_{90}$[0.14, 0.62]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season (GSL).
 B. alleghaniensis ($\beta = $ 0.19, $UI_{90}$[-0.11, 0.5]) and
 B. papyrifera ($\beta = $ 0.33, $UI_{90}$[-0.11, 0.78]) 
-show a weaker response, but seem to grow more in response to longer seasons, while 
-B. populifolia  ($\beta = $ 0.02, $UI_{90}$[-0.32, 0.36])  
-did not respond to the GSL 
+show a weaker response, but seem to grow more in response to longer seasons, with an even weaker response for 
+B. populifolia  ($\beta = $ 0.02, $UI_{90}$[-0.32, 0.36])
 (Figure \ref{fig:wcmuplot}).
 
 % Figure Growth X GSL
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width responses to length of the primary growing season (days). The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \label{fig:wcgrowthSlopesGSL}
 \end{figure}
 
@@ -230,13 +241,15 @@ did not respond to the GSL
 \item Ring width decreased with a later start of season (SOS) for 
 A. incana ($\beta = $ -0.66, $UI_{90}$[-0.9, -0.43]) and 
 B. populifolia ($\beta = $ -0.45, $UI_{90}$[-0.83, -0.05]). 
-Whereas B. alleghaniensis ($\beta = $ -0.2, $UI_{90}$[-0.55, 0.14]) and
+The 90\% UI overlap with 0 for 
+B. alleghaniensis ($\beta = $ -0.2, $UI_{90}$[-0.55, 0.14]) and
 B. papyrifera ($\beta = $ -0.21, $UI_{90}$[-0.69, 0.27]) 
-show a weaker response, but seem to grow less with later SOS.
+showing a weaker, but negative response to a later SOS
 (Figure \ref{fig:wcmuplot}).
 
 % EOS
-\item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ -0.27, $UI_{90}$[-0.52, -0.02]). B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ -0.25, $UI_{90}$[-0.54, 0.05]). 
+\item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ -0.27, $UI_{90}$[-0.52, -0.02]). 
+B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ -0.25, $UI_{90}$[-0.54, 0.05]). 
 B. alleghaniensis ($\beta = $ 0.04, $UI_{90}$[-0.25, 0.33]) and
 B. papyrifera ($\beta = $ 0.06, $UI_{90}$[-0.33, 0.45]) 
 didn't respond to EOS.
@@ -254,33 +267,6 @@ Only HF grew less ($\alpha_{site} = $ = -0.72, $UI_{90}$[-2.39, 0.92])
 
 \end{enumerate}
 
-%-------------------------------------------------------------------------------
-%-------------------------------------------------------------------------------
-\subsection*{coringTreespotters}
-% \begin{enumerate}
-%   \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Betula alleghaniensis grew less.(Figure \ref{fig:growthSlopes})
-%   \item
-%   \item
-%   \item 
-% \end{enumerate}
-
-
-
-
-% Figure mu plot bspp
-% \begin{figure}[!ht]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-% \caption{Slope values across the different species}
-% \label{fig:tsmuplotbspp}
-% \end{figure}
-
-% Figure provenances
-% \begin{figure}[h!]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-% \caption{Site intercept values}
-% \label{fig:tsmuplotbsppasite}
-% \end{figure}
-
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -293,22 +279,85 @@ Only HF grew less ($\alpha_{site} = $ = -0.72, $UI_{90}$[-2.39, 0.92])
 
 \subsection*{Wildchrokie}
 \begin {enumerate}
-\item Fitting start of season (leafout) adds 12 rows of data out of the 227 when removing both NA entries for leafout and budset. Fitting end of season (budset) adds 3 rows of data out of the 227 when removing both NA entries for leafout and budset.
+\item Fitting start of season (leafout) adds 12 rows of data out of the 227 when removing both NA entries for leafout and budset, and 3 rows of data when fitting the full dataset of end of season (budset).
 \item Fitting with the maximum number of rows of data didn't change the parameter estimates by much for SOS (Figure \ref{fig:wcSOScomparison}) and EOS (Figure \ref{fig:wcEOScomparison}).
 \end {enumerate}
 
 % SOS data comparison
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/SOSFullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with SOS as the predictor.}
+\caption{Full vs most restricted rows of data for the model with SOS as the predictor. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcSOScomparison}
 \end{figure}
 
 % EOS data comparison 
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/EOSFullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with EOS as the predictor.}
+\caption{Full vs most restricted rows of data for the model with EOS as the predictor. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcEOScomparison}
 \end{figure}
+
+% Leafout X climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/climate/climSumLeafout.jpeg}
+\caption{Leafout as a function of different climate predictors across winter (DJF) and spring (MAM). DJF is for December, January and February and MAM is for March, April and May. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
+\label{fig:leafoutClim}
+\end{figure}
+
+% Budset X climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/climate/climSumBudset.jpeg}
+\caption{Budset as a function of different climate predictors across spring (MAM), summer (JJA) and autumn (SON). MAM is for March, April and May, JJA is for June, July and August and SON is for September, October and November. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
+\label{fig:budsetClim}
+\end{figure}
+
+% Climate lmer output
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Mon Mar 23 13:07:44 2026
+\begin{table}[ht]
+\centering
+\caption{\ Regression coefficients for the lmer model with years as random effects.} 
+\label{tab:clim_results}
+\begingroup\footnotesize
+\begin{tabular}{llrrrr}
+  \toprule 
+ Predictor & Season & Slope & Std.\ Error & $t$-value & $p$-value \\
+ \midrule 
+ \multicolumn{6}{l}{\textit{leafout}} \\
+ \midrule 
+ PDSI & DJF & -7.76 & 2.12 & -3.66 & 0.17 \\ 
+  PDSI & MAM & -8.05 & 0.69 & -11.66 & 0.05 \\ 
+  TempMeanMax & DJF & 7.38 & 3.18 & 2.33 & 0.26 \\ 
+  TempMeanMax & MAM & 7.66 & 2.45 & 3.12 & 0.20 \\ 
+  TempMeanMean & DJF & 7.92 & 1.42 & 5.58 & 0.11 \\ 
+  TempMeanMean & MAM & 7.69 & 2.34 & 3.28 & 0.19 \\ 
+  TempMeanMin & DJF & 8.07 & 0.46 & 17.55 & 0.00 \\ 
+  TempMeanMin & MAM & 7.82 & 1.90 & 4.12 & 0.15 \\ 
+  Precip & DJF & -5.72 & 5.69 & -1.01 & 0.50 \\ 
+  Precip & MAM & -6.34 & 5.18 & -1.22 & 0.44 \\ 
+   \midrule 
+ \multicolumn{6}{l}{\textit{budset}} \\
+ \midrule 
+ &  &  &  &  &  \\ 
+  PDSI & MAM & -5.85 & 0.74 & -7.92 & 0.00 \\ 
+  PDSI & JJA & -5.80 & 0.77 & -7.55 & 0.07 \\ 
+  PDSI & SON & -5.77 & 1.05 & -5.49 & 0.11 \\ 
+  TempMeanMax & MAM & 5.37 & 2.26 & 2.38 & 0.25 \\ 
+  TempMeanMax & JJA & 5.78 & 0.89 & 6.52 & 0.09 \\ 
+  TempMeanMax & SON & 5.23 & 2.76 & 1.90 & 0.31 \\ 
+  TempMeanMean & MAM & 5.40 & 2.18 & 2.48 & 0.24 \\ 
+  TempMeanMean & JJA & 5.01 & 2.96 & 1.69 & 0.34 \\ 
+  TempMeanMean & SON & 5.79 & 0.89 & 6.53 & 0.09 \\ 
+  TempMeanMin & MAM & 5.52 & 1.86 & 2.96 & 0.20 \\ 
+  TempMeanMin & JJA & 3.45 & 4.72 & 0.73 & 0.60 \\ 
+  TempMeanMin & SON & 4.85 & 3.23 & 1.50 & 0.37 \\ 
+  Precip & MAM & -4.90 & 3.34 & -1.47 & 0.38 \\ 
+  Precip & JJA & -5.85 & 0.74 & -7.91 & 0.00 \\ 
+  Precip & SON & -2.86 & 5.23 & -0.55 & 0.68 \\ 
+   \bottomrule 
+\end{tabular}
+\endgroup
+\end{table}
+
 
 \end{document}

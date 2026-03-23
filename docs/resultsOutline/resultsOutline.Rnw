@@ -18,56 +18,40 @@ source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/m
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 options(digits = 2)
 # get some useful objects
-yrwc <- c(2018:2020)
+yrwc <- c(2018:2020) 
 
 pgsGSLagg <- aggregate(pgsGSL ~ year, emp, mean)
 
+# get the model dfs
+aspp_df5 <- aspp_df2[, c("spp_name", "fit_aspp_per5", "fit_aspp_per25","fit_aspp_per75","fit_aspp_per95")]
+aspp_df5_gsl <- aspp_df2_gsl[, c("spp_name", "fit_aspp_per5", "fit_aspp_per25","fit_aspp_per75","fit_aspp_per95")]
+aspp_df5_sos <- aspp_df2_sos[, c("spp_name", "fit_aspp_per5", "fit_aspp_per25","fit_aspp_per75","fit_aspp_per95")]
+aspp_df5_eos <- aspp_df2_eos[, c("spp_name", "fit_aspp_per5", "fit_aspp_per25","fit_aspp_per75","fit_aspp_per95")]
+
+site_df5 <-         site_df2[, c("site_name", "fit_a_site_per5", "fit_a_site_per25","fit_a_site_per75","fit_a_site_per95")]
+site_df5_gsl <- site_df2_gsl[, c("site_name", "fit_a_site_per5", "fit_a_site_per25","fit_a_site_per75","fit_a_site_per95")]
+site_df5_sos <- site_df2_sos[, c("site_name", "fit_a_site_per5", "fit_a_site_per25","fit_a_site_per75","fit_a_site_per95")]
+site_df5_eos <- site_df2_eos[, c("site_name", "fit_a_site_per5", "fit_a_site_per25","fit_a_site_per75","fit_a_site_per95")]
+
+bspp_df5 <-         bspp_df2[, c("spp_name", "fit_bspp_per5", "fit_bspp_per25","fit_bspp_per75","fit_bspp_per95")]
+bspp_df5_gsl <- bspp_df2_gsl[, c("spp_name", "fit_bspp_per5", "fit_bspp_per25","fit_bspp_per75","fit_bspp_per95")]
+bspp_df5_sos <- bspp_df2_sos[, c("spp_name", "fit_bspp_per5", "fit_bspp_per25","fit_bspp_per75","fit_bspp_per95")]
+bspp_df5_eos <- bspp_df2_eos[, c("spp_name", "fit_bspp_per5", "fit_bspp_per25","fit_bspp_per75","fit_bspp_per95")]
+
+climatesumfortable <- climatesum[which(climatesum$year %in% yrwc), 1:7]
 @
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Wildchrokie}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-<<Code_chunk_Minimal_example, results='asis', echo=FALSE>>=
-library(xtable)
-#Just some random data
-x1 <- rnorm(1000); x2 <- rnorm(1000); x3 <- rnorm(1000)
-y  <- 2 + 1 *x1 + rnorm(1000)
-#Run regressions
-reg1 <- summary(lm(y ~ x1))
-reg2 <- summary(lm(y ~ x2))
-reg3 <- summary(lm(y ~ x3))
-#Create data.frame
-df <- data.frame(Model = 1:3,
-                 Alpha = c(reg1$coef[1,1], reg2$coef[1,1], reg3$coef[1,1]),
-                 Beta  = c(reg1$coef[2,1], reg2$coef[2,1], reg3$coef[2,1]),
-                 tV    = c(reg1$coef[2,2], reg2$coef[2,2], reg3$coef[2,2]),
-                 AdjR  = c(reg1$adj.r.s,  reg2$adj.r.s,   reg3$adj.r.s))
-strCaption <- paste0("\\textbf{Table Whatever} This table is just produced with some",
-                     "random data and does not mean anything. Just to show you how ",
-                     "things work.")
-print(xtable(df, digits=2, caption=strCaption, label="Test_table"), 
-      size="footnotesize", #Change size; useful for bigger tables
-      include.rownames=FALSE, #Don't print rownames
-      include.colnames=FALSE, #We create them ourselves
-      caption.placement="top", 
-      hline.after=NULL, #We don't need hline; we use booktabs
-      add.to.row = list(pos = list(-1, 
-                                   nrow(df)),
-                        command = c(paste("\\toprule \n",
-                                          "Model & $\\alpha$ & $\\beta$ & t-value & $R^2$ \\\\\n", 
-                                          "\\midrule \n"),
-                                    "\\bottomrule \n")
-                        )
-      )
 
-@
 %-------------------------------------------------------------------------------
 \subsection{Growing season length and conditions}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
 
 % GSL length
-\item Across the three years and all species, the growing season length varied from \Sexpr{min(emp$pgsGSL)} days to \Sexpr{max(emp$pgsGSL)} days. 
+\item Across the three years and all species, the growing season length varied from \Sexpr{min(emp$pgsGSL)} to \Sexpr{max(emp$pgsGSL)} days. 
 
 % GSL length
 \item The year with longest growing season length on average was 
@@ -89,9 +73,9 @@ and the coldest,
 
 % Temperature summer
 \item The hottest summer period of the three years (JJA) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean temperature of \Sexpr{climatesum$tmeanmean[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C,
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean mean temperature of \Sexpr{climatesum$tmeanmean[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C,
 and the coldest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean temperature of \Sexpr{climatesum$tmeanmean[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C.
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean mean temperature of \Sexpr{climatesum$tmeanmean[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C.
 
 % PDSI spring
 \item The driest spring period of the three years (MAM) was
@@ -107,16 +91,46 @@ and the wettest,
 
 % PPT spring
 \item The spring period with the highest precipitation of the three years (MAM) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]},
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]},
 and the lowest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}.
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}.
 
 % PPT summer
 \item The summer period with the highest precipitation of the three years (JJA) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]},
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]},
 and the lowest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}.
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}.
 \end{enumerate}
+
+<<climate_summary_table, results='asis', echo=FALSE>>=
+
+
+strCaption <- paste0("Climate variables for each year and seasons.")
+
+print(xtable(climatesumfortable, 
+             digits  = c(0, 0, 0, 2, 2, 2, 2, 0),
+             caption = strCaption, 
+             label   = "tab:climate_summary"),
+      size               = "footnotesize",
+      include.rownames   = FALSE,
+      include.colnames   = FALSE,
+      caption.placement  = "top",
+      hline.after        = NULL,
+      sanitize.text.function = identity,
+      add.to.row = list(
+        pos     = list(-1, nrow(climatesumfortable)),
+        command = c(
+          paste("\\toprule \n",
+                "Year & Season & PDSI & T\\textsubscript{max} ($^\\circ$C)",
+                "& T\\textsubscript{mean} ($^\\circ$C)",
+                "& T\\textsubscript{min} ($^\\circ$C)",
+                "& PPT (mm) \\\\\n",
+                "\\midrule \n"),
+          "\\bottomrule \n"
+        )
+      )
+)
+@
 
 %-------------------------------------------------------------------------------
 \subsection{Phenology observations}
@@ -126,7 +140,7 @@ and the lowest,
 \item On average, the earliest leafout date was in 2019 for all species (A. incana: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Alnus incana"])}, 
 B alleghaniensis: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula alleghaniensis"])}, 
 B. papyrifera: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula papyrifera"])} and 
-B. populifolia: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula populifolia"])}. 
+B. populifolia: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula populifolia"])}). 
 The latest leafout date for all species was in 2020 (
 A. incana: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Alnus incana"])}, 
 B alleghaniensis: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula alleghaniensis"])}, 
@@ -146,6 +160,8 @@ B. papyrifera: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula papyrife
 B. populifolia: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula populifolia"])}).
 No species was consistently the earliest nor the latest set bud.
 
+\item Across all species and for our three years, we found that PDSI and the total precipitation over the winter and spring were the only two significant climate predictors. Temperature did not affect leafout.
+\item We found similar relationships with budset with the spring, summer and autumn PDSI and precipitation affecting this phenophase with no effect of temperature over these periods.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -153,7 +169,8 @@ No species was consistently the earliest nor the latest set bud.
 %-------------------------------------------------------------------------------
 \begin{enumerate}
 \item The ring width of our species vary from \Sexpr{min(emp$lengthMM)}mm to \Sexpr{max(emp$lengthMM)}mm. 
-\item Ring widths for A. incana varied from \Sexpr{rwsum[1,2]} to \Sexpr{rwsum[1,3]}, 
+\item Ring widths for A. incana varied 
+from \Sexpr{rwsum[1,2]} to \Sexpr{rwsum[1,3]}, 
 from \Sexpr{rwsum[2,2]} to \Sexpr{rwsum[2,3]} for B. alleghaniensis, 
 from \Sexpr{rwsum[3,2]} to \Sexpr{rwsum[3,3]} for B. papyrifera and 
 from \Sexpr{rwsum[4,2]} to \Sexpr{rwsum[4,3]} for B. populifolia.
@@ -162,31 +179,29 @@ from \Sexpr{rwsum[4,2]} to \Sexpr{rwsum[4,3]} for B. populifolia.
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a stronger response to longer GSL compared to increased GDD. Especially for A. incana not shifting its growth in response to GDD but showing a strong response to GSL, as well as the start and end of season.
+Our results show similar trends in response to the thermal (GDD) versus the calendar growing season (GSL), with a stronger response to GSL. Specifically, A. incana shows a marked shift in its response strength with longer GSL compared to GDD.
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
-\caption{Model parameters across the different predictors}
+\caption{Model parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independant variable changing (see \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS and \ref{fig:wcEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplot}
 \end{figure}
 
 \begin{enumerate}
 
 % GDD
-\item A. incana ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Alnus incana")]}]),
+\item Though the effects are weak, all species appear to slightly grow more with increased GDD (A. incana ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Alnus incana")]}]),
 B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula alleghaniensis")]}]) and
-B. papyrifera ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}]) 
-show a weak response, but seem to grow more with more GDD, while 
-B. populifolia  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula populifolia")]}])  
-did not respond to increased GDD 
+B. papyrifera ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}])),
+with the weakest effect being on
+B. populifolia  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula populifolia")]}])
 (Figure \ref{fig:wcmuplot}).
 
 % Figure Growth X GDD
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to growing degree days for the primary growing season. The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
-\label{fig:wcgrowthSlopesGDD}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \end{figure}
 
 
@@ -194,15 +209,14 @@ did not respond to increased GDD
 \item A. incana ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season (GSL).
 B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}]) and
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}]) 
-show a weaker response, but seem to grow more in response to longer seasons, while 
-B. populifolia  ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}])  
-did not respond to the GSL 
+show a weaker response, but seem to grow more in response to longer seasons, with an even weaker response for 
+B. populifolia  ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}])
 (Figure \ref{fig:wcmuplot}).
 
 % Figure Growth X GSL
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width responses to length of the primary growing season (days). The shaded areas represent the 50\% confidence intervals. The dots represent the empirical data}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \label{fig:wcgrowthSlopesGSL}
 \end{figure}
 
@@ -210,13 +224,15 @@ did not respond to the GSL
 \item Ring width decreased with a later start of season (SOS) for 
 A. incana ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}]) and 
 B. populifolia ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]). 
-Whereas B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}]) and
+The 90\% UI overlap with 0 for 
+B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}]) and
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}]) 
-show a weaker response, but seem to grow less with later SOS.
+showing a weaker, but negative response to a later SOS
 (Figure \ref{fig:wcmuplot}).
 
 % EOS
-\item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]). B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}]). 
+\item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]). 
+B. populifolia showed a weaker response but appears to also grow less with a later EOS ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}]). 
 B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}]) and
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}]) 
 didn't respond to EOS.
@@ -234,33 +250,6 @@ Only HF grew less ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df
 
 \end{enumerate}
 
-%-------------------------------------------------------------------------------
-%-------------------------------------------------------------------------------
-\subsection*{coringTreespotters}
-% \begin{enumerate}
-%   \item Both maples, and both birches responded to varying growing degree days during the growing season. Maples and River birch grew more wheras Betula alleghaniensis grew less.(Figure \ref{fig:growthSlopes})
-%   \item
-%   \item
-%   \item 
-% \end{enumerate}
-
-
-
-
-% Figure mu plot bspp
-% \begin{figure}[!ht]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/bspp_mean_plot.jpeg}
-% \caption{Slope values across the different species}
-% \label{fig:tsmuplotbspp}
-% \end{figure}
-
-% Figure provenances
-% \begin{figure}[h!]
-% \includegraphics[width=0.5\textwidth]{../../analyses/figures/empiricalData/asite_mean_plot.jpeg}
-% \caption{Site intercept values}
-% \label{fig:tsmuplotbsppasite}
-% \end{figure}
-
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -273,22 +262,77 @@ Only HF grew less ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df
 
 \subsection*{Wildchrokie}
 \begin {enumerate}
-\item Fitting start of season (leafout) adds \Sexpr{nrow(empfull[!is.na(empfull$leafout),]) - nrow(empfull[!is.na(empfull$pgsGDD5),])} rows of data out of the \Sexpr{nrow(empfull[!is.na(empfull$pgsGDD5),])} when removing both NA entries for leafout and budset. Fitting end of season (budset) adds \Sexpr{nrow(empfull[!is.na(empfull$budset),]) - nrow(empfull[!is.na(empfull$pgsGDD5),])} rows of data out of the \Sexpr{nrow(empfull[!is.na(empfull$pgsGDD5),])} when removing both NA entries for leafout and budset.
+\item Fitting start of season (leafout) adds \Sexpr{nrow(empfull[!is.na(empfull$leafout),]) - nrow(empfull[!is.na(empfull$pgsGDD5),])} rows of data out of the \Sexpr{nrow(empfull[!is.na(empfull$pgsGDD5),])} when removing both NA entries for leafout and budset, and \Sexpr{nrow(empfull[!is.na(empfull$budset),]) - nrow(empfull[!is.na(empfull$pgsGDD5),])} rows of data when fitting the full dataset of end of season (budset).
 \item Fitting with the maximum number of rows of data didn't change the parameter estimates by much for SOS (Figure \ref{fig:wcSOScomparison}) and EOS (Figure \ref{fig:wcEOScomparison}).
 \end {enumerate}
 
 % SOS data comparison
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/SOSFullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with SOS as the predictor.}
+\caption{Full vs most restricted rows of data for the model with SOS as the predictor. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcSOScomparison}
 \end{figure}
 
 % EOS data comparison 
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/empiricalData/EOSFullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with EOS as the predictor.}
+\caption{Full vs most restricted rows of data for the model with EOS as the predictor. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcEOScomparison}
 \end{figure}
+
+% Leafout X climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/climate/climSumLeafout.jpeg}
+\caption{Leafout as a function of different climate predictors across winter (DJF) and spring (MAM). DJF is for December, January and February and MAM is for March, April and May. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
+\label{fig:leafoutClim}
+\end{figure}
+
+% Budset X climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/climate/climSumBudset.jpeg}
+\caption{Budset as a function of different climate predictors across spring (MAM), summer (JJA) and autumn (SON). MAM is for March, April and May, JJA is for June, July and August and SON is for September, October and November. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
+\label{fig:budsetClim}
+\end{figure}
+
+% Climate lmer output
+<<Code_chunk_Minimal_example, results='asis', echo=FALSE>>=
+# add separator
+separator <- data.frame(predictor="", period="", slope=NA,
+                        std_error=NA, t_value=NA, p_value=NA)
+
+combined <- rbind(climresultsleafout, separator, climresultsbudset)
+
+strCaption <- paste0("\\ Regression coefficients for the lmer model with years as random effects.")
+
+print(xtable(combined, digits=2, caption=strCaption, label="tab:clim_results"),
+      size="footnotesize",
+      include.rownames=FALSE,
+      include.colnames=FALSE,
+      caption.placement="top",
+      hline.after=NULL,
+      sanitize.text.function = identity,      
+      add.to.row = list(
+        pos = list(-1,                        
+                   nrow(climresultsleafout),  
+                   nrow(combined)),           
+        command = c(
+          #header
+          paste("\\toprule \n",
+                "Predictor & Season & Slope & Std.\\ Error & $t$-value & $p$-value \\\\\n",
+                "\\midrule \n",
+                # leafout sub-header
+                "\\multicolumn{6}{l}{\\textit{leafout}} \\\\\n",
+                "\\midrule \n"),
+          # separators
+          paste("\\midrule \n",
+                "\\multicolumn{6}{l}{\\textit{budset}} \\\\\n",
+                "\\midrule \n"),
+          #footer?
+          "\\bottomrule \n"
+        )
+      )
+)
+
+@
 
 \end{document}
