@@ -260,10 +260,10 @@ meanminson$period <- "SON"
 meanmin <- rbind(meanmindjf,meanminmam,meanminjja,meanminson)
 
 # precipitation
-meanpptdjf <- aggregate(ppt ~ year, terra_djf, mean)
-meanpptmam <- aggregate(ppt ~ year, terra_mam, mean)
-meanpptjja <- aggregate(ppt ~ year, terra_jja, mean)
-meanpptson <- aggregate(ppt ~ year, terra_son, mean)
+meanpptdjf <- aggregate(ppt ~ year, terra_djf, sum)
+meanpptmam <- aggregate(ppt ~ year, terra_mam, sum)
+meanpptjja <- aggregate(ppt ~ year, terra_jja, sum)
+meanpptson <- aggregate(ppt ~ year, terra_son, sum)
 colnames(meanpptdjf) <- c("year", "ppt")
 colnames(meanpptmam) <- c("year", "ppt")
 colnames(meanpptjja) <- c("year", "ppt")

@@ -8,9 +8,8 @@
 rm(list=ls()) 
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
-# options(mc.cores = parallel::detectCores())
+options(mc.cores = parallel::detectCores())
 options(digits = 3)
-# quartz()
 
 # Load library 
 library(ggplot2)
@@ -48,8 +47,10 @@ emp2$site_num <- match(emp2$site, unique(emp2$site))
 emp2$spp_num <- match(emp2$spp, unique(emp2$spp))
 emp2$treeid_num <- match(emp2$treeid, unique(emp2$treeid))
 
+emp2$lengthMM <- emp2$lengthCM*10
+
 # transform data in vectors for GDD
-y <- emp2$lengthCM*10 # ring width in mm
+y <- emp2$lengthMM # ring width in mm
 N <- nrow(emp2)
 Nspp <- length(unique(emp2$spp_num))
 Nsite <- length(unique(emp2$site_num))
@@ -59,10 +60,10 @@ treeid <- as.numeric(emp2$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 # different response variables
-gdd <- emp2$pgsGDD5/200
-gsl <- as.numeric(emp2$pgsGSL/10)
-sos <- emp2$leafout/10
-eos <- emp2$budset/10
+gdd <- (emp2$pgsGDD5 - mean(emp2$pgsGDD5)) / sd(emp2$pgsGDD5)
+gsl <- (emp2$pgsGSL - mean(emp2$pgsGSL)) / sd(emp2$pgsGSL)
+sos <- (emp2$leafout - mean(emp2$leafout)) / sd(emp2$leafout)
+eos <- (emp2$budset - mean(emp2$budset)) / sd(emp2$budset)
 
 # Fit model GDD
 rstan_options(auto_write = TRUE)
@@ -72,8 +73,7 @@ fitgdd <- sampling(gddmodel, data = c("N","y",
                                 "Nsite", "site", 
                                 "Ntreeid", "treeid", 
                                 "gdd"),
-                warmup = 1000, iter=2000, 
-                chains=4)
+                warmup = 1000, iter=2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -88,8 +88,7 @@ fitgsl <- sampling(gslmodel, data = c("N","y",
                                   "Nsite", "site", 
                                   "Ntreeid", "treeid", 
                                   "gsl"),
-                warmup = 1000, iter = 2000, 
-                chains = 4)
+                warmup = 1000, iter = 2000, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
 
 # Fit model SOS
@@ -100,8 +99,7 @@ fitsos <- sampling(sosmodel, data = c("N","y",
                                   "Nsite", "site",
                                   "Ntreeid", "treeid",
                                   "sos"),
-                warmup = 1000, iter = 2000,
-                chains=4)
+                warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 
 # Fit model EOS
@@ -112,8 +110,7 @@ fiteos <- sampling(eosmodel, data = c("N","y",
                                   "Nsite", "site",
                                   "Ntreeid", "treeid",
                                   "eos"),
-                warmup = 1000, iter = 2000,
-                chains=4)
+                warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
 

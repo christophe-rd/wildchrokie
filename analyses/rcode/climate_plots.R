@@ -187,68 +187,106 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "ppt")] <- "Precip"
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-if(makeplots) {
-jpeg(
-  filename = "figures/climate/climSumLeafout.jpeg", 
-  width = 2400, height = 3600, res = 300)
 
-periods    <- c("DJF", "MAM")
-
-par(mfrow = c(5, 2), 
-    mar = c(4, 4, 2, 1),   
-    oma = c(0, 0, 4, 8))
-
-for (i in seq_along(clim_vars)) { # i = "tmeanmin"
-  for (j in seq_along(periods)) { # j = "MAM"
-    
-    p   <- periods[j]
-    var <- clim_vars[i]
-    
-    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
-                      !is.na(emp_clim$anomleafout), ]
-    
-    plot(dat[[var]], dat$anomleafout,
-         xlab = var, ylab  = "leafout",
-         ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
-         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
-         main = "")
-    
-    # Add column headers 
-    if (i == 1) {
-      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
-    }
-    
-    if (nrow(dat) > 1) {
-      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
-      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
-      sum <- summary(lm_fit)
-      significance <- ifelse(sum$coefficients[2,4]<0.05, "signif", "nonsignif")
-      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
-                    length.out = 200)
-      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
-      lines(x_seq, pred, col = "black", lwd = 2)
-      slope <- round(fixef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope), 
-            side = 3, line = -2, cex = 1, adj = 0.8)
-      if (significance == "signif") {
-        mtext(" *", 
-              side = 3, line = -2, cex = 2, adj = 0.95)
+  # Initialize results data frame
+  climresultsleafout <- data.frame(
+    predictor   = character(),
+    period      = character(),
+    slope       = numeric(),
+    std_error   = numeric(),
+    t_value     = numeric(),
+    p_value     = numeric(),
+    stringsAsFactors = FALSE
+  )
+  
+  jpeg(
+    filename = "figures/climate/climSumLeafout.jpeg", 
+    width = 2400, height = 3600, res = 300)
+  periods    <- c("DJF", "MAM")
+  par(mfrow = c(5, 2), 
+      mar = c(4, 4, 2, 1),   
+      oma = c(0, 0, 4, 8))
+  for (i in seq_along(clim_vars)) {
+    for (j in seq_along(periods)) {
+      
+      p   <- periods[j]
+      var <- clim_vars[i]
+      
+      dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
+                        !is.na(emp_clim$anomleafout), ]
+      
+      plot(dat[[var]], dat$anomleafout,
+           xlab = var, ylab  = "leafout",
+           ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
+           pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+           main = "")
+      
+      if (i == 1) {
+        mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+      }
+      
+      if (nrow(dat) > 1) {
+        tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
+        lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
+        sum <- summary(lm_fit)
+        significance <- ifelse(sum$coefficients[2,4] < 0.05, "signif", "nonsignif")
+        x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
+                      length.out = 200)
+        pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
+        lines(x_seq, pred, col = "black", lwd = 2)
+        slope <- round(fixef(lm_fit)[2], 2)
+        mtext(paste0("β = ", slope), 
+              side = 3, line = -2, cex = 1, adj = 0.8)
+        if (significance == "signif") {
+          mtext(" *", side = 3, line = -2, cex = 2, adj = 0.95)
+        }
+        
+        # Collect results
+        climresultsleafout <- rbind(climresultsleafout, data.frame(
+          predictor    = var,
+          period       = p,
+          slope     = sum$coefficients[2, 1],
+          std_error    = sum$coefficients[2, 2],
+          t_value      = sum$coefficients[2, 4],
+          p_value      = sum$coefficients[2, 5],
+          stringsAsFactors = FALSE
+        ))
+        
+      } else {
+        # Still record the row but with NAs when insufficient data
+        climresultsleafout <- rbind(climresultsleafout, data.frame(
+          predictor    = var,
+          period       = p,
+          slope        = NA_real_,
+          std_error    = NA_real_,
+          t_value      = NA_real_,
+          p_value      = NA_real_,
+          stringsAsFactors = FALSE
+        ))
       }
     }
   }
-}
-
-# Legend in outer right margin
-par(xpd = NA)
-legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
-       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
-       title = "Year", bty = "y", xjust = 0, yjust = -7)
-dev.off()
+  
+  par(xpd = NA)
+  legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
+         legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+         title = "Year", bty = "y", xjust = 0, yjust = -7)
+  dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Budset ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(
+  climresultsbudset <- data.frame(
+    predictor   = character(),
+    period      = character(),
+    slope       = numeric(),
+    std_error   = numeric(),
+    t_value     = numeric(),
+    p_value     = numeric(),
+    stringsAsFactors = FALSE
+  )
+  
+  jpeg(
   filename = "figures/climate/climSumBudset.jpeg", 
   width = 2400, height = 3600, res = 300)
 
@@ -297,6 +335,29 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
         mtext(" *", 
               side = 3, line = -2, cex = 2, adj = 0.95)
       }
+      
+      # Collect results
+      climresultsbudset <- rbind(climresultsbudset, data.frame(
+        predictor    = var,
+        period       = p,
+        slope     = sum$coefficients[2, 1],
+        std_error    = sum$coefficients[2, 2],
+        t_value      = sum$coefficients[2, 4],
+        p_value      = sum$coefficients[2, 5],
+        stringsAsFactors = FALSE
+      ))
+      
+    } else {
+      # Still record the row but with NAs when insufficient data
+      climresultsbudset <- rbind(climresultsbudset, data.frame(
+        predictor    = var,
+        period       = p,
+        slope        = NA_real_,
+        std_error    = NA_real_,
+        t_value      = NA_real_,
+        p_value      = NA_real_,
+        stringsAsFactors = FALSE
+      ))
     }
   }
 }
@@ -449,7 +510,7 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
 
 dev.off()
 
-}
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####

@@ -4,11 +4,11 @@
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
 
 # housekeeping
-# rm(list=ls())
-# options(stringsAsFactors = FALSE)
-# options(max.print = 150)
-# options(mc.cores = parallel::detectCores())
-# options(digits = 3)
+rm(list=ls())
+options(stringsAsFactors = FALSE)
+options(max.print = 150)
+options(mc.cores = parallel::detectCores())
+options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -51,7 +51,6 @@ commonNames <- c(
 )
 
 emp$commonName <- commonNames[emp$latbi]
-emp$lengthMM <- emp$lengthCM*10
 
 # copy of emp with no row removal
 empfull <- emp
@@ -77,7 +76,7 @@ Ntreeid <- length(unique(treeid))
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgdd <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGDD")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -107,10 +106,16 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
+
+treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
+bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
+site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgsl <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthGSL")
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
 
 df_fitgsl <- as.data.frame(fitgsl)
 
@@ -149,7 +154,7 @@ aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitsos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthSOS")
+fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
 
 df_fitsos <- as.data.frame(fitsos)
 
@@ -188,7 +193,7 @@ aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fiteos <- readRDS("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/stanOutput/fitGrowthEOS")
+fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
 
 df_fiteos <- as.data.frame(fiteos)
 
@@ -227,15 +232,9 @@ aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-treeid_df2$treeid <- as.numeric(treeid_df2$treeid)
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Define objects used throught the models ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Define objects used throught the models #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 sitefull <- c(
   "GR" = "Dartmouth College (NH)",
   "HF" = "Harvard Forest (MA)",
