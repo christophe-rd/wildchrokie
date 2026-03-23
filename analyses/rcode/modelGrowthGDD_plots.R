@@ -34,7 +34,7 @@ source('rcode/utilExtractParam.R')
 
 # flags
 makeplots <- FALSE
-interceptmuplots <- TRUE
+interceptmuplots <- FALSE
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
@@ -60,7 +60,7 @@ emp <- emp[!is.na(emp$pgsGDD5),]
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
-
+emp$lengthMM <- emp$lengthCM
 # transform data in vectors
 y <- emp$lengthMM # ring width in mm
 N <- nrow(emp)
@@ -329,7 +329,7 @@ colnames(treeid_bspp) <- colnames(atreeidsub)
 # back convert the slopes to their original scales
 bspp_df4 <- bspp_df
 for (i in 1:ncol(bspp_df4)){
-  bspp_df4[[i]] <- bspp_df4[[i]] / 200
+  bspp_df4[[i]] <- bspp_df4[[i]]/200
 }
 
 for (i in seq_len(ncol(treeid_bspp))) { # i = 30
@@ -1314,28 +1314,28 @@ site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
 plot_row(aspp_df2, site_df2, bspp_df2,
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change/200 GDD",
+         bspp_xlab = "Ring width (mm) change per 200 GDD",
          row_label = "GDD")
 
 # Row 2: GSL
 plot_row(aspp_df2_gsl, site_df2_gsl, bspp_df2_gsl,
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per GSL in days",
+         bspp_xlab = "Ring width (mm) change per 10 days of GSL",
          row_label = "GSL")
 
 # Row 3: SOS  (re-load objects as in your original SOS block first)
 plot_row(aspp_df2_sos, site_df2_sos, bspp_df2_sos,   # after the SOS extraction block
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per days in leafout date",
+         bspp_xlab = "Ring width (mm) change per 10 days of leafout",
          row_label = "SOS")
 
 # Row 4: EOS  (re-load objects as in your original EOS block first)
 plot_row(aspp_df2_eos, site_df2_eos, bspp_df2_eos,   # after the EOS extraction block
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per days in budset date",
+         bspp_xlab = "Ring width (mm) change per 10 days of budset",
          row_label = "EOS")
 
 # slot 13 - species legend
@@ -1359,7 +1359,7 @@ legend("center",
 dev.off()
 
 
-}
+  }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
