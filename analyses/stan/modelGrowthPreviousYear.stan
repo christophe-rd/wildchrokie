@@ -62,7 +62,7 @@ generated quantities {
         asite[site[i]] +
         atreeid[treeid[i]] + 
         bsp[species[i]]*gdd[i] + 
-        bspyr[species[i]]*gddyr[i] +, 
+        bspyr[species[i]]*gddyr[i], 
         sigma_y);
   }
 

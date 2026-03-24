@@ -60,12 +60,12 @@ treeid <- as.numeric(emp2$treeid_num)
 Ntreeid <- length(unique(treeid))
 
 # different response variables
-# gdd <- (emp2$pgsGDD5 - mean(emp2$pgsGDD5)) / sd(emp2$pgsGDD5)
+gdd <- (emp2$pgsGDD5 - mean(emp2$pgsGDD5)) / sd(emp2$pgsGDD5)
 # gsl <- (emp2$pgsGSL - mean(emp2$pgsGSL)) / sd(emp2$pgsGSL)
 # sos <- (emp2$leafout - mean(emp2$leafout)) / sd(emp2$leafout)
 # eos <- (emp2$budset - mean(emp2$budset)) / sd(emp2$budset)
 
-gdd <- emp2$pgsGDD5 / 200
+# gdd <- emp2$pgsGDD5 / 200
 gsl <- emp2$pgsGSL / 10
 sos <- emp2$leafout / 10
 eos <- emp2$budset / 10
