@@ -51,7 +51,8 @@ for (i in years) {
 }
 
 # add gdd of previous year indexed by yeardiff
-rw$gdd <- agg2$diff[match(rw$yeardiff, agg2$year)]
+rw$gddpreviousyr <- agg2$diff[match(rw$yeardiff, agg2$year)]
+rw$gddcurrentyr <- agg2$diff[match(rw$year, agg2$year)]
 
 rw$lengthMM <- rw$lengthCM * 10
 
@@ -61,7 +62,7 @@ rw$spp_num <- match(rw$spp, unique(rw$spp))
 rw$treeid_num <- match(rw$treeid, unique(rw$treeid))
 
 # transform data in vectors for GDD
-rw <- rw[!is.na(rw$lengthMM) & !is.na(rw$gdd),]
+rw <- rw[!is.na(rw$lengthMM) & !is.na(rw$gddcurrentyr) & !is.na(rw$gddpreviousyr),]
 rw <- subset(rw, site != "XX" & !spp %in% c("QUERNA", "QUEROB"))
 y <- rw$lengthMM
 N <- nrow(rw)
@@ -71,16 +72,17 @@ site <- as.numeric(as.character(rw$site_num))
 species <- as.numeric(as.character(rw$spp_num))
 treeid <- as.numeric(rw$treeid_num)
 Ntreeid <- length(unique(treeid))
-gdd <- rw$gdd
+gdd	<- rw$gddcurrentyr
+gddyr <- rw$gddpreviousyr
 
 # Fit model GDD
 rstan_options(auto_write = TRUE)
-gddmodel <- stan_model("stan/twolevelhierint.stan")
+gddmodel <- stan_model("stan/modelGrowthPreviousYear.stan")
 fit <- sampling(gddmodel, data = c("N","y",
                                       "Nspp","species",
                                       "Nsite", "site", 
                                       "Ntreeid", "treeid", 
-                                      "gdd"),
+                                      "gdd", "gddyr"),
                    warmup = 1000, iter=2000, chains=4)
 saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 
@@ -105,11 +107,26 @@ dev.off()
 
 ##### Plot posterior vs priors for gdd fit #####
 # pdf(file = "figures/empiricalData/gddModelPriorVSPosteriorPrvsYr.pdf", width = 8, height = 10)
+df_fit <- as.data.frame(fit)
+
+columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
+sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
+treeid_df <- df_fit[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
+site_df <- df_fit[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+
 jpeg("figures/empiricalData/gddModelPriorVSPosteriorPrvsYr.jpeg", 
      width =2400, height = 3600, res =300)
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(3, 3))
 
 # a
 plot(density(df_fit[, "a_prior"]), 
@@ -160,6 +177,16 @@ plot(density(df_fit[, "bsp_prior"]),
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_bsp", 
      xlab = "bsp", ylim = c(0, 1.8))
+for (col in colnames(bspp_df)) {
+  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bspyr
+plot(density(df_fit[, "bspyr_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_bspPreviousYr", 
+     xlab = "bspPreviousYr", ylim = c(0, 1.8))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
