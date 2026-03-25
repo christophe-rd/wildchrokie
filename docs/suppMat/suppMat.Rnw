@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{Supp material for Wildchrokie and CoringTreespotters}
+\author{Christophe Rouleau-Desrochers}
+\date{\today}
+\maketitle
+
+<<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(xtable)
+source("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/rcode/plottingEmpiricalData.R")
+
+options(digits = 2)
+# get some useful objects
+yrwc <- c(2018:2020) 
+@
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section{Wildchrokie}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section{CoringTreespotters}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\subsection{Age allometry}
+It is commonplace in dendrochronoly to perform standardization, i.e. selecting and fitting a statistical model to the annual growth increments of each tree separately to remove the non climatic growth influences such as those associated with tree age (CITE Schofield 2016 and Fritts 1976). This filters our non climatic growth influences. However, this is most often performed on very long series, where age allometry is expected to affect the ring width as the tree's diameter gets wider. We did not detrend our ring chronologies because we had \Sexpr{nrow(rwagecoef[which(rwagecoef$slope < 0),])} trees that had decreasing ring widths as a function of tree age versus \Sexpr{nrow(rwagecoef[which(rwagecoef$slope > 0),])} that showed a positive trend, for our 9 years of interest. 
+
+% Figure Ring width across years
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/empiricalData/ringwidthXyearPhenoData1page.pdf}
+\caption{}
+\label{fig:rwByAge}
+\end{figure}
+
+
+
+% Climate lmer output
+<<Code_chunk_Minimal_example, results='asis', echo=FALSE>>=
+
+@
+
+\end{document}
