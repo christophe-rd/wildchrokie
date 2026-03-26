@@ -36,31 +36,33 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  a ~ normal(5, 3);
+  a ~ normal(2, 3);
   aspp ~ normal(0, 6);
   asite ~ normal(0, 2);
   ayear ~ normal(0, 2);
-  bsp ~ normal(0, 0.5);
+  bsp ~ normal(0, 2);
   sigma_y ~ normal(0, 3);
   
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
-// generated quantities {
-//   // posterior predictive samples
-//   array[N] real y_rep;
-//   for (i in 1:N) {
-//     y_rep[i] = normal_rng(
-//         a + 
-//         aspp[species[i]] + 
-//         asite[site[i]] +
-//         bsp[species[i]]*climpredictor[i], sigma_y);
-//   }
-// 
-//   // prior predictive samples
-//   real a_prior = normal_rng(5, 3);
-//   real sigma_y_prior = abs(normal_rng(0, 3));    
-//   real aspp_prior = normal_rng(0, 6);
-//   real bsp_prior = normal_rng(0, 0.5);
-//   real asite_prior = normal_rng(0, 2);
-// }
+generated quantities {
+  // posterior predictive samples
+  array[N] real y_rep;
+  for (i in 1:N) {
+    y_rep[i] = normal_rng(
+        a +
+        aspp[species[i]] +
+        asite[site[i]] +
+        ayear[year[i]] + 
+        bsp[species[i]]*climpredictor[i], sigma_y);
+  }
+
+  // prior predictive samples
+  real a_prior = normal_rng(2, 3);
+  real aspp_prior = normal_rng(0, 6);
+  real asite_prior = normal_rng(0, 2);
+  real ayear_prior = normal_rng(0, 2);
+  real bsp_prior = normal_rng(0, 2);
+  real sigma_y_prior = abs(normal_rng(0, 3));
+}

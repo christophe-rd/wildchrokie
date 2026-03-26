@@ -531,10 +531,9 @@ period <- "MAM"
 d <- emp_clim[emp_clim$period == period & !is.na(emp_clim$TempMeanMax) & 
                 !is.na(emp_clim$anombudset), ]
 
-
 # transform data in vectors for gsl
 data <- list(
-  y = d$leafout / 10,
+  y = d$anomleafout,
   N = nrow(d),
   year = as.numeric(as.character(d$year_num)),
   species = as.numeric(as.character(d$spp_num)),
@@ -545,6 +544,7 @@ data <- list(
   climpredictor = d$TempMeanMax
 )
 
+# Fit models
 rstan_options(auto_write = TRUE)
 climmodel <- stan_model("stan/climatePredictors.stan")
 fit <- sampling(climmodel, data = data, 
@@ -552,7 +552,7 @@ fit <- sampling(climmodel, data = data,
 
 post_means <- summary(fit)$summary[, "mean"]
 
-# Pull out what you need by name
+# pull what I need
 a <- post_means["a"]
 aspp <- post_means[grep("^aspp", names(post_means))]
 asite <- post_means[grep("^asite", names(post_means))]
@@ -562,8 +562,13 @@ bsp <- post_means[grep("^bsp",  names(post_means))]
 x_vals <- unique(d$TempMeanMax)
 
 # Set up empty plot
-plot(NULL, xlim = range(x_vals), ylim = c(min(d$leafout/10), max(d$leafout/10)), 
-     xlab = "x", ylab = "y", xaxt = "n")
+plot(NULL, 
+     xlim = range(x_vals), 
+     ylim = c(min(d$leafout/10), max(d$leafout/10)), 
+     xlab = climvar, 
+     ylab = "leafout", 
+     main = period,
+     xaxt = "n")
 
 cols <- c("firebrick", "steelblue", "forestgreen", "darkorange")
 
@@ -578,16 +583,81 @@ for (s in 1:4) { # i = 2
 legend("topleft", legend = paste("spp", 1:4),
        col = cols, lwd = 2, pch = 16)
 
-
-# add asite/ayear if needed for fitted values
-
-# Example: plot per species (assuming x = some continuous predictor)
-# bsp[1] = slope for spp 1, aspp[1] + a = intercept for spp 1
-
 x_range <- seq(min(yourdata$x), max(yourdata$x), length.out = 100)
 
 plot(yourdata$x, yourdata$y, col = yourdata$species, pch = 16,
      xlab = "x", ylab = "y")
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot posterior vs priors for gdd fit ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+pdf(file = "figures/climate/climateModelPriorVSPosterior.pdf", 
+    width = 8, height = 10)
+
+pal <- wes_palette("AsteroidCity1")[3:4]
+
+par(mfrow = c(3, 2))
+df_fit <- as.data.frame(fit)
+
+# a
+plot(density(df_fit[, "a_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_a", 
+     xlab = "a", ylim = c(0,0.5))
+lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_y
+plot(density(df_fit[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0,2))
+lines(density(df_fit[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fit[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+for (col in colnames(aspp_df)) {
+  lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
+} 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# asite
+plot(density(df_fit[, "asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_asite", 
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+for (col in colnames(site_df)) {
+  lines(density(site_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fit[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", xlim = c(-6, 6), ylim = c(0, 0.5))
+for (col in colnames(site_df)) {
+  lines(density(site_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fit[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 1.8))
+for (col in colnames(bspp_df)) {
+  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+
 
 for (i in seq_along(clim_vars)) { # i = "tmeanmin"
   for (j in seq_along(periods)) { # j = "MAM"
