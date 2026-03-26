@@ -46,6 +46,7 @@ empir <- empir[!is.na(empir$pgsGDD5),]
 empir$site_num <- match(empir$site, unique(empir$site))
 empir$spp_num <- match(empir$spp, unique(empir$spp))
 empir$treeid_num <- match(empir$treeid, unique(empir$treeid))
+empir$year_num <- match(empir$year, unique(empir$year))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate data #### 
@@ -519,3 +520,90 @@ leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
 leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
 budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
 budsetbyyr$budset <- round(budsetbyyr$budset, 2)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Fit the figures with stan ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+clim_vars <- c("TempMeanMax", "TempMeanMin", "TempMeanMean")
+climvar <- clim_vars[1] 
+period <- "MAM"
+
+d <- emp_clim[emp_clim$period == period & !is.na(emp_clim$TempMeanMax) & 
+                !is.na(emp_clim$anombudset), ]
+
+
+# transform data in vectors for gsl
+data <- list(
+  y = d$leafout / 10,
+  N = nrow(d),
+  year = as.numeric(as.character(d$year_num)),
+  species = as.numeric(as.character(d$spp_num)),
+  site = as.numeric(as.character(d$site_num)),
+  Nspp = length(unique(d$spp_num)),
+  Nsite = length(unique(d$site_num)),
+  Nyear = length(unique(d$year_num)),
+  climpredictor = d$TempMeanMax
+)
+
+rstan_options(auto_write = TRUE)
+climmodel <- stan_model("stan/climatePredictors.stan")
+fit <- sampling(climmodel, data = data, 
+                       warmup = 1000, iter = 2000, chains=4)
+
+post_means <- summary(fit)$summary[, "mean"]
+
+# Pull out what you need by name
+a <- post_means["a"]
+aspp <- post_means[grep("^aspp", names(post_means))]
+asite <- post_means[grep("^asite", names(post_means))]
+ayear <- post_means[grep("^ayear", names(post_means))]
+bsp <- post_means[grep("^bsp",  names(post_means))]
+
+x_vals <- unique(d$TempMeanMax)
+
+# Set up empty plot
+plot(NULL, xlim = range(x_vals), ylim = c(min(d$leafout/10), max(d$leafout/10)), 
+     xlab = "x", ylab = "y", xaxt = "n")
+
+cols <- c("firebrick", "steelblue", "forestgreen", "darkorange")
+
+for (s in 1:4) { # i = 2
+  intercept_s <- a + aspp[s]
+  slope_s <- bsp[s]
+  y_vals <- intercept_s + slope_s * x_vals
+  lines(x_vals, y_vals, col = cols[s], lwd = 2)
+  points(x_vals, y_vals, col = cols[s], pch = 16, cex = 1.2)
+}
+
+legend("topleft", legend = paste("spp", 1:4),
+       col = cols, lwd = 2, pch = 16)
+
+
+# add asite/ayear if needed for fitted values
+
+# Example: plot per species (assuming x = some continuous predictor)
+# bsp[1] = slope for spp 1, aspp[1] + a = intercept for spp 1
+
+x_range <- seq(min(yourdata$x), max(yourdata$x), length.out = 100)
+
+plot(yourdata$x, yourdata$y, col = yourdata$species, pch = 16,
+     xlab = "x", ylab = "y")
+
+for (i in seq_along(clim_vars)) { # i = "tmeanmin"
+  for (j in seq_along(periods)) { # j = "MAM"
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
+                      !is.na(emp_clim$anombudset), ]
+    
+    plot(dat[[var]], dat$anombudset,
+         xlab = var, ylab  = "budset",
+         ylim = c(min(empir$anombudset), max(empir$anombudset)),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    abline(h = 0, lty = 2, col = "gray50")
+  }
+}
