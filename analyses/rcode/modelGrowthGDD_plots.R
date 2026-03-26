@@ -60,7 +60,8 @@ emp <- emp[!is.na(emp$pgsGDD5),]
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
-emp$lengthMM <- emp$lengthCM
+emp$lengthMM <- emp$lengthCM * 10
+
 # transform data in vectors
 y <- emp$lengthMM # ring width in mm
 N <- nrow(emp)
@@ -254,6 +255,9 @@ subyvec
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
                                   "treeid", "spp", "site", "latbi")])
 
+# z score covariates
+emp$gddz <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
+
 atreeidsub <- subset(df_fitgdd, select = subyvec)
 colnames(atreeidsub) <- 1:length(subyvec)
 
@@ -328,9 +332,9 @@ colnames(treeid_bspp) <- colnames(atreeidsub)
 
 # back convert the slopes to their original scales
 bspp_df4 <- bspp_df
-for (i in 1:ncol(bspp_df4)){
-  bspp_df4[[i]] <- bspp_df4[[i]]/200
-}
+# for (i in 1:ncol(bspp_df4)){
+  # bspp_df4[[i]] <- bspp_df4[[i]]/200
+# }
 
 for (i in seq_len(ncol(treeid_bspp))) { # i = 30
   tree_id <- as.integer(colnames(treeid_bspp)[i])
@@ -341,7 +345,8 @@ treeid_bspp
 
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
-x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)  
+x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
+xz <- seq(min(gddz), max(gddz), length.out = 100)  
 y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
@@ -349,8 +354,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
 
   y_post <- sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(x), 
-          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x,
+    rnorm(length(xz), 
+          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * xz,
           sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
@@ -383,31 +388,32 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # empty plot first
-  plot(emp$pgsGDD5, y, type = "n", 
-       ylim = range(c(emp_treeid$lengthCM * 10, y_low, y_high), na.rm = TRUE),
+  plot(emp_treeid$gddz, emp_treeid$lengthMM, type = "n", 
+       ylim = range(c(emp_treeid$lengthMM, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name) # set the name for each plot
   
   spp_id <- treeid_spp_site$spp_num[
-    match(tree_id_num, treeid_spp_site$treeid_num)
-  ]
+    match(tree_id_num, treeid_spp_site$treeid_num)]
+  
   line_col <- sppcols[spp_id]
   
   # shaded interval
-  polygon(c(x, rev(x)), 
+  polygon(c(xz, rev(xz)), 
           c(y_low, # lower interval
             rev(y_high)), # high interval
           col = adjustcolor(line_col, alpha.f = 0.3), 
           border = NA)
   
   # mean line
-  lines(x, y_mean,
+  lines(xz, y_mean,
         col = line_col,
         lwd = 2)
   
   points(
-    emp_treeid$pgsGDD5,
-    emp_treeid$lengthCM * 10,
+    # emp_treeid$pgsGDD5,
+    emp_treeid$gddz,
+    emp_treeid$lengthMM,
     pch = 16,
     cex = 2,
     col = line_col)
@@ -472,9 +478,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(emp_spp$lengthCM * 10, y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, emp_spp$lengthCM * 10,
+  plot(emp_spp$pgsGDD5, emp_spp$lengthMM,
        type = "n",
        # ylim = ylim_spp,
        ylim = c(0,14),
@@ -497,7 +503,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGDD5,
-    emp_spp$lengthCM * 10,
+    emp_spp$lengthMM,
     pch = 16,
     cex = 1,
     col = line_col
@@ -559,7 +565,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
   points(
     emp_spp$pgsGDD5,
-    emp_spp$lengthCM * 10,
+    emp_spp$lengthMM,
     pch = 16,
     cex = 1,
     col = line_col)
@@ -708,9 +714,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_gsl <- apply(y_post_gsl, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$lengthCM * 10, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGSL, emp_spp$lengthCM * 10,
+  plot(emp_spp$pgsGSL, emp_spp$lengthMM,
        type = "n",
        ylim = c(0,14),
        xlab = "Primary growing season GSL",
@@ -729,7 +735,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGSL,
-    emp_spp$lengthCM * 10,
+    emp_spp$lengthMM,
     pch = 16,
     cex = 1,
     col = line_col
