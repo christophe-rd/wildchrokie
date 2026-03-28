@@ -33,27 +33,163 @@ source('rcode/utilExtractParam.R')
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 set.seed(124)
 
-# set parameters
-n_spp <- 12 # number of species
-n_perspp <- 8 # number of individuals per species
-n_treeid <- n_perspp * n_spp # number of treeid
-n_meas <- 10 # repeated measurements per id
-N <- n_treeid * n_meas # total number of measurements
+Nspp <- 20 
+N_tree_per_spp <- 15
+N_obs_per_tree <- 12
+Ntreeid <- Nspp*N_tree_per_spp
+N <- Ntreeid * N_obs_per_tree
 
-a <- 5
-sigma_y <- 1
-sigma_atreeid <- 0.5
+tree_species_idxs <- rep(1:Nspp, times = N_tree_per_spp)
+
+# index
+treeid <- rep(1:Ntreeid, each = N_obs_per_tree)
+species <- tree_species_idxs[treeid]
+
+sigma_y <- 3
+sigma_atreeid <- 1.5
 sigma_aspp <- 2
-error <- rnorm(N, 0, sigma_y)
 
-# get replicated treeid
-treeid <- rep(1:n_treeid, each = n_meas)
+aspp <- rnorm(Nspp, 0, sigma_aspp)
 
-# replicated spp
-spp <- rep(rep(1:n_spp, each = n_perspp), each = n_meas) 
+# Nested 
+alpha_tree_species <- rnorm(Ntreeid, aspp[tree_species_idxs], sigma_atreeid)
+alpha_tree <- alpha_tree_species - aspp[tree_species_idxs]
 
-# get intercept values for each species
-aspp <- rnorm(n_spp, 0, sigma_aspp)
+y <- rnorm(N, alpha_tree_species[treeid], sigma_y)
+
+fitnested <- stan("stan/twolevelhierint_nested.stan", 
+                  data=c("N","y",
+                         "Nspp","species",
+                         "Ntreeid", "treeid"),
+                  warmup = 1000, iter = 2000, chains=4)
+
+# Non-nested
+atreeid_nonested <- rnorm(Ntreeid, 0, sigma_atreeid)
+atreeid_aspp_nonnested <- aspp[tree_species_idxs] + atreeid_nonested
+
+y <- rnorm(N, atreeid_aspp_nonnested[treeid], sigma_y)
+
+fitnonnested <- stan("stan/twolevelhierint_nested.stan", 
+                  data=c("N","y",
+                         "Nspp","species",
+                         "Ntreeid", "treeid"),
+                  warmup = 1000, iter = 2000, chains=4)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Recover and plot parameters ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Nested #####
+df_fit <- as.data.frame(fitnested)
+
+# posterior summaries
+sigma_df2  <- extract_params(df_fit, "sigma", "mean", "sigma")
+treeid_df2 <- extract_params(df_fit, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fit, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+
+# add sim coef
+treeid_df2$sim_treeid <- alpha_tree
+aspp_df2$sim_aspp <- aspp
+
+
+# Plot treeid 
+treeidnested <- ggplot(treeid_df2, aes(x = sim_treeid, y = fit_atreeid)) +
+  geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_point(color = "#046C9A", size = 1, alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim atreeid", y = "fit atreeid", title = "atreeid nested") +
+  theme_minimal()
+
+# Plot aspp 
+asppnested <- ggplot(aspp_df2, aes(x = sim_aspp, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per5, ymax = fit_aspp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75), 
+                width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim aspp", y = "fit aspp", title = "aspp nested") +
+  geom_point(color = "#046C9A", size = 2) +
+  theme_minimal()
+
+##### Non-nested #####
+df_fitnonnested <- as.data.frame(fitnonnested)
+
+# posterior summaries
+sigma_df2_nonnested  <- extract_params(df_fitnonnested, "sigma", "mean", "sigma")
+treeid_df2_nonnested <- extract_params(df_fitnonnested, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_nonnested <- subset(treeid_df2_nonnested, !grepl("z|sigma", treeid))
+aspp_df2_nonnested   <- extract_params(df_fitnonnested, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+
+# add sim coef
+treeid_df2_nonnested$sim_treeid <- atreeid_nonested
+aspp_df2_nonnested$sim_aspp <- aspp
+
+
+# Plot treeid 
+treeidnonnested <- ggplot(treeid_df2_nonnested, aes(x = sim_treeid, y = fit_atreeid)) +
+  geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_point(color = "#046C9A", size = 1, alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim atreeid", y = "fit atreeid", title = "atreeid non-nested") +
+  theme_minimal()
+
+# Plot aspp 
+asppnonnested <- ggplot(aspp_df2_nonnested, aes(x = sim_aspp, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per5, ymax = fit_aspp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75), 
+                width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim aspp", y = "fit aspp", title = "aspp non-nested") +
+  geom_point(color = "#046C9A", size = 2) +
+  theme_minimal()
+
+combined_plot <- (treeidnested + asppnested) /
+(treeidnonnested + asppnonnested)
+combined_plot
+ggsave("figures/simdata/combinedPrmRecoveryNested.jpeg", combined_plot, 
+       width = 8, height = 8, units = "in", dpi = 300)
+
+
+# # Plot sigmas
+# sigma_simXfit_plot <- ggplot(sigma_df2, aes(x = sim_sigma, y = mean)) +
+#   geom_errorbar(aes(ymin = mean_per25, ymax = mean_per75),
+#                 width = 0, linewidth = 1.5, color = "darkgray", alpha = 1) +
+#   geom_errorbar(aes(ymin = mean_per5, ymax = mean_per95),
+#                 width = 0, linewidth = 0.5, color = "darkgray", alpha = 1) +
+#   geom_abline(intercept = 0, slope = 1, linetype = "dashed",
+#               color = "#B40F20", linewidth = 1) +
+#   geom_point(color = "#046C9A", size = 3) +
+#   ggrepel::geom_text_repel(aes(label = sigma), size = 3) +
+#   labs(x = "sim sigma", y = "fit sigma",
+#        title = "") +
+#   theme_minimal()
+# sigma_simXfit_plot
+
+
+
+
+
+treeid_df2$spp <- simnest$spp[match(treeid_df2$treeid, simnest$treeid)]
+treeid_df2$fit_aspp <- aspp_df2$fit_aspp[match(treeid_df2$spp, aspp_df2$spp)]
+
+treeid_df2$diffmean <- treeid_df2$fit_atreeid + treeid_df2$fit_aspp
+# Plot parameter recovery
+sigma_df2$sim_sigma <- c(sigma_atreeid, sigma_y)
+aspp_df2$sim_aspp <- simnest$aspp[match(aspp_df2$spp, simnest$spp)]
+treeid_df2$sim_atreeid <- simnest$atreeid[match(treeid_df2$treeid, simnest$treeid)]
+treeidsppdf2$sim_atreeid <- simnest$atreeid[match(treeidsppdf2$treeid, simnest$treeid)]
+
+
+
+
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Simulate data in the nested way #####
@@ -63,7 +199,7 @@ simnest <- data.frame(
   spp = spp
 )
 
-atreeid <- rnorm(N, aspp[spp], sigma_atreeid)
+atreeid <- rnorm(n_treeid, aspp[spp], 0.0001)
 
 # Add my parameters to the df
 simnest$aspp <- aspp[simnest$spp]
@@ -88,60 +224,7 @@ simnest$ringwidth <-
   # simnest$aspp +
   simnest$error
 
-
-##### Victor's way #####
-set.seed(11032026)
-# set parameters
-
-
-N_species <- 12
-N_trees_per_species <- 8
-N_obs_per_tree <- 10
-N_trees <- N_species * N_trees_per_species
-N <- N_trees * N_obs_per_tree
-
-alpha <- 5
-sigma_species <- 2
-sigma_tree <- 0.5
-sigma <- 1
-
-alpha_species <- rnorm(N_species, 0, sigma_species)
-tree_species_idxs <- rep(1:N_species, times = N_trees_per_species)
-alpha_tree_species <- rnorm(N_trees, mean = alpha_species[tree_species_idxs], sd = sigma_tree)
-alpha_tree <- alpha_tree_species - alpha_species[tree_species_idxs]
-
-tree_idxs <- rep(1:N_trees, each = N_obs_per_tree)
-species_idxs <- tree_species_idxs[tree_idxs]
-y <- rnorm(N, mean = alpha_tree_species[tree_idxs], sd = sigma)
-
-
-data <- list(
-  N = N,
-  N_species = N_species,
-  N_trees = N_trees,
-  species_idxs = species_idxs,
-  tree_idxs = tree_idxs,
-  y = y
-)
-
-N <- N
-y <- y
-Nspp <- N_species
-species <- species_idxs
-treeid <- tree_idxs
-Ntreeid <- N_trees
-table(treeid)
-
 rstan_options(auto_write = TRUE)
-
-fitnested <- stan("stan/twolevelhierint_nested.stan", 
-                  data=c("N","y",
-                         "Nspp","species",
-                         "Ntreeid", "treeid"),
-                  warmup = 1000, iter = 2000, chains=4)
-
-
-
 fitvictor <- stan("stan/twolevelhierint_nested.stan", 
             data = c("N","y",
                      "Nspp","species",
@@ -149,6 +232,9 @@ fitvictor <- stan("stan/twolevelhierint_nested.stan",
             chains = 4, cores = 4, iter = 2000, warmup = 1000)
 
 samples <- util$extract_expectand_vals(fit)
+
+
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Simulate data in the additive way #####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -192,7 +278,7 @@ dev.off()
 
 pdf(file = "figures/simData/simNestedVSAdditive.pdf", width = 6, height = 6)
 par(mfrow = c(2, 2))
-for (i in unique(simnest$spp)) { # i = 3
+for (i in unique(species)) { # i = 3
   nest_sub <- simnest[simnest$spp == i, ]
   add_sub  <- simadd[simadd$spp == i, ]
   
@@ -268,57 +354,6 @@ columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
 sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
 treeid_df <- df_fit[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
-
-
-# join treeid df and aspp df
-subyvec <- vector()
-for (i in 1:length(unique(simnest$treeid))) {
-  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
-}
-subyvec
-
-atreeidsub <- subset(df_fit, select = subyvec)
-
-colnames(atreeidsub) <- 1:length(subyvec)
-
-# start by filling a df with treeid intercepts only
-# the spp values for each tree id
-treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fit)))
-colnames(treeid_aspp) <- colnames(atreeidsub)
-
-for (i in seq_len(ncol(treeid_aspp))) { # i = 1
-  tree_id <- as.integer(colnames(treeid_aspp)[i])
-  spp_id <- simnest$spp[match(tree_id, simnest$treeid)]
-  treeid_aspp[, i] <- aspp_df[, spp_id]
-}
-treeid_aspp
-
-treeidspp <- atreeidsub + treeid_aspp
-
-# colnames(treeidspp) <- paste("atreeid", "[", colnames(treeidspp), "]", sep = "")
-# treeeidspp2 <- extract_params(treeeidspp, "atreeid" )
-
-treeidsppdf2 <- data.frame(
-  treeid = character(ncol(treeidspp)),
-  fit_atreeid = numeric(ncol(treeidspp)),  
-  fit_atreeid_per5 = NA, 
-  fit_atreeid_per25 = NA,
-  fit_atreeid_per75 = NA,
-  fit_atreeid_per95 = NA
-)
-for (i in 1:ncol(treeidspp)) { # i = 1
-  treeidsppdf2$treeid[i] <- colnames(treeidspp)[i]         
-  treeidsppdf2$fit_atreeid[i] <- round(mean(treeidspp[[i]]),3)  
-  treeidsppdf2$fit_atreeid_per5[i] <- round(quantile(treeidspp[[i]], probs = 0.05), 3)
-  treeidsppdf2$fit_atreeid_per25[i] <- round(quantile(treeidspp[[i]], probs = 0.25), 3)
-  treeidsppdf2$fit_atreeid_per75[i] <- round(quantile(treeidspp[[i]], probs = 0.75), 3)
-  treeidsppdf2$fit_atreeid_per95[i] <- round(quantile(treeidspp[[i]], probs = 0.95), 3)
-}
-treeidsppdf2
-
-# change colnames
-colnames(treeid_df) <- 1:ncol(treeid_df)
-colnames(aspp_df) <- 1:ncol(aspp_df)
 
 # posterior summaries
 sigma_df2  <- extract_params(df_fit, "sigma", "mean", "sigma")
