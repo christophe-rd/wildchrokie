@@ -12,7 +12,7 @@ array[N] real y;
 }
 
 parameters{
-real a;		
+// real a;		
 real<lower=0> sigma_atreeid;
 real<lower=0> sigma_y; 	  
 vector[Ntreeid] zatreeid; 
@@ -26,14 +26,14 @@ atreeid = 0 + sigma_atreeid*zatreeid;
 array[N] real ypred;
 for (i in 1:N){ 
     ypred[i] =
-        a + 
+        // a + 
         aspp[species[i]] + 
         atreeid[treeid[i]];  
         }
 }
 
 model{	
-  a ~ normal(5, 3);
+  // a ~ normal(5, 3);
   zatreeid ~ normal(0, 1);
   aspp ~ normal(0, 6);
   sigma_atreeid ~ normal(0, 1); 
@@ -45,7 +45,7 @@ generated quantities {
   array[N] real y_rep;
   for (i in 1:N) {
     y_rep[i] = normal_rng(
-        a + 
+        // a + 
         aspp[species[i]] + 
         atreeid[treeid[i]], sigma_y);  
   }
