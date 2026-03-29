@@ -524,6 +524,8 @@ budsetbyyr$budset <- round(budsetbyyr$budset, 2)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit the figures with stan ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (FALSE){
+
 clim_vars <- c("TempMeanMax", "TempMeanMin", "TempMeanMean")
 climvar <- clim_vars[1] 
 period <- "MAM"
@@ -676,4 +678,6 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     
     abline(h = 0, lty = 2, col = "gray50")
   }
+}
+
 }

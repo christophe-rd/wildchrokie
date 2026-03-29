@@ -16,7 +16,7 @@
 library(xtable)
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/modelGrowthGDD_plots.R")
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
-options(digits = 2)
+options(digits = 1)
 # get some useful objects
 yrwc <- c(2018:2020) 
 
@@ -51,7 +51,7 @@ climatesumfortable <- climatesum[which(climatesum$year %in% yrwc), 1:7]
 \begin{enumerate}
 
 % GSL length
-\item Across the three years and all species, the growing season length varied from \Sexpr{min(emp$pgsGSL)} to \Sexpr{max(emp$pgsGSL)} days. 
+\item The shortest season by days was \Sexpr{emp$year[emp$pgsGSL == min(emp$pgsGSL)]} with \Sexpr{min(emp$pgsGSL)} days and \Sexpr{emp$year[emp$pgsGSL == max(emp$pgsGSL)]} was the longest with \Sexpr{max(emp$pgsGSL)} days. 
 
 % GSL length
 \item The year with longest growing season length on average was 
