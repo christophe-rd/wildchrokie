@@ -16,7 +16,7 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
-
+  
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if (length(grep("lizzie", getwd())) > 0) {
@@ -25,23 +25,24 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
+# source model code
+source("rcode/modelGrowthGDD.R")
 
-util <- new.env()
-source('mcmc_analysis_tools_rstan.R', local=util)
-source('mcmc_visualization_tools.R', local=util)
-# my function to extract parameters
-source('rcode/utilExtractParam.R')
+# util <- new.env()
+# source('mcmc_analysis_tools_rstan.R', local=util)
+# source('mcmc_visualization_tools.R', local=util)
+# # my function to extract parameters
+# source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- FALSE
-interceptmuplots <- FALSE
+makeplots <- TRUE
+interceptmuplots <- TRUE
+
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
 climatesum <- read.csv("output/climateSummariesYear.csv")
-gddyr <- read.csv("output/gddByYear.csv")
-emp <- read.csv("output/empiricalDataMAIN.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
 commonNames <- c(
@@ -53,26 +54,23 @@ commonNames <- c(
 
 emp$commonName <- commonNames[emp$latbi]
 
-# copy of emp with no row removal
-empfull <- emp
-
-emp <- emp[!is.na(emp$pgsGDD5),]
-# transform my groups to numeric values
-emp$site_num <- match(emp$site, unique(emp$site))
-emp$spp_num <- match(emp$spp, unique(emp$spp))
-emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
-emp$lengthMM <- emp$lengthCM * 10
-
-# transform data in vectors
-y <- emp$lengthMM # ring width in mm
-N <- nrow(emp)
-gdd <- emp$pgsGDD5/200
-Nspp <- length(unique(emp$spp_num))
-Nsite <- length(unique(emp$site_num))
-site <- as.numeric(as.character(emp$site_num))
-species <- as.numeric(as.character(emp$spp_num))
-treeid <- as.numeric(emp$treeid_num)
-Ntreeid <- length(unique(treeid))
+# emp <- emp[!is.na(emp$pgsGDD5),]
+# # transform my groups to numeric values
+# emp$site_num <- match(emp$site, unique(emp$site))
+# emp$spp_num <- match(emp$spp, unique(emp$spp))
+# emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+# emp$lengthMM <- emp$lengthCM * 10
+# 
+# # transform data in vectors
+# y <- emp$lengthMM # ring width in mm
+# N <- nrow(emp)
+# gdd <- emp$pgsGDD5/gdd
+# Nspp <- length(unique(emp$spp_num))
+# Nsite <- length(unique(emp$site_num))
+# site <- as.numeric(as.character(emp$site_num))
+# species <- as.numeric(as.character(emp$spp_num))
+# treeid <- as.numeric(emp$treeid_num)
+# Ntreeid <- length(unique(treeid))
 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -244,6 +242,20 @@ sitefull <- c(
   "WM" = "White Mountains (NH)"
 )
 
+site_order <- c(
+  "HF",
+  "WM",
+  "GR", 
+  "SH")
+
+locations <- data.frame(
+  name = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
+  shortnames = c("HF", "WM", "GR", "SH"),
+  lon = c(-72.2, -71, -70.66, -74.01),
+  lat = c(42.6, 44.1, 44.9, 45.9)
+)
+# shapes for sites
+my_shapes <- c( HF = 19, WM = 18, GR = 15, SH = 17)
 sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
 
 subyvec <- vector()
@@ -277,9 +289,7 @@ sppvecname <- unique(treeid_spp_site$latbi)
 
 n_spp <- nrow(bspp_df2)
 n_site <- nrow(site_df2)
-y_pos <- 1:n_spp 
-
-sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
+y_pos <- rev(1:n_spp)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: Prep posterior reconstruction #####
@@ -329,9 +339,9 @@ colnames(treeid_bspp) <- colnames(atreeidsub)
 
 # back convert the slopes to their original scales
 bspp_df4 <- bspp_df
-# for (i in 1:ncol(bspp_df4)){
-  # bspp_df4[[i]] <- bspp_df4[[i]]/200
-# }
+for (i in 1:ncol(bspp_df4)){
+  bspp_df4[[i]] <- bspp_df4[[i]]/gddscale
+}
 
 for (i in seq_len(ncol(treeid_bspp))) { # i = 30
   tree_id <- as.integer(colnames(treeid_bspp)[i])
@@ -342,7 +352,7 @@ treeid_bspp
 
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
-x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
+gddseq <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
 
 if(makeplots) {
 y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
@@ -352,8 +362,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
 
   y_post <- sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(x), 
-          fullintercept[f, tree_col] + treeid_bspp[f, tree_col],
+    rnorm(length(gddseq), 
+          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * gddseq,
           sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
@@ -386,7 +396,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # empty plot first
-  plot(emp_treeid$gdd, emp_treeid$lengthMM, type = "n", 
+  plot(emp_treeid$pgsGDD5, emp_treeid$lengthMM, type = "n", 
        ylim = range(c(emp_treeid$lengthMM, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name) # set the name for each plot
@@ -397,20 +407,19 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   line_col <- sppcols[spp_id]
   
   # shaded interval
-  polygon(c(x, rev(x)), 
+  polygon(c(gddseq, rev(gddseq)), 
           c(y_low, # lower interval
             rev(y_high)), # high interval
           col = adjustcolor(line_col, alpha.f = 0.3), 
           border = NA)
   
   # mean line
-  lines(x, y_mean,
+  lines(gddseq, y_mean,
         col = line_col,
         lwd = 2)
   
   points(
-    # emp_treeid$pgsGDD5,
-    emp_treeid$gdd,
+    emp_treeid$pgsGDD5,
     emp_treeid$lengthMM,
     pch = 16,
     cex = 2,
@@ -425,7 +434,7 @@ mean_post_list <- list()
 for (i in seq_along(treeidvecnum)) {
   tree_col <- as.character(treeidvecnum[i])
   mean_post_list[[tree_col]] <- sapply(1:nrow(df_fitgdd), function(f) {
-    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * x
+    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * gddseq
     # no sigma_y yet
   })
 }
@@ -438,12 +447,9 @@ spp_mean_list <- lapply(spp_list, function(tree_vec) {
 # re-simulate sigma on the averaged mean
 spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
   sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(x), mean_mat[, f], sigma_df$sigma_y[f])
+    rnorm(length(gddseq), mean_mat[, f], sigma_df$sigma_y[f])
   })
 })
-
-x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)   
-sppcols <- c(wes_palette("AsteroidCity1"))[1:4]
 
 # jpeg output
 jpeg(
@@ -484,25 +490,25 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = c(0,14),
        xlab = "Primary growing season GDD",
        ylab = "Ring width (mm)",
-       main = spp_column_name,
+            main = bquote(italic(.(spp_column_name))),
        frame = FALSE)
   
   # color
   line_col <- sppcols[spp_num]
   
   polygon(
-    c(x, rev(x)),
+    c(gddseq, rev(gddseq)),
     c(y_low, rev(y_high)),
     col = adjustcolor(line_col, alpha.f = 0.3),
     border = NA
   )
   
-  lines(x, y_mean, col = line_col, lwd = 2)
+  lines(gddseq, y_mean, col = line_col, lwd = 2)
   
   points(
     emp_spp$pgsGDD5,
     emp_spp$lengthMM,
-    pch = 16,
+    pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
   )
@@ -548,14 +554,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
   line_col <- sppcols[spp_num]
   
   # shaded interval
-  polygon(c(x, rev(x)), 
+  polygon(c(gddseq, rev(gddseq)), 
           c(y_low, # lower interval
             rev(y_high)), # high interval
           col = adjustcolor(line_col, alpha.f = 0.2), 
           border = NA)
   
   # mean line
-  lines(x, y_mean,
+  lines(gddseq, y_mean,
         col = line_col,
         lwd = 2)
   
@@ -652,7 +658,7 @@ treeid_bspp_gsl
 
 treeidvecnum <- 1:ncol(fullintercept_gsl)
 treeidvecname <- treeid_spp_site$treeid
-x <- seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)  
+gslseq <- seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)  
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GSL: per Spp, facet #####
@@ -661,7 +667,7 @@ mean_post_list_gsl <- list()
 for (i in seq_along(treeidvecnum)) {
   tree_col <- as.character(treeidvecnum[i])
   mean_post_list_gsl[[tree_col]] <- sapply(1:nrow(df_fitgsl), function(f) {
-    fullintercept_gsl[f, tree_col] + treeid_bspp_gsl[f, tree_col] * x
+    fullintercept_gsl[f, tree_col] + treeid_bspp_gsl[f, tree_col] * gslseq
     # no sigma_y yet
   })
 }
@@ -674,7 +680,7 @@ spp_mean_list_gsl <- lapply(spp_list, function(tree_vec) {
 # re-simulate sigma on the averaged mean
 spp_post_list_gsl <- lapply(spp_mean_list_gsl, function(mean_mat) {
   sapply(1:nrow(df_fitgsl), function(f) {
-    rnorm(length(x), mean_mat[, f], sigma_df_gsl$sigma_y[f])
+    rnorm(length(gslseq), mean_mat[, f], sigma_df_gsl$sigma_y[f])
   })
 })
 
@@ -719,22 +725,22 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = c(0,14),
        xlab = "Primary growing season GSL",
        ylab = "Ring width (mm)",
-       main = spp_column_name,
+       main = bquote(italic(.(spp_column_name))),
        frame = FALSE)
   
   polygon(
-    c(x, rev(x)),
+    c(gslseq, rev(gslseq)),
     c(y_low_gsl, rev(y_high_gsl)),
     col = adjustcolor(line_col, alpha.f = 0.3),
     border = NA
   )
   
-  lines(x, y_mean_gsl, col = line_col, lwd = 2)
+  lines(gslseq, y_mean_gsl, col = line_col, lwd = 2)
   
   points(
     emp_spp$pgsGSL,
     emp_spp$lengthMM,
-    pch = 16,
+    pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
   )
@@ -823,12 +829,6 @@ species_order <- c(
   "Betula papyrifera", 
   "Betula populifolia")
 
-site_order <- c(
-  "HF",
-  "WM",
-  "GR", 
-  "SH")
-
 # col
 my_colors <- c(
   "Alnus incana" = wes_palette("AsteroidCity1")[1],
@@ -836,13 +836,7 @@ my_colors <- c(
   "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
   "Betula populifolia" = wes_palette("AsteroidCity1")[4]
 )
-# shapes for sites
-my_shapes <- c(
-  HF = 19,
-  WM = 18,
-  GR = 15,
-  SH = 17
-)
+
 
 
 # open device
@@ -994,181 +988,252 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Combined mu plots bspp (GDD / GSL / SOS / EOS) ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot!
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### bspp ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
-     width = 1800, height = 2800, res = 300)  
+     width = 1800, height = 2200, res = 300)
+
 layout(matrix(c(
   1, 5,
   2, 5,
   3, 5,
   4, 5
 ), nrow = 4, byrow = TRUE),
-widths = c(1, 0.4)) # bspp column and legend column
-
-plot_row <- function(bspp_df2,
-                     n_spp, y_pos,
-                     sppcols,
-                     bspp_xlab,
-                     row_label) {
-  
-  # bspp
-  par(mar = c(5, 2, 2, 2))
-  plot(bspp_df2$fit_bspp, y_pos,
-       xlim = range(c(bspp_df2$fit_bspp_per5, bspp_df2$fit_bspp_per95)),
-       ylim = c(0.5, n_spp + 0.5),
-       xlab = bspp_xlab,
-       ylab = "",
-       yaxt = "n",
-       pch = 16, cex = 2, col = sppcols,
-       frame.plot = FALSE)
-  segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
-           col = sppcols, lwd = 1.5)
-  segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
-           col = sppcols, lwd = 3)
-  abline(v = 0, lty = 2, col = "black")
-  
-}
+widths = c(0.7, 0.4))
 
 # Row 1: GDD
-plot_row(bspp_df2,
-         n_spp, y_pos,
-         sppcols,
-         bspp_xlab = "Ring width (mm) change per 200 GDD",
-         row_label = "GDD")
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change average GDD in 10 spring days", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
-plot_row(bspp_df2_gsl,
-         n_spp, y_pos,
-         sppcols,
-         bspp_xlab = "Ring width (mm) change per 10 days of GSL",
-         row_label = "GSL")
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_gsl$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 10 days of GSL", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Row 3: SOS 
-plot_row(bspp_df2_sos,   # after the SOS extraction block
-         n_spp, y_pos,
-         sppcols,
-         bspp_xlab = "Ring width (mm) change per 10 days of leafout",
-         row_label = "SOS")
+# Row 3: SOS
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_sos$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 5 days of leafout", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Row 4: EOS  
-plot_row(bspp_df2_eos,   # after the EOS extraction block
-         n_spp, y_pos,
-         sppcols,
-         bspp_xlab = "Ring width (mm) change per 10 days of budset",
-         row_label = "EOS")
+# Row 4: EOS
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_eos$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 10 days of budset", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# slot 13 - species legend
+# Slot 5: species legend
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = rev(unique(bspp_df2$spp_name)),  
-       col    = rev(unique(sppcols)),           
+       legend = sapply(unique(bspp_df2$spp_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(sppcols),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Species", title.font = 2)
 
 dev.off()
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Combined mu plots aspp and asite (GDD / GSL / SOS / EOS) ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot!
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### aspp ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(file = "figures/empiricalData/muALLaspp.jpeg",
+     width = 1800, height = 2200, res = 300)
 
-jpeg(file = "figures/empiricalData/muALLaspp_asite.jpeg",
-     width = 2400, height = 2800, res = 300)
 layout(matrix(c(
-  1,  2, 9,
-  3,  4, 9,
-  5,  6, 10,
-  7,  8, 10
+  1, 5,
+  2, 5,
+  3, 5,
+  4, 5
 ), nrow = 4, byrow = TRUE),
-widths = c(1, 1, 0.6)) # aspp asite and legend columns
-
-plot_row <- function(aspp_df2, site_df2,
-                     n_spp, n_site, y_pos,
-                     sppcols, sitecolors,
-                     row_label) {
-  # aspp  
-  par(mar = c(5, 2, 2, 2))
-  plot(aspp_df2$fit_aspp, y_pos,
-       xlim = c(-15, 15),
-       ylim = c(0.5, n_spp + 0.5),
-       xlab = "Ring width intercept values (mm)",
-       ylab = "",
-       yaxt = "n",
-       pch = 16, cex = 2, col = sppcols,
-       frame.plot = FALSE)
-  segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
-           col = sppcols, lwd = 1.5)
-  segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
-           col = sppcols, lwd = 3)
-  abline(v = 0, lty = 2, col = "black")
-  
-  mtext(row_label, side = 3, line = 0.5, adj = 0, font = 2, cex = 1.1)
-  
-  # asite
-  par(mar = c(5, 2, 2, 2))
-  plot(site_df2$fit_a_site, y_pos,
-       xlim = c(-2, 2),
-       ylim = c(0.5, n_site + 0.5),
-       xlab = "Ring width intercept values (mm)",
-       ylab = "",
-       yaxt = "n",
-       pch = 16, cex = 2, col = sitecolors,
-       frame.plot = FALSE)
-  segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
-           col = sitecolors, lwd = 1.5)
-  segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
-           col = sitecolors, lwd = 3)
-  abline(v = 0, lty = 2, col = "black")
-  
-}
-
-# attach sitefull to all site_df2 variants
-site_df2$sitefull     <- sitefull[site_df2$site_name]
-site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
+widths = c(0.7, 0.4))
 
 # Row 1: GDD
-plot_row(aspp_df2, site_df2,
-         n_spp, n_site, y_pos,
-         sppcols, sitecolors,
-         row_label = "GDD")
+par(mar = c(5, 8, 2, 2))
+plot(aspp_df2$fit_aspp, y_pos,
+     xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
-plot_row(aspp_df2_gsl, site_df2_gsl,
-         n_spp, n_site, y_pos,
-         sppcols, sitecolors,
-         row_label = "GSL")
+par(mar = c(5, 8, 2, 2))
+plot(aspp_df2_gsl$fit_aspp, y_pos,
+     xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(aspp_df2_gsl$fit_aspp_per5,  y_pos, aspp_df2_gsl$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2_gsl$fit_aspp_per25, y_pos, aspp_df2_gsl$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Row 3: SOS  
-plot_row(aspp_df2_sos, site_df2_sos, # after the SOS extraction block
-         n_spp, n_site, y_pos,
-         sppcols, sitecolors,
-         row_label = "SOS")
+# Row 3: SOS
+par(mar = c(5, 8, 2, 2))
+plot(aspp_df2_sos$fit_aspp, y_pos,
+     xlim = c(-15, 15),ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "", 
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(aspp_df2_sos$fit_aspp_per5,  y_pos, aspp_df2_sos$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2_sos$fit_aspp_per25, y_pos, aspp_df2_sos$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Row 4: EOS 
-plot_row(aspp_df2_eos, site_df2_eos,
-         n_spp, n_site, y_pos,
-         sppcols, sitecolors,
-         row_label = "EOS")
+# Row 4: EOS
+par(mar = c(5, 8, 2, 2))
+plot(aspp_df2_eos$fit_aspp, y_pos,
+     xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5), 
+     xlab = "Ring width intercept values (mm)", ylab = "", 
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(aspp_df2_eos$fit_aspp_per5,  y_pos, aspp_df2_eos$fit_aspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(aspp_df2_eos$fit_aspp_per25, y_pos, aspp_df2_eos$fit_aspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# slot 13 - species legend
+# Slot 5: species legend
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = unique(aspp_df2$spp_name),
+       legend = sapply(unique(aspp_df2$spp_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(sppcols),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Species", title.font = 2)
 
-# slot 14 - sites legend
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### asite ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(file = "figures/empiricalData/muALLasite.jpeg",
+     width = 1800, height = 2200, res = 300)
+
+layout(matrix(c(
+  1, 5,
+  2, 5,
+  3, 5,
+  4, 5
+), nrow = 4, byrow = TRUE),
+widths = c(0.7, 0.4))
+
+y_pos <- match(site_df2$site_name, site_order)
+site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
+sitecolors <- site_color_map[site_df2$site_name]
+
+site_df2$lat <- locations$lat[match(site_df2$site_name, locations$shortnames)]
+site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$shortnames)]
+site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$shortnames)]
+site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$shortnames)]
+
+lat_labels <- locations$lat[match(site_order, locations$shortnames)]
+
+
+# Row 1: GDD
+par(mar = c(5, 8, 2, 2))
+plot(site_df2$fit_a_site, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "Latitude",
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
+         col = sitecolors, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 2: GSL
+par(mar = c(5, 8, 2, 2))
+plot(site_df2_gsl$fit_a_site, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "Latitude",
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+segments(site_df2_gsl$fit_a_site_per5,  y_pos, site_df2_gsl$fit_a_site_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2_gsl$fit_a_site_per25, y_pos, site_df2_gsl$fit_a_site_per75, y_pos,
+         col = sitecolors, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 3: SOS
+par(mar = c(5, 8, 2, 2))
+plot(site_df2_sos$fit_a_site, y_pos,
+     xlim = c(-5, 5),ylim = c(0.5, n_site + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+segments(site_df2_sos$fit_a_site_per5,  y_pos, site_df2_sos$fit_a_site_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2_sos$fit_a_site_per25, y_pos, site_df2_sos$fit_a_site_per75, y_pos,
+         col = sitecolors, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 4: EOS
+par(mar = c(5, 8, 2, 2))
+plot(site_df2_eos$fit_a_site, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5), 
+     xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+segments(site_df2_eos$fit_a_site_per5,  y_pos, site_df2_eos$fit_a_site_per95, y_pos,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2_eos$fit_a_site_per25, y_pos, site_df2_eos$fit_a_site_per75, y_pos,
+         col = sitecolors, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Slot 5: Site legend
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = unique(site_df2$sitefull),
-       col    = sitecolors,
+       legend = rev(locations$name[match(site_order, locations$shortnames)]),
+       col    = rev(site_color_map[site_order]),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Sites", title.font = 2)
-
+       title  = "Site", title.font = 2)
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1188,3 +1253,4 @@ rwmin <- aggregate(lengthMM ~ spp, emp, FUN = min)
 rwmax <- aggregate(lengthMM ~ spp, emp, FUN = max)
 rwsum <- merge(rwmin, rwmax, by = "spp")
 colnames(rwsum) <- c("spp","min", "max")
+

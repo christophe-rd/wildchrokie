@@ -34,42 +34,58 @@ source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
 source('rcode/utilExtractParam.R')
 
+# flags
+fitmodels <- FALSE
+
 emp <- read.csv("output/empiricalDataMAIN.csv")
+gddyr <- read.csv("output/gddByYear.csv")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit model GDD
-emp2 <- emp[!is.na(emp$pgsGDD5),]
+emp <- emp[!is.na(emp$pgsGDD5),]
+
+# scale gdd to how many gdd are in 10 average spring days
+temp<- subset(gddyr, doy <151 & doy > 120)
+temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
+temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+
+temp <- temp[order(temp$year, temp$doy), ]
+
+temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 10))
+gdd_10day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
+gddscale <- mean(gdd_10day$gdddiff)
 
 # transform my groups to numeric values
-emp2$site_num <- match(emp2$site, unique(emp2$site))
-emp2$spp_num <- match(emp2$spp, unique(emp2$spp))
-emp2$treeid_num <- match(emp2$treeid, unique(emp2$treeid))
+emp$site_num <- match(emp$site, unique(emp$site))
+emp$spp_num <- match(emp$spp, unique(emp$spp))
+emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 
-emp2$lengthMM <- emp2$lengthCM*10
+emp$lengthMM <- emp$lengthCM*10
 
 # transform data in vectors for GDD
-y <- emp2$lengthMM # ring width in mm
-N <- nrow(emp2)
-Nspp <- length(unique(emp2$spp_num))
-Nsite <- length(unique(emp2$site_num))
-site <- as.numeric(as.character(emp2$site_num))
-species <- as.numeric(as.character(emp2$spp_num))
-treeid <- as.numeric(emp2$treeid_num)
+y <- emp$lengthMM # ring width in mm
+N <- nrow(emp)
+Nspp <- length(unique(emp$spp_num))
+Nsite <- length(unique(emp$site_num))
+site <- as.numeric(as.character(emp$site_num))
+species <- as.numeric(as.character(emp$spp_num))
+treeid <- as.numeric(emp$treeid_num)
 Ntreeid <- length(unique(treeid))
 
-# different response variables
-gdd <- (emp2$pgsGDD5 - mean(emp2$pgsGDD5)) / sd(emp2$pgsGDD5)
-# gsl <- (emp2$pgsGSL - mean(emp2$pgsGSL)) / sd(emp2$pgsGSL)
-# sos <- (emp2$leafout - mean(emp2$leafout)) / sd(emp2$leafout)
-# eos <- (emp2$budset - mean(emp2$budset)) / sd(emp2$budset)
+# different response variables Z scored
+# gdd <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
+# gsl <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
+# sos <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
+# eos <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
 
-# gdd <- emp2$pgsGDD5 / 200
-gsl <- emp2$pgsGSL / 10
-sos <- emp2$leafout / 10
-eos <- emp2$budset / 10
+gdd <- emp$pgsGDD5 / gddscale
+gsl <- emp$pgsGSL / 10
+sos <- emp$leafout / 5
+eos <- emp$budset / 10
 
+if (fitmodels){
 # Fit model GDD
 rstan_options(auto_write = TRUE)
 gddmodel <- stan_model("stan/twolevelhierint.stan")
@@ -560,6 +576,7 @@ if (FALSE) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # FULL DATA ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+emp <- read.csv("output/empiricalDataMAIN.csv")
 # Fit model SOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 empsos <- emp[!is.na(emp$leafout),]
 
@@ -725,7 +742,7 @@ max(treeid_df2$meandiff)
 treeiddiffs <- c(head(treeid_df2[order(treeid_df2$meandiff), ], 3)$treeid, 
                  head(treeid_df2[order(-treeid_df2$meandiff), ], 3)$treeid)
 fulleosleafout <- aggregate(leafout ~ treeid_num, empsos, FUN = length)
-restreosleafout <- aggregate(leafout ~ treeid_num, emp2, FUN = length)
+restreosleafout <- aggregate(leafout ~ treeid_num, emp, FUN = length)
 # checks
 sum(fulleosleafout$leafout)
 sum(restreosleafout$leafout)
@@ -831,3 +848,5 @@ points(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
 abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
 
 dev.off()
+
+}
