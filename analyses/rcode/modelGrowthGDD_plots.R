@@ -1242,57 +1242,24 @@ abline(v = 0, lty = 2, col = "black")
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Combined mu plots (GDD / GSL / SOS / EOS) ####
+# Combined mu plots bspp (GDD / GSL / SOS / EOS) ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot!
-jpeg(file = "figures/empiricalData/muALL.jpeg",
-     width = 3000, height = 4000, res = 300)  
+jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
+     width = 1800, height = 2800, res = 300)  
 layout(matrix(c(
-  1,  2,  3, 13,
-  4,  5,  6, 13,
-  7,  8,  9, 14,
-  10, 11, 12, 14
+  1, 5,
+  2, 5,
+  3, 5,
+  4, 5
 ), nrow = 4, byrow = TRUE),
-widths = c(1, 1, 1, 
-           0.8)) # legend column
+widths = c(1, 0.4)) # bspp column and legend column
 
-plot_row <- function(aspp_df2, site_df2, bspp_df2,
-                     n_spp, n_site, y_pos,
-                     sppcols, sitecolors,
+plot_row <- function(bspp_df2,
+                     n_spp, y_pos,
+                     sppcols,
                      bspp_xlab,
                      row_label) {
-  # aspp  
-  par(mar = c(5, 2, 2, 2))
-  plot(aspp_df2$fit_aspp, y_pos,
-       xlim = c(-15, 15),
-       ylim = c(0.5, n_spp + 0.5),
-       xlab = "Ring width intercept values (mm)",
-       ylab = "",
-       yaxt = "n",
-       pch = 16, cex = 2, col = sppcols,
-       frame.plot = FALSE)
-  segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
-           col = sppcols, lwd = 1.5)
-  segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
-           col = sppcols, lwd = 3)
-  abline(v = 0, lty = 2, col = "black")
-  mtext(row_label, side = 3, line = 0.5, adj = 0, font = 2, cex = 1.1)
-  
-  # --- asite ---
-  par(mar = c(5, 2, 2, 2))
-  plot(site_df2$fit_a_site, y_pos,
-       xlim = c(-2, 2),
-       ylim = c(0.5, n_site + 0.5),
-       xlab = "Ring width intercept values (mm)",
-       ylab = "",
-       yaxt = "n",
-       pch = 16, cex = 2, col = sitecolors,
-       frame.plot = FALSE)
-  segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
-           col = sitecolors, lwd = 1.5)
-  segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
-           col = sitecolors, lwd = 3)
-  abline(v = 0, lty = 2, col = "black")
   
   # bspp
   par(mar = c(5, 2, 2, 2))
@@ -1312,36 +1279,126 @@ plot_row <- function(aspp_df2, site_df2, bspp_df2,
   
 }
 
+# Row 1: GDD
+plot_row(bspp_df2,
+         n_spp, y_pos,
+         sppcols,
+         bspp_xlab = "Ring width (mm) change per 200 GDD",
+         row_label = "GDD")
+
+# Row 2: GSL
+plot_row(bspp_df2_gsl,
+         n_spp, y_pos,
+         sppcols,
+         bspp_xlab = "Ring width (mm) change per 10 days of GSL",
+         row_label = "GSL")
+
+# Row 3: SOS 
+plot_row(bspp_df2_sos,   # after the SOS extraction block
+         n_spp, y_pos,
+         sppcols,
+         bspp_xlab = "Ring width (mm) change per 10 days of leafout",
+         row_label = "SOS")
+
+# Row 4: EOS  
+plot_row(bspp_df2_eos,   # after the EOS extraction block
+         n_spp, y_pos,
+         sppcols,
+         bspp_xlab = "Ring width (mm) change per 10 days of budset",
+         row_label = "EOS")
+
+# slot 13 - species legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("center",
+       legend = rev(unique(bspp_df2$spp_name)),  
+       col    = rev(unique(sppcols)),           
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Combined mu plots aspp and asite (GDD / GSL / SOS / EOS) ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot!
+
+jpeg(file = "figures/empiricalData/muALLaspp_asite.jpeg",
+     width = 2400, height = 2800, res = 300)
+layout(matrix(c(
+  1,  2, 9,
+  3,  4, 9,
+  5,  6, 10,
+  7,  8, 10
+), nrow = 4, byrow = TRUE),
+widths = c(1, 1, 0.6)) # aspp asite and legend columns
+
+plot_row <- function(aspp_df2, site_df2,
+                     n_spp, n_site, y_pos,
+                     sppcols, sitecolors,
+                     row_label) {
+  # aspp  
+  par(mar = c(5, 2, 2, 2))
+  plot(aspp_df2$fit_aspp, y_pos,
+       xlim = c(-15, 15),
+       ylim = c(0.5, n_spp + 0.5),
+       xlab = "Ring width intercept values (mm)",
+       ylab = "",
+       yaxt = "n",
+       pch = 16, cex = 2, col = sppcols,
+       frame.plot = FALSE)
+  segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
+           col = sppcols, lwd = 1.5)
+  segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
+           col = sppcols, lwd = 3)
+  abline(v = 0, lty = 2, col = "black")
+  
+  mtext(row_label, side = 3, line = 0.5, adj = 0, font = 2, cex = 1.1)
+  
+  # asite
+  par(mar = c(5, 2, 2, 2))
+  plot(site_df2$fit_a_site, y_pos,
+       xlim = c(-2, 2),
+       ylim = c(0.5, n_site + 0.5),
+       xlab = "Ring width intercept values (mm)",
+       ylab = "",
+       yaxt = "n",
+       pch = 16, cex = 2, col = sitecolors,
+       frame.plot = FALSE)
+  segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
+           col = sitecolors, lwd = 1.5)
+  segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
+           col = sitecolors, lwd = 3)
+  abline(v = 0, lty = 2, col = "black")
+  
+}
+
 # attach sitefull to all site_df2 variants
 site_df2$sitefull     <- sitefull[site_df2$site_name]
 site_df2_gsl$sitefull <- sitefull[site_df2_gsl$site_name]
 
 # Row 1: GDD
-plot_row(aspp_df2, site_df2, bspp_df2,
+plot_row(aspp_df2, site_df2,
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per 200 GDD",
          row_label = "GDD")
 
 # Row 2: GSL
-plot_row(aspp_df2_gsl, site_df2_gsl, bspp_df2_gsl,
+plot_row(aspp_df2_gsl, site_df2_gsl,
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per 10 days of GSL",
          row_label = "GSL")
 
-# Row 3: SOS  (re-load objects as in your original SOS block first)
-plot_row(aspp_df2_sos, site_df2_sos, bspp_df2_sos,   # after the SOS extraction block
+# Row 3: SOS  
+plot_row(aspp_df2_sos, site_df2_sos, # after the SOS extraction block
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per 10 days of leafout",
          row_label = "SOS")
 
-# Row 4: EOS  (re-load objects as in your original EOS block first)
-plot_row(aspp_df2_eos, site_df2_eos, bspp_df2_eos,   # after the EOS extraction block
+# Row 4: EOS 
+plot_row(aspp_df2_eos, site_df2_eos,
          n_spp, n_site, y_pos,
          sppcols, sitecolors,
-         bspp_xlab = "Ring width (mm) change per 10 days of budset",
          row_label = "EOS")
 
 # slot 13 - species legend
@@ -1365,7 +1422,6 @@ legend("center",
 dev.off()
 
 
-  }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####

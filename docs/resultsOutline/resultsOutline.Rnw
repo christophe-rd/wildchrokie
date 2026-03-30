@@ -54,8 +54,8 @@ climatesumfortable <- climatesum[which(climatesum$year %in% yrwc), 1:7]
 \item The shortest season by days was \Sexpr{emp$year[emp$pgsGSL == min(emp$pgsGSL)]} with \Sexpr{min(emp$pgsGSL)} days and \Sexpr{emp$year[emp$pgsGSL == max(emp$pgsGSL)]} was the longest with \Sexpr{max(emp$pgsGSL)} days. 
 
 % GSL length
-\item The year with longest growing season length on average was 
-\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]} with \Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),2]} days,
+\item The longest growing season by days \Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]}on average was in 
+ with \Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),2]} days,
 and the shortest was 
 \Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),1]} with \Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),2]} days.
 
