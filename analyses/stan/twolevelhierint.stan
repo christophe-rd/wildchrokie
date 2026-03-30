@@ -74,4 +74,10 @@ generated quantities {
 
   real zatreeid_prior = normal_rng(0, 1);
   real atreeid_prior = abs(normal_rng(0, 0.5)) * zatreeid_prior;
+  
+    // For LOO cross-validation
+  vector[N] log_lik;
+  for (i in 1:N) {
+    log_lik[i] = normal_lpdf(y[i] | ypred[i], sigma_y);
+  }
 }
