@@ -59,7 +59,7 @@ diagnostics <- util$extract_hmc_diagnostics(fit)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot GDD fit ####
+# Plot fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Recover parameters #####
 df_fit <- as.data.frame(fit)
@@ -175,12 +175,13 @@ util$plot_hist_quantiles(samples, "y_rep",
                          xlab = "Budset dates")
 dev.off()
 
+for (i in unique(data$treeid))
 t <- 60
 idxs <- which(data$treeid==t)
 util$plot_disc_pushforward_quantiles(samples, 
                                      paste0("y_rep[",idxs,"]"),
                                      baseline_values = data$y[idxs], ylab = "Budset", xticklabs = 1:length(idxs))
-
+}
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
