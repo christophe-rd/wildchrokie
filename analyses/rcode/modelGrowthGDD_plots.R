@@ -35,6 +35,7 @@ source('rcode/utilExtractParam.R')
 # flags
 makeplots <- FALSE
 interceptmuplots <- FALSE
+
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
@@ -255,9 +256,6 @@ subyvec
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
                                   "treeid", "spp", "site", "latbi")])
 
-# z score covariates
-emp$gddz <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
-
 atreeidsub <- subset(df_fitgdd, select = subyvec)
 colnames(atreeidsub) <- 1:length(subyvec)
 
@@ -283,7 +281,6 @@ y_pos <- 1:n_spp
 
 sitecolors <- c(wes_palette("Darjeeling1"))[1:4]
 
-if(makeplots) {
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: Prep posterior reconstruction #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -346,7 +343,8 @@ treeid_bspp
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
 x <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
-xz <- seq(min(gddz), max(gddz), length.out = 100)  
+
+if(makeplots) {
 y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
 
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
@@ -354,8 +352,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   tree_col <- as.character(treeidvecnum[i]) 
 
   y_post <- sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(xz), 
-          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * xz,
+    rnorm(length(x), 
+          fullintercept[f, tree_col] + treeid_bspp[f, tree_col],
           sigma_df$sigma_y[f])
   })
   y_post_list[[tree_col]] <- y_post
@@ -388,7 +386,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # empty plot first
-  plot(emp_treeid$gddz, emp_treeid$lengthMM, type = "n", 
+  plot(emp_treeid$gdd, emp_treeid$lengthMM, type = "n", 
        ylim = range(c(emp_treeid$lengthMM, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name) # set the name for each plot
@@ -399,20 +397,20 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   line_col <- sppcols[spp_id]
   
   # shaded interval
-  polygon(c(xz, rev(xz)), 
+  polygon(c(x, rev(x)), 
           c(y_low, # lower interval
             rev(y_high)), # high interval
           col = adjustcolor(line_col, alpha.f = 0.3), 
           border = NA)
   
   # mean line
-  lines(xz, y_mean,
+  lines(x, y_mean,
         col = line_col,
         lwd = 2)
   
   points(
     # emp_treeid$pgsGDD5,
-    emp_treeid$gddz,
+    emp_treeid$gdd,
     emp_treeid$lengthMM,
     pch = 16,
     cex = 2,
@@ -743,6 +741,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
 }
 
 dev.off()
+
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Mu plots #####
@@ -1420,8 +1420,6 @@ legend("center",
        title  = "Sites", title.font = 2)
 
 dev.off()
-
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
