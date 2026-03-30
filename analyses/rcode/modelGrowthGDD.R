@@ -38,6 +38,9 @@ source('rcode/utilExtractParam.R')
 fitmodels <- FALSE
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
+empfullsos <- emp[!is.na(emp$leafout),]
+empfulleos <- emp[!is.na(emp$leafout),]
+
 gddyr <- read.csv("output/gddByYear.csv")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

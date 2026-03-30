@@ -35,8 +35,8 @@ source("rcode/modelGrowthGDD.R")
 # source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- TRUE
-interceptmuplots <- TRUE
+makeplots <- FALSE
+interceptmuplots <- FALSE
 
 
 # === === === === === === === === === === === === === === === === 
