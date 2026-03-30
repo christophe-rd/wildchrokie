@@ -184,9 +184,16 @@ Our results show similar trends in response to the thermal (GDD) (Figure \ref{fi
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALL.jpeg}
-\caption{Model parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independant variable changing (see Figure \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS, and Figure \ref{fig:wcEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
-\label{fig:wcmuplot}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/muALLbspp.jpeg}
+\caption{Model slope parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independent variable changing (see Figure \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS, and Figure \ref{fig:wcEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:wcmuplotbspp}
+\end{figure}
+
+% Wildchrokie site mu plot
+\begin{figure}[!ht]
+\includegraphics[width=0.7\textwidth]{../../analyses/figures/climate/muALLasite.jpeg}
+\caption{}
+\label{fig:wcmuplotasite}
 \end{figure}
 
 \begin{enumerate}
@@ -197,15 +204,7 @@ B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}])),
 with the weakest effect being on
 B. populifolia  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula populifolia")]}])
-(Figure \ref{fig:wcmuplot}).
-
-% Figure Growth X GDD
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
-\label{fig:wcgrowthSlopesGDD}
-\end{figure}
-
+(Figure \ref{fig:wcmuplotbspp}).
 
 % GSL
 \item A. incana ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}]) is the only species for which its 90\% intervals don't overlap with zero suggesting that it grows more with longer growing season (GSL).
@@ -213,14 +212,7 @@ B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$sp
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}]) 
 show a weaker response, but seem to grow more in response to longer seasons, with an even weaker response for 
 B. populifolia  ($\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula populifolia")]}])
-(Figure \ref{fig:wcmuplot}).
-
-% Figure Growth X GSL
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
-\label{fig:wcgrowthSlopesGSL}
-\end{figure}
+(Figure \ref{fig:wcmuplotbspp}).
 
 % SOS
 \item Ring width decreased with a later start of season (SOS) for 
@@ -230,7 +222,7 @@ The 90\% UI overlap with 0 for
 B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}]) and
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}]) 
 showing a weaker, but negative response to a later SOS
-(Figure \ref{fig:wcmuplot}).
+(Figure \ref{fig:wcmuplotbspp}).
 
 % EOS
 \item Ring width decreased with a later end of season (EOS) for A. incana ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]). 
@@ -238,7 +230,7 @@ B. populifolia showed a weaker response but appears to also grow less with a lat
 B. alleghaniensis ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}]) and
 B. papyrifera ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}]) 
 didn't respond to EOS.
-(Figure \ref{fig:wcmuplot}).
+(Figure \ref{fig:wcmuplotbspp}).
 
 % Site
 \item For the provenance with the GDD model, the estimates didn't shift much across climate predictors. We detected a weak growth difference between 
@@ -246,7 +238,7 @@ G. College ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_na
 S. Hypolyte ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "SH")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "SH")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "SH")]}]),
 W. Mountains ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "WM")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "WM")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "WM")]}]) and 
 H. Forest ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "HF")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "HF")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "HF")]}]) 
-(Figure \ref{fig:wcmuplot})
+(Figure \ref{fig:wcmuplotasite})
 
 
 
@@ -334,5 +326,26 @@ print(xtable(combined, digits=2, caption=strCaption, label="tab:climResults"),
 )
 
 @
+
+% Wildchrokie aspp mu plot
+\begin{figure}[!ht]
+\includegraphics[width=0.7\textwidth]{../../analyses/figures/climate/muALLaspp.jpeg}
+\caption{}
+\label{fig:wcmuplotaspp}
+\end{figure}
+
+% Figure Growth X GDD
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\label{fig:wcgrowthSlopesGDD}
+\end{figure}
+
+% Figure Growth X GSL
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\label{fig:wcgrowthSlopesGSL}
+\end{figure}
 
 \end{document}

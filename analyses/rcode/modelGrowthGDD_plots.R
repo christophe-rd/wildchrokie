@@ -493,6 +493,10 @@ for (i in seq_along(sppvecnum)) { # i = 1
             main = bquote(italic(.(spp_column_name))),
        frame = FALSE)
   
+  # add panel letter 
+  mtext(paste0("(", letters[i], ")"), 
+        side = 3, adj = 0, line = 0.3, font = 2, cex = 1.2)
+  
   # color
   line_col <- sppcols[spp_num]
   
@@ -727,6 +731,10 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
        frame = FALSE)
+  
+  # add panel letter 
+  mtext(paste0("(", letters[i], ")"), 
+        side = 3, adj = 0, line = 0.3, font = 2, cex = 1.2)
   
   polygon(
     c(gslseq, rev(gslseq)),

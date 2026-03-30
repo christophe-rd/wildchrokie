@@ -594,7 +594,7 @@ site <- as.numeric(as.character(empsos$site_num))
 species <- as.numeric(as.character(empsos$spp_num))
 treeid <- as.numeric(empsos$treeid_num)
 Ntreeid <- length(unique(treeid))
-sos <- empsos$leafout/10
+sos <- empsos$leafout / 5
 
 rstan_options(auto_write = TRUE)
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
@@ -606,7 +606,7 @@ fitsosfull <- sampling(sosmodel, data = c("N","y",
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
 
-# Fit model EOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Fit model EOS
 empeos <- emp[!is.na(emp$budset),]
 
 # transform my groups to numeric values
@@ -639,213 +639,152 @@ saveRDS(fiteos, "output/stanOutput/fitGrowthEOSFull")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Recover and plot parameters SOS restricted vs full #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-# SOS restricted
 df_fitsos <- as.data.frame(fitsos)
-
 # posterior summaries
-sigma_df2  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
-site_df2   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
+aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
+site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 # SOS full
 df_fitsos <- as.data.frame(fitsosfull)
-
 # posterior summaries
-sigma_df2_full  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2_full   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_full <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full <- subset(treeid_df2_full, !grepl("z|sigma", treeid))
-aspp_df2_full   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full <- subset(treeid_df2_full, !grepl("prior", treeid))
-site_df2_full   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_full_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_full_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_full_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("z|sigma", treeid))
+aspp_df2_full_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("prior", treeid))
+site_df2_full_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
-# Open device
-jpeg("figures/empiricalData/SOSFullVSRestricted.jpeg", width = 6, height = 6, units = "in", res = 300)
-par(mfrow = c(2,2))
-
-plot(sigma_df2$mean, sigma_df2_full$mean,
-     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full$mean_per25, sigma_df2_full$mean_per75)),
-     xlim = range(c(sigma_df2$mean_per25, sigma_df2$mean_per75)))
-arrows(x0 = sigma_df2$mean, y0 = sigma_df2_full$mean_per25,
-       x1 = sigma_df2$mean, y1 = sigma_df2_full$mean_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2$mean_per25, y0 = sigma_df2_full$mean,
-       x1 = sigma_df2$mean_per75, y1 = sigma_df2_full$mean,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-
-points(sigma_df2$mean, sigma_df2_full$mean,
-       pch = 16, col = "#046C9A", cex = 1.5)
-
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-points(sigma_df2$mean, sigma_df2_full$mean, pch = 16, col = "#046C9A", cex = 1.5)
-text(sigma_df2$mean_per75, sigma_df2_full$mean_per25, labels = sigma_df2$sigma, pos = c(3,3), cex = 0.75)
-
-# bspp
-plot(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
-     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full$fit_bspp_per25, bspp_df2_full$fit_bspp_per75)),
-     xlim = range(c(bspp_df2$fit_bspp_per25, bspp_df2$fit_bspp_per75)))
-arrows(x0 = bspp_df2$fit_bspp, y0 = bspp_df2_full$fit_bspp_per25,
-       x1 = bspp_df2$fit_bspp, y1 = bspp_df2_full$fit_bspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2$fit_bspp_per25, y0 = bspp_df2_full$fit_bspp,
-       x1 = bspp_df2$fit_bspp_per75, y1 = bspp_df2_full$fit_bspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-# aspp
-plot(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
-     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full$fit_aspp_per25, aspp_df2_full$fit_aspp_per75)),
-     xlim = range(c(aspp_df2$fit_aspp_per25, aspp_df2$fit_aspp_per75)))
-arrows(x0 = aspp_df2$fit_aspp, y0 = aspp_df2_full$fit_aspp_per25,
-       x1 = aspp_df2$fit_aspp, y1 = aspp_df2_full$fit_aspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2$fit_aspp_per25, y0 = aspp_df2_full$fit_aspp,
-       x1 = aspp_df2$fit_aspp_per75, y1 = aspp_df2_full$fit_aspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-###### Plot treeid ######
-treeid_df2_full <- subset(treeid_df2_full, !treeid %in% setdiff(treeid_df2_full$treeid, treeid_df2$treeid))
-plot(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
-     xlab = "restricted", ylab = "full", main = "atreeid", type = "n", frame = FALSE,
-     ylim = range(c(treeid_df2_full$fit_atreeid_per25, treeid_df2_full$fit_atreeid_per75)),
-     xlim = range(c(treeid_df2$fit_atreeid_per25, treeid_df2$fit_atreeid_per75)))
-arrows(x0 = treeid_df2$fit_atreeid, y0 = treeid_df2_full$fit_atreeid_per25,
-       x1 = treeid_df2$fit_atreeid, y1 = treeid_df2_full$fit_atreeid_per75,
-       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
-arrows(x0 = treeid_df2$fit_atreeid_per25, y0 = treeid_df2_full$fit_atreeid,
-       x1 = treeid_df2$fit_atreeid_per75, y1 = treeid_df2_full$fit_atreeid,
-       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
-points(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
-       pch = 16, col = "#046C9A", cex = 0.8)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-dev.off()
-
-# check which tree ids differ and if it's the result 
-treeid_df2$fit_atreeid_full <- treeid_df2_full$fit_atreeid[match(treeid_df2$treeid, treeid_df2_full$treeid)]
-
-treeid_df2$meandiff <- treeid_df2$fit_atreeid - treeid_df2$fit_atreeid_full
-min(treeid_df2$meandiff)
-max(treeid_df2$meandiff)
-treeiddiffs <- c(head(treeid_df2[order(treeid_df2$meandiff), ], 3)$treeid, 
-                 head(treeid_df2[order(-treeid_df2$meandiff), ], 3)$treeid)
-fulleosleafout <- aggregate(leafout ~ treeid_num, empsos, FUN = length)
-restreosleafout <- aggregate(leafout ~ treeid_num, emp, FUN = length)
-# checks
-sum(fulleosleafout$leafout)
-sum(restreosleafout$leafout)
-
-fulleosleafout$restr <- restreosleafout$leafout[match(fulleosleafout$treeid_num, 
-                                                      restreosleafout$treeid_num)]
-
-checkleafout <- subset(fulleosleafout, treeid_num %in% treeiddiffs)
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Recover and plot parameters EOS restricted vs full #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-# EOS restricted
+# Recover and plot parameters EOS restricted vs full 
 df_fiteos <- as.data.frame(fiteos)
-
 # posterior summaries
-sigma_df2  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
-site_df2   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
+aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
+site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 # EOS full
 df_fiteos <- as.data.frame(fiteosfull)
-
 # posterior summaries
-sigma_df2_full  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2_full   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_full <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full <- subset(treeid_df2_full, !grepl("z|sigma", treeid))
-aspp_df2_full   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full <- subset(treeid_df2_full, !grepl("prior", treeid))
-site_df2_full   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+sigma_df2_full_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_full_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_full_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("z|sigma", treeid))
+aspp_df2_full_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("prior", treeid))
+site_df2_full_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 # Open device
-jpeg("figures/empiricalData/EOSFullVSRestricted.jpeg", width = 6, height = 6, units = "in", res = 300)
-par(mfrow = c(2,2))
+jpeg("figures/empiricalData/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
+par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
 
-plot(sigma_df2$mean, sigma_df2_full$mean,
+plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
      xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full$mean_per25, sigma_df2_full$mean_per75)),
-     xlim = range(c(sigma_df2$mean_per25, sigma_df2$mean_per75)))
-arrows(x0 = sigma_df2$mean, y0 = sigma_df2_full$mean_per25,
-       x1 = sigma_df2$mean, y1 = sigma_df2_full$mean_per75,
+     ylim = range(c(sigma_df2_full_sos$mean_per25, sigma_df2_full_sos$mean_per75)),
+     xlim = range(c(sigma_df2_sos$mean_per25, sigma_df2_sos$mean_per75)))
+arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$mean_per25,
+       x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$mean_per75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2$mean_per25, y0 = sigma_df2_full$mean,
-       x1 = sigma_df2$mean_per75, y1 = sigma_df2_full$mean,
+arrows(x0 = sigma_df2_sos$mean_per25, y0 = sigma_df2_full_sos$mean,
+       x1 = sigma_df2_sos$mean_per75, y1 = sigma_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-
-points(sigma_df2$mean, sigma_df2_full$mean,
+points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
        pch = 16, col = "#046C9A", cex = 1.5)
-
 abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-points(sigma_df2$mean, sigma_df2_full$mean, pch = 16, col = "#046C9A", cex = 1.5)
-text(sigma_df2$mean_per75, sigma_df2_full$mean_per25, labels = sigma_df2$sigma, pos = c(3,3), cex = 0.75)
+points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#046C9A", cex = 1.5)
+text(sigma_df2_sos$mean_per75, sigma_df2_full_sos$mean_per25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
-plot(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+plot(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
      xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full$fit_bspp_per25, bspp_df2_full$fit_bspp_per75)),
-     xlim = range(c(bspp_df2$fit_bspp_per25, bspp_df2$fit_bspp_per75)))
-arrows(x0 = bspp_df2$fit_bspp, y0 = bspp_df2_full$fit_bspp_per25,
-       x1 = bspp_df2$fit_bspp, y1 = bspp_df2_full$fit_bspp_per75,
+     ylim = range(c(bspp_df2_full_sos$fit_bspp_per25, bspp_df2_full_sos$fit_bspp_per75)),
+     xlim = range(c(bspp_df2_sos$fit_bspp_per25, bspp_df2_sos$fit_bspp_per75)))
+arrows(x0 = bspp_df2_sos$fit_bspp, y0 = bspp_df2_full_sos$fit_bspp_per25,
+       x1 = bspp_df2_sos$fit_bspp, y1 = bspp_df2_full_sos$fit_bspp_per75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2$fit_bspp_per25, y0 = bspp_df2_full$fit_bspp,
-       x1 = bspp_df2$fit_bspp_per75, y1 = bspp_df2_full$fit_bspp,
+arrows(x0 = bspp_df2_sos$fit_bspp_per25, y0 = bspp_df2_full_sos$fit_bspp,
+       x1 = bspp_df2_sos$fit_bspp_per75, y1 = bspp_df2_full_sos$fit_bspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2$fit_bspp, bspp_df2_full$fit_bspp,
+points(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
        pch = 16, col = "#046C9A", cex = 1.5)
 abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
 
 # aspp
-plot(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+plot(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
      xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full$fit_aspp_per25, aspp_df2_full$fit_aspp_per75)),
-     xlim = range(c(aspp_df2$fit_aspp_per25, aspp_df2$fit_aspp_per75)))
-arrows(x0 = aspp_df2$fit_aspp, y0 = aspp_df2_full$fit_aspp_per25,
-       x1 = aspp_df2$fit_aspp, y1 = aspp_df2_full$fit_aspp_per75,
+     ylim = range(c(aspp_df2_full_sos$fit_aspp_per25, aspp_df2_full_sos$fit_aspp_per75)),
+     xlim = range(c(aspp_df2_sos$fit_aspp_per25, aspp_df2_sos$fit_aspp_per75)))
+arrows(x0 = aspp_df2_sos$fit_aspp, y0 = aspp_df2_full_sos$fit_aspp_per25,
+       x1 = aspp_df2_sos$fit_aspp, y1 = aspp_df2_full_sos$fit_aspp_per75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2$fit_aspp_per25, y0 = aspp_df2_full$fit_aspp,
-       x1 = aspp_df2$fit_aspp_per75, y1 = aspp_df2_full$fit_aspp,
+arrows(x0 = aspp_df2_sos$fit_aspp_per25, y0 = aspp_df2_full_sos$fit_aspp,
+       x1 = aspp_df2_sos$fit_aspp_per75, y1 = aspp_df2_full_sos$fit_aspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2$fit_aspp, aspp_df2_full$fit_aspp,
+points(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
        pch = 16, col = "#046C9A", cex = 1.5)
 abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
 
-###### Plot treeid ######
-treeid_df2_full <- subset(treeid_df2_full, !treeid %in% setdiff(treeid_df2_full$treeid, treeid_df2$treeid))
-plot(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
-     xlab = "restricted", ylab = "full", main = "atreeid", type = "n", frame = FALSE,
-     ylim = range(c(treeid_df2_full$fit_atreeid_per25, treeid_df2_full$fit_atreeid_per75)),
-     xlim = range(c(treeid_df2$fit_atreeid_per25, treeid_df2$fit_atreeid_per75)))
-arrows(x0 = treeid_df2$fit_atreeid, y0 = treeid_df2_full$fit_atreeid_per25,
-       x1 = treeid_df2$fit_atreeid, y1 = treeid_df2_full$fit_atreeid_per75,
-       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
-arrows(x0 = treeid_df2$fit_atreeid_per25, y0 = treeid_df2_full$fit_atreeid,
-       x1 = treeid_df2$fit_atreeid_per75, y1 = treeid_df2_full$fit_atreeid,
-       angle = 90, code = 3, length = 0, lwd = 0.8, col = "darkgray")
-points(treeid_df2$fit_atreeid, treeid_df2_full$fit_atreeid,
-       pch = 16, col = "#046C9A", cex = 0.8)
+
+# add label
+mtext("a)", side = 2, outer = TRUE, at = 0.95, font = 2, las = 1, line = 0.5)
+
+# EOS
+plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
+     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2_full_eos$mean_per25, sigma_df2_full_eos$mean_per75)),
+     xlim = range(c(sigma_df2_eos$mean_per25, sigma_df2_eos$mean_per75)))
+arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$mean_per25,
+       x1 = sigma_df2_eos$mean, y1 = sigma_df2_full_eos$mean_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
+       x1 = sigma_df2_eos$mean_per75, y1 = sigma_df2_full_eos$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
+       pch = 16, col = "#046C9A", cex = 1.5)
 abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#046C9A", cex = 1.5)
+text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
+     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2_full_eos$fit_bspp_per25, bspp_df2_full_eos$fit_bspp_per75)),
+     xlim = range(c(bspp_df2_eos$fit_bspp_per25, bspp_df2_eos$fit_bspp_per75)))
+arrows(x0 = bspp_df2_eos$fit_bspp, y0 = bspp_df2_full_eos$fit_bspp_per25,
+       x1 = bspp_df2_eos$fit_bspp, y1 = bspp_df2_full_eos$fit_bspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2_eos$fit_bspp_per25, y0 = bspp_df2_full_eos$fit_bspp,
+       x1 = bspp_df2_eos$fit_bspp_per75, y1 = bspp_df2_full_eos$fit_bspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+# aspp
+plot(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
+     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2_full_eos$fit_aspp_per25, aspp_df2_full_eos$fit_aspp_per75)),
+     xlim = range(c(aspp_df2_eos$fit_aspp_per25, aspp_df2_eos$fit_aspp_per75)))
+arrows(x0 = aspp_df2_eos$fit_aspp, y0 = aspp_df2_full_eos$fit_aspp_per25,
+       x1 = aspp_df2_eos$fit_aspp, y1 = aspp_df2_full_eos$fit_aspp_per75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2_eos$fit_aspp_per25, y0 = aspp_df2_full_eos$fit_aspp,
+       x1 = aspp_df2_eos$fit_aspp_per75, y1 = aspp_df2_full_eos$fit_aspp,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
+       pch = 16, col = "#046C9A", cex = 1.5)
+abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+
+# add label
+mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
 
 dev.off()
 
