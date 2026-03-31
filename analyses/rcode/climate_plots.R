@@ -69,41 +69,17 @@ years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 empir$anomleafout <- empir$leafout - mean(empir$leafout)
 empir$anombudset <- empir$budset - mean(empir$budset)
-
-if (makeplots) {
   
 # number of frost free days before leafout
-weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, FUN = function(x)
-{sapply(seq_along(x), function(i) sum(x[seq_len(i-1)] < 0, na.rm = TRUE))
-})
+weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, 
+                                  FUN = function(x){
+                                    sapply(seq_along(x), function(i) 
+                                      sum(x[seq_len(i-1)] < 0, na.rm = TRUE))})
 
 weldhillclim$yeardoy <- paste(weldhillclim$year, gddyr$doy, sep = "_")
 emp5 <- emp4[!is.na(emp4$budburst),]
 emp5$frostFbudburst <- weldhillclim$frostFreeDays[match(emp5$yeardoybudburst, 
-                                                        weldhillclim$yeardoy)]
-unique(emp5$budburst)
-plot(emp5$frostFbudburst, emp5$budburst,
-     xlab = "number of frost free days at budburst", ylab = "budburst",
-     pch = 16, frame = FALSE,
-     col = yearcolors[match(emp5$year, years)],
-     main = "leafout X frost free days at budburst")
 
-for (i in seq_along(years)) {
-  year_dat <- emp5[emp5$year == years[i], ]  # <-- years[i] not i
-  
-  lm_fit <- lm(budburst ~ frostFbudburst, data = year_dat)
-  x_seq  <- seq(min(year_dat$frostFbudburst, na.rm = TRUE), 
-                max(year_dat$frostFbudburst, na.rm = TRUE), length.out = 200)
-  pred   <- predict(lm_fit, newdata = data.frame(frostFbudburst = x_seq))
-  
-  lines(x_seq, pred, 
-        col = yearcolors[i],
-        lwd = 2)
-  legend("bottomright",
-         legend = years, 
-         col= yearcolors, pch = 16, lty = 1, lwd = 2,
-         title  = "Year")
-}
 
 # precipitation at leafout
 emp4$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
