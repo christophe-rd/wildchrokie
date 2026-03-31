@@ -295,3 +295,8 @@ merged <- Reduce(function(x, y) merge(x, y, by = c("year", "period")),
 merged <- subset(merged, year != 2015)
 
 write_csv(merged, "output/climateSummariesYear.csv")
+
+# save not by period
+terra2 <- subset(terra, year >2015 & year < 2025)
+terra2 <- terra2[, 1:ncol(terra2)-1]
+write_csv(terra2, "output/climateSummariesByMonth.csv")
