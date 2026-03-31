@@ -1,5 +1,5 @@
 // previous year growth condition as another slope predictor
-
+// mid march 2026
 data{
 int<lower=0> N; 	// number of total observations
 int<lower=0> Nspp; 	// number of species (grouping factor)
@@ -41,9 +41,9 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  a ~ normal(5, 3);
+  a ~ normal(5, 15);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
-  aspp ~ normal(0, 6);
+  aspp ~ normal(0, 15);
   asite ~ normal(0, 2);
   bsp ~ normal(0, 0.5);
   bspyr ~ normal(0, 0.5);
@@ -67,10 +67,10 @@ generated quantities {
   }
 
   // prior predictive samples
-  real a_prior = normal_rng(5, 3);
+  real a_prior = normal_rng(5, 15);
   real sigma_atreeid_prior = abs(normal_rng(0, 0.5));  
   real sigma_y_prior = abs(normal_rng(0, 3));    
-  real aspp_prior = normal_rng(0, 6);
+  real aspp_prior = normal_rng(0, 15);
   real bsp_prior = normal_rng(0, 0.5);
   real bspyr_prior = normal_rng(0, 0.5);
   real asite_prior = normal_rng(0, 2);
