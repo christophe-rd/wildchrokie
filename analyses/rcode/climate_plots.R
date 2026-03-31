@@ -69,26 +69,16 @@ years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 empir$anomleafout <- empir$leafout - mean(empir$leafout)
 empir$anombudset <- empir$budset - mean(empir$budset)
-  
-# number of frost free days before leafout
-weldhillclim$frostFreeDays <- ave(weldhillclim$minTempC, weldhillclim$year, 
-                                  FUN = function(x){
-                                    sapply(seq_along(x), function(i) 
-                                      sum(x[seq_len(i-1)] < 0, na.rm = TRUE))})
-
-weldhillclim$yeardoy <- paste(weldhillclim$year, gddyr$doy, sep = "_")
-emp5 <- emp4[!is.na(emp4$budburst),]
-emp5$frostFbudburst <- weldhillclim$frostFreeDays[match(emp5$yeardoybudburst, 
-
 
 # precipitation at leafout
+if (makeplots) {
 emp4$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
   # takes the previous year accumulation of ppt in december
   sub <- weldhillclim[(weldhillclim$year == obs_year - 1 & weldhillclim$doy >= 335) |
                         # then going into the current year condition
                         (weldhillclim$year == obs_year & weldhillclim$doy <= leafout_doy), ]
   sum(sub$pptMM, na.rm = TRUE) # sum the ppt over our period of interest
-}, emp4$leafout, emp4$year) # apply the function to each of those 2 arguments
+  }, emp4$leafout, emp4$year) # apply the function to each of those 2 arguments
 
 plot(emp4$winterPptLeafout, emp4$leafout,
      xlab = "precipitation accumulation (mm) at leafout", ylab = "leafout",
@@ -112,116 +102,107 @@ for (i in seq_along(years)) { # i = 2018
          col= yearcolors, pch = 16, lty = 1, lwd = 2,
          title  = "Year")
 }
-
 }
 
-}
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # common objects across budset and leafout
-clim_vars  <- c("PDSI", 
-                "TempMeanMax", 
-                "TempMeanMean", 
-                "TempMeanMin", 
-                "Precip")
+clim_vars  <- c("TempMeanMax", "TempMeanMean","TempMeanMin")
 
 emp_clim <- merge(empir, climatesum, by = "year", all.x = TRUE)
 
-colnames(emp_clim)[which(colnames(emp_clim) %in% "pdsi")] <- "PDSI"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
-colnames(emp_clim)[which(colnames(emp_clim) %in% "ppt")] <- "Precip"
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Initialize results data frame
+climresultsleafout <- data.frame(
+  predictor   = character(),
+  period      = character(),
+  slope       = numeric(),
+  std_error   = numeric(),
+  t_value     = numeric(),
+  p_value     = numeric(),
+  stringsAsFactors = FALSE
+)
 
-  # Initialize results data frame
-  climresultsleafout <- data.frame(
-    predictor   = character(),
-    period      = character(),
-    slope       = numeric(),
-    std_error   = numeric(),
-    t_value     = numeric(),
-    p_value     = numeric(),
-    stringsAsFactors = FALSE
-  )
-  
-  jpeg(
-    filename = "figures/climate/climSumLeafout.jpeg", 
-    width = 2400, height = 3600, res = 300)
-  periods    <- c("DJF", "MAM")
-  par(mfrow = c(5, 2), 
-      mar = c(4, 4, 2, 1),   
-      oma = c(0, 0, 4, 8))
-  for (i in seq_along(clim_vars)) {
-    for (j in seq_along(periods)) {
-      
-      p   <- periods[j]
-      var <- clim_vars[i]
-      
-      dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
-                        !is.na(emp_clim$anomleafout), ]
-      
-      plot(dat[[var]], dat$anomleafout,
-           xlab = var, ylab  = "leafout",
-           ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
-           pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
-           main = "")
-      
-      if (i == 1) {
-        mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+jpeg(
+  filename = "figures/climate/climSumLeafout.jpeg", 
+  width = 2400, height = 3600, res = 300)
+periods    <- c("DJF", "MAM")
+par(mfrow = c(5, 2), 
+    mar = c(4, 4, 2, 1),   
+    oma = c(0, 0, 4, 8))
+for (i in seq_along(clim_vars)) {
+  for (j in seq_along(periods)) {
+    
+    p   <- periods[j]
+    var <- clim_vars[i]
+    
+    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
+                      !is.na(emp_clim$anomleafout), ]
+    
+    plot(dat[[var]], dat$anomleafout,
+         xlab = var, ylab  = "leafout",
+         ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
+         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
+         main = "")
+    
+    if (i == 1) {
+      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    }
+    
+    if (nrow(dat) > 1) {
+      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
+      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
+      sum <- summary(lm_fit)
+      significance <- ifelse(sum$coefficients[2,4] < 0.05, "signif", "nonsignif")
+      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
+                    length.out = 200)
+      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
+      lines(x_seq, pred, col = "black", lwd = 2)
+      slope <- round(fixef(lm_fit)[2], 2)
+      mtext(paste0("β = ", slope), 
+            side = 3, line = -2, cex = 1, adj = 0.8)
+      if (significance == "signif") {
+        mtext(" *", side = 3, line = -2, cex = 2, adj = 0.95)
       }
       
-      if (nrow(dat) > 1) {
-        tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
-        lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
-        sum <- summary(lm_fit)
-        significance <- ifelse(sum$coefficients[2,4] < 0.05, "signif", "nonsignif")
-        x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
-                      length.out = 200)
-        pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
-        lines(x_seq, pred, col = "black", lwd = 2)
-        slope <- round(fixef(lm_fit)[2], 2)
-        mtext(paste0("β = ", slope), 
-              side = 3, line = -2, cex = 1, adj = 0.8)
-        if (significance == "signif") {
-          mtext(" *", side = 3, line = -2, cex = 2, adj = 0.95)
-        }
-        
-        # Collect results
-        climresultsleafout <- rbind(climresultsleafout, data.frame(
-          predictor    = var,
-          period       = p,
-          slope     = sum$coefficients[2, 1],
-          std_error    = sum$coefficients[2, 2],
-          t_value      = sum$coefficients[2, 4],
-          p_value      = sum$coefficients[2, 5],
-          stringsAsFactors = FALSE
-        ))
-        
-      } else {
-        # Still record the row but with NAs when insufficient data
-        climresultsleafout <- rbind(climresultsleafout, data.frame(
-          predictor    = var,
-          period       = p,
-          slope        = NA_real_,
-          std_error    = NA_real_,
-          t_value      = NA_real_,
-          p_value      = NA_real_,
-          stringsAsFactors = FALSE
-        ))
-      }
+      # Collect results
+      climresultsleafout <- rbind(climresultsleafout, data.frame(
+        predictor    = var,
+        period       = p,
+        slope     = sum$coefficients[2, 1],
+        std_error    = sum$coefficients[2, 2],
+        t_value      = sum$coefficients[2, 4],
+        p_value      = sum$coefficients[2, 5],
+        stringsAsFactors = FALSE
+      ))
+      
+    } else {
+      # Still record the row but with NAs when insufficient data
+      climresultsleafout <- rbind(climresultsleafout, data.frame(
+        predictor    = var,
+        period       = p,
+        slope        = NA_real_,
+        std_error    = NA_real_,
+        t_value      = NA_real_,
+        p_value      = NA_real_,
+        stringsAsFactors = FALSE
+      ))
     }
   }
-  
-  par(xpd = NA)
-  legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
-         legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
-         title = "Year", bty = "y", xjust = 0, yjust = -7)
-  dev.off()
+}
+
+par(xpd = NA)
+legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
+       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
+       title = "Year", bty = "y", xjust = 0, yjust = -7)
+dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Budset ####
@@ -498,46 +479,7 @@ data <- list(
 # Fit models
 rstan_options(auto_write = TRUE)
 climmodel <- stan_model("stan/climatePredictors.stan")
-fit <- sampling(climmodel, data = data, 
-                       warmup = 1000, iter = 2000, chains=4)
-
-post_means <- summary(fit)$summary[, "mean"]
-
-# pull what I need
-a <- post_means["a"]
-aspp <- post_means[grep("^aspp", names(post_means))]
-asite <- post_means[grep("^asite", names(post_means))]
-ayear <- post_means[grep("^ayear", names(post_means))]
-bsp <- post_means[grep("^bsp",  names(post_means))]
-
-x_vals <- unique(d$TempMeanMax)
-
-# Set up empty plot
-plot(NULL, 
-     xlim = range(x_vals), 
-     ylim = c(min(d$leafout/10), max(d$leafout/10)), 
-     xlab = climvar, 
-     ylab = "leafout", 
-     main = period,
-     xaxt = "n")
-
-cols <- c("firebrick", "steelblue", "forestgreen", "darkorange")
-
-for (s in 1:4) { # i = 2
-  intercept_s <- a + aspp[s]
-  slope_s <- bsp[s]
-  y_vals <- intercept_s + slope_s * x_vals
-  lines(x_vals, y_vals, col = cols[s], lwd = 2)
-  points(x_vals, y_vals, col = cols[s], pch = 16, cex = 1.2)
-}
-
-legend("topleft", legend = paste("spp", 1:4),
-       col = cols, lwd = 2, pch = 16)
-
-x_range <- seq(min(yourdata$x), max(yourdata$x), length.out = 100)
-
-plot(yourdata$x, yourdata$y, col = yourdata$species, pch = 16,
-     xlab = "x", ylab = "y")
+fit <- sampling(climmodel, data = data, iter = 2000, chains=4)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot posterior vs priors for gdd fit ####
@@ -549,6 +491,13 @@ pal <- wes_palette("AsteroidCity1")[3:4]
 
 par(mfrow = c(3, 2))
 df_fit <- as.data.frame(fit)
+
+columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
+sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
+aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
+bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
+site_df <- df_fit[, columns[grepl("asite", columns)]]
+ayear_df <- df_fit[, columns[grepl("ayear", columns)]]
 
 # a
 plot(density(df_fit[, "a_prior"]), 
@@ -628,5 +577,4 @@ for (i in seq_along(clim_vars)) { # i = "tmeanmin"
     abline(h = 0, lty = 2, col = "gray50")
   }
 }
-
 }
