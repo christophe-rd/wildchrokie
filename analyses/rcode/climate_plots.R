@@ -116,92 +116,137 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
 
+# define plot objects and stuff
+species_order <- c(
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
+
+my_colors <- c(
+  "Alnus incana" = wes_palette("AsteroidCity1")[1],
+  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
+  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
+  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
+  
+)
+
+years      <- sort(unique(empir$year))
+firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
+
+climmodel <- stan_model("stan/climatePredictors.stan")
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Initialize results data frame
-climresultsleafout <- data.frame(
-  predictor   = character(),
-  period      = character(),
-  slope       = numeric(),
-  std_error   = numeric(),
-  t_value     = numeric(),
-  p_value     = numeric(),
-  stringsAsFactors = FALSE
-)
+clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
+periods <- c("DJF", "MAM")
 
 jpeg(
   filename = "figures/climate/climSumLeafout.jpeg", 
-  width = 2400, height = 3600, res = 300)
-periods    <- c("DJF", "MAM")
-par(mfrow = c(5, 2), 
-    mar = c(4, 4, 2, 1),   
-    oma = c(0, 0, 4, 8))
-for (i in seq_along(clim_vars)) {
-  for (j in seq_along(periods)) {
+  width = 2000, height = 3000, res = 300)
+
+layout(matrix(c(1,2,7,
+                3,4,7,
+                5,6,7), nrow = 3, byrow = TRUE),
+       widths = c(2, 2, 1))
+
+# set df to recover the parameters
+all_params <- data.frame()
+
+for (i in seq_along(clim_vars)) { # i = 2
+  for (j in seq_along(periods)) { # j = 1
     
     p   <- periods[j]
     var <- clim_vars[i]
     
-    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
-                      !is.na(emp_clim$anomleafout), ]
+    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]), ]
     
-    plot(dat[[var]], dat$anomleafout,
-         xlab = var, ylab  = "leafout",
-         ylim = c(min(empir$anomleafout), max(empir$anomleafout)),
-         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
-         main = "")
+    # transform data in vectors for gsl
+    data <- list(
+      y = dat$anomleafout,
+      N = nrow(dat),
+      year = as.numeric(as.character(dat$year_num)),
+      species = as.numeric(as.character(dat$spp_num)),
+      site = as.numeric(as.character(dat$site_num)),
+      Nspp = length(unique(dat$spp_num)),
+      Nsite = length(unique(dat$site_num)),
+      Nyear = length(unique(dat$year_num)),
+      climpredictor = dat[[var]]
+    )
     
-    if (i == 1) {
-      mtext(p, side = 3, line = 1, outer = FALSE, cex = 1.2, font = 2)
+    # Fit models
+    rstan_options(auto_write = TRUE)
+    fit <- sampling(climmodel, data = data, 
+                    warmup = 1000, iter = 2000, chains=4, refresh = 0)
+    
+    post_means <- summary(fit)$summary[, "mean"]
+    
+    # Extract full summary with quantiles
+    post_summary <- summary(fit, probs = c(0.05, 0.95))$summary
+    
+    # Build dataframe for all parameters of interest
+    param_indices <- c(
+      "a",
+      grep("^ayear(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
+      grep("^asite(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
+      grep("^aspp(?!.*_prior)",  rownames(post_summary), value = TRUE, perl = TRUE),
+      grep("^bsp(?!.*_prior)",   rownames(post_summary), value = TRUE, perl = TRUE)
+    )
+    param_df <- data.frame(
+      clim_var  = var,
+      period    = p,
+      parameter = param_indices,
+      mean      = post_summary[param_indices, "mean"],
+      q5        = post_summary[param_indices, "5%"],
+      q95       = post_summary[param_indices, "95%"],
+      row.names = NULL
+    )
+    
+    all_params <- rbind(all_params, param_df)
+    # pull what I need
+    a <- post_means["a"]
+    aspp <- post_means[grep("^aspp", names(post_means))]
+    asite <- post_means[grep("^asite", names(post_means))]
+    ayear <- post_means[grep("^ayear", names(post_means))]
+    bsp <- post_means[grep("^bsp",  names(post_means))]
+    
+    x_vals <- sort(unique(dat[[var]]))
+    
+    # Set up empty plot
+    x_range <- range(x_vals)
+    x_pad <- diff(x_range) * 0.08  # 8% padding on each side
+    
+    plot(NULL, 
+         xlim = c(x_range[1] - x_pad, x_range[2] + x_pad),
+         ylim = c(min(dat$anomleafout), max(dat$anomleafout)), 
+         xlab = var, ylab = "leafout", 
+         main = p, frame = FALSE)
+    abline(h = 0, lty = 2, col = "gray50")
+    
+    for (s in 1:data$Nspp) { # i = 2
+      intercept_s <- a + aspp[s]
+      slope_s <- bsp[s]
+      y_vals <- intercept_s + slope_s * x_vals
+      lines(x_vals, y_vals, col = my_colors[s], lwd = 2)
     }
     
-    if (nrow(dat) > 1) {
-      tmp    <- data.frame(x = dat[[var]], y = dat$anomleafout, year = dat$year)
-      lm_fit <- lmer(y ~ scale(x) + (1 | year), data = tmp)
-      sum <- summary(lm_fit)
-      significance <- ifelse(sum$coefficients[2,4] < 0.05, "signif", "nonsignif")
-      x_seq  <- seq(min(tmp$x, na.rm = TRUE), max(tmp$x, na.rm = TRUE), 
-                    length.out = 200)
-      pred <- predict(lm_fit, newdata = data.frame(x = x_seq, year = NA), re.form = NA)
-      lines(x_seq, pred, col = "black", lwd = 2)
-      slope <- round(fixef(lm_fit)[2], 2)
-      mtext(paste0("β = ", slope), 
-            side = 3, line = -2, cex = 1, adj = 0.8)
-      if (significance == "signif") {
-        mtext(" *", side = 3, line = -2, cex = 2, adj = 0.95)
-      }
-      
-      # Collect results
-      climresultsleafout <- rbind(climresultsleafout, data.frame(
-        predictor    = var,
-        period       = p,
-        slope     = sum$coefficients[2, 1],
-        std_error    = sum$coefficients[2, 2],
-        t_value      = sum$coefficients[2, 4],
-        p_value      = sum$coefficients[2, 5],
-        stringsAsFactors = FALSE
-      ))
-      
-    } else {
-      # Still record the row but with NAs when insufficient data
-      climresultsleafout <- rbind(climresultsleafout, data.frame(
-        predictor    = var,
-        period       = p,
-        slope        = NA_real_,
-        std_error    = NA_real_,
-        t_value      = NA_real_,
-        p_value      = NA_real_,
-        stringsAsFactors = FALSE
-      ))
-    }
+    points(data$climpredictor, data$y,
+           col = my_colors[data$species], pch = 16, cex = 0.8)
+    
+    # one year label per unique clim value, at top of each plot
+    text(x_vals, rep(max(dat$anomleafout), length(x_vals)),
+         labels = dat$year[match(x_vals, dat[[var]])],
+         cex = 1, col = "black")
   }
 }
+par(mar = c(0, 0, 0, 0))
+plot(NULL, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
+legend("center", legend = species_order,
+       col = my_colors[species_order], pch = 16, lwd = 2,
+       bty = "n", cex = 0.9, pt.cex = 1.5)
 
-par(xpd = NA)
-legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
-       legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
-       title = "Year", bty = "y", xjust = 0, yjust = -7)
+
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -458,7 +503,7 @@ if (FALSE){
 
 clim_vars <- c("TempMeanMax", "TempMeanMin", "TempMeanMean")
 climvar <- clim_vars[1] 
-period <- "MAM"
+period <- "DJF"
 
 d <- emp_clim[emp_clim$period == period & !is.na(emp_clim$TempMeanMax) & 
                 !is.na(emp_clim$anombudset), ]
@@ -479,7 +524,7 @@ data <- list(
 # Fit models
 rstan_options(auto_write = TRUE)
 climmodel <- stan_model("stan/climatePredictors.stan")
-fit <- sampling(climmodel, data = data, iter = 2000, chains=4)
+fit <- sampling(climmodel, data = data, iter = 2000, chains=4, cores = 4)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot posterior vs priors for gdd fit ####
@@ -529,7 +574,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.5))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -539,15 +584,15 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "ayear_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_ayear", 
-     xlab = "ayear", xlim = c(-6, 6), ylim = c(0, 0.5))
-for (col in colnames(site_df)) {
-  lines(density(site_df[, col]), col = pal[2], lwd = 1)
+     xlab = "ayear", xlim = c(-20, 20), ylim = c(0, 0.5))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # bsp
 plot(density(df_fit[, "bsp_prior"]), 
-     col = pal[1], lwd = 2, 
+     col = pal[1], lwd = 2, xlim = c(-15, 15),
      main = "priorVSposterior_bsp", 
      xlab = "bsp", ylim = c(0, 1.8))
 for (col in colnames(bspp_df)) {
@@ -556,25 +601,4 @@ for (col in colnames(bspp_df)) {
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
-
-
-
-for (i in seq_along(clim_vars)) { # i = "tmeanmin"
-  for (j in seq_along(periods)) { # j = "MAM"
-    
-    p   <- periods[j]
-    var <- clim_vars[i]
-    
-    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]) & 
-                      !is.na(emp_clim$anombudset), ]
-    
-    plot(dat[[var]], dat$anombudset,
-         xlab = var, ylab  = "budset",
-         ylim = c(min(empir$anombudset), max(empir$anombudset)),
-         pch = 16, frame = FALSE, col = firststeps[match(dat$year, years)],
-         main = "")
-    
-    abline(h = 0, lty = 2, col = "gray50")
-  }
-}
 }
