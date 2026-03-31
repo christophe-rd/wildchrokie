@@ -91,7 +91,7 @@ saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 samples <- util$extract_expectand_vals(fit)
 jpeg(
-  filename = "figures/troubleShootingGrowthModel/retrodictiveCheckHistPrvsYr.jpeg",
+  filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg",
   width = 2400,      
   height = 2400,
   res = 300          
@@ -122,7 +122,7 @@ colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
-jpeg("figures/empiricalData/gddModelPriorVSPosteriorPrvsYr.jpeg", 
+jpeg("figures/growthPreviousYearModel/gddModelPriorVSPosteriorPrvsYr.jpeg", 
      width =2400, height = 3600, res =300)
 pal <- wes_palette("AsteroidCity1")[3:4]
 
@@ -132,7 +132,7 @@ par(mfrow = c(3, 3))
 plot(density(df_fit[, "a_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
+     xlab = "a", ylim = c(0,0.1))
 lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -156,7 +156,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", xlim = c(-60, 60), ylim = c(0, 0.1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -193,3 +193,4 @@ for (col in colnames(bspp_df)) {
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
+

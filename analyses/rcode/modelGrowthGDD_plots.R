@@ -35,7 +35,7 @@ source("rcode/modelGrowthGDD.R")
 # source('rcode/utilExtractParam.R')
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 interceptmuplots <- TRUE
 
 
@@ -537,7 +537,7 @@ par(mar = c(4, 4, 2, 1))
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
 
 plot(emp$pgsGDD5, y, type = "n", 
-     ylim = range(min(emp$lengthCM*10), max(emp$lengthCM*10)), 
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
      xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
      main = "species growth responses")
 
@@ -754,6 +754,452 @@ for (i in seq_along(sppvecnum)) { # i = 1
   )
 }
 
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# SOS: prep posterior reconstruction ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+subyvec <- vector()
+for (i in 1:length(unique(emp$treeid_num))) {
+  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
+}
+subyvec
+
+atreeidsub_sos <- subset(df_fitsos, select = subyvec)
+
+colnames(atreeidsub_sos) <- 1:length(subyvec)
+
+# the spp values for each tree id
+treeid_aspp_sos <- data.frame(matrix(ncol = ncol(atreeidsub_sos), nrow = nrow(df_fitsos)))
+colnames(treeid_aspp_sos) <- colnames(atreeidsub_sos)
+
+for (i in seq_len(ncol(treeid_aspp_sos))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_aspp_sos)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_aspp_sos[, i] <- aspp_df_sos[, spp_id]
+}
+treeid_aspp_sos
+
+# the site values for each tree id
+treeid_asite_sos <- data.frame(matrix(ncol = ncol(atreeidsub_sos), nrow = nrow(df_fitsos)))
+colnames(treeid_asite_sos) <- colnames(atreeidsub_sos)
+
+for (i in seq_len(ncol(treeid_asite_sos))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_asite_sos)[i])
+  site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_asite_sos[, i] <- site_df_sos[, site_id]
+}
+treeid_asite_sos
+
+# recover a
+treeid_a_sos <- data.frame(matrix(ncol = ncol(atreeidsub_sos), nrow = nrow(df_fitsos)))
+colnames(treeid_a_sos) <- colnames(atreeidsub_sos)
+
+for (i in seq_len(ncol(treeid_a_sos))) { # i = 1
+  treeid_a_sos[, i] <- df_fitsos[, "a"]
+}
+
+# sum all 3 dfs together to get the full intercept for each treeid
+fullintercept_sos <-
+  treeid_a_sos + 
+  atreeidsub_sos +
+  treeid_aspp_sos +
+  treeid_asite_sos
+fullintercept_sos
+
+# now get the slope for each treeid
+treeid_bspp_sos <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitsos)))
+colnames(treeid_bspp_sos) <- colnames(atreeidsub)
+
+# back convert the slopes to their original scales
+bspp_df4_sos <- bspp_df_sos
+for (i in 1:ncol(bspp_df4_sos)){
+  bspp_df4_sos[[i]] <- bspp_df4_sos[[i]] / 5
+}
+
+for (i in seq_len(ncol(treeid_bspp_sos))) { # i = 30
+  tree_id <- as.integer(colnames(treeid_bspp_sos)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_bspp_sos[, i] <- bspp_df4_sos[, spp_id]
+}
+treeid_bspp_sos
+
+treeidvecnum <- 1:ncol(fullintercept_sos)
+treeidvecname <- treeid_spp_site$treeid
+sosseq <- seq(min(emp$leafout), max(emp$leafout), length.out = 100)  
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### SOS: per Spp, facet #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+mean_post_list_sos <- list()
+for (i in seq_along(treeidvecnum)) {
+  tree_col <- as.character(treeidvecnum[i])
+  mean_post_list_sos[[tree_col]] <- sapply(1:nrow(df_fitsos), function(f) {
+    fullintercept_sos[f, tree_col] + treeid_bspp_sos[f, tree_col] * sosseq
+    # no sigma_y yet
+  })
+}
+
+# average the mean predictions across trees within species
+spp_mean_list_sos <- lapply(spp_list, function(tree_vec) {
+  Reduce("+", mean_post_list_sos[as.character(tree_vec)]) / length(tree_vec)
+})
+
+# re-simulate sigma on the averaged mean
+spp_post_list_sos <- lapply(spp_mean_list_sos, function(mean_mat) {
+  sapply(1:nrow(df_fitsos), function(f) {
+    rnorm(length(sosseq), mean_mat[, f], sigma_df_sos$sigma_y[f])
+  })
+})
+
+# jpeg output
+jpeg(
+  filename = "figures/empiricalData/growthModelSlopesperSppFacetSOS.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+# Layout: 2 rows × 2 columns per page
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  
+  # define spp num
+  spp_num <- as.integer(spp_column)
+  
+  # spp color
+  line_col <- sppcols[spp_num]
+  
+  # subset empirical data correctly
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+  
+  spp_column <- as.character(sppvecnum[i]) 
+  y_post_sos <- spp_post_list_sos[[spp_column]]
+  
+  # summaries
+  y_mean_sos <- apply(y_post_sos, 1, mean)
+  y_low_sos  <- apply(y_post_sos, 1, quantile, 0.25)
+  y_high_sos <- apply(y_post_sos, 1, quantile, 0.75)
+  
+  # species-specific ylim
+  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  
+  plot(emp_spp$leafout, emp_spp$lengthMM,
+       type = "n",
+       ylim = c(0,14),
+       xlab = "Leafout day of year",
+       ylab = "Ring width (mm)",
+       main = bquote(italic(.(spp_column_name))),
+       frame = FALSE)
+  
+  # add panel letter 
+  mtext(paste0("(", letters[i], ")"), 
+        side = 3, adj = 0, line = 0.3, font = 2, cex = 1.2)
+  
+  polygon(
+    c(sosseq, rev(sosseq)),
+    c(y_low_sos, rev(y_high_sos)),
+    col = adjustcolor(line_col, alpha.f = 0.3),
+    border = NA
+  )
+  
+  lines(sosseq, y_mean_sos, col = line_col, lwd = 2)
+  
+  points(
+    emp_spp$leafout,
+    emp_spp$lengthMM,
+    pch = my_shapes[emp_spp$site],
+    cex = 1,
+    col = line_col
+  )
+}
+
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### SOS: per Spp, non-facetted #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# PDF output
+jpeg(
+  filename = "figures/empiricalData/growthModelSlopesperSppNoFacetSOS.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+
+# Layout: 2 rows × 2 columns per page
+par(mar = c(4, 4, 2, 1))
+
+plot(emp$leafout, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Leafout day of year", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post_sos <- spp_post_list_sos[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post_sos, 1, mean)
+  y_low  <- apply(y_post_sos, 1, quantile, 0.25)
+  y_high <- apply(y_post_sos, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  # shaded interval
+  polygon(c(sosseq, rev(sosseq)),
+          c(y_low, # lower interval
+            rev(y_high)), # high interval
+          col = adjustcolor(line_col, alpha.f = 0.1),
+          border = NA)
+  
+  # mean line
+  lines(sosseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+  
+  # points(
+  #   x = emp_spp$leafout, y = emp_spp$lengthMM,
+  #   pch = 16, cex = 1, col = line_col)
+  
+  # legend(
+  #   "topleft", legend = sppvecname,
+  #   col = sppcols[as.integer(sppvecnum)], lwd = 2, pch = 16, bty = "n", cex = 1.5
+  # )
+  
+}
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# EOS: prep posterior reconstruction ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+subyvec <- vector()
+for (i in 1:length(unique(emp$treeid_num))) {
+  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
+}
+subyvec
+
+atreeidsub_eos <- subset(df_fiteos, select = subyvec)
+
+colnames(atreeidsub_eos) <- 1:length(subyvec)
+
+# the spp values for each tree id
+treeid_aspp_eos <- data.frame(matrix(ncol = ncol(atreeidsub_eos), nrow = nrow(df_fiteos)))
+colnames(treeid_aspp_eos) <- colnames(atreeidsub_eos)
+
+for (i in seq_len(ncol(treeid_aspp_eos))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_aspp_eos)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_aspp_eos[, i] <- aspp_df_eos[, spp_id]
+}
+treeid_aspp_eos
+
+# the site values for each tree id
+treeid_asite_eos <- data.frame(matrix(ncol = ncol(atreeidsub_eos), nrow = nrow(df_fiteos)))
+colnames(treeid_asite_eos) <- colnames(atreeidsub_eos)
+
+for (i in seq_len(ncol(treeid_asite_eos))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_asite_eos)[i])
+  site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_asite_eos[, i] <- site_df_eos[, site_id]
+}
+treeid_asite_eos
+
+# recover a
+treeid_a_eos <- data.frame(matrix(ncol = ncol(atreeidsub_eos), nrow = nrow(df_fiteos)))
+colnames(treeid_a_eos) <- colnames(atreeidsub_eos)
+
+for (i in seq_len(ncol(treeid_a_eos))) { # i = 1
+  treeid_a_eos[, i] <- df_fiteos[, "a"]
+}
+
+# sum all 3 dfs together to get the full intercept for each treeid
+fullintercept_eos <-
+  treeid_a_eos + 
+  atreeidsub_eos +
+  treeid_aspp_eos +
+  treeid_asite_eos
+fullintercept_eos
+
+# now get the slope for each treeid
+treeid_bspp_eos <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fiteos)))
+colnames(treeid_bspp_eos) <- colnames(atreeidsub)
+
+# back convert the slopes to their original scales
+bspp_df4_eos <- bspp_df_eos
+for (i in 1:ncol(bspp_df4_eos)){
+  bspp_df4_eos[[i]] <- bspp_df4_eos[[i]] / 10
+}
+
+for (i in seq_len(ncol(treeid_bspp_eos))) { # i = 30
+  tree_id <- as.integer(colnames(treeid_bspp_eos)[i])
+  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
+  treeid_bspp_eos[, i] <- bspp_df4_eos[, spp_id]
+}
+treeid_bspp_eos
+
+treeidvecnum <- 1:ncol(fullintercept_eos)
+treeidvecname <- treeid_spp_site$treeid
+eosseq <- seq(min(emp$budset), max(emp$budset), length.out = 100)  
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### EOS: per Spp, facet #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+mean_post_list_eos <- list()
+for (i in seq_along(treeidvecnum)) {
+  tree_col <- as.character(treeidvecnum[i])
+  mean_post_list_eos[[tree_col]] <- sapply(1:nrow(df_fiteos), function(f) {
+    fullintercept_eos[f, tree_col] + treeid_bspp_eos[f, tree_col] * eosseq
+    # no sigma_y yet
+  })
+}
+
+# average the mean predictions across trees within species
+spp_mean_list_eos <- lapply(spp_list, function(tree_vec) {
+  Reduce("+", mean_post_list_eos[as.character(tree_vec)]) / length(tree_vec)
+})
+
+# re-simulate sigma on the averaged mean
+spp_post_list_eos <- lapply(spp_mean_list_eos, function(mean_mat) {
+  sapply(1:nrow(df_fiteos), function(f) {
+    rnorm(length(eosseq), mean_mat[, f], sigma_df_eos$sigma_y[f])
+  })
+})
+
+# jpeg output
+jpeg(
+  filename = "figures/empiricalData/growthModelSlopesperSppFacetEOS.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+# Layout: 2 rows × 2 columns per page
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  
+  # define spp num
+  spp_num <- as.integer(spp_column)
+  
+  # spp color
+  line_col <- sppcols[spp_num]
+  
+  # subset empirical data correctly
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+  
+  spp_column <- as.character(sppvecnum[i]) 
+  y_post_eos <- spp_post_list_eos[[spp_column]]
+  
+  # summaries
+  y_mean_eos <- apply(y_post_eos, 1, mean)
+  y_low_eos  <- apply(y_post_eos, 1, quantile, 0.25)
+  y_high_eos <- apply(y_post_eos, 1, quantile, 0.75)
+  
+  # species-specific ylim
+  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  
+  plot(emp_spp$budset, emp_spp$lengthMM,
+       type = "n",
+       ylim = c(0,14),
+       xlab = "Budset day of year",
+       ylab = "Ring width (mm)",
+       main = bquote(italic(.(spp_column_name))),
+       frame = FALSE)
+  
+  # add panel letter 
+  mtext(paste0("(", letters[i], ")"), 
+        side = 3, adj = 0, line = 0.3, font = 2, cex = 1.2)
+  
+  polygon(
+    c(eosseq, rev(eosseq)),
+    c(y_low_eos, rev(y_high_eos)),
+    col = adjustcolor(line_col, alpha.f = 0.3),
+    border = NA
+  )
+  
+  lines(eosseq, y_mean_eos, col = line_col, lwd = 2)
+  
+  points(
+    emp_spp$budset,
+    emp_spp$lengthMM,
+    pch = my_shapes[emp_spp$site],
+    cex = 1,
+    col = line_col
+  )
+}
+
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### EOS: per Spp, non-facetted #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# PDF output
+jpeg(
+  filename = "figures/empiricalData/growthModelSlopesperSppNoFacetEOS.jpeg",
+  width = 2400,      # wider image (pixels) → more horizontal room
+  height = 2400,
+  res = 300          # good print-quality resolution
+)
+
+# Layout: 2 rows × 2 columns per page
+par(mar = c(4, 4, 2, 1))
+
+plot(emp$budset, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Budset day of year", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post_eos <- spp_post_list_eos[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post_eos, 1, mean)
+  y_low  <- apply(y_post_eos, 1, quantile, 0.25)
+  y_high <- apply(y_post_eos, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  polygon(c(eosseq, rev(eosseq)),
+          c(y_low, rev(y_high)), # low and high interval
+          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
+  
+  lines(eosseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+  
+  # points(
+  #   x = emp_spp$budset, y = emp_spp$lengthMM,
+  #   pch = 16, cex = 1, col = line_col)
+  
+  # legend(
+  #   "topleft", legend = sppvecname,
+  #   col = sppcols[as.integer(sppvecnum)], lwd = 2, pch = 16, bty = "n", cex = 1.5
+  # )
+  
+}
 dev.off()
 
 }
@@ -1073,6 +1519,221 @@ legend("center",
        title  = "Species", title.font = 2)
 
 dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### bspp with lines #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
+     width = 2400, height = 2800, res = 300)
+
+layout(matrix(c(
+  1, 5, 9,
+  2, 6, 9,
+  3, 7, 9,
+  4, 8, 9
+), nrow = 4, byrow = TRUE),
+widths = c(0.8, 0.8, 0.5))
+
+# Row 1, Col 1, Slot 5 : GDD
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 2, Col 1, Slot 6 : GSL
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_gsl$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 10 days of GSL", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 3, Col 1, Slot 7 : SOS
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_sos$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 5 days of leafout", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 4, Col 1, Slot 8 : EOS
+par(mar = c(5, 8, 2, 2))
+plot(bspp_df2_eos$fit_bspp, y_pos,
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Ring width (mm) change per 10 days of budset", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
+         col = sppcols, lwd = 1.5)
+segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
+         col = sppcols, lwd = 3)
+abline(v = 0, lty = 2, col = "black")
+mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 1, Col 2, Slot 5 : GDD
+par(mar = c(5, 8, 2, 2))
+plot(emp$pgsGDD5, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Growing season growing degree days (GDD)", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post <- spp_post_list[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post, 1, mean)
+  y_low  <- apply(y_post, 1, quantile, 0.25)
+  y_high <- apply(y_post, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  polygon(c(gddseq, rev(gddseq)),
+          c(y_low, rev(y_high)), # low and high interval
+          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
+  
+  lines(gddseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+}
+# Row 2, Col 2, Slot 6 : GSL
+par(mar = c(5, 8, 2, 2))
+plot(emp$pgsGSL, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Growing season length (days)", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post_gsl <- spp_post_list_gsl[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post_gsl, 1, mean)
+  y_low  <- apply(y_post_gsl, 1, quantile, 0.25)
+  y_high <- apply(y_post_gsl, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  polygon(c(gslseq, rev(gslseq)),
+          c(y_low, rev(y_high)), # low and high interval
+          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
+  
+  lines(gslseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+}
+
+# Row 3, Col 2, Slot 7 : SOS
+par(mar = c(5, 8, 2, 2))
+plot(emp$leafout, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Leafout day of year", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post_sos <- spp_post_list_sos[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post_sos, 1, mean)
+  y_low  <- apply(y_post_sos, 1, quantile, 0.25)
+  y_high <- apply(y_post_sos, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  polygon(c(sosseq, rev(sosseq)),
+          c(y_low, rev(y_high)), # low and high interval
+          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
+  
+  lines(sosseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+}
+
+# Row 4, Col 2, Slot 8 : EOS
+par(mar = c(5, 8, 2, 2))
+plot(emp$budset, y, type = "n", frame = FALSE,
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Budset day of year", ylab = "Ring width (mm)",
+     main = "")
+
+# Loop over trees again to plot each tree individually
+for (i in seq_along(sppvecnum)) { # i = 1
+  spp_column <- as.character(sppvecnum[i])
+  spp_column_name <- as.character(sppvecname[i])
+  y_post_eos <- spp_post_list_eos[[spp_column]]
+  
+  # color line by spp
+  spp_num <- as.integer(spp_column)
+  
+  # calculate mean and 50% credible interval (25%-75%)
+  y_mean <- apply(y_post_eos, 1, mean)
+  y_low  <- apply(y_post_eos, 1, quantile, 0.25)
+  y_high <- apply(y_post_eos, 1, quantile, 0.75)
+  
+  line_col <- sppcols[spp_num]
+  
+  polygon(c(eosseq, rev(eosseq)),
+          c(y_low, rev(y_high)), # low and high interval
+          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
+  
+  lines(eosseq, y_mean,
+        col = line_col,
+        lwd = 2)
+  
+  emp_spp <- emp[emp$spp_num == spp_num, ]
+}
+
+
+# Slot 9: species legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("center",
+       legend = sapply(unique(bspp_df2$spp_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(sppcols),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
+dev.off()
+
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
