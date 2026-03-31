@@ -36,8 +36,7 @@ source("rcode/modelGrowthGDD.R")
 
 # flags
 makeplots <- TRUE
-interceptmuplots <- TRUE
-
+# interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -396,8 +395,8 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # empty plot first
-  plot(emp_treeid$pgsGDD5, emp_treeid$lengthMM, type = "n", 
-       ylim = range(c(emp_treeid$lengthMM, y_low, y_high), na.rm = TRUE),
+  plot(emp_treeid$pgsGDD5, emp_treeid$loglength, type = "n", 
+       ylim = range(c(emp_treeid$loglength, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name) # set the name for each plot
   
@@ -420,7 +419,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
   
   points(
     emp_treeid$pgsGDD5,
-    emp_treeid$lengthMM,
+    emp_treeid$loglength,
     pch = 16,
     cex = 2,
     col = line_col)
@@ -482,14 +481,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, emp_spp$lengthMM,
+  plot(emp_spp$pgsGDD5, emp_spp$loglength,
        type = "n",
        # ylim = ylim_spp,
-       ylim = c(0,14),
+       ylim = c(0,4),
        xlab = "Primary growing season GDD",
-       ylab = "Ring width (mm)",
+       ylab = "Ring width (mm) log",
             main = bquote(italic(.(spp_column_name))),
        frame = FALSE)
   
@@ -511,7 +510,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGDD5,
-    emp_spp$lengthMM,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -537,7 +536,7 @@ par(mar = c(4, 4, 2, 1))
 # below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
 
 plot(emp$pgsGDD5, y, type = "n", 
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
      main = "species growth responses")
 
@@ -573,7 +572,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
   points(
     emp_spp$pgsGDD5,
-    emp_spp$lengthMM,
+    emp_spp$loglength,
     pch = 16,
     cex = 1,
     col = line_col)
@@ -722,9 +721,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_gsl <- apply(y_post_gsl, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGSL, emp_spp$lengthMM,
+  plot(emp_spp$pgsGSL, emp_spp$loglength,
        type = "n",
        ylim = c(0,14),
        xlab = "Primary growing season GSL",
@@ -747,7 +746,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGSL,
-    emp_spp$lengthMM,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -886,9 +885,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_sos <- apply(y_post_sos, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$leafout, emp_spp$lengthMM,
+  plot(emp_spp$leafout, emp_spp$loglength,
        type = "n",
        ylim = c(0,14),
        xlab = "Leafout day of year",
@@ -911,7 +910,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$leafout,
-    emp_spp$lengthMM,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -935,7 +934,7 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 plot(emp$leafout, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "Ring width (mm)",
      main = "")
 
@@ -970,7 +969,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$spp_num == spp_num, ]
   
   # points(
-  #   x = emp_spp$leafout, y = emp_spp$lengthMM,
+  #   x = emp_spp$leafout, y = emp_spp$loglength,
   #   pch = 16, cex = 1, col = line_col)
   
   # legend(
@@ -1111,9 +1110,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_eos <- apply(y_post_eos, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$budset, emp_spp$lengthMM,
+  plot(emp_spp$budset, emp_spp$loglength,
        type = "n",
        ylim = c(0,14),
        xlab = "Budset day of year",
@@ -1136,7 +1135,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$budset,
-    emp_spp$lengthMM,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -1160,7 +1159,7 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 plot(emp$budset, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "Ring width (mm)",
      main = "")
 
@@ -1191,7 +1190,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$spp_num == spp_num, ]
   
   # points(
-  #   x = emp_spp$budset, y = emp_spp$lengthMM,
+  #   x = emp_spp$budset, y = emp_spp$loglength,
   #   pch = 16, cex = 1, col = line_col)
   
   # legend(
@@ -1201,8 +1200,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
 }
 dev.off()
-
-}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Mu plots #####
@@ -1459,7 +1456,7 @@ widths = c(0.7, 0.4))
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
@@ -1472,7 +1469,7 @@ mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_gsl$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 10 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
@@ -1485,7 +1482,7 @@ mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_sos$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 5 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
@@ -1498,7 +1495,7 @@ mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_eos$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
@@ -1524,7 +1521,7 @@ dev.off()
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
-     width = 2400, height = 2800, res = 300)
+     width = 2800, height = 2800, res = 300)
 
 layout(matrix(c(
   1, 5, 9,
@@ -1532,13 +1529,13 @@ layout(matrix(c(
   3, 7, 9,
   4, 8, 9
 ), nrow = 4, byrow = TRUE),
-widths = c(0.8, 0.8, 0.5))
+widths = c(1.3, 1, 0.5))
 
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Log ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
@@ -1550,8 +1547,8 @@ mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_gsl$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 10 days of GSL", ylab = "",
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Log ring width (mm) change per 10 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
@@ -1563,8 +1560,8 @@ mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_sos$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 5 days of leafout", ylab = "",
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Log ring width (mm) change per 5 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
@@ -1576,8 +1573,8 @@ mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_eos$fit_bspp, y_pos,
-     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change per 10 days of budset", ylab = "",
+     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Log ring width (mm) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
@@ -1589,8 +1586,8 @@ mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = c(5, 8, 2, 2))
 plot(emp$pgsGDD5, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
-     xlab = "Growing season growing degree days (GDD)", ylab = "Ring width (mm)",
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
+     xlab = "Growing season growing degree days (GDD)", ylab = "Log ring width (mm)",
      main = "")
 
 # Loop over trees again to plot each tree individually
@@ -1622,8 +1619,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = c(5, 8, 2, 2))
 plot(emp$pgsGSL, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
-     xlab = "Growing season length (days)", ylab = "Ring width (mm)",
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
+     xlab = "Growing season length (days)", ylab = "Log ring width (mm)",
      main = "")
 
 # Loop over trees again to plot each tree individually
@@ -1656,8 +1653,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 3, Col 2, Slot 7 : SOS
 par(mar = c(5, 8, 2, 2))
 plot(emp$leafout, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
-     xlab = "Leafout day of year", ylab = "Ring width (mm)",
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
+     xlab = "Leafout day of year", ylab = "Log ring width (mm)",
      main = "")
 
 # Loop over trees again to plot each tree individually
@@ -1690,8 +1687,8 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 4, Col 2, Slot 8 : EOS
 par(mar = c(5, 8, 2, 2))
 plot(emp$budset, y, type = "n", frame = FALSE,
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
-     xlab = "Budset day of year", ylab = "Ring width (mm)",
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
+     xlab = "Budset day of year", ylab = "Log ring width (mm)",
      main = "")
 
 # Loop over trees again to plot each tree individually
@@ -1720,7 +1717,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   emp_spp <- emp[emp$spp_num == spp_num, ]
 }
-
 
 # Slot 9: species legend
 par(mar = c(1, 1, 1, 1))
@@ -1842,7 +1838,7 @@ lat_labels <- locations$lat[match(site_order, locations$shortnames)]
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
 plot(site_df2$fit_a_site, y_pos,
-     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5),
+     xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
@@ -1856,7 +1852,7 @@ mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
 plot(site_df2_gsl$fit_a_site, y_pos,
-     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5),
+     xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
@@ -1870,7 +1866,7 @@ mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
 plot(site_df2_sos$fit_a_site, y_pos,
-     xlim = c(-5, 5),ylim = c(0.5, n_site + 0.5),
+     xlim = c(-2, 2),ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
@@ -1884,7 +1880,7 @@ mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
 plot(site_df2_eos$fit_a_site, y_pos,
-     xlim = c(-5, 5), ylim = c(0.5, n_site + 0.5), 
+     xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
@@ -1904,6 +1900,7 @@ legend("center",
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Site", title.font = 2)
 dev.off()
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####

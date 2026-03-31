@@ -66,9 +66,10 @@ emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 
 emp$lengthMM <- emp$lengthCM*10
+emp$loglength <- log(emp$lengthMM)
 
 # transform data in vectors for GDD
-y <- emp$lengthMM # ring width in mm
+y <- emp$loglength # ring width in mm
 N <- nrow(emp)
 Nspp <- length(unique(emp$spp_num))
 Nsite <- length(unique(emp$site_num))
@@ -182,7 +183,7 @@ par(mfrow = c(3, 2))
 plot(density(df_fitgdd[, "a_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
+     xlab = "a", ylim = c(0, 1))
 lines(density(df_fitgdd[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -190,7 +191,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgdd[, "sigma_atreeid_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_atreeid", 
-     xlab = "sigma_atreeid", ylim = c(0,2))
+     xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitgdd[, "sigma_atreeid"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -198,7 +199,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgdd[, "sigma_y_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_y", 
-     xlab = "sigma_y", ylim = c(0,2))
+     xlab = "sigma_y", ylim = c(0, 4))
 lines(density(df_fitgdd[, "sigma_y"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -206,7 +207,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgdd[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -216,7 +219,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgdd[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -226,7 +229,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgdd[, "bsp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
+     xlab = "bsp", ylim = c(0, 5))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
@@ -275,7 +278,7 @@ par(mfrow = c(3, 2))
 plot(density(df_fitgsl[, "a_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
+     xlab = "a", ylim = c(0, 1))
 lines(density(df_fitgsl[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -283,7 +286,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgsl[, "sigma_atreeid_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_atreeid", 
-     xlab = "sigma_atreeid", ylim = c(0,2))
+     xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitgsl[, "sigma_atreeid"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -291,7 +294,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgsl[, "sigma_y_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_y", 
-     xlab = "sigma_y", ylim = c(0,2))
+     xlab = "sigma_y", ylim = c(0, 4))
 lines(density(df_fitgsl[, "sigma_y"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -299,7 +302,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgsl[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -309,7 +314,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgsl[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -319,7 +324,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitgsl[, "bsp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
+     xlab = "bsp", ylim = c(0, 5))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
@@ -368,7 +373,7 @@ par(mfrow = c(3, 2))
 plot(density(df_fitsos[, "a_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
+     xlab = "a", ylim = c(0, 1))
 lines(density(df_fitsos[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -376,7 +381,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitsos[, "sigma_atreeid_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_atreeid", 
-     xlab = "sigma_atreeid", ylim = c(0,2))
+     xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitsos[, "sigma_atreeid"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -384,7 +389,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitsos[, "sigma_y_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_y", 
-     xlab = "sigma_y", ylim = c(0,2))
+     xlab = "sigma_y", ylim = c(0, 4))
 lines(density(df_fitsos[, "sigma_y"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -392,7 +397,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitsos[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -402,7 +409,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitsos[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -412,7 +419,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fitsos[, "bsp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
+     xlab = "bsp", ylim = c(0, 5))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
@@ -461,7 +468,7 @@ par(mfrow = c(3, 2))
 plot(density(df_fiteos[, "a_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
+     xlab = "a", ylim = c(0, 1))
 lines(density(df_fiteos[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -469,7 +476,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fiteos[, "sigma_atreeid_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_atreeid", 
-     xlab = "sigma_atreeid", ylim = c(0,2))
+     xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fiteos[, "sigma_atreeid"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -477,7 +484,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fiteos[, "sigma_y_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_sigma_y", 
-     xlab = "sigma_y", ylim = c(0,2))
+     xlab = "sigma_y", ylim = c(0, 4))
 lines(density(df_fiteos[, "sigma_y"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
@@ -485,7 +492,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fiteos[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -495,7 +504,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fiteos[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -505,15 +514,13 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fiteos[, "bsp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
+     xlab = "bsp", ylim = c(0, 5))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
-
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####

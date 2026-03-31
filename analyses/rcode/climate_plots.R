@@ -2,10 +2,10 @@
 # CRD 12 March 2026
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -29,6 +29,7 @@ makeplots <- FALSE
 
 empir <- read.csv("output/empiricalDataMAIN.csv")
 climatesum <- read.csv("output/climateSummariesYear.csv")
+climatesummonth <- read.csv("output/climateSummariesByMonth.csv")
 gddyr <- read.csv("output/gddByYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
@@ -102,7 +103,7 @@ for (i in seq_along(years)) { # i = 2018
          col= yearcolors, pch = 16, lty = 1, lwd = 2,
          title  = "Year")
 }
-}
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
@@ -485,8 +486,7 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
        title = "Year", bty = "y", xjust = 0, yjust = -7)
 
 dev.off()
-
-
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####
@@ -495,6 +495,13 @@ leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
 leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
 budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
 budsetbyyr$budset <- round(budsetbyyr$budset, 2)
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Droughts ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+moderatedrought <- subset(climatesummonth, pdsi < -2 & pdsi > -3)
+severedrought <- subset(climatesummonth, pdsi < -3)
+climatesummonth[which(climatesummonth$pdsi < -2 & climatesummonth$month <10 & climatesummonth$month > 2 & climatesummonth$year %in% yrwc),1]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit the figures with stan ####
@@ -518,7 +525,7 @@ data <- list(
   Nspp = length(unique(d$spp_num)),
   Nsite = length(unique(d$site_num)),
   Nyear = length(unique(d$year_num)),
-  climpredictor = d$TempMeanMax
+  climpredictor = d$TempMeanMean
 )
 
 # Fit models
@@ -564,7 +571,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-20, 20), ylim = c(0, 0.15))
+     xlab = "aspp", xlim = c(-50, 50), ylim = c(0, 0.1))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -574,7 +581,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.5))
+     xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.2))
 for (col in colnames(site_df)) {
   lines(density(site_df[, col]), col = pal[2], lwd = 1)
 }
@@ -584,7 +591,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "ayear_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_ayear", 
-     xlab = "ayear", xlim = c(-20, 20), ylim = c(0, 0.5))
+     xlab = "ayear", xlim = c(-50, 50), ylim = c(0, 0.1))
 for (col in colnames(ayear_df)) {
   lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
 }
@@ -592,7 +599,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # bsp
 plot(density(df_fit[, "bsp_prior"]), 
-     col = pal[1], lwd = 2, xlim = c(-15, 15),
+     col = pal[1], lwd = 2, xlim = c(-10, 10),
      main = "priorVSposterior_bsp", 
      xlab = "bsp", ylim = c(0, 1.8))
 for (col in colnames(bspp_df)) {
