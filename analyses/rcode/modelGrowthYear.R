@@ -1,5 +1,5 @@
 # Wildchrokie model
-# CRD 23 April 2025
+# CRD 30 March 2026
 # compare a year model as the predictor with the gdd model and cross-validate to figure out which one is the most predictive.
 
 # housekeeping
@@ -33,7 +33,7 @@ emp <- read.csv("output/empiricalDataMAIN.csv")
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit model GDD
-# emp <- emp[!is.na(emp$year),]
+emp <- emp[!is.na(emp$pgsGDD5),]
 
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
@@ -51,7 +51,7 @@ data <- list(
   site = as.numeric(as.character(emp$site_num)),
   species = as.numeric(as.character(emp$spp_num)),
   treeid = as.numeric(emp$treeid_num),
-  Ntreeid = length(unique(treeid)),
+  Ntreeid = length(unique(emp$treeid)),
   Nyear = length(unique(emp$year)),
   year = as.integer(as.factor(emp$year)))
 
@@ -68,8 +68,29 @@ diagnostics <- util$extract_hmc_diagnostics(fityear)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # loo
-extract_log_lik(yearmodel, merge_chains = FALSE)
-loo(yearmodel)
+log_lik_1 <- extract_log_lik(fityear, merge_chains = FALSE)
+
+# relative effective sample sizes
+r_eff <- relative_eff(exp(log_lik_1)) 
+
+loo_1 <- loo(log_lik_1, r_eff = r_eff)
+
+plot(loo_1)
+# which observations are problematic
+pareto_k <- loo_1$diagnostics$pareto_k
+bad_obs <- which(pareto_k > 0.7)
+bad_obs
+
+emp[bad_obs, ]
+
+# comparison 
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+log_lik_gdd <- extract_log_lik(fitgdd, merge_chains = FALSE)
+r_eff_gdd <- relative_eff(exp(log_lik_gdd)) 
+loo_gdd <- loo(log_lik_gdd, r_eff = r_eff_gdd)
+
+comp <- loo_compare(loo_1, loo_gdd)
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot Year fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

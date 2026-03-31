@@ -36,7 +36,7 @@ source("rcode/modelGrowthGDD.R")
 
 # flags
 makeplots <- FALSE
-interceptmuplots <- FALSE
+interceptmuplots <- TRUE
 
 
 # === === === === === === === === === === === === === === === === 
@@ -1014,7 +1014,7 @@ widths = c(0.7, 0.4))
 par(mar = c(5, 8, 2, 2))
 plot(bspp_df2$fit_bspp, y_pos,
      xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Ring width (mm) change average GDD in 10 spring days", ylab = "",
+     xlab = "Ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
 segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)

@@ -2,8 +2,8 @@
 # CRD 12 March 2026
 
 # housekeeping
-# rm(list=ls())
-# options(stringsAsFactors = FALSE)
+rm(list=ls())
+options(stringsAsFactors = FALSE)
 options(max.print = 150)
 options(digits = 3)
 
@@ -69,33 +69,6 @@ years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 empir$anomleafout <- empir$leafout - mean(empir$leafout)
 empir$anombudset <- empir$budset - mean(empir$budset)
-
-# leafout vs gdd
-emp4$gddLeafout <- gddyr$GDD_5[match(emp4$yeardoyleafout, gddyr$yeardoy)]
-if (makeplots){
-plot(emp4$gddLeafout, emp4$leafout,
-     xlab = "gddLeafout", ylab = "leafout",
-     pch = 16, 
-     col = yearcolors[match(emp4$year, years)],
-     main = "leafout X gdd at leafout")
-
-for (i in seq_along(years)) {
-  year_dat <- emp4[emp4$year == years[i], ]
-  
-  lm_fit <- lm(leafout ~ gddLeafout, data = year_dat)
-  x_seq  <- seq(min(year_dat$gddLeafout, na.rm = TRUE), 
-                max(year_dat$gddLeafout, na.rm = TRUE), length.out = 200)
-  pred   <- predict(lm_fit, newdata = data.frame(gddLeafout = x_seq))
-  
-  lines(x_seq, pred, 
-        col = yearcolors[i],
-        lwd = 2)
-}
-
-legend("bottomright",
-       legend = years, 
-       col= yearcolors, pch = 16, lty = 1, lwd = 2,
-       title  = "Year")
 
 if (makeplots) {
   
