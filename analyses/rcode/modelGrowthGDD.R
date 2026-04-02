@@ -12,13 +12,8 @@ options(mc.cores = parallel::detectCores())
 options(digits = 3)
 
 # Load library 
-library(ggplot2)
 library(rstan)
-library(future)
-library(shinystan)
 library(wesanderson)
-library(patchwork)
-library(rstanarm)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -38,8 +33,13 @@ source('rcode/utilExtractParam.R')
 fitmodels <- FALSE
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
+
+# change ring width
+emp$lengthMM <- emp$lengthCM*10
+emp$loglength <- log(emp$lengthMM)
+
 empfullsos <- emp[!is.na(emp$leafout),]
-empfulleos <- emp[!is.na(emp$leafout),]
+empfulleos <- emp[!is.na(emp$budset),]
 
 gddyr <- read.csv("output/gddByYear.csv")
 
@@ -65,9 +65,6 @@ emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 
-emp$lengthMM <- emp$lengthCM*10
-emp$loglength <- log(emp$lengthMM)
-
 # transform data in vectors for GDD
 y <- emp$loglength # ring width in mm
 N <- nrow(emp)
@@ -91,7 +88,6 @@ eos <- emp$budset / 10
 
 if (fitmodels){
 # Fit model GDD
-rstan_options(auto_write = TRUE)
 gddmodel <- stan_model("stan/twolevelhierint.stan")
 fitgdd <- sampling(gddmodel, data = c("N","y",
                                 "Nspp","species",
@@ -106,7 +102,6 @@ diagnostics <- util$extract_hmc_diagnostics(fitgdd)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model GSL
-rstan_options(auto_write = TRUE)
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 fitgsl <- sampling(gslmodel, data = c("N","y",
                                   "Nspp","species",
@@ -117,7 +112,6 @@ fitgsl <- sampling(gslmodel, data = c("N","y",
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
 
 # Fit model SOS
-rstan_options(auto_write = TRUE)
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsos <- sampling(sosmodel, data = c("N","y",
                                   "Nspp","species",
@@ -128,7 +122,6 @@ fitsos <- sampling(sosmodel, data = c("N","y",
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 
 # Fit model EOS
-rstan_options(auto_write = TRUE)
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = c("N","y",
                                   "Nspp","species",
@@ -173,7 +166,7 @@ site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site",
 
 
 ##### Plot posterior vs priors for gdd fit #####
-pdf(file = "figures/empiricalData/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
+pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
@@ -268,7 +261,7 @@ treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 ##### Plot posterior vs priors for GSL fit #####
-pdf(file = "figures/empiricalData/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
+pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
@@ -363,7 +356,7 @@ treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 ##### Plot posterior vs priors for sos fit #####
-pdf(file = "figures/empiricalData/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
+pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
@@ -458,7 +451,7 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 ##### Plot posterior vs priors for eos fit #####
-pdf(file = "figures/empiricalData/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
+pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
@@ -586,27 +579,24 @@ if (FALSE) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # FULL DATA ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp <- read.csv("output/empiricalDataMAIN.csv")
-# Fit model SOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-empsos <- emp[!is.na(emp$leafout),]
-
+# Fit model SOS
 # transform my groups to numeric values
-empsos$site_num <- match(empsos$site, unique(empsos$site))
-empsos$spp_num <- match(empsos$spp, unique(empsos$spp))
-empsos$treeid_num <- match(empsos$treeid, unique(empsos$treeid))
+empfullsos$site_num <- match(empfullsos$site, unique(empfullsos$site))
+empfullsos$spp_num <- match(empfullsos$spp, unique(empfullsos$spp))
+empfullsos$treeid_num <- match(empfullsos$treeid, unique(empfullsos$treeid))
 
 # transform data in vectors for gsl
-y <- empsos$lengthCM*10 # ring width in mm
-N <- nrow(empsos)
-Nspp <- length(unique(empsos$spp_num))
-Nsite <- length(unique(empsos$site_num))
-site <- as.numeric(as.character(empsos$site_num))
-species <- as.numeric(as.character(empsos$spp_num))
-treeid <- as.numeric(empsos$treeid_num)
+y <- empfullsos$loglength # ring width in mm
+N <- nrow(empfullsos)
+Nspp <- length(unique(empfullsos$spp_num))
+Nsite <- length(unique(empfullsos$site_num))
+site <- as.numeric(as.character(empfullsos$site_num))
+species <- as.numeric(as.character(empfullsos$spp_num))
+treeid <- as.numeric(empfullsos$treeid_num)
 Ntreeid <- length(unique(treeid))
-sos <- empsos$leafout / 5
+sos <- empfullsos$leafout / 5
 
-rstan_options(auto_write = TRUE)
+
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsosfull <- sampling(sosmodel, data = c("N","y",
                                       "Nspp","species",
@@ -617,25 +607,22 @@ fitsosfull <- sampling(sosmodel, data = c("N","y",
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
 
 # Fit model EOS
-empeos <- emp[!is.na(emp$budset),]
-
 # transform my groups to numeric values
-empeos$site_num <- match(empeos$site, unique(empeos$site))
-empeos$spp_num <- match(empeos$spp, unique(empeos$spp))
-empeos$treeid_num <- match(empeos$treeid, unique(empeos$treeid))
+empfulleos$site_num <- match(empfulleos$site, unique(empfulleos$site))
+empfulleos$spp_num <- match(empfulleos$spp, unique(empfulleos$spp))
+empfulleos$treeid_num <- match(empfulleos$treeid, unique(empfulleos$treeid))
 
 # transform data in vectors for gsl
-y <- empeos$lengthCM*10 # ring width in mm
-N <- nrow(empeos)
-Nspp <- length(unique(empeos$spp_num))
-Nsite <- length(unique(empeos$site_num))
-site <- as.numeric(as.character(empeos$site_num))
-species <- as.numeric(as.character(empeos$spp_num))
-treeid <- as.numeric(empeos$treeid_num)
+y <- empfulleos$loglength # ring width in mm
+N <- nrow(empfulleos)
+Nspp <- length(unique(empfulleos$spp_num))
+Nsite <- length(unique(empfulleos$site_num))
+site <- as.numeric(as.character(empfulleos$site_num))
+species <- as.numeric(as.character(empfulleos$spp_num))
+treeid <- as.numeric(empfulleos$treeid_num)
 Ntreeid <- length(unique(treeid))
-eos <- empeos$budset/10
+eos <- empfulleos$budset/10
 
-rstan_options(auto_write = TRUE)
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteosfull <- sampling(eosmodel, data = c("N","y",
                                       "Nspp","species",
@@ -693,11 +680,11 @@ treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("prior", treeid))
 site_df2_full_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
 # Open device
-jpeg("figures/empiricalData/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
+jpeg("figures/growthModelsMain/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
 par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
 
 plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
+     xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_sos$mean_per25, sigma_df2_full_sos$mean_per75)),
      xlim = range(c(sigma_df2_sos$mean_per25, sigma_df2_sos$mean_per75)))
 arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$mean_per25,
@@ -748,7 +735,7 @@ mtext("a)", side = 2, outer = TRUE, at = 0.95, font = 2, las = 1, line = 0.5)
 
 # EOS
 plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
+     xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_eos$mean_per25, sigma_df2_full_eos$mean_per75)),
      xlim = range(c(sigma_df2_eos$mean_per25, sigma_df2_eos$mean_per75)))
 arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$mean_per25,

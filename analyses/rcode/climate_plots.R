@@ -499,9 +499,12 @@ budsetbyyr$budset <- round(budsetbyyr$budset, 2)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Droughts ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+yrwc <- c(2018:2020)
+yrts <- c(2016:2024)
+climatesummonth$monthname <- month.name[climatesummonth$month]
+
 moderatedrought <- subset(climatesummonth, pdsi < -2 & pdsi > -3)
 severedrought <- subset(climatesummonth, pdsi < -3)
-climatesummonth[which(climatesummonth$pdsi < -2 & climatesummonth$month <10 & climatesummonth$month > 2 & climatesummonth$year %in% yrwc),1]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit the figures with stan ####

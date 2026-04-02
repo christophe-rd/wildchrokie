@@ -28,14 +28,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 # source model code
 source("rcode/modelGrowthGDD.R")
 
-# util <- new.env()
-# source('mcmc_analysis_tools_rstan.R', local=util)
-# source('mcmc_visualization_tools.R', local=util)
-# # my function to extract parameters
-# source('rcode/utilExtractParam.R')
-
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -52,25 +46,6 @@ commonNames <- c(
 )
 
 emp$commonName <- commonNames[emp$latbi]
-
-# emp <- emp[!is.na(emp$pgsGDD5),]
-# # transform my groups to numeric values
-# emp$site_num <- match(emp$site, unique(emp$site))
-# emp$spp_num <- match(emp$spp, unique(emp$spp))
-# emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
-# emp$lengthMM <- emp$lengthCM * 10
-# 
-# # transform data in vectors
-# y <- emp$lengthMM # ring width in mm
-# N <- nrow(emp)
-# gdd <- emp$pgsGDD5/gdd
-# Nspp <- length(unique(emp$spp_num))
-# Nsite <- length(unique(emp$site_num))
-# site <- as.numeric(as.character(emp$site_num))
-# species <- as.numeric(as.character(emp$spp_num))
-# treeid <- as.numeric(emp$treeid_num)
-# Ntreeid <- length(unique(treeid))
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD posterior recovery ####
@@ -267,9 +242,6 @@ subyvec
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
                                   "treeid", "spp", "site", "latbi")])
 
-atreeidsub <- subset(df_fitgdd, select = subyvec)
-colnames(atreeidsub) <- 1:length(subyvec)
-
 # get a vector for each treeid for each species
 spp1vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 1]
 spp2vec <- treeid_spp_site$treeid_num[treeid_spp_site$spp_num == 2]
@@ -294,31 +266,34 @@ y_pos <- rev(1:n_spp)
 ##### GDD: Prep posterior reconstruction #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # start by filling a df with treeid intercepts only
-# the spp values for each tree id
-treeid_aspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
-colnames(treeid_aspp) <- colnames(atreeidsub)
+atreeid_gdd<- subset(df_fitgdd, select = subyvec)
+colnames(atreeid_gdd) <- 1:length(subyvec)
 
-for (i in seq_len(ncol(treeid_aspp))) { # i = 1
-  tree_id <- as.integer(colnames(treeid_aspp)[i])
+# the spp values for each tree id
+treeid_aspp_gdd <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
+colnames(treeid_aspp_gdd) <- colnames(atreeid_gdd)
+
+for (i in seq_len(ncol(treeid_aspp_gdd))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_aspp_gdd)[i])
   spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_aspp[, i] <- aspp_df[, spp_id]
+  treeid_aspp_gdd[, i] <- aspp_df[, spp_id]
 }
-treeid_aspp
+treeid_aspp_gdd
 
 # the site values for each tree id
-treeid_asite <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
-colnames(treeid_asite) <- colnames(atreeidsub)
+treeid_asite_gdd <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
+colnames(treeid_asite_gdd) <- colnames(atreeid_gdd)
 
-for (i in seq_len(ncol(treeid_asite))) { # i = 1
-  tree_id <- as.integer(colnames(treeid_asite)[i])
+for (i in seq_len(ncol(treeid_asite_gdd))) { # i = 1
+  tree_id <- as.integer(colnames(treeid_asite_gdd)[i])
   site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_asite[, i] <- site_df[, site_id]
+  treeid_asite_gdd[, i] <- site_df[, site_id]
 }
-treeid_asite
+treeid_asite_gdd
 
 # recover a
-treeid_a <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
-colnames(treeid_a) <- colnames(atreeidsub)
+treeid_a <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
+colnames(treeid_a) <- colnames(atreeid_gdd)
 
 for (i in seq_len(ncol(treeid_a))) { # i = 1
   treeid_a[, i] <- df_fitgdd[, "a"]
@@ -327,14 +302,14 @@ for (i in seq_len(ncol(treeid_a))) { # i = 1
 # sum all 3 dfs together to get the full intercept for each treeid
 fullintercept <-
   treeid_a + 
-  atreeidsub +
-  treeid_aspp +
-  treeid_asite
+  atreeid_gdd +
+  treeid_aspp_gdd +
+  treeid_asite_gdd
 fullintercept
 
 # now get the slope for each treeid
-treeid_bspp <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgdd)))
-colnames(treeid_bspp) <- colnames(atreeidsub)
+treeid_bspp <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
+colnames(treeid_bspp) <- colnames(atreeid_gdd)
 
 # back convert the slopes to their original scales
 bspp_df4 <- bspp_df
@@ -372,7 +347,7 @@ for (i in seq_along(treeidvecnum)) { # i = 1
 ##### GDD: per treeid, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
-pdf(file = "figures/empiricalData/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
+pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -452,7 +427,7 @@ spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
 
 # jpeg output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppFacet.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -524,7 +499,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # PDF output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSpp.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSpp.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -594,14 +569,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL: prep posterior reconstruction ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-subyvec <- vector()
-for (i in 1:length(unique(emp$treeid_num))) {
-  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
-}
-subyvec
-
 atreeidsub_gsl <- subset(df_fitgsl, select = subyvec)
-
 colnames(atreeidsub_gsl) <- 1:length(subyvec)
 
 # the spp values for each tree id
@@ -643,8 +611,8 @@ fullintercept_gsl <-
 fullintercept_gsl
 
 # now get the slope for each treeid
-treeid_bspp_gsl <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitgsl)))
-colnames(treeid_bspp_gsl) <- colnames(atreeidsub)
+treeid_bspp_gsl <- data.frame(matrix(ncol = ncol(atreeidsub_gsl), nrow = nrow(df_fitgsl)))
+colnames(treeid_bspp_gsl) <- colnames(atreeidsub_gsl)
 
 # back convert the slopes to their original scales
 bspp_df4_gsl <- bspp_df_gsl
@@ -689,7 +657,7 @@ spp_post_list_gsl <- lapply(spp_mean_list_gsl, function(mean_mat) {
 
 # jpeg output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppFacetGSL.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -758,12 +726,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS: prep posterior reconstruction ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-subyvec <- vector()
-for (i in 1:length(unique(emp$treeid_num))) {
-  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
-}
-subyvec
-
 atreeidsub_sos <- subset(df_fitsos, select = subyvec)
 
 colnames(atreeidsub_sos) <- 1:length(subyvec)
@@ -807,8 +769,8 @@ fullintercept_sos <-
 fullintercept_sos
 
 # now get the slope for each treeid
-treeid_bspp_sos <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fitsos)))
-colnames(treeid_bspp_sos) <- colnames(atreeidsub)
+treeid_bspp_sos <- data.frame(matrix(ncol = ncol(atreeidsub_sos), nrow = nrow(df_fitsos)))
+colnames(treeid_bspp_sos) <- colnames(atreeidsub_sos)
 
 # back convert the slopes to their original scales
 bspp_df4_sos <- bspp_df_sos
@@ -853,7 +815,7 @@ spp_post_list_sos <- lapply(spp_mean_list_sos, function(mean_mat) {
 
 # jpeg output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppFacetSOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -924,7 +886,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppNoFacetSOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -983,12 +945,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS: prep posterior reconstruction ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-subyvec <- vector()
-for (i in 1:length(unique(emp$treeid_num))) {
-  subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
-}
-subyvec
-
 atreeidsub_eos <- subset(df_fiteos, select = subyvec)
 
 colnames(atreeidsub_eos) <- 1:length(subyvec)
@@ -1032,8 +988,8 @@ fullintercept_eos <-
 fullintercept_eos
 
 # now get the slope for each treeid
-treeid_bspp_eos <- data.frame(matrix(ncol = ncol(atreeidsub), nrow = nrow(df_fiteos)))
-colnames(treeid_bspp_eos) <- colnames(atreeidsub)
+treeid_bspp_eos <- data.frame(matrix(ncol = ncol(atreeidsub_eos), nrow = nrow(df_fiteos)))
+colnames(treeid_bspp_eos) <- colnames(atreeidsub_eos)
 
 # back convert the slopes to their original scales
 bspp_df4_eos <- bspp_df_eos
@@ -1078,7 +1034,7 @@ spp_post_list_eos <- lapply(spp_mean_list_eos, function(mean_mat) {
 
 # jpeg output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppFacetEOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -1149,7 +1105,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/empiricalData/growthModelSlopesperSppNoFacetEOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -1226,9 +1182,9 @@ sub <- sub[!duplicated(sub$treeid_num),]
 
 # recalculate the full intercept without the grand mean
 fullintercept2 <-
-  atreeidsub +
-  treeid_aspp +
-  treeid_asite
+  atreeid_gdd +
+  treeid_aspp_gdd +
+  treeid_asite_gdd
 fullintercept2
 
 # get posterior means and quantiles
@@ -1288,11 +1244,9 @@ my_colors <- c(
   "Betula populifolia" = wes_palette("AsteroidCity1")[4]
 )
 
-
-
 # open device
 pdf(
-  file = "figures/empiricalData/meanPlotGrowthGDD_treeidBYspp.pdf",
+  file = "figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
   width = 8,  
   height = 8
 )
@@ -1442,7 +1396,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1520,7 +1474,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg(file = "figures/empiricalData/muALLbspp.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
      width = 2800, height = 2800, res = 300)
 
 layout(matrix(c(
@@ -1734,7 +1688,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/empiricalData/muALLaspp.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLaspp.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1812,7 +1766,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### asite ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/empiricalData/muALLasite.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLasite.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(

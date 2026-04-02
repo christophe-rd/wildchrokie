@@ -42,13 +42,13 @@ for (i in 1:N){ // don't change this for reparameterization
 
 model{	
   a ~ normal(2, 4);
-  zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 5);
   asite ~ normal(0, 1);
   bsp ~ normal(0, 0.8);
   sigma_atreeid ~ normal(0, 1); 
   sigma_y ~ normal(0, 1);
   
+  zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
