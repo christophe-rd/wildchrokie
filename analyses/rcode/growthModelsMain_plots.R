@@ -2,20 +2,6 @@
 # CRD 14 December 2025
 
 # Goal: Plot model output because modelGrowthGDD is becoming too long and messy
-
-# housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(mc.cores = parallel::detectCores())
-options(digits = 3)
-
-# Load library 
-library(ggplot2)
-library(rstan)
-library(future)
-library(wesanderson)
-library(patchwork) 
   
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -29,7 +15,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 source("rcode/growthModelsMain.R")
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -693,7 +679,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$pgsGSL, emp_spp$loglength,
        type = "n",
-       ylim = c(0,14),
+       ylim = c(0,4),
        xlab = "Primary growing season GSL",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
@@ -851,7 +837,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$leafout, emp_spp$loglength,
        type = "n",
-       ylim = c(0,14),
+       ylim = c(0,4),
        xlab = "Leafout day of year",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
@@ -1070,7 +1056,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$budset, emp_spp$loglength,
        type = "n",
-       ylim = c(0,14),
+       ylim = c(0,4),
        xlab = "Budset day of year",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
