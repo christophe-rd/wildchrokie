@@ -694,9 +694,9 @@ arrows(x0 = sigma_df2_sos$mean_per25, y0 = sigma_df2_full_sos$mean,
        x1 = sigma_df2_sos$mean_per75, y1 = sigma_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#046C9A", cex = 1.5)
+       pch = 16, col = "#79ad41", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#79ad41", cex = 1.5)
 text(sigma_df2_sos$mean_per75, sigma_df2_full_sos$mean_per25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
@@ -711,8 +711,8 @@ arrows(x0 = bspp_df2_sos$fit_bspp_per25, y0 = bspp_df2_full_sos$fit_bspp,
        x1 = bspp_df2_sos$fit_bspp_per75, y1 = bspp_df2_full_sos$fit_bspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+       pch = 16, col = "#79ad41", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
 plot(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
@@ -726,8 +726,8 @@ arrows(x0 = aspp_df2_sos$fit_aspp_per25, y0 = aspp_df2_full_sos$fit_aspp,
        x1 = aspp_df2_sos$fit_aspp_per75, y1 = aspp_df2_full_sos$fit_aspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+       pch = 16, col = "#79ad41", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 
 # add label
@@ -745,8 +745,8 @@ arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
        x1 = sigma_df2_eos$mean_per75, y1 = sigma_df2_full_eos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+       pch = 16, col = "#e67424", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#046C9A", cex = 1.5)
 text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
 
@@ -762,8 +762,8 @@ arrows(x0 = bspp_df2_eos$fit_bspp_per25, y0 = bspp_df2_full_eos$fit_bspp,
        x1 = bspp_df2_eos$fit_bspp_per75, y1 = bspp_df2_full_eos$fit_bspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+       pch = 16, col = "#e67424", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
 plot(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
@@ -777,8 +777,8 @@ arrows(x0 = aspp_df2_eos$fit_aspp_per25, y0 = aspp_df2_full_eos$fit_aspp,
        x1 = aspp_df2_eos$fit_aspp_per75, y1 = aspp_df2_full_eos$fit_aspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
+       pch = 16, col = "#e67424", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # add label
 mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
