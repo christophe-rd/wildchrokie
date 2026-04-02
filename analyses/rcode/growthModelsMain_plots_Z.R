@@ -26,7 +26,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 }
 
 # source model code
-source("rcode/growthModelsMain.R")
+source("rcode/modelGrowthGDD.R")
 
 # flags
 makeplots <- FALSE
