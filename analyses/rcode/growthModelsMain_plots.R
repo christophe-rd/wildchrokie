@@ -1398,12 +1398,13 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
+
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
@@ -1411,12 +1412,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_gsl$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 10 days of GSL", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
@@ -1424,12 +1425,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_sos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 5 days of leafout", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
@@ -1437,12 +1438,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_eos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width (mm) change per 10 days of budset", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Slot 5: species legend
@@ -1454,7 +1455,6 @@ legend("center",
        col    = unique(sppcols),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Species", title.font = 2)
-
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -1476,12 +1476,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Log ring width (mm) change in averaged GDD of 10 spring days", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2, Col 1, Slot 6 : GSL
@@ -1489,12 +1489,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_gsl$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Log ring width (mm) change per 10 days of GSL", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3, Col 1, Slot 7 : SOS
@@ -1502,12 +1502,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_sos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Log ring width (mm) change per 5 days of leafout", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4, Col 1, Slot 8 : EOS
@@ -1515,12 +1515,12 @@ par(mar = c(5, 8, 2, 2))
 plot(bspp_df2_eos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "Log ring width (mm) change per 10 days of budset", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 1, Col 2, Slot 5 : GDD
@@ -1690,12 +1690,12 @@ par(mar = c(5, 8, 2, 2))
 plot(aspp_df2$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
@@ -1703,12 +1703,12 @@ par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_gsl$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_gsl$fit_aspp_per5,  y_pos, aspp_df2_gsl$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_gsl$fit_aspp_per25, y_pos, aspp_df2_gsl$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
@@ -1716,12 +1716,12 @@ par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_sos$fit_aspp, y_pos,
      xlim = c(-15, 15),ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "", 
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_sos$fit_aspp_per5,  y_pos, aspp_df2_sos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_sos$fit_aspp_per25, y_pos, aspp_df2_sos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
@@ -1729,12 +1729,12 @@ par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_eos$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "", 
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_eos$fit_aspp_per5,  y_pos, aspp_df2_eos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_eos$fit_aspp_per25, y_pos, aspp_df2_eos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Slot 5: species legend
@@ -1780,13 +1780,13 @@ par(mar = c(5, 8, 2, 2))
 plot(site_df2$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
-     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
 segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
 segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
@@ -1794,13 +1794,13 @@ par(mar = c(5, 8, 2, 2))
 plot(site_df2_gsl$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
-     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
 segments(site_df2_gsl$fit_a_site_per5,  y_pos, site_df2_gsl$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
 segments(site_df2_gsl$fit_a_site_per25, y_pos, site_df2_gsl$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
@@ -1808,13 +1808,13 @@ par(mar = c(5, 8, 2, 2))
 plot(site_df2_sos$fit_a_site, y_pos,
      xlim = c(-2, 2),ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
-     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
 segments(site_df2_sos$fit_a_site_per5,  y_pos, site_df2_sos$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
 segments(site_df2_sos$fit_a_site_per25, y_pos, site_df2_sos$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
@@ -1822,13 +1822,13 @@ par(mar = c(5, 8, 2, 2))
 plot(site_df2_eos$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
-     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE)
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
 segments(site_df2_eos$fit_a_site_per5,  y_pos, site_df2_eos$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
 segments(site_df2_eos$fit_a_site_per25, y_pos, site_df2_eos$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
-abline(v = 0, lty = 2, col = "black")
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Slot 5: Site legend
