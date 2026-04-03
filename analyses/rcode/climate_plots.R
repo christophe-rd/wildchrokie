@@ -42,7 +42,9 @@ commonNames <- c(
 
 empir$commonName <- commonNames[empir$latbi]
 
+emp4 <- empir[!is.na(empir$leafout),]
 empir <- empir[!is.na(empir$pgsGDD5),]
+
 # transform my groups to numeric values
 empir$site_num <- match(empir$site, unique(empir$site))
 empir$spp_num <- match(empir$spp, unique(empir$spp))
@@ -52,7 +54,6 @@ empir$year_num <- match(empir$year, unique(empir$year))
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate data #### 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp4 <- empir[!is.na(empir$leafout),]
 emp4$leafout <- as.integer(emp4$leafout)
 emp4$budset <- as.integer(emp4$budset)
 
@@ -345,6 +346,7 @@ legend(x = par("usr")[2] + 2, y = mean(par("usr")[3:4]),
        legend = years, col = firststeps, pch = 16, lty = 1, lwd = 2,
        title = "Year", bty = "y", xjust = 0, yjust = -7)
 dev.off()
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # CoringTreespotters ####
@@ -364,10 +366,13 @@ colnames(emp_climts)[which(colnames(emp_climts) %in% "ppt")] <- "Precip"
 years <- sort(unique(empts$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 
+emp_climtslo <- emp_climts[!is.na(emp_climts$leafout),]
+emp_climtscl <- emp_climts[!is.na(emp_climts$coloredLeaves),]
+
+if (makeplots) {
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-emp_climtslo <- emp_climts[!is.na(emp_climts$leafout),]
 emp_climtslo$anomleafout <- emp_climtslo$leafout - mean(emp_climtslo$leafout)
 jpeg("figures/climate/climSumLeafoutTS.jpeg",
      width = 2400, height = 3600, res = 300)
@@ -421,7 +426,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### coloredLeaves ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-emp_climtscl <- emp_climts[!is.na(emp_climts$coloredLeaves),]
 emp_climtscl$anomleafcolor <- emp_climtscl$coloredLeaves - 
   mean(emp_climtscl$coloredLeaves)
 
@@ -492,9 +496,10 @@ dev.off()
 # Phenology ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
-leafoutbyyr$leafout <- round(leafoutbyyr$leafout, 2)
 budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
-budsetbyyr$budset <- round(budsetbyyr$budset, 2)
+
+leafoutbyyrts <- aggregate(leafout ~ year + latbi, empts, FUN = mean)
+colleavesbyyrts <- aggregate(coloredLeaves ~ year + latbi, empts, FUN = mean)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Droughts ####

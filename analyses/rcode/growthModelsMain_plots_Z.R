@@ -68,22 +68,22 @@ colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
-bspp_df2   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+sigma_df2_z  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2_z   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
                              "spp", "bsp\\[(\\d+)\\]")
-treeid_df2 <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+treeid_df2_z <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
                              "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+treeid_df2_z <- subset(treeid_df2_z, !grepl("z|sigma", treeid))
+aspp_df2_z   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
-site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+site_df2_z   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
 
-treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
-site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
-aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
+treeid_df2_z$treeid_name <- emp$treeid[match(treeid_df2_z$treeid, emp$treeid_num)]
+bspp_df2_z$spp_name <- emp$latbi[match(bspp_df2_z$spp, emp$spp_num)]
+site_df2_z$site_name <- emp$site[match(site_df2_z$site, emp$site_num)]
+aspp_df2_z$spp_name <- emp$latbi[match(aspp_df2_z$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL posterior recovery ####
@@ -107,22 +107,22 @@ colnames(aspp_df_gsl) <- 1:ncol(aspp_df)
 colnames(site_df_gsl) <- 1:ncol(site_df)
 
 # posterior summaries
-sigma_df2_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
-bspp_df2_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
+sigma_df2_z_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
+bspp_df2_z_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
                                  "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_gsl <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
+treeid_df2_z_gsl <- extract_params(df_fitgsl, "atreeid", "fit_atreeid", 
                                  "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_gsl <- subset(treeid_df2, !grepl("z|sigma", treeid))
-aspp_df2_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
+treeid_df2_z_gsl <- subset(treeid_df2_z, !grepl("z|sigma", treeid))
+aspp_df2_z_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp", 
                                  "spp", "aspp\\[(\\d+)\\]")
-site_df2_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
+site_df2_z_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
                                  "site", "asite\\[(\\d+)\\]")
 
-treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
-treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
-bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
-site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
-aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
+treeid_df2_z_gsl$treeid <- as.numeric(treeid_df2_z_gsl$treeid)
+treeid_df2_z_gsl$treeid_name <- emp$treeid[match(treeid_df2_z_gsl$treeid, emp$treeid_num)]
+bspp_df2_z_gsl$spp_name <- emp$latbi[match(bspp_df2_z_gsl$spp, emp$spp_num)]
+site_df2_z_gsl$site_name <- emp$site[match(site_df2_z_gsl$site, emp$site_num)]
+aspp_df2_z_gsl$spp_name <- emp$latbi[match(aspp_df2_z_gsl$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
@@ -146,22 +146,22 @@ colnames(aspp_df_sos) <- 1:ncol(aspp_df_sos)
 colnames(site_df_sos) <- 1:ncol(site_df_sos)
 
 # posterior summaries
-sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
+sigma_df2_z_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
+bspp_df2_z_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", 
                                  "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
+treeid_df2_z_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", 
                                  "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
-aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
+treeid_df2_z_sos <- subset(treeid_df2_z_sos, !grepl("z|sigma", treeid))
+aspp_df2_z_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", 
                                  "spp", "aspp\\[(\\d+)\\]")
-site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
+site_df2_z_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
                                  "site", "asite\\[(\\d+)\\]")
 
-treeid_df2_sos$treeid <- as.numeric(treeid_df2_sos$treeid)
-treeid_df2_sos$treeid_name <- emp$treeid[match(treeid_df2_sos$treeid, emp$treeid_num)]
-bspp_df2_sos$spp_name <- emp$latbi[match(bspp_df2_sos$spp, emp$spp_num)]
-site_df2_sos$site_name <- emp$site[match(site_df2_sos$site, emp$site_num)]
-aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
+treeid_df2_z_sos$treeid <- as.numeric(treeid_df2_z_sos$treeid)
+treeid_df2_z_sos$treeid_name <- emp$treeid[match(treeid_df2_z_sos$treeid, emp$treeid_num)]
+bspp_df2_z_sos$spp_name <- emp$latbi[match(bspp_df2_z_sos$spp, emp$spp_num)]
+site_df2_z_sos$site_name <- emp$site[match(site_df2_z_sos$site, emp$site_num)]
+aspp_df2_z_sos$spp_name <- emp$latbi[match(aspp_df2_z_sos$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS posterior recovery ####
@@ -185,22 +185,22 @@ colnames(aspp_df_eos) <- 1:ncol(aspp_df_eos)
 colnames(site_df_eos) <- 1:ncol(site_df_eos)
 
 # posterior summaries
-sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
+sigma_df2_z_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
+bspp_df2_z_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", 
                                  "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
+treeid_df2_z_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", 
                                  "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
-aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
+treeid_df2_z_eos <- subset(treeid_df2_z_eos, !grepl("z|sigma", treeid))
+aspp_df2_z_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", 
                                  "spp", "aspp\\[(\\d+)\\]")
-site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
+site_df2_z_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
                                  "site", "asite\\[(\\d+)\\]")
 
-treeid_df2_eos$treeid <- as.numeric(treeid_df2_eos$treeid)
-treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid_num)]
-bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
-site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
-aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
+treeid_df2_z_eos$treeid <- as.numeric(treeid_df2_z_eos$treeid)
+treeid_df2_z_eos$treeid_name <- emp$treeid[match(treeid_df2_z_eos$treeid, emp$treeid_num)]
+bspp_df2_z_eos$spp_name <- emp$latbi[match(bspp_df2_z_eos$spp, emp$spp_num)]
+site_df2_z_eos$site_name <- emp$site[match(site_df2_z_eos$site, emp$site_num)]
+aspp_df2_z_eos$spp_name <- emp$latbi[match(aspp_df2_z_eos$spp, emp$spp_num)]
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Mu plots####
@@ -259,8 +259,8 @@ spp_list <- list(
 sppvecnum <- 1:4
 sppvecname <- unique(treeid_spp_site$latbi)
 
-n_spp <- nrow(bspp_df2)
-n_site <- nrow(site_df2)
+n_spp <- nrow(bspp_df2_z)
+n_site <- nrow(site_df2_z)
 y_pos <- rev(1:n_spp)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -279,56 +279,56 @@ widths = c(0.7, 0.4))
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(bspp_df2$fit_bspp, y_pos,
+plot(bspp_df2_z$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "GDD standardized effect size", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
+segments(bspp_df2_z$fit_bspp_per5,  y_pos, bspp_df2_z$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
+segments(bspp_df2_z$fit_bspp_per25, y_pos, bspp_df2_z$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(bspp_df2_gsl$fit_bspp, y_pos,
+plot(bspp_df2_z_gsl$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "GSL standardized effect size", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
+segments(bspp_df2_z_gsl$fit_bspp_per5,  y_pos, bspp_df2_z_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
+segments(bspp_df2_z_gsl$fit_bspp_per25, y_pos, bspp_df2_z_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(bspp_df2_sos$fit_bspp, y_pos,
+plot(bspp_df2_z_sos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "SOS standardized effect size", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
+segments(bspp_df2_z_sos$fit_bspp_per5,  y_pos, bspp_df2_z_sos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
+segments(bspp_df2_z_sos$fit_bspp_per25, y_pos, bspp_df2_z_sos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(bspp_df2_eos$fit_bspp, y_pos,
+plot(bspp_df2_z_eos$fit_bspp, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "EOS standardized effect size", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
+segments(bspp_df2_z_eos$fit_bspp_per5,  y_pos, bspp_df2_z_eos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
+segments(bspp_df2_z_eos$fit_bspp_per25, y_pos, bspp_df2_z_eos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -337,7 +337,7 @@ mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = sapply(unique(bspp_df2$spp_name), 
+       legend = sapply(unique(bspp_df2_z$spp_name), 
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(sppcols),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
@@ -361,56 +361,56 @@ widths = c(0.7, 0.4))
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2$fit_aspp, y_pos,
+plot(aspp_df2_z$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
+segments(aspp_df2_z$fit_aspp_per5,  y_pos, aspp_df2_z$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
+segments(aspp_df2_z$fit_aspp_per25, y_pos, aspp_df2_z$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_gsl$fit_aspp, y_pos,
+plot(aspp_df2_z_gsl$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_gsl$fit_aspp_per5,  y_pos, aspp_df2_gsl$fit_aspp_per95, y_pos,
+segments(aspp_df2_z_gsl$fit_aspp_per5,  y_pos, aspp_df2_z_gsl$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(aspp_df2_gsl$fit_aspp_per25, y_pos, aspp_df2_gsl$fit_aspp_per75, y_pos,
+segments(aspp_df2_z_gsl$fit_aspp_per25, y_pos, aspp_df2_z_gsl$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_sos$fit_aspp, y_pos,
+plot(aspp_df2_z_sos$fit_aspp, y_pos,
      xlim = c(-15, 15),ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "", 
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_sos$fit_aspp_per5,  y_pos, aspp_df2_sos$fit_aspp_per95, y_pos,
+segments(aspp_df2_z_sos$fit_aspp_per5,  y_pos, aspp_df2_z_sos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(aspp_df2_sos$fit_aspp_per25, y_pos, aspp_df2_sos$fit_aspp_per75, y_pos,
+segments(aspp_df2_z_sos$fit_aspp_per25, y_pos, aspp_df2_z_sos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_eos$fit_aspp, y_pos,
+plot(aspp_df2_z_eos$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "", 
      yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_eos$fit_aspp_per5,  y_pos, aspp_df2_eos$fit_aspp_per95, y_pos,
+segments(aspp_df2_z_eos$fit_aspp_per5,  y_pos, aspp_df2_z_eos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
-segments(aspp_df2_eos$fit_aspp_per25, y_pos, aspp_df2_eos$fit_aspp_per75, y_pos,
+segments(aspp_df2_z_eos$fit_aspp_per25, y_pos, aspp_df2_z_eos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -419,7 +419,7 @@ mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = sapply(unique(aspp_df2$spp_name), 
+       legend = sapply(unique(aspp_df2_z$spp_name), 
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(sppcols),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
@@ -441,76 +441,76 @@ layout(matrix(c(
 ), nrow = 4, byrow = TRUE),
 widths = c(0.7, 0.4))
 
-y_pos <- match(site_df2$site_name, site_order)
+y_pos <- match(site_df2_z$site_name, site_order)
 site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
-sitecolors <- site_color_map[site_df2$site_name]
+sitecolors <- site_color_map[site_df2_z$site_name]
 
-site_df2$lat <- locations$lat[match(site_df2$site_name, locations$shortnames)]
-site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$shortnames)]
-site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$shortnames)]
-site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$shortnames)]
+site_df2_z$lat <- locations$lat[match(site_df2_z$site_name, locations$shortnames)]
+site_df2_z_gsl$lat <- locations$lat[match(site_df2_z_gsl$site_name, locations$shortnames)]
+site_df2_z_sos$lat <- locations$lat[match(site_df2_z_sos$site_name, locations$shortnames)]
+site_df2_z_eos$lat <- locations$lat[match(site_df2_z_eos$site_name, locations$shortnames)]
 
 lat_labels <- locations$lat[match(site_order, locations$shortnames)]
 
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(site_df2$fit_a_site, y_pos,
+plot(site_df2_z$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE,      
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
+segments(site_df2_z$fit_a_site_per5,  y_pos, site_df2_z$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
+segments(site_df2_z$fit_a_site_per25, y_pos, site_df2_z$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_gsl$fit_a_site, y_pos,
+plot(site_df2_z_gsl$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE,      
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(site_df2_gsl$fit_a_site_per5,  y_pos, site_df2_gsl$fit_a_site_per95, y_pos,
+segments(site_df2_z_gsl$fit_a_site_per5,  y_pos, site_df2_z_gsl$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_gsl$fit_a_site_per25, y_pos, site_df2_gsl$fit_a_site_per75, y_pos,
+segments(site_df2_z_gsl$fit_a_site_per25, y_pos, site_df2_z_gsl$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_sos$fit_a_site, y_pos,
+plot(site_df2_z_sos$fit_a_site, y_pos,
      xlim = c(-2, 2),ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE,      
      panel.first = abline(v = 0, lty = 2, col = "black"),
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(site_df2_sos$fit_a_site_per5,  y_pos, site_df2_sos$fit_a_site_per95, y_pos,
+segments(site_df2_z_sos$fit_a_site_per5,  y_pos, site_df2_z_sos$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_sos$fit_a_site_per25, y_pos, site_df2_sos$fit_a_site_per75, y_pos,
+segments(site_df2_z_sos$fit_a_site_per25, y_pos, site_df2_z_sos$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_eos$fit_a_site, y_pos,
+plot(site_df2_z_eos$fit_a_site, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE,      
      panel.first = abline(v = 0, lty = 2, col = "black"),
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(site_df2_eos$fit_a_site_per5,  y_pos, site_df2_eos$fit_a_site_per95, y_pos,
+segments(site_df2_z_eos$fit_a_site_per5,  y_pos, site_df2_z_eos$fit_a_site_per95, y_pos,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_eos$fit_a_site_per25, y_pos, site_df2_eos$fit_a_site_per75, y_pos,
+segments(site_df2_z_eos$fit_a_site_per25, y_pos, site_df2_z_eos$fit_a_site_per75, y_pos,
          col = sitecolors, lwd = 3)
 
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)

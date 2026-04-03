@@ -15,7 +15,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 source("rcode/growthModelsMain.R")
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
