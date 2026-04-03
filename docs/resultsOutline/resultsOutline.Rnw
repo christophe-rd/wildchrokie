@@ -14,10 +14,10 @@
 
 
 % Set Wildchrokie species shortcut
-\newcommand{\Ainc}{\textit{A. incana}}
-\newcommand{\Ball}{\textit{B. alleghaniensis}}
-\newcommand{\Bpap}{\textit{B. papyrifera}}
-\newcommand{\Bpop}{\textit{B. populifolia}}
+\newcommand{\Ainc}{\textit{A. incana }}
+\newcommand{\Ball}{\textit{B. alleghaniensis }}
+\newcommand{\Bpap}{\textit{B. papyrifera }}
+\newcommand{\Bpop}{\textit{B. populifolia }}
 
 % Set CoringTreespotters species shortcut
 \newcommand{\Arub}{\textit{A. rubrum}}
@@ -33,16 +33,43 @@
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 library(xtable)
-source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/modelGrowthGDD_plots.R")
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/growthModelsMain_plots.R")
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
-source("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/rcode/TSmodelGrowthGDD_plots.R")
+source("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/rcode/TSgrowthModelsMain_plots.R")
 
 options(digits = 1)
 
 # get some useful objects
-yrwc <- c(2018:2020) 
-
 pgsGSLagg <- aggregate(pgsGSL ~ year, emp, mean)
+pgsGSLaggTS <- aggregate(pgsGSL ~ year, empts, mean)
+pgsGSLaggTS <- subset(pgsGSLaggTS, year != 2015)
+SOSagg <- aggregate(leafout ~ year, emp, mean)
+SOSaggTS <- aggregate(leafout ~ year, empts, mean)
+SOSaggTS <- subset(SOSaggTS, year != 2015)
+EOSagg <- aggregate(budset ~ year, emp, mean)
+EOSaggTS <- aggregate(coloredLeaves ~ year, empts, mean)
+EOSaggTS <- subset(EOSaggTS, year != 2015)
+
+# JJA thermal sum
+temp <- subset(gddyr, doy >59 & doy < 152)
+temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
+temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+
+gddspringsum <- aggregate(gdddiff ~ year, temp, FUN = max)
+
+# JJA thermal sum
+temp <- subset(gddyr, doy >152 & doy < 244)
+temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
+temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+
+gddsummersum <- aggregate(gdddiff ~ year, temp, FUN = max)
+
+# JJA thermal sum
+temp <- subset(gddyr, doy >243 & doy < 305)
+temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
+temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+
+gddautumnsum <- aggregate(gdddiff ~ year, temp, FUN = max)
 
 # get the model dfs
 aspp_df5 <- aspp_df2[, c("spp_name", "fit_aspp_per5", "fit_aspp_per25","fit_aspp_per75","fit_aspp_per95")]
@@ -74,13 +101,41 @@ climatesumfortable <- climatesum[which(climatesum$year %in% yrwc), 1:7]
 \begin{enumerate}
 
 % GSL length and conditions
-\item \Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),1]} was the shortest season, with an average of (\Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),2]} days, an average summer temperature of \Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLagg[which.min(pgsGSLagg$pgsGSL), 1], 5]} C,
-and a growing season cumulative thermal sum of ***.
-\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]} was the longest season with (\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),2]}) days, an average summer temperature of ** and a GS cumulative thermal sum of **. 
-\Sexpr{pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 1]} had an average of \Sexpr{pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 2]} days, an average summer temperature of ** and a GS cumulative thermal sum of **.
+\item \Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),1]} was the shortest season by days (mean GSL $=$\Sexpr{pgsGSLagg[which.min(pgsGSLagg$pgsGSL),2]}),
+with an average summer temperature of 
+\Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLagg[which.min(pgsGSLagg$pgsGSL), 1], 5]}$^\circ$C,and a summer thermal sum of 
+\Sexpr{gddsummersum[which(gddsummersum$year %in% pgsGSLagg[which.min(pgsGSLagg$pgsGSL),1]),2]} GDD. \\
+\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]} was the longest season by days (mean GSL $=$
+\Sexpr{pgsGSLagg[which.max(pgsGSLagg$pgsGSL),2]})
+with an average summer temperature of 
+\Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLagg[which.max(pgsGSLagg$pgsGSL), 1], 5]}$^\circ$C, and a summer thermal sum of 
+\Sexpr{gddsummersum[which(gddsummersum$year %in% pgsGSLagg[which.max(pgsGSLagg$pgsGSL),1]),2]} GDD. \\
+\Sexpr{pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 1]} had an average GSL of \Sexpr{pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 2]} days, 
+an average summer temperature of 
+\Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 1], 5]}$^\circ$, and summer thermal sum of 
+\Sexpr{gddsummersum[which(gddsummersum$year %in% pgsGSLagg[order(pgsGSLagg$pgsGSL)[ceiling(nrow(pgsGSLagg)/2)], 1]), 2]} GDD
 
-% SOS
-\item Leafout dates across all years and species varied from \Sexpr{min(emp$leafout)} to \Sexpr{max(emp$leafout)} and budset date varied from \Sexpr{min(emp$budset)} to \Sexpr{max(emp$budset)}, which are the two phases that set the boundaries of the growing season.
+% SOS conditions
+\item Leafout dates across all years and species varied from 
+\Sexpr{min(emp$leafout)} to 
+\Sexpr{max(emp$leafout)} and budset date varied from 
+\Sexpr{min(emp$budset)} to 
+\Sexpr{max(emp$budset)}, which are the two phases that set the boundaries of the growing season.
+
+\item \Sexpr{SOSagg[which.min(SOSagg$leafout),1]} had the earliest start of season (mean leafout date $=$
+\Sexpr{SOSagg[which.min(SOSagg$leafout),2]}), and the coldest spring of the three years
+(\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == SOSagg[which.min(SOSagg$leafout), 1], 5]}$^\circ$C), with a spring thermal sum of 
+\Sexpr{gddspringsum[which(gddspringsum$year %in% SOSagg[which.min(SOSagg$leafout),1]),2]} GDD. \\
+\Sexpr{SOSagg[which.max(SOSagg$leafout),1]} had the latest start of season (mean leafout date $=$
+\Sexpr{SOSagg[which.max(SOSagg$leafout),2]}), 
+and was also the warmest spring (
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == SOSagg[which.max(SOSagg$leafout), 1], 5]}$^\circ$C), but had the lowest thermal sum of three years (
+\Sexpr{gddspringsum[which(gddspringsum$year %in% SOSagg[which.max(SOSagg$leafout),1]),2]} GDD). \\
+\Sexpr{SOSagg[order(SOSagg$leafout)[ceiling(nrow(SOSagg)/2)], 1]} had an average start of season of \Sexpr{SOSagg[order(SOSagg$leafout)[ceiling(nrow(SOSagg)/2)], 2]},an average spring temperature of
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == SOSagg[order(SOSagg$leafout)[ceiling(nrow(SOSagg)/2)], 1], 5]}$^\circ$, and the highest spring thermal sum (
+\Sexpr{gddspringsum[which(gddspringsum$year %in% SOSagg[order(SOSagg$leafout)[ceiling(nrow(SOSagg)/2)], 1]), 2]} GDD).
+
+% SOS by species 
 \item On average, the earliest leafout date was in 2019 for all species (\Ainc: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Alnus incana"])}, 
 B alleghaniensis: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula alleghaniensis"])}, 
 \Bpap: \Sexpr{min(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula papyrifera"])} and 
@@ -92,70 +147,52 @@ B alleghaniensis: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula al
 \Bpop: \Sexpr{max(leafoutbyyr$leafout[leafoutbyyr$latbi == "Betula populifolia"])}).
 No species was consistently the earliest nor the latest to leafout.
 
+% EOS condition
+\item \Sexpr{EOSagg[which.min(EOSagg$budset),1]} had the earliest end of season (mean budset date $=$\Sexpr{EOSagg[which.min(EOSagg$budset),2]}), and was coldest autumn (average autumn temperature $=$
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == EOSagg[which.min(EOSagg$budset), 1], 5]}$^\circ$C), with a autumn thermal sum of
+\Sexpr{gddspringsum[which(gddspringsum$year %in% EOSagg[which.min(EOSagg$budset),1]),2]} GDD. \\
+\Sexpr{EOSagg[which.max(EOSagg$budset),1]} had the latest end of season (mean budset date $=$\Sexpr{EOSagg[which.max(EOSagg$budset),2]}), and was the warmest autumn (average autumn temperature $=$
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == EOSagg[which.max(EOSagg$budset), 1], 5]}$^\circ$C) with a autumn thermal sum of 
+\Sexpr{gddspringsum[which(gddspringsum$year %in% EOSagg[which.max(EOSagg$budset),1]),2]} GDD. \\
+\Sexpr{EOSagg[order(EOSagg$budset)[ceiling(nrow(EOSagg)/2)], 1]} had an average end of season of \Sexpr{EOSagg[order(EOSagg$budset)[ceiling(nrow(EOSagg)/2)], 2]}, an average autumn temperature of 
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == EOSagg[order(EOSagg$budset)[ceiling(nrow(EOSagg)/2)], 1], 5]}$^\circ$, 
+and had the highest thermal sum of the three years (\Sexpr{gddspringsum[which(gddspringsum$year %in% EOSagg[order(EOSagg$budset)[ceiling(nrow(EOSagg)/2)], 1]), 2]} GDD).
 
-The hottest spring period of the three years (MAM) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, 
-                                 climatesum$tmeanmean, NA))]} with a mean mean temperature of 
-\Sexpr{climatesum$tmeanmean[which.max(ifelse(climatesum$period == "MAM" & 
-                                 climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C,
-and the coldest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc,
-                                 climatesum$tmeanmean, NA))]} with a mean mean temperature of
-\Sexpr{climatesum$tmeanmean[which.min(ifelse(climatesum$period == "MAM" &
-                                 climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C.
-
-% Temperature summer
-\item The hottest summer period of the three years (JJA) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean mean temperature of \Sexpr{climatesum$tmeanmean[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C,
-and the coldest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]} with a mean mean temperature of \Sexpr{climatesum$tmeanmean[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$tmeanmean, NA))]}$^\circ$C.
-
-% PDSI spring
-\item The driest spring period of the three years (MAM) (3-month averaged PDSI index) was
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]},
-and the wettest,
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}.
-
-% Drought occurence
-\item \Sexpr{unique(moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 1])} is the only year a period of moderate drought ($PDSI < -2 >-3$)  which happened from \Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][1]} through \Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][3]}. Throughout the three years,\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 1])[11]} of \Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 1])[11]} was the only period with a severe drought ($PDSI < -3$) 
-
-% PDSI summer
-\item The driest summer period (PDSI) of the three years (JJA) was
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]},
-and the wettest,
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of \Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}.
-
-% PPT spring
-\item The spring period with the highest precipitation of the three years (MAM) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}mm,
-and the lowest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}mm.
-
-% PPT summer
-\item The summer period with the highest precipitation of the three years (JJA) was
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}mm,
-and the lowest,
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]} with a total precipitation of \Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$ppt, NA))]}mm.
-\end{enumerate}
-
-
-
-%-------------------------------------------------------------------------------
-\subsection{Phenology observations}
-%-------------------------------------------------------------------------------
-\begin{enumerate}
-
+% EOS by species 
 \item On average, the earliest budset date was in 2019 for \Ainc (
 \Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Alnus incana"])}) and 
-B alleghaniensis (\Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}), but in 2018 for
+\Ball (\Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}), but in 2018 for
 \Bpap (\Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula papyrifera"])}) and 
 \Bpop (\Sexpr{min(budsetbyyr$budset[budsetbyyr$latbi == "Betula populifolia"])}). 
 The latest budset date for all species was in 2020 (
 \Ainc: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Alnus incana"])}, 
-B alleghaniensis: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}, 
+\Ball: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula alleghaniensis"])}, 
 \Bpap: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula papyrifera"])} and 
 \Bpop: \Sexpr{max(budsetbyyr$budset[budsetbyyr$latbi == "Betula populifolia"])}).
 No species was consistently the earliest nor the latest to set buds.
+
+% PDSI spring
+\item The driest spring of the three years (MAM) (3-month averaged PDSI index) was
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry spring with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+
+% PDSI summer
+\item \Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} had the driest summer (JJA) with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry summer with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+
+% Drought occurence
+\item \Sexpr{unique(moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 1])} is the only year a with period of moderate drought ($PDSI [-3, -2]$) which was from 
+\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][1]} through 
+\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][3]}. Throughout the three years,
+\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 11])} of 
+\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 1])} was the only period with a severe drought ($PDSI < -3$) 
 
 \end{enumerate}
 
@@ -164,17 +201,16 @@ No species was consistently the earliest nor the latest to set buds.
 %-------------------------------------------------------------------------------
 \begin{enumerate}
 \item The ring widths of our species vary from \Sexpr{min(emp$lengthMM)} mm to \Sexpr{max(emp$lengthMM)} mm. 
-\item Ring widths for \Ainc varied 
-from \Sexpr{rwsum[1,2]}mm to \Sexpr{rwsum[1,3]}mm, 
-from \Sexpr{rwsum[2,2]}mm to \Sexpr{rwsum[2,3]}mm for \Ball, 
-from \Sexpr{rwsum[3,2]}mm to \Sexpr{rwsum[3,3]}mm for \Bpap and 
-from \Sexpr{rwsum[4,2]}mm to \Sexpr{rwsum[4,3]}mm for \Bpop.
+\item Ring widths for \Ball were the smallest and varied from \Sexpr{rwsum[2,2]} mm to \Sexpr{rwsum[2,3]} mm, and 
+\Bpop had the largest rings which spanned from 
+\Sexpr{rwsum[4,2]} mm to \Sexpr{rwsum[4,3]} mm on average.
+\Ainc (\Sexpr{rwsum[1,2]} mm to \Sexpr{rwsum[1,3]} mm) and 
+\Bpap were quite similar (\Sexpr{rwsum[3,2]} mm to \Sexpr{rwsum[3,3]} mm).
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-Our results show similar trends in response to the thermal (GDD) (Figure \ref{fig:wcgrowthSlopesGDD}) versus the calendar growing season (GSL) (Figure \ref{fig:wcgrowthSlopesGSL}), with a stronger response to GSL. Specifically, \Ainc shows a marked shift in its response strength with longer GSL compared to GDD.
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -234,9 +270,133 @@ W. Mountains ($\alpha_{site} = $ \Sexpr{site_df2$fit_a_site[which(site_df2$site_
 H. Forest ($\alpha_{site} = $ = \Sexpr{site_df2$fit_a_site[which(site_df2$site_name %in% "HF")]}, $UI_{90}$[\Sexpr{site_df2$fit_a_site_per5[which(site_df2$site_name %in% "HF")]}, \Sexpr{site_df2$fit_a_site_per95[which(site_df2$site_name %in% "HF")]}]) 
 (Figure \ref{fig:wcmuplotasite})
 
+Our results show similar trends in response to the thermal (GDD) (Figure \ref{fig:wcgrowthSlopesGDD}) versus the calendar growing season (GSL) (Figure \ref{fig:wcgrowthSlopesGSL}), with a stronger response to GSL. Specifically, \Ainc shows a marked shift in its response strength with longer GSL compared to GDD.
 
 
 \end{enumerate}
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section{CoringTreespotters}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+%-------------------------------------------------------------------------------
+\subsection{Growing season length and conditions}
+%-------------------------------------------------------------------------------
+\begin{enumerate}
+
+% GSL length and conditions
+\item \Sexpr{pgsGSLaggTS[which.min(pgsGSLaggTS$pgsGSL),1]} was the shortest season by days (mean GSL $=$\Sexpr{pgsGSLaggTS[which.min(pgsGSLaggTS$pgsGSL),2]}),
+with an average summer temperature of 
+\Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLaggTS[which.min(pgsGSLaggTS$pgsGSL), 1], 5]}$^\circ$C, and a summer thermal sum of 
+\Sexpr{gddsummersum[which(gddsummersum$year %in% pgsGSLaggTS[which.min(pgsGSLaggTS$pgsGSL),1]),2]} GDD. \\
+\Sexpr{pgsGSLaggTS[which.max(pgsGSLaggTS$pgsGSL),1]} was the longest season by days (mean GSL $=$
+\Sexpr{pgsGSLaggTS[which.max(pgsGSLaggTS$pgsGSL),2]})
+with an average summer temperature of 
+\Sexpr{climatesum[climatesum$period == "JJA" & climatesum$year == pgsGSLaggTS[which.max(pgsGSLaggTS$pgsGSL), 1], 5]}$^\circ$C, and a summer thermal sum of 
+\Sexpr{gddsummersum[which(gddsummersum$year %in% pgsGSLaggTS[which.max(pgsGSLaggTS$pgsGSL),1]),2]} GDD. \\
+
+% SOS conditions
+\item Leafout dates across all years and species varied from 
+\Sexpr{min(empts$leafout)} (\Sexpr{empts[which.min(empts$leafout),3]}) to 
+\Sexpr{max(empts$leafout)} (\Sexpr{empts[which.max(empts$leafout),3]}) and leaf colouring date varied from 
+\Sexpr{min(empts$coloredLeaves)} (\Sexpr{empts[which.min(empts$coloredLeaves),3]}) to 
+\Sexpr{max(empts$coloredLeaves)} (\Sexpr{empts[which.max(empts$coloredLeaves),3]}), which we use to set the boundaries of the growing season.
+
+\item \Sexpr{SOSaggTS[which.min(SOSaggTS$leafout),1]} had the earliest start of season (mean leafout date $=$
+\Sexpr{SOSaggTS[which.min(SOSaggTS$leafout),2]}), an average temperature of (
+\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == SOSaggTS[which.min(SOSaggTS$leafout), 1], 5]}$^\circ$C), and a spring thermal sum of 
+\Sexpr{gddspringsum[which(gddspringsum$year %in% SOSaggTS[which.min(SOSaggTS$leafout),1]),2]} GDD. \\
+\Sexpr{SOSaggTS[which.max(SOSaggTS$leafout),1]} had the latest start of season (mean leafout date $=$
+\Sexpr{SOSaggTS[which.max(SOSaggTS$leafout),2]}), 
+an average temperature of 
+(\Sexpr{climatesum[climatesum$period == "MAM" & climatesum$year == SOSaggTS[which.max(SOSaggTS$leafout), 1], 5]}$^\circ$C), and a thermal sum of 
+(\Sexpr{gddspringsum[which(gddspringsum$year %in% SOSaggTS[which.max(SOSaggTS$leafout),1]),2]} GDD). \\
+
+% SOS by species 
+\item On average, the earliest leafout date for each species are
+\Arub: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Acer rubrum"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Acer rubrum"]),1]}), 
+\Asac: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Acer saccharum"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Acer saccharum"]),1]}), 
+\Afla: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Aesculus flava"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Aesculus flava"]),1]}), 
+\Ball: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Betula alleghaniensis"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Betula alleghaniensis"]),1]}), 
+\Bnig: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Betula nigra"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Betula nigra"]),1]}), 
+\Cgla: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Carya glabra"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Carya glabra"]),1]}), 
+\Cova: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Carya ovata"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Carya ovata"]),1]}), 
+\Pdel: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Populus deltoides"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Populus deltoides"]),1]}), 
+\Qalb: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Quercus alba"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Quercus alba"]),1]}), 
+\Qrub: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Quercus rubra"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Quercus rubra"]),1]}), 
+\Tame: \Sexpr{min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Tilia americana"])} 
+(\Sexpr{leafoutbyyrts[which.min(leafoutbyyrts$leafout[leafoutbyyrts$latbi == "Tilia americana"]),1]}), 
+
+% EOS condition
+\item \Sexpr{EOSaggTS[which.min(EOSaggTS$coloredLeaves),1]} had the earliest end of season (mean leaf colouring date $=$
+\Sexpr{EOSaggTS[which.min(EOSaggTS$coloredLeaves),2]}), an average temperature of (
+\Sexpr{climatesum[climatesum$period == "SON" & climatesum$year == EOSaggTS[which.min(EOSaggTS$coloredLeaves), 1], 5]}$^\circ$C), and a spring thermal sum of 
+\Sexpr{gddspringsum[which(gddspringsum$year %in% EOSaggTS[which.min(EOSaggTS$coloredLeaves),1]),2]} GDD. \\
+\Sexpr{EOSaggTS[which.max(EOSaggTS$coloredLeaves),1]} had the latest end of season (mean leaf colouring date $=$
+\Sexpr{EOSaggTS[which.max(EOSaggTS$coloredLeaves),2]}), 
+an average temperature of 
+(\Sexpr{climatesum[climatesum$period == "SON" & climatesum$year == EOSaggTS[which.max(EOSaggTS$coloredLeaves), 1], 5]}$^\circ$C), and a thermal sum of 
+(\Sexpr{gddspringsum[which(gddspringsum$year %in% EOSaggTS[which.max(EOSaggTS$coloredLeaves),1]),2]} GDD). \\
+
+% EOS by species 
+\item On average, the earliest budset date was in 2019 for \Ainc (
+\Sexpr{min(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Alnus incana"])}) and 
+\Ball (\Sexpr{min(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula alleghaniensis"])}), but in 2018 for
+\Bpap (\Sexpr{min(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula papyrifera"])}) and 
+\Bpop (\Sexpr{min(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula populifolia"])}). 
+The latest budset date for all species was in 2020 (
+\Ainc: \Sexpr{max(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Alnus incana"])}, 
+\Ball: \Sexpr{max(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula alleghaniensis"])}, 
+\Bpap: \Sexpr{max(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula papyrifera"])} and 
+\Bpop: \Sexpr{max(budsetbyyr$coloredLeaves[budsetbyyr$latbi == "Betula populifolia"])}).
+No species was consistently the earliest nor the latest to set buds.
+
+% PDSI spring
+\item The driest spring of the three years (MAM) (3-month averaged PDSI index) was
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry spring with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+
+% PDSI summer
+\item \Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} had the driest summer (JJA) with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry summer with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+
+% Drought occurence
+\item \Sexpr{unique(moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 1])} is the only year a with period of moderate drought ($PDSI [-3, -2]$) which was from 
+\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][1]} through 
+\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][3]}. Throughout the three years,
+\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 11])} of 
+\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 1])} was the only period with a severe drought ($PDSI < -3$) 
+
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{Ring widths}
+%-------------------------------------------------------------------------------
+\begin{enumerate}
+\item The ring widths of our species vary from \Sexpr{min(empts$lengthMM)} mm to \Sexpr{max(empts$lengthMM)} mm. 
+\item Ring widths for \Ball were the smallest and varied from \Sexpr{rwsum[2,2]} mm to \Sexpr{rwsum[2,3]} mm, and 
+\Bpop had the largest rings which spanned from 
+\Sexpr{rwsum[4,2]} mm to \Sexpr{rwsum[4,3]} mm on average.
+\Ainc (\Sexpr{rwsum[1,2]} mm to \Sexpr{rwsum[1,3]} mm) and 
+\Bpap were quite similar (\Sexpr{rwsum[3,2]} mm to \Sexpr{rwsum[3,3]} mm).
+\end{enumerate}
+
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
