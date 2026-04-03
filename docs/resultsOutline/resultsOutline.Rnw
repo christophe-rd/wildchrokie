@@ -20,16 +20,16 @@
 \newcommand{\Bpop}{\textit{B. populifolia }}
 
 % Set CoringTreespotters species shortcut
-\newcommand{\Arub}{\textit{A. rubrum}}
-\newcommand{\Asac}{\textit{A. saccharum}}
-\newcommand{\Afla}{\textit{A. flava}}
-\newcommand{\Bnig}{\textit{B. nigra}}
-\newcommand{\Cgla}{\textit{C. glabra}}
-\newcommand{\Cova}{\textit{C. ovata}}
-\newcommand{\Pdel}{\textit{P. deltoides}}
-\newcommand{\Qalb}{\textit{Q. alba}}
-\newcommand{\Qrub}{\textit{Q. rubra}}
-\newcommand{\Tame}{\textit{T. americana}}   
+\newcommand{\Arub}{\textit{A. rubrum }}
+\newcommand{\Asac}{\textit{A. saccharum }}
+\newcommand{\Afla}{\textit{A. flava }}
+\newcommand{\Bnig}{\textit{B. nigra }}
+\newcommand{\Cgla}{\textit{C. glabra }}
+\newcommand{\Cova}{\textit{C. ovata }}
+\newcommand{\Pdel}{\textit{P. deltoides }}
+\newcommand{\Qalb}{\textit{Q. alba }}
+\newcommand{\Qrub}{\textit{Q. rubra }}
+\newcommand{\Tame}{\textit{T. americana }}   
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 library(xtable)
@@ -364,8 +364,6 @@ an average temperature of
 \Sexpr{EOSaggTS[which.min(EOSaggTS$coloredLeaves),2]}), an average temperature of (
 \Sexpr{climatesum[climatesum$period == "SON" & climatesum$year == EOSaggTS[which.min(EOSaggTS$coloredLeaves), 1], 5]}$^\circ$C), and an autumn thermal sum of 
 \Sexpr{gddspringsum[which(gddspringsum$year %in% EOSaggTS[which.min(EOSaggTS$coloredLeaves),1]),2]} GDD. \\
-
-
 \Sexpr{EOSaggTS[which.max(EOSaggTS$coloredLeaves),1]} had the latest end of season (mean leaf colouring date $=$
 \Sexpr{EOSaggTS[which.max(EOSaggTS$coloredLeaves),2]}), 
 an average temperature of 
@@ -375,27 +373,24 @@ an average temperature of
 % EOS by species 
 
 % PDSI spring
-\item The driest spring of the three years (MAM) (3-month averaged PDSI index) was
-\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} with a PDSI value of 
-\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, a cumulative precipitation of 
-\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry spring with a PDSI value of 
-\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\item The driest spring of the nine years (MAM) (3-month averaged PDSI index) was
+\Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]}, a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} was the least dry spring with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} and a cumulative precipitation of \Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "MAM" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} mm.
 
 % PDSI summer
-\item \Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} had the driest summer (JJA) with a PDSI value of 
-\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]}, and a cumulative precipitation of 
-\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
-\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} was the least dry summer with a PDSI value of 
-\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} and a cumulative precipitation of 
-\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrwc, climatesum$pdsi, NA))]} mm.
+\item \Sexpr{climatesum$year[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} also had the driest summer (JJA) with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]}, and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.min(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} mm.
+\Sexpr{climatesum$year[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} was the least dry summer with a PDSI value of 
+\Sexpr{climatesum$pdsi[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} and a cumulative precipitation of 
+\Sexpr{climatesum$ppt[which.max(ifelse(climatesum$period == "JJA" & climatesum$year %in% yrts, climatesum$pdsi, NA))]} mm.
 
 % Drought occurence
-\item \Sexpr{unique(moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 1])} is the only year a with period of moderate drought ($PDSI [-3, -2]$) which was from 
-\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][1]} through 
-\Sexpr{moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrwc), 11][3]}. Throughout the three years,
-\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 11])} of 
-\Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrwc), 1])} was the only period with a severe drought ($PDSI < -3$) 
+\item \Sexpr{unique(moderatedrought[which(moderatedrought$month <10 & moderatedrought$month > 2 & moderatedrought$year %in% yrts), 1])} had at least one month of moderate drought ($PDSI [-3, -2]$) throughout their growing seasons.
+Severe droughts periods occurred in \Sexpr{unique(severedrought[which(severedrought$month <10 & severedrought$month > 2 & severedrought$year %in% yrts), 1])} was the only period with a severe drought ($PDSI < -3$) 
 
 \end{enumerate}
 
@@ -403,12 +398,13 @@ an average temperature of
 \subsection{Ring widths}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item The ring widths of our species vary from \Sexpr{min(empts$lengthMM)} mm to \Sexpr{max(empts$lengthMM)} mm. 
-\item Ring widths for \Ball were the smallest and varied from \Sexpr{rwsum[2,2]} mm to \Sexpr{rwsum[2,3]} mm, and 
-\Bpop had the largest rings which spanned from 
-\Sexpr{rwsum[4,2]} mm to \Sexpr{rwsum[4,3]} mm on average.
-\Ainc (\Sexpr{rwsum[1,2]} mm to \Sexpr{rwsum[1,3]} mm) and 
-\Bpap were quite similar (\Sexpr{rwsum[3,2]} mm to \Sexpr{rwsum[3,3]} mm).
+\item The ring widths of our species---for the study period---vary from \Sexpr{min(empts$lengthMM)} mm to \Sexpr{max(empts$lengthMM)} mm. 
+\item Ring widths for \Cova were the smallest and varied from 
+\Sexpr{rwsumts[which(rwsumts$latbi %in% rwsumts[which.min(rwsumts$mean), 1]), 2]} mm to 
+\Sexpr{rwsumts[which(rwsumts$latbi %in% rwsumts[which.min(rwsumts$mean), 1]), 3]} mm, and 
+\Asac had the largest rings which spanned from 
+\Sexpr{rwsumts[which(rwsumts$latbi %in% rwsumts[which.max(rwsumts$mean), 1]), 2]} to
+\Sexpr{rwsumts[which(rwsumts$latbi %in% rwsumts[which.max(rwsumts$mean), 1]), 3]}.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -425,8 +421,8 @@ an average temperature of
 \begin{enumerate}
 
 % GDD
-\item Growth did not change with greater thermal season for most species (
-\Arub: $\beta = $ \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}],
+\item Growth did not change with greater thermal season for most species 
+(\Arub: $\beta = $ \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}],
 \Asac: $\beta = $
 \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]},
 \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]}],
@@ -450,15 +446,15 @@ an average temperature of
 \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Quercus alba")]}],
 \Qrub: $\beta = $
 \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]},
-\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]}], and
-\Tame grew more with longer thermal season $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]}],
+\Tame $\beta = $
 \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Tilia americana")]},
 \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Tilia americana")]}]). 
 However, growth for \Ball decreased with greater thermal season 
 $\beta = $ \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]}, 
 $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]},
 \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]}])
-) (Figure \ref{fig:wcmuplotbsppTS} a) and e)). These estimates were unchanged when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (a))
+) (Figure \ref{fig:wcmuplotbsppTS} a) and e)). These estimates were unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (a))
  
 % GSL
 \item Similarly to the response to thermal season, the species did not increase growth with longer calendar season 
@@ -492,7 +488,7 @@ $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betu
 \Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Tilia americana")]}]))
 , including \Ball: $\beta = $
 \Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]},
-\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]}] (Figure \ref{fig:wcmuplotbsppTS} b) and f)). These estimates were unchanged when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (b))
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]}] (Figure \ref{fig:wcmuplotbsppTS} b) and f)). These estimates were also unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (b))
 
 % SOS
 \item Growth did not change in response to the start of season for any species
@@ -527,11 +523,11 @@ $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betu
 \Tame: $\beta = $
 \Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]},
 \Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]}])
-(Figure \ref{fig:wcmuplotbsppTS} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfullsosts)} vs $n=$\Sexpr{nrow(empts)}) (Figure*), nor when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (c)).
+(Figure \ref{fig:wcmuplotbsppTS} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfullsosts)} vs $n=$\Sexpr{nrow(empts)}) (Figure*), nor when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (c)).
 
 % EOS
-\item Similarly to the response to thermal season, the species did not increase growth with longer calendar season (
-\Arub: $\beta = $ \Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}],
+\item Similarly to the response to thermal season, the species did not increase growth with longer calendar season 
+(\Arub: $\beta = $ \Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}],
 \Asac: $\beta = $
 \Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]},
 \Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]}],
@@ -563,6 +559,9 @@ $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betu
 \Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]},
 \Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbsppTS} d) and h)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfulleosts)} vs $n=$\Sexpr{nrow(empts)}).
 
+% Effect size across species
+\item 
+
 \end{enumerate}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
@@ -574,9 +573,16 @@ $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betu
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-% EOS data comparison 
+% Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
+\caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor. Each pannel represent the different parameters used to fit the models.}
+\label{fig:wcEOScomparison}
+\end{figure}
+
+% Full vs restricted data comparison for Coringtreespotters
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
 \caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcEOScomparison}
 \end{figure}
@@ -621,6 +627,20 @@ $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betu
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/budburstVSLeafout/DporousVSRporous.jpeg}
 \caption{}
 \label{fig:buburstVSleafoutTS}
+\end{figure}
+
+% Z-scored slope results Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
+\caption{}
+\label{fig:bsppZscored}
+\end{figure}
+
+% Z-scored slope results CoringTreespotters
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
+\caption{}
+\label{fig:bsppZscoredTS}
 \end{figure}
 
 % % Climate variables
