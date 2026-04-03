@@ -259,7 +259,7 @@ Similarly to its response to the thermal season,
 \Ainc ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}]) and 
 \Bpop ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]), but didn't change for the other two 
 (\Ball ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula alleghaniensis")]}]) and
-\Bpap ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}])) (Figure \ref{fig:wcmuplotbspp} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfullsos)} vs \Sexpr{nrow(emp)}). 
+\Bpap ($\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula papyrifera")]}])) (Figure \ref{fig:wcmuplotbspp} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfullsos)} vs $n=$\Sexpr{nrow(emp)}). 
 
 % EOS
 \item Growth decreased with a later end of season (EOS) only for for 
@@ -267,7 +267,7 @@ Similarly to its response to the thermal season,
 Growth for the other species did not change with a later end of season
 (\Bpop showed a weaker response but appears to also grow less with a later EOS ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula populifolia")]}], 
 \Ball ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula alleghaniensis")]}]) and
-\Bpap ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp} d) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfulleos)} vs \Sexpr{nrow(emp)} Figure \ref{fig:}). 
+\Bpap ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp} d) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfulleos)} vs $n=$\Sexpr{nrow(emp)} Figure \ref{fig:}). 
 
 % Site
 \item Growth did not change across any sites ( 
@@ -411,7 +411,159 @@ an average temperature of
 \Bpap were quite similar (\Sexpr{rwsum[3,2]} mm to \Sexpr{rwsum[3,3]} mm).
 \end{enumerate}
 
+%-------------------------------------------------------------------------------
+\subsection{Model results}
+%-------------------------------------------------------------------------------
 
+% Figure mu across all species and climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
+\caption{Model slope parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independent variable changing (see Figure \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS, and Figure \ref{fig:wcEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:wcmuplotbsppTS}
+\end{figure}
+
+\begin{enumerate}
+
+% GDD
+\item Growth did not change with greater thermal season for most species (
+\Arub: $\beta = $ \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Acer rubrum")]}],
+\Asac: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Acer saccharum")]}],
+\Afla: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Aesculus flava")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Aesculus flava")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Aesculus flava")]}],
+\Bnig: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Betula nigra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betula nigra")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Betula nigra")]}],
+\Cgla: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Carya glabra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Carya glabra")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Carya glabra")]}],
+\Cova: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Carya ovata")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Carya ovata")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Carya ovata")]}],
+\Pdel: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Populus deltoides")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Populus deltoides")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Populus deltoides")]}],
+\Qalb: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Quercus alba")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Quercus alba")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Quercus alba")]}],
+\Qrub: $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Quercus rubra")]}], and
+\Tame grew more with longer thermal season $\beta = $
+\Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Tilia americana")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Tilia americana")]}]). 
+However, growth for \Ball decreased with greater thermal season 
+$\beta = $ \Sexpr{bspp_df2_ts$fit_bspp[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]}, 
+$UI_{90}$[\Sexpr{bspp_df2_ts$fit_bspp_per5[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]},
+\Sexpr{bspp_df2_ts$fit_bspp_per95[which(bspp_df2_ts$spp_name %in% "Betula alleghaniensis")]}])
+) (Figure \ref{fig:wcmuplotbsppTS} a) and e)). These estimates were unchanged when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (a))
+ 
+% GSL
+\item Similarly to the response to thermal season, the species did not increase growth with longer calendar season 
+(\Arub: $\beta = $ \Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Acer rubrum")]}],
+\Asac: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Acer saccharum")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Acer saccharum")]}],
+\Afla: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Aesculus flava")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Aesculus flava")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Aesculus flava")]}],
+\Bnig: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Betula nigra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Betula nigra")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Betula nigra")]}],
+\Cgla: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Carya glabra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Carya glabra")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Carya glabra")]}],
+\Cova: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Carya ovata")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Carya ovata")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Carya ovata")]}],
+\Pdel: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Populus deltoides")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Populus deltoides")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Populus deltoides")]}],
+\Qalb: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Quercus alba")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Quercus alba")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Quercus alba")]}],
+\Qrub: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Quercus rubra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Quercus rubra")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Quercus rubra")]}], and
+\Tame: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Tilia americana")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Tilia americana")]}]))
+, including \Ball: $\beta = $
+\Sexpr{bspp_df2_ts_gsl$fit_bspp[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_gsl$fit_bspp_per5[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]},
+\Sexpr{bspp_df2_ts_gsl$fit_bspp_per95[which(bspp_df2_ts_gsl$spp_name %in% "Betula alleghaniensis")]}] (Figure \ref{fig:wcmuplotbsppTS} b) and f)). These estimates were unchanged when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (b))
+
+% SOS
+\item Growth did not change in response to the start of season for any species
+(\Arub: $\beta = $ \Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Acer rubrum")]}],
+\Asac: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Acer saccharum")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Acer saccharum")]}],
+\Afla: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Aesculus flava")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Aesculus flava")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Aesculus flava")]}],
+\Ball: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Betula alleghaniensis")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Betula alleghaniensis")]}],
+\Bnig: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Betula nigra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Betula nigra")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Betula nigra")]}],
+\Cgla: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Carya glabra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Carya glabra")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Carya glabra")]}],
+\Cova: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Carya ovata")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Carya ovata")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Carya ovata")]}],
+\Pdel: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Populus deltoides")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Populus deltoides")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Populus deltoides")]}],
+\Qalb: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Quercus alba")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Quercus alba")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Quercus alba")]}],
+\Qrub: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Quercus rubra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Quercus rubra")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Quercus rubra")]}], and
+\Tame: $\beta = $
+\Sexpr{bspp_df2_ts_sos$fit_bspp[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_sos$fit_bspp_per5[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]},
+\Sexpr{bspp_df2_ts_sos$fit_bspp_per95[which(bspp_df2_ts_sos$spp_name %in% "Tilia americana")]}])
+(Figure \ref{fig:wcmuplotbsppTS} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfullsosts)} vs $n=$\Sexpr{nrow(empts)}) (Figure*), nor when using budburst instead of leafout as the metric for the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (c)).
+
+% EOS
+\item Similarly to the response to thermal season, the species did not increase growth with longer calendar season (
+\Arub: $\beta = $ \Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}, \Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Acer rubrum")]}],
+\Asac: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Acer saccharum")]}],
+\Afla: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Aesculus flava")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Aesculus flava")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Aesculus flava")]}],
+\Bnig: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Betula nigra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Betula nigra")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Betula nigra")]}],
+\Cgla: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Carya glabra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Carya glabra")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Carya glabra")]}],
+\Cova: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Carya ovata")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Carya ovata")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Carya ovata")]}],
+\Pdel: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Populus deltoides")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Populus deltoides")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Populus deltoides")]}],
+\Qalb: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Quercus alba")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Quercus alba")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Quercus alba")]}],
+\Qrub: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Quercus rubra")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Quercus rubra")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Quercus rubra")]}], and
+\Tame: $\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Tilia americana")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Tilia americana")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Tilia americana")]}]))
+, except \Ball for which its growth decreased with later end of season ($\beta = $
+\Sexpr{bspp_df2_ts_eos$fit_bspp[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_ts_eos$fit_bspp_per5[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]},
+\Sexpr{bspp_df2_ts_eos$fit_bspp_per95[which(bspp_df2_ts_eos$spp_name %in% "Betula alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbsppTS} d) and h)). The estimates were unchanged when using the full or restricted datasets ($n =$\Sexpr{nrow(empfulleosts)} vs $n=$\Sexpr{nrow(empts)}).
+
+\end{enumerate}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplemental results
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -462,6 +614,13 @@ an average temperature of
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
 \caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \label{fig:wcgrowthSlopesGSL}
+\end{figure}
+
+% Budburst vs leafout for CoringTreespotters
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/budburstVSLeafout/DporousVSRporous.jpeg}
+\caption{}
+\label{fig:buburstVSleafoutTS}
 \end{figure}
 
 % % Climate variables
