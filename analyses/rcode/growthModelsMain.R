@@ -30,7 +30,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-fitmodels <- TRUE
+fitmodels <- FALSE
 fitmodelsZscored <- FALSE
 
 emp <- read.csv("output/empiricalDataMAIN.csv")

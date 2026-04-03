@@ -29,7 +29,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 source("rcode/growthModelsMain.R")
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -526,3 +526,12 @@ legend("center",
 dev.off()
 
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Combine the differe predictors in one df ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+bspp_df2_z$pred <- "gdd"
+bspp_df2_z_gsl$pred <- "gsl"
+bspp_df2_z_sos$pred <- "sos"
+bspp_df2_z_eos$pred <- "eos"
+rbind(bspp_df2_z, bspp_df2_z_gsl, bspp_df2_z_sos, bspp_df2_z_eos)
