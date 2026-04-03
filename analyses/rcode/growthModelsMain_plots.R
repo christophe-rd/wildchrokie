@@ -1482,7 +1482,7 @@ segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = c(5, 8, 2, 2))
@@ -1495,7 +1495,7 @@ segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = c(5, 8, 2, 2))
@@ -1508,7 +1508,7 @@ segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = c(5, 8, 2, 2))
@@ -1521,7 +1521,7 @@ segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = c(5, 8, 2, 2))
@@ -1529,6 +1529,7 @@ plot(emp$pgsGDD5, y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season growing degree days (GDD)", ylab = "Log ring width (mm)",
      main = "")
+mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
@@ -1562,6 +1563,7 @@ plot(emp$pgsGSL, y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season length (days)", ylab = "Log ring width (mm)",
      main = "")
+mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
@@ -1596,6 +1598,7 @@ plot(emp$leafout, y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "Log ring width (mm)",
      main = "")
+mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
@@ -1630,6 +1633,7 @@ plot(emp$budset, y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "Log ring width (mm)",
      main = "")
+mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
@@ -1840,8 +1844,93 @@ legend("center",
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Site", title.font = 2)
 dev.off()
-}
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### asite with map ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# set full names of sites
+locations <- data.frame(
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
+  shortnames = c("HF", "WM", "GR", "SH"),   
+  Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
+  Latitude   = c( 42.55,  44.11,  44.92,  45.98)
+)
+site_order <- locations$shortnames[order(locations$Latitude)]     
+site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
+
+# order same as figure
+locations2 <- locations[order(locations$Latitude), ]              
+locations2$col <- wes_palette("Darjeeling1")[1:4]     
+
+# site map 
+n_site     <- length(site_order)
+y_pos      <- match(site_df2$site_name, site_order)
+sitecolors <- site_color_map[site_df2$site_name]
+lat_labels <- locations$Latitude[match(site_order, locations$shortnames)]
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+lat_min <- 41; lat_max <- 48
+lon_min <- -78; lon_max <- -63
+
+special_point <- data.frame(
+  name = "Arnold Arboretum of\nHarvard University (MA)",
+  Longitude  = -71.13358611669867,
+  Latitude  =  42.29601035316377
+)
+
+special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
+points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
+
+
+map_plot <- ggplot(data = world) +
+  geom_sf(fill = "white", color = "gray60") +
+  geom_sf(data = points_sf, color = locations2$col, size = 4) +
+  geom_text(data = locations2,
+            aes(x = Longitude, y = Latitude, label = name),
+            nudge_y = 0.35, size = 4.5, fontface = "bold") +
+  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
+  theme_minimal() +
+  theme(
+    strip.text        = element_blank(),
+    legend.key.height = unit(1.5, "lines"),
+    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
+  )
+
+# mu plot for asite
+forest_grob <- as_grob(function() {
+  par(mar = c(7, 5, 5, 0.5))
+  
+  plot(site_df2$fit_a_site, y_pos,
+       xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
+       xlab = "Ring width intercept values (mm)", ylab = "Latitude",
+       yaxt = "n", pch = 16, cex = 2, col = sitecolors,
+       frame.plot = TRUE,
+       panel.first = abline(v = 0, lty = 2, col = "black"))
+  axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+  segments(site_df2$fit_a_site_per5,  y_pos,
+           site_df2$fit_a_site_per95, y_pos,
+           col = sitecolors, lwd = 1.5)
+  segments(site_df2$fit_a_site_per25, y_pos,
+           site_df2$fit_a_site_per75, y_pos,
+           col = sitecolors, lwd = 3)
+})
+
+combined <- plot_grid(forest_grob, map_plot, ncol = 2, rel_widths = c(0.4, 0.7))
+
+combined_labeled <- ggdraw(combined) +
+  draw_plot_label(
+    label    = c("a)", "b)"),
+    x        = c(0.098, 0.418),   # x position: left edge of each panel
+    y        = c(0.84, 0.84),     # y position: top of figure
+    size     = 14,
+    fontface = "bold"
+  )
+
+
+ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
+
+
+}
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

@@ -30,7 +30,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/utilExtractParam.R')
 
 # flags
-fitmodels <- FALSE
+fitmodels <- TRUE
 fitmodelsZscored <- FALSE
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
@@ -43,13 +43,15 @@ empfullsos <- emp[!is.na(emp$leafout),]
 empfulleos <- emp[!is.na(emp$budset),]
 
 gddyr <- read.csv("output/gddByYear.csv")
+nrow(empfullsos)
+nrow(empfulleos)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Fit model GDD
 emp <- emp[!is.na(emp$pgsGDD5),]
-
+nrow(emp)
 # scale gdd to how many gdd are in 10 average spring days
 temp<- subset(gddyr, doy <151 & doy > 120)
 temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
@@ -742,7 +744,7 @@ arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
        pch = 16, col = "#e67424", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
-points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#046C9A", cex = 1.5)
+points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#e67424", cex = 1.5)
 text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
