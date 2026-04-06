@@ -278,11 +278,30 @@ emp_climtslo$spp_num <- match(emp_climtslo$latbi, unique(emp_climtslo$latbi))
 emp_climtslo$treeid_num <- match(emp_climtslo$id, unique(emp_climtslo$id))
 emp_climtslo$year_num <- match(emp_climtslo$year, unique(emp_climtslo$year))
 
-# Fit with Stan
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Fit Leafout with Stan #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 jpeg(
-  filename = "figures/climate/climSumLeafoutTS.jpeg", 
-  width = 2000, height = 3000, res = 300)
+  filename = "figures/climate/climSumLeafout_TS.jpeg", 
+  width = 2500, height = 3000, res = 300)
 
+renoir <- c("#17154f", "#2f357c", "#6c5d9e", "#9d9cd5", "#b0799a", "#e48171", 
+            "#bf3729", "#e69b00", "#f5bb50", "#ada43b", "#355828")
+
+colslatbi <- c(
+  "Acer rubrum"           = renoir[1],
+  "Acer saccharum"        = renoir[2],
+  "Aesculus flava"        = renoir[3],
+  "Betula alleghaniensis" = renoir[4],
+  "Betula nigra"          = renoir[5],
+  "Carya glabra"          = renoir[6],
+  "Carya ovata"           = renoir[7],
+  "Populus deltoides"     = renoir[8],
+  "Quercus alba"          = renoir[9],
+  "Quercus rubra"         = renoir[10],
+  "Tilia americana"       = renoir[11]
+)
+species_orderts <- rev(unique(emp_climts$latbi))
 layout(matrix(c(1,2,7,
                 3,4,7,
                 5,6,7), nrow = 3, byrow = TRUE),
@@ -305,16 +324,14 @@ for (i in seq_along(clim_vars)) { # i = 2
       N = nrow(dat),
       year = as.numeric(as.character(dat$year_num)),
       species = as.numeric(as.character(dat$spp_num)),
-      site = as.numeric(as.character(dat$site_num)),
       Nspp = length(unique(dat$spp_num)),
-      Nsite = length(unique(dat$site_num)),
       Nyear = length(unique(dat$year_num)),
       climpredictor = dat[[var]]
     )
     
     # Fit models
-    fit <- sampling(climmodel, data = data, 
-                    warmup = 1000, iter = 2000, chains=4, refresh = 0)
+    fit <- sampling(climmodelts, data = data, 
+                    warmup = 50, iter = 100, chains=4, refresh = 0)
     
     post_means <- summary(fit)$summary[, "mean"]
     
@@ -325,7 +342,6 @@ for (i in seq_along(clim_vars)) { # i = 2
     param_indices <- c(
       "a",
       grep("^ayear(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^asite(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
       grep("^aspp(?!.*_prior)",  rownames(post_summary), value = TRUE, perl = TRUE),
       grep("^bsp(?!.*_prior)",   rownames(post_summary), value = TRUE, perl = TRUE)
     )
@@ -343,7 +359,6 @@ for (i in seq_along(clim_vars)) { # i = 2
     # pull what I need
     a <- post_means["a"]
     aspp <- post_means[grep("^aspp", names(post_means))]
-    asite <- post_means[grep("^asite", names(post_means))]
     ayear <- post_means[grep("^ayear", names(post_means))]
     bsp <- post_means[grep("^bsp",  names(post_means))]
     
@@ -352,6 +367,8 @@ for (i in seq_along(clim_vars)) { # i = 2
     # Set up empty plot
     x_range <- range(x_vals)
     x_pad <- diff(x_range) * 0.08  # 8% padding on each side
+    
+    par(mar = c(5, 3, 3, 3))
     
     plot(NULL, 
          xlim = c(x_range[1] - x_pad, x_range[2] + x_pad),
@@ -364,25 +381,23 @@ for (i in seq_along(clim_vars)) { # i = 2
       intercept_s <- a + aspp[s]
       slope_s <- bsp[s]
       y_vals <- intercept_s + slope_s * x_vals
-      lines(x_vals, y_vals, col = my_colors[s], lwd = 2)
+      lines(x_vals, y_vals, col = colslatbi[s], lwd = 2)
     }
     
     points(data$climpredictor, data$y,
-           col = my_colors[data$species], pch = 16, cex = 0.8)
+           col = colslatbi[data$species], pch = 16, cex = 0.8)
     
     # one year label per unique clim value, at top of each plot
     text(x_vals, rep(max(dat$anomleafout), length(x_vals)),
          labels = dat$year[match(x_vals, dat[[var]])],
-         cex = 1, col = "black")
+         cex = 0.8, col = "black", srt = 90)
   }
 }
 par(mar = c(0, 0, 0, 0))
 plot(NULL, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
-legend("center", legend = species_order,
-       col = my_colors[species_order], pch = 16, lwd = 2,
-       bty = "n", cex = 0.9, pt.cex = 1.5)
-
-
+legend("center", legend = species_orderts,
+       col = colslatbi[species_orderts], pch = 16, lwd = 2,
+       bty = "n", cex = 1, pt.cex = 1.5)
 dev.off()
 
 
