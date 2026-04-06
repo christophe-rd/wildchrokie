@@ -16,7 +16,7 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
-  
+
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if (length(grep("lizzie", getwd())) > 0) {

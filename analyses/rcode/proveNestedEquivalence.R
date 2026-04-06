@@ -173,3 +173,75 @@ util$plot_hist_quantiles(samples, "y_rep",
                          baseline_values = y,
                          xlab = "Ring width (mm)")
 dev.off()
+
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Old way ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+spp <- 1:Nspp
+
+simnest <- data.frame(
+  treeid = treeid,
+  spp = spp
+)
+
+atreeid_old <- rnorm(Ntreeid, aspp[spp], sigma_atreeid)
+
+# Add my parameters to the df
+simnest$aspp <- aspp[simnest$spp]
+simnest$atreeid <- atreeid_old[simnest$treeid]
+simnest$atreeid <- simnest$atreeid - simnest$aspp
+simnest$error <- rnorm(Ntreeid, 0, sigma_y)
+
+simnest$ringwidth <- 
+  simnest$atreeid + 
+  simnest$aspp +
+  simnest$error
+
+y <- simnest$ringwidth
+Nspp <- Nspp
+species <- as.numeric(as.character(simnest$spp))
+Ntreeid <- length(unique(simnest$treeid))
+treeid <- treeid
+fitnonnested_old <- stan("stan/twolevelhierint_nested.stan", 
+                     data=c("N","y",
+                            "Nspp","species",
+                            "Ntreeid", "treeid"),
+                     warmup = 1000, iter = 2000, chains=4)
+
+
+##### Nested old way #####
+df_fit_old <- as.data.frame(fitnonnested_old)
+
+# posterior summaries
+sigma_df2_old  <- extract_params(df_fit_old, "sigma", "mean", "sigma")
+treeid_df2_old <- extract_params(df_fit_old, "atreeid", "fit_atreeid", 
+                                       "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_old <- subset(treeid_df2_old, !grepl("z|sigma", treeid))
+aspp_df2_old   <- extract_params(df_fit_old, "aspp", "fit_aspp", 
+                                       "spp", "aspp\\[(\\d+)\\]")
+
+# add sim coef
+treeid_df2_old$sim_treeid <- simnest$atreeid[match(treeid_df2_old$treeid, simnest$treeid)]
+aspp_df2_old$sim_aspp <- simnest$aspp[match(aspp_df2_old$spp, simnest$spp)]
+
+
+# Plot treeid 
+ggplot(treeid_df2_old, aes(x = sim_treeid, y = fit_atreeid)) +
+  geom_errorbar(aes(ymin = fit_atreeid_per5, ymax = fit_atreeid_per95),
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.7) +
+  geom_point(color = "#046C9A", size = 1, alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim atreeid", y = "fit atreeid", title = "atreeid non-nested") +
+  theme_minimal()
+
+# Plot aspp 
+ggplot(aspp_df2_old, aes(x = sim_aspp, y = fit_aspp)) +
+  geom_errorbar(aes(ymin = fit_aspp_per5, ymax = fit_aspp_per95), 
+                width = 0, linewidth = 0.5, color = "darkgray", alpha=0.9) +
+  geom_errorbar(aes(ymin = fit_aspp_per25, ymax = fit_aspp_per75), 
+                width = 0, linewidth = 1.5,  color = "darkgray", alpha=0.9) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "#B40F20", linewidth = 1) +
+  labs(x = "sim aspp", y = "fit aspp", title = "aspp non-nested") +
+  geom_point(color = "#046C9A", size = 2) +
+  theme_minimal()
