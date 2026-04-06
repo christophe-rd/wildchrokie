@@ -248,86 +248,30 @@ n_spp <- nrow(bspp_df2)
 n_site <- nrow(site_df2)
 y_pos <- rev(1:n_spp)
 
+# y axis for mean plots
+ylimline <- c(-1, 3)
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: Prep posterior reconstruction #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# start by filling a df with treeid intercepts only
-atreeid_gdd<- subset(df_fitgdd, select = subyvec)
-colnames(atreeid_gdd) <- 1:length(subyvec)
+# recover full intercepts for each tree id
+fullintercept_cols <- grep("^fullintercept", colnames(df_fitgdd), value = TRUE)
+fullintercept <- df_fitgdd[, fullintercept_cols]
+colnames(fullintercept) <- 1:ncol(fullintercept)
 
-# the spp values for each tree id
-treeid_aspp_gdd <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
-colnames(treeid_aspp_gdd) <- colnames(atreeid_gdd)
+# recover each slope
+treeid_slope_cols <- grep("^treeid_slope", colnames(df_fitgdd), value = TRUE)
+treeid_bspp4 <- df_fitgdd[, treeid_slope_cols] / gddscale
+colnames(treeid_bspp) <- 1:ncol(treeid_bspp)
 
-for (i in seq_len(ncol(treeid_aspp_gdd))) { # i = 1
-  tree_id <- as.integer(colnames(treeid_aspp_gdd)[i])
-  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_aspp_gdd[, i] <- aspp_df[, spp_id]
-}
-treeid_aspp_gdd
-
-# the site values for each tree id
-treeid_asite_gdd <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
-colnames(treeid_asite_gdd) <- colnames(atreeid_gdd)
-
-for (i in seq_len(ncol(treeid_asite_gdd))) { # i = 1
-  tree_id <- as.integer(colnames(treeid_asite_gdd)[i])
-  site_id <- treeid_spp_site$site_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_asite_gdd[, i] <- site_df[, site_id]
-}
-treeid_asite_gdd
-
-# recover a
-treeid_a <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
-colnames(treeid_a) <- colnames(atreeid_gdd)
-
-for (i in seq_len(ncol(treeid_a))) { # i = 1
-  treeid_a[, i] <- df_fitgdd[, "a"]
-}
-
-# sum all 3 dfs together to get the full intercept for each treeid
-fullintercept <-
-  treeid_a + 
-  atreeid_gdd +
-  treeid_aspp_gdd +
-  treeid_asite_gdd
-fullintercept
-
-# now get the slope for each treeid
-treeid_bspp <- data.frame(matrix(ncol = ncol(atreeid_gdd), nrow = nrow(df_fitgdd)))
-colnames(treeid_bspp) <- colnames(atreeid_gdd)
-
-# back convert the slopes to their original scales
-bspp_df4 <- bspp_df
-for (i in 1:ncol(bspp_df4)){
-  bspp_df4[[i]] <- bspp_df4[[i]]/gddscale
-}
-
-for (i in seq_len(ncol(treeid_bspp))) { # i = 30
-  tree_id <- as.integer(colnames(treeid_bspp)[i])
-  spp_id <- treeid_spp_site$spp_num[match(tree_id, treeid_spp_site$treeid_num)]
-  treeid_bspp[, i] <- bspp_df4[, spp_id]
-}
-treeid_bspp
+# recover sim ypred for each gdd X tree id for each iterations
+y_post_array <- extract(fitgdd, "y_post")$y_post
 
 treeidvecnum <- 1:ncol(fullintercept)
 treeidvecname <- treeid_spp_site$treeid
-gddseq <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
+gddseq <- dgdd$gddseq
 
 if(makeplots) {
-y_post_list <- list()  # store posterior predictions in a list where each tree id gets matrixad
-
-# below I create a list where each row is the posterior estimate for each value of gdd (so the first row correspond to the model estimate for the first gdd value stored in x) and each column is the iteration (from 1 to 8000)
-for (i in seq_along(treeidvecnum)) { # i = 1
-  tree_col <- as.character(treeidvecnum[i]) 
-
-  y_post <- sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(gddseq), 
-          fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * gddseq,
-          sigma_df$sigma_y[f])
-  })
-  y_post_list[[tree_col]] <- y_post
-}
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: per treeid, facet #####
@@ -338,78 +282,45 @@ pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid.pdf", width = 10
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
-# Loop over trees again to plot each tree individually
-for (i in seq_along(treeidvecnum)) { # i = 1
+for (i in seq_along(treeidvecnum)) {
   tree_col <- as.character(treeidvecnum[i])
   tree_col_name <- as.character(treeidvecname[i])
-  y_post <- y_post_list[[tree_col]]
   
-  # color line by spp
+  # new extraction: y_post_array is [n_draws, Ngddseq, Ntreeid]
+  # slice out this tree, transpose to [Ngddseq, n_draws] to match old y_post shape
+  y_post <- t(y_post_array[, , i])
+  
   tree_id_num <- as.integer(tree_col)
-  
-  # index the dots per treeid
   emp_treeid <- emp[emp$treeid_num == tree_id_num, ]
   
-  # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  # empty plot first
   plot(emp_treeid$pgsGDD5, emp_treeid$loglength, type = "n", 
        ylim = range(c(emp_treeid$loglength, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
-       main = tree_col_name) # set the name for each plot
+       main = tree_col_name)
   
-  spp_id <- treeid_spp_site$spp_num[
-    match(tree_id_num, treeid_spp_site$treeid_num)]
-  
+  spp_id <- treeid_spp_site$spp_num[match(tree_id_num, treeid_spp_site$treeid_num)]
   line_col <- sppcols[spp_id]
   
-  # shaded interval
   polygon(c(gddseq, rev(gddseq)), 
-          c(y_low, # lower interval
-            rev(y_high)), # high interval
+          c(y_low, rev(y_high)),
           col = adjustcolor(line_col, alpha.f = 0.3), 
           border = NA)
   
-  # mean line
-  lines(gddseq, y_mean,
-        col = line_col,
-        lwd = 2)
+  lines(gddseq, y_mean, col = line_col, lwd = 2)
   
-  points(
-    emp_treeid$pgsGDD5,
-    emp_treeid$loglength,
-    pch = 16,
-    cex = 2,
-    col = line_col)
+  points(emp_treeid$pgsGDD5, emp_treeid$loglength, pch = 16, cex = 2, col = line_col)
 }
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: per Spp, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-mean_post_list <- list()
-for (i in seq_along(treeidvecnum)) {
-  tree_col <- as.character(treeidvecnum[i])
-  mean_post_list[[tree_col]] <- sapply(1:nrow(df_fitgdd), function(f) {
-    fullintercept[f, tree_col] + treeid_bspp[f, tree_col] * gddseq
-    # no sigma_y yet
-  })
-}
-
-# average the mean predictions across trees within species
-spp_mean_list <- lapply(spp_list, function(tree_vec) {
-  Reduce("+", mean_post_list[as.character(tree_vec)]) / length(tree_vec)
-})
-
-# re-simulate sigma on the averaged mean
-spp_post_list <- lapply(spp_mean_list, function(mean_mat) {
-  sapply(1:nrow(df_fitgdd), function(f) {
-    rnorm(length(gddseq), mean_mat[, f], sigma_df$sigma_y[f])
-  })
-})
+spp_post_array <- extract(fitgdd, "spp_post")$spp_post
+# dimensions: [n_draws, Ngddseq, Nspp]
 
 # jpeg output
 jpeg(
@@ -434,7 +345,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$spp_num == spp_num, ]
   
   spp_column <- as.character(sppvecnum[i]) 
-  y_post <- spp_post_list[[spp_column]]
+  y_post <- t(spp_post_array[, , i])
   
   # summaries
   y_mean <- apply(y_post, 1, mean)
@@ -446,8 +357,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$pgsGDD5, emp_spp$loglength,
        type = "n",
-       # ylim = ylim_spp,
-       ylim = c(0,4),
+       ylim = ylimline,
        xlab = "Primary growing season GDD",
        ylab = "Ring width (mm) log",
             main = bquote(italic(.(spp_column_name))),
@@ -679,7 +589,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$pgsGSL, emp_spp$loglength,
        type = "n",
-       ylim = c(0,4),
+       ylim = ylimline,
        xlab = "Primary growing season GSL",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
@@ -837,7 +747,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$leafout, emp_spp$loglength,
        type = "n",
-       ylim = c(0,4),
+       ylim = ylimline,
        xlab = "Leafout day of year",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
@@ -1056,7 +966,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$budset, emp_spp$loglength,
        type = "n",
-       ylim = c(0,4),
+       ylim = ylimline,
        xlab = "Budset day of year",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_column_name))),
