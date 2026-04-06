@@ -887,12 +887,8 @@ gsl <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
 sos <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
 eos <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
 
-gddmodel <- stan_model("stan/modelGrowthGDD.stan")
-fitgdd <- sampling(gddmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site", 
-                                      "Ntreeid", "treeid", 
-                                      "gdd"),
+gddmodel <- stan_model("stan/modelGrowthGDD_z.stan")
+fitgdd <- sampling(gddmodel, data = dgdd,
                    warmup = 1000, iter=2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored")
 
@@ -901,32 +897,20 @@ diagnostics <- util$extract_hmc_diagnostics(fitgdd)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model GSL
-gslmodel <- stan_model("stan/modelGrowthGSL.stan")
-fitgsl <- sampling(gslmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site", 
-                                      "Ntreeid", "treeid", 
-                                      "gsl"),
+gslmodel <- stan_model("stan/modelGrowthGSL_z.stan")
+fitgsl <- sampling(gslmodel, data = dgsl,
                    warmup = 1000, iter = 2000, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored")
 
 # Fit model SOS
-sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsos <- sampling(sosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "sos"),
+sosmodel <- stan_model("stan/modelGrowthSOS_z.stan")
+fitsos <- sampling(sosmodel, data = dsos,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored")
 
 # Fit model EOS
-eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteos <- sampling(eosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "eos"),
+eosmodel <- stan_model("stan/modelGrowthEOS_z.stan")
+fiteos <- sampling(eosmodel, data = deos,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored")
 

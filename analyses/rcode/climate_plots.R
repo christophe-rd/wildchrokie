@@ -2,10 +2,10 @@
 # CRD 12 March 2026
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -107,6 +107,7 @@ for (i in seq_along(years)) { # i = 2018
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if(makeplots){
 # common objects across budset and leafout
 clim_vars  <- c("TempMeanMax", "TempMeanMean","TempMeanMin")
 
@@ -139,6 +140,7 @@ climmodelts <- stan_model("stan/TSclimatePredictors.stan")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
 clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
 periods <- c("DJF", "MAM")
 
@@ -247,7 +249,7 @@ legend("center", legend = species_order,
 
 
 dev.off()
-
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # CoringTreespotters ####
@@ -281,6 +283,7 @@ emp_climtslo$year_num <- match(emp_climtslo$year, unique(emp_climtslo$year))
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Fit Leafout with Stan #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+if(makeplots){
 jpeg(
   filename = "figures/climate/climSumLeafout_TS.jpeg", 
   width = 2500, height = 3000, res = 300)
@@ -400,7 +403,7 @@ legend("center", legend = species_orderts,
        bty = "n", cex = 1, pt.cex = 1.5)
 dev.off()
 
-
+}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####
