@@ -46,6 +46,17 @@ gddyr <- read.csv("output/gddByYear.csv")
 nrow(empfullsos)
 nrow(empfulleos)
 
+# transform my groups to numeric values
+emp$site_num <- match(emp$site, unique(emp$site))
+emp$spp_num <- match(emp$spp, unique(emp$spp))
+emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+
+# order by tree id
+treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
+                                  "treeid", "spp", "site", "latbi")])
+
+treeid_spp_site_ordered <- treeid_spp_site[order(treeid_spp_site$treeid_num), ]
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -63,35 +74,37 @@ temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1
 gdd_10day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
 gddscale <- mean(gdd_10day$gdddiff)
 
-# transform my groups to numeric values
-emp$site_num <- match(emp$site, unique(emp$site))
-emp$spp_num <- match(emp$spp, unique(emp$spp))
-emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
 
-# transform data in vectors for GDD
-y <- emp$loglength # ring width in mm
-N <- nrow(emp)
-Nspp <- length(unique(emp$spp_num))
-Nsite <- length(unique(emp$site_num))
-site <- as.numeric(as.character(emp$site_num))
-species <- as.numeric(as.character(emp$spp_num))
-treeid <- as.numeric(emp$treeid_num)
-Ntreeid <- length(unique(treeid))
+# data list for gdd
+dgdd <- list(
+  y = emp$loglength,
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  gdd = emp$pgsGDD5 / gddscale,
+  gddseq = gddseq,
+  gddscale = gddscale,
+  Ngddseq = length(gddseq)
+)
+dgdd
 
-gdd <- emp$pgsGDD5 / gddscale
-gsl <- emp$pgsGSL / 10
+
 sos <- emp$leafout / 5
 eos <- emp$budset / 10
 
 if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
-fitgdd <- sampling(gddmodel, data = c("N","y",
-                                "Nspp","species",
-                                "Nsite", "site", 
-                                "Ntreeid", "treeid", 
-                                "gdd"),
-                warmup = 1000, iter=2000, chains=4)
+fitgdd <- sampling(gddmodel, data = dgdd,
+                warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -99,6 +112,30 @@ diagnostics <- util$extract_hmc_diagnostics(fitgdd)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model GSL
+gslscale <- 10
+gsl <- emp$pgsGSL / gslscale
+gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)
+
+# data list for GSL
+dgsl <- list(
+  y = emp$loglength,
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  gsl = emp$pgsGSL / gslscale,
+  gslseq = gslseq,
+  gslscale = gslscale,
+  Ngslseq = length(gslseq)
+)
+dgsl
+
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 fitgsl <- sampling(gslmodel, data = c("N","y",
                                   "Nspp","species",
@@ -109,6 +146,29 @@ fitgsl <- sampling(gslmodel, data = c("N","y",
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
 
 # Fit model SOS
+sosscale <- 5
+sos <- emp$leafout / sosscale
+sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = 100)
+
+# data list for sos
+dsos <- list(
+  y = emp$loglength,
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  sos = emp$leafout / sosscale,
+  sosseq = sosseq,
+  sosscale = sosscale,
+  Nsosseq = length(sosseq)
+)
+
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsos <- sampling(sosmodel, data = c("N","y",
                                   "Nspp","species",
@@ -119,6 +179,30 @@ fitsos <- sampling(sosmodel, data = c("N","y",
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 
 # Fit model EOS
+# Fit model SOS
+eosscale <- 5
+eos <- emp$leafout / eosscale
+eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = 100)
+
+# data list for eos
+deos <- list(
+  y = emp$loglength,
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  eos = emp$budset / eosscale,
+  eosseq = eosseq,
+  eosscale = eosscale,
+  Neosseq = length(eosseq)
+)
+
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = c("N","y",
                                   "Nspp","species",
