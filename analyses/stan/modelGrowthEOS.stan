@@ -10,6 +10,12 @@ int<lower=0> Nsite;  // number of sites (grouping factor)
 array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
+array[Ntreeid] int treeid_species; // species index for each treeid
+array[Ntreeid] int treeid_site;    // site index for each treeid
+array[Nspp] int Ntreeid_per_spp;
+int<lower=0> Neosseq;
+vector[Neosseq] eosseq;
+real eosscale; # scale
 vector[N] eos; 	// eos (predictor for slope)
 array[N] real y;
 }
@@ -75,4 +81,44 @@ generated quantities {
 
   real zatreeid_prior = normal_rng(0, 1);
   real atreeid_prior = abs(normal_rng(0, 0.5)) * zatreeid_prior;
+  
+  # Recover the full intercept per treeid
+  vector[Ntreeid] fullintercept;
+  vector[Ntreeid] treeid_slope;
+  
+  for (t in 1:Ntreeid) {
+  fullintercept[t] = a 
+                    + aspp[treeid_species[t]] 
+                    + asite[treeid_site[t]] 
+                    + atreeid[t];
+  treeid_slope[t]  = bsp[treeid_species[t]];
+  }
+  # Sim for each tree id, at each eosseq
+  matrix[Neosseq, Ntreeid] y_post;
+  
+  for (t in 1:Ntreeid) {
+    for (g in 1:Neosseq) {
+      y_post[g, t] = normal_rng(fullintercept[t] + (treeid_slope[t]/ eosscale) * eosseq[g], sigma_y);
+    }
+}
+  # Sim for each species
+  matrix[Neosseq, Nspp] spp_mean;
+  matrix[Neosseq, Nspp] spp_post;
+  
+  spp_mean = rep_matrix(0, Neosseq, Nspp);
+
+  for (t in 1:Ntreeid) {
+    int s = treeid_species[t];
+    for (g in 1:Neosseq) {
+      spp_mean[g, s] += (fullintercept[t] + (treeid_slope[t] / eosscale) * eosseq[g])
+                        / Ntreeid_per_spp[s];
+    }
+  }
+  
+  for (s in 1:Nspp) {
+    for (g in 1:Neosseq) {
+      spp_post[g, s] = normal_rng(spp_mean[g, s], sigma_y);
+  }
+}
+
 }

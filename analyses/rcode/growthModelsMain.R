@@ -31,6 +31,7 @@ source('rcode/utilExtractParam.R')
 
 # flags
 fitmodels <- FALSE
+fitmodelfull <- FALSE
 fitmodelsZscored <- FALSE
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
@@ -46,6 +47,10 @@ gddyr <- read.csv("output/gddByYear.csv")
 nrow(empfullsos)
 nrow(empfulleos)
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Most restricted amount of data ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+emp <- emp[!is.na(emp$pgsGDD5),]
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -57,12 +62,6 @@ treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
 
 treeid_spp_site_ordered <- treeid_spp_site[order(treeid_spp_site$treeid_num), ]
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Most restricted amount of data ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Fit model GDD
-emp <- emp[!is.na(emp$pgsGDD5),]
-nrow(emp)
 # scale gdd to how many gdd are in 10 average spring days
 temp<- subset(gddyr, doy <151 & doy > 120)
 temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
@@ -96,22 +95,7 @@ dgdd <- list(
 )
 dgdd
 
-
-sos <- emp$leafout / 5
-eos <- emp$budset / 10
-
-if (fitmodels){
-# Fit model GDD
-gddmodel <- stan_model("stan/modelGrowthGDD.stan")
-fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 1000, iter = 2000, chains=4)
-saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
-
-# check warnings
-diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
-util$check_all_hmc_diagnostics(diagnostics)
-
-# Fit model GSL
+# Set model GSL data
 gslscale <- 10
 gsl <- emp$pgsGSL / gslscale
 gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)
@@ -134,18 +118,6 @@ dgsl <- list(
   gslscale = gslscale,
   Ngslseq = length(gslseq)
 )
-dgsl
-
-gslmodel <- stan_model("stan/modelGrowthGSL.stan")
-fitgsl <- sampling(gslmodel, data = c("N","y",
-                                  "Nspp","species",
-                                  "Nsite", "site", 
-                                  "Ntreeid", "treeid", 
-                                  "gsl"),
-                warmup = 1000, iter = 2000, chains = 4)
-saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
-
-# Fit model SOS
 sosscale <- 5
 sos <- emp$leafout / sosscale
 sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = 100)
@@ -169,17 +141,6 @@ dsos <- list(
   Nsosseq = length(sosseq)
 )
 
-sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsos <- sampling(sosmodel, data = c("N","y",
-                                  "Nspp","species",
-                                  "Nsite", "site",
-                                  "Ntreeid", "treeid",
-                                  "sos"),
-                warmup = 1000, iter = 2000, chains=4)
-saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
-
-# Fit model EOS
-# Fit model SOS
 eosscale <- 5
 eos <- emp$leafout / eosscale
 eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = 100)
@@ -202,16 +163,34 @@ deos <- list(
   eosscale = eosscale,
   Neosseq = length(eosseq)
 )
+if (fitmodels){
+# Fit model GDD
+gddmodel <- stan_model("stan/modelGrowthGDD.stan")
+fitgdd <- sampling(gddmodel, data = dgdd,
+                warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
+# check warnings
+diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+# fit gsl
+gslmodel <- stan_model("stan/modelGrowthGSL.stan")
+fitgsl <- sampling(gslmodel, data = dgsl,
+                warmup = 1000, iter = 2000, chains = 4)
+saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
+
+# Fit model SOS
+sosmodel <- stan_model("stan/modelGrowthSOS.stan")
+fitsos <- sampling(sosmodel, data = dsos,
+                warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
+
+# Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteos <- sampling(eosmodel, data = c("N","y",
-                                  "Nspp","species",
-                                  "Nsite", "site",
-                                  "Ntreeid", "treeid",
-                                  "eos"),
+fiteos <- sampling(eosmodel, data = deos,
                 warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
@@ -245,6 +224,12 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
+# save csvs
+write.csv(sigma_df2,  "output/GM_GDDparam_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2,   "output/GM_GDDparam_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2, "output/GM_GDDparam_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2,   "output/GM_GDDparam_aspp.csv",   row.names = FALSE)
+write.csv(site_df2,   "output/GM_GDDparam_site.csv",   row.names = FALSE)
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -341,6 +326,13 @@ aspp_df2   <- extract_params(df_fitgsl, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+
 treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
+# save csvs
+write.csv(sigma_df2,  "output/GM_GSLparam_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2,   "output/GM_GSLparam_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2, "output/GM_GSLparam_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2,   "output/GM_GSLparam_aspp.csv",   row.names = FALSE)
+write.csv(site_df2,   "output/GM_GSLparam_site.csv",   row.names = FALSE)
+
 ##### Plot posterior vs priors for GSL fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
 
@@ -436,6 +428,13 @@ aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(
 treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 
+# save csvs
+write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",row.names = FALSE)
+write.csv(bspp_df2_sos,   "output/GM_SOSparam_bspp.csv", row.names = FALSE)
+write.csv(treeid_df2_sos, "output/GM_SOSparam_treeid.csv",row.names = FALSE)
+write.csv(aspp_df2_sos,   "output/GM_SOSparam_aspp.csv", row.names = FALSE)
+write.csv(site_df2_sos,   "output/GM_SOSparam_site.csv", row.names = FALSE)
+
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
@@ -530,6 +529,13 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
 aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# save csvs
+write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",row.names = FALSE)
+write.csv(bspp_df2_eos,   "output/GM_EOSparam_bspp.csv", row.names = FALSE)
+write.csv(treeid_df2_eos, "output/GM_EOSparam_treeid.csv",row.names = FALSE)
+write.csv(aspp_df2_eos,   "output/GM_EOSparam_aspp.csv", row.names = FALSE)
+write.csv(site_df2_eos,   "output/GM_EOSparam_site.csv", row.names = FALSE)
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -660,6 +666,7 @@ if (FALSE) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # FULL DATA ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (fitmodelfull) {
 # Fit model SOS
 # transform my groups to numeric values
 empfullsos$site_num <- match(empfullsos$site, unique(empfullsos$site))
@@ -866,7 +873,7 @@ mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
 
 dev.off()
 }
-
+}
 # === === === === === === === === === === === === === === === === === === === #
 # === === === === === === === === === === === === === === === === === === === #
 

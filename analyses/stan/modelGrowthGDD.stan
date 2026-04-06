@@ -13,10 +13,10 @@ array[N] int treeid;   // tree id identity, coded as int
 array[Ntreeid] int treeid_species; // species index for each treeid
 array[Ntreeid] int treeid_site;    // site index for each treeid
 array[Nspp] int Ntreeid_per_spp;
-vector[N] gdd; 	// gdd (predictor for slope)
 int<lower=0> Ngddseq;
 vector[Ngddseq] gddseq;
 real gddscale; # scale
+vector[N] gdd; 	// gdd (predictor for slope)
 array[N] real y;
 }
 
@@ -86,6 +86,8 @@ generated quantities {
   for (i in 1:N) {
     log_lik[i] = normal_lpdf(y[i] | ypred[i], sigma_y);
   }
+  
+  # Recover the full intercept per treeid
   vector[Ntreeid] fullintercept;
   vector[Ntreeid] treeid_slope;
   
