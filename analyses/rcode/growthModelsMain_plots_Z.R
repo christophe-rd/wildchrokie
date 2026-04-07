@@ -4,11 +4,11 @@
 # plotting z-scored data
 
 # housekeeping
-rm(list=ls())
-options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(mc.cores = parallel::detectCores())
-options(digits = 3)
+# rm(list=ls())
+# options(stringsAsFactors = FALSE)
+# options(max.print = 150)
+# options(mc.cores = parallel::detectCores())
+# options(digits = 3)
 
 # Load library 
 library(ggplot2)
@@ -26,17 +26,14 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 }
 
 # source model code
-source("rcode/growthModelsMain.R")
+# source("rcode/growthModelsMain.R")
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
-climatesum <- read.csv("output/climateSummariesYear.csv")
-weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
-
 commonNames <- c(
   "Alnus incana"          = "Grey alder",
   "Betula alleghaniensis" = "Yellow birch",
@@ -52,20 +49,6 @@ emp$commonName <- commonNames[emp$latbi]
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDDZscored")
 
 df_fitgdd <- as.data.frame(fitgdd)
-
-# full posterior
-columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
-sigma_df <- df_fitgdd[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
-treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
-site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df) <- 1:ncol(bspp_df)
-colnames(treeid_df) <- 1:ncol(treeid_df)
-colnames(aspp_df) <- 1:ncol(aspp_df)
-colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
 sigma_df2_z  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
@@ -92,20 +75,6 @@ fitgsl <- readRDS("output/stanOutput/fitGrowthGSLZscored")
 
 df_fitgsl <- as.data.frame(fitgsl)
 
-# full posterior
-columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
-sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
-bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
-treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
-site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df_gsl) <- 1:ncol(bspp_df)
-colnames(treeid_df_gsl) <- 1:ncol(treeid_df)
-colnames(aspp_df_gsl) <- 1:ncol(aspp_df)
-colnames(site_df_gsl) <- 1:ncol(site_df)
-
 # posterior summaries
 sigma_df2_z_gsl  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
 bspp_df2_z_gsl   <- extract_params(df_fitgsl, "bsp", "fit_bspp", 
@@ -131,19 +100,6 @@ fitsos <- readRDS("output/stanOutput/fitGrowthSOSZscored")
 
 df_fitsos <- as.data.frame(fitsos)
 
-# full posterior
-columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
-sigma_df_sos <- df_fitsos[, columns[grepl("sigma", columns)]]
-bspp_df_sos <- df_fitsos[, columns[grepl("bsp", columns)]]
-treeid_df_sos <- df_fitsos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_sos <- df_fitsos[, columns[grepl("aspp", columns)]]
-site_df_sos <- df_fitsos[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df_sos) <- 1:ncol(bspp_df_sos)
-colnames(treeid_df_sos) <- 1:ncol(treeid_df_sos)
-colnames(aspp_df_sos) <- 1:ncol(aspp_df_sos)
-colnames(site_df_sos) <- 1:ncol(site_df_sos)
 
 # posterior summaries
 sigma_df2_z_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
@@ -169,20 +125,6 @@ aspp_df2_z_sos$spp_name <- emp$latbi[match(aspp_df2_z_sos$spp, emp$spp_num)]
 fiteos <- readRDS("output/stanOutput/fitGrowthEOSZscored")
 
 df_fiteos <- as.data.frame(fiteos)
-
-# full posterior
-columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
-sigma_df_eos <- df_fiteos[, columns[grepl("sigma", columns)]]
-bspp_df_eos <- df_fiteos[, columns[grepl("bsp", columns)]]
-treeid_df_eos <- df_fiteos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_eos <- df_fiteos[, columns[grepl("aspp", columns)]]
-site_df_eos <- df_fiteos[, columns[grepl("asite", columns)]]
-
-# change colnames
-colnames(bspp_df_eos) <- 1:ncol(bspp_df_eos)
-colnames(treeid_df_eos) <- 1:ncol(treeid_df_eos)
-colnames(aspp_df_eos) <- 1:ncol(aspp_df_eos)
-colnames(site_df_eos) <- 1:ncol(site_df_eos)
 
 # posterior summaries
 sigma_df2_z_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
@@ -289,7 +231,7 @@ segments(bspp_df2_z$fit_bspp_per5,  y_pos, bspp_df2_z$fit_bspp_per95, y_pos,
 segments(bspp_df2_z$fit_bspp_per25, y_pos, bspp_df2_z$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
-mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
@@ -303,7 +245,7 @@ segments(bspp_df2_z_gsl$fit_bspp_per5,  y_pos, bspp_df2_z_gsl$fit_bspp_per95, y_
 segments(bspp_df2_z_gsl$fit_bspp_per25, y_pos, bspp_df2_z_gsl$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
-mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
@@ -317,7 +259,7 @@ segments(bspp_df2_z_sos$fit_bspp_per5,  y_pos, bspp_df2_z_sos$fit_bspp_per95, y_
 segments(bspp_df2_z_sos$fit_bspp_per25, y_pos, bspp_df2_z_sos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
-mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
@@ -331,7 +273,7 @@ segments(bspp_df2_z_eos$fit_bspp_per5,  y_pos, bspp_df2_z_eos$fit_bspp_per95, y_
 segments(bspp_df2_z_eos$fit_bspp_per25, y_pos, bspp_df2_z_eos$fit_bspp_per75, y_pos,
          col = sppcols, lwd = 3)
 
-mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Slot 5: species legend
 par(mar = c(1, 1, 1, 1))
@@ -526,12 +468,3 @@ legend("center",
 dev.off()
 
 }
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Combine the differe predictors in one df ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-bspp_df2_z$pred <- "gdd"
-bspp_df2_z_gsl$pred <- "gsl"
-bspp_df2_z_sos$pred <- "sos"
-bspp_df2_z_eos$pred <- "eos"
-rbind(bspp_df2_z, bspp_df2_z_gsl, bspp_df2_z_sos, bspp_df2_z_eos)
