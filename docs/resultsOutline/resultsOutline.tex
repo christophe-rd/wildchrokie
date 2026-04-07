@@ -80,27 +80,17 @@
 \newcommand{\Qrub}{\textit{Q. rubra }}
 \newcommand{\Tame}{\textit{T. americana }}   
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-##   year pgsGSL leafout coloredLeaves gdddiff pdsi tmeanmax tmeanmean tmeanmin
-## 1 2016    156     124           280    1594 -4.0       29        23       17
-## 2 2017    156     117           273    1472  1.6       27        22       16
-## 3 2018    144     123           267    1569  1.9       28        23       17
-## 4 2019    143     119           262    1549  4.0       28        22       17
-## 5 2020    133     125           258    1645 -2.4       29        23       17
-## 6 2021    144     116           260    1543  1.0       28        23       17
-## 7 2022    137     121           258    1611 -2.7       29        23       17
-## 8 2023    145     113           258    1459 -0.3       27        22       16
-## 9 2024    134     118           252    1573  2.3       28        23       17
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Wildchrokie}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
+%-------------------------------------------------------------------------------
+\subsection{Species, years and observations}
+%-------------------------------------------------------------------------------
+\begin{enumerate}
+\item Wildchrokie includes four deciduous tree species from four sites, with phenological observations from 2018 to 2020. In total, our final dataset has 239 leafout observations and 230. We used these observations to set the boundaries of individual-level growing seasons, which together yield 227 complete growing season observations.
+\end{enumerate}
 
 %-------------------------------------------------------------------------------
 \subsection{Growing season length and conditions}
@@ -143,14 +133,14 @@ and was also the warmest spring (
 511 GDD).
 
 % SOS by species 
-\item On average, the earliest leafout date was in 2019 for all species (\Ainc: 120.9, 
+\item On average, the earliest leafout date was in 2019 for all species (\Ainc: 120.93, 
 B alleghaniensis: 123, 
-\Bpap: 125.8 and 
-\Bpop: 121.5), and the latest was in 2020 (
-\Ainc: 149.1, 
-B alleghaniensis: 141.3, 
-\Bpap: 136.6 and 
-\Bpop: 133.9).
+\Bpap: 125.83 and 
+\Bpop: 121.52), and the latest was in 2020 (
+\Ainc: 149.07, 
+B alleghaniensis: 141.32, 
+\Bpap: 136.57 and 
+\Bpop: 133.88).
 No species was consistently the earliest nor the latest to leafout.
 
 % EOS condition
@@ -166,15 +156,15 @@ and had the highest thermal sum of the three years (511 GDD).
 
 % EOS by species 
 \item On average, the earliest budset date was in 2019 for \Ainc 
-(263.3) and 
+(263.29) and 
 \Ball (258), but in 2018 for
-\Bpap (266.8) and 
-\Bpop (266.3). 
+\Bpap (266.83) and 
+\Bpop (266.29). 
 The latest budset date for all species was in 2020
-(\Ainc:280.9, 
-\Ball:264.1, 
-\Bpap:279.4 and 
-\Bpop:282).
+(\Ainc: 280.88, 
+\Ball: 264.05, 
+\Bpap: 279.43 and 
+\Bpop: 282).
 No species was consistently the earliest nor the latest to set buds.
 
 % PDSI spring
@@ -207,21 +197,20 @@ September of
 %-------------------------------------------------------------------------------
 \begin{enumerate}
 \item The ring widths of our species vary from 0.4 mm to 13.5 mm. 
-\item Ring widths for \Ball were the smallest and varied from 0.4 mm to 6.9 mm, and 
+\item Ring widths for \Ball were the smallest and varied from 0.39 mm to 6.92 mm, and 
 \Bpop had the largest rings which spanned from 
-0.8 mm to 13.5 mm on average.
-\Ainc (0.6 mm to 7.8 mm) and 
-\Bpap were quite similar (0.7 mm to 6.4 mm).
+0.75 mm to 13.55 mm on average.
+\Ainc (0.61 mm to 7.81 mm) and 
+\Bpap were quite similar (0.65 mm to 6.42 mm).
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
 \subsection{Model results}
 %-------------------------------------------------------------------------------
-
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbspp.jpeg}
-\caption{Model slope parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independent variable changing (see Figure \ref{fig:wcSOSEOScomparison} for a comparison between two different data set length for SOS, and Figure \ref{fig:wcSOSEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\caption{Model slope parameters across the different model predictors for Wildchrokie species. GDD represent the accumulated growing degree days between leafout and budset (a) the models estimates shows log ring width change per 10 average spring days GDD (174). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing (see Figure \ref{fig:wcSOSEOScomparison}a for a comparison between two different data set length for SOS, and Figure \ref{fig:wcSOSEOScomparison}b, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The pannels on the right are the reconstructed species estimates posterior distribution with error at each GDD(e), GSL(f), SOS(g) and EOS (h) values. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI.}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -229,77 +218,74 @@ September of
 
 % GDD
 \item Growth did not change with greater thermal season for most species 
-\Ainc: ($\beta = $ 0.1, $UI_{90}$[-0.1, 0.2]),
+\Ainc: ($\beta = $ 0.06, $UI_{90}$[-0.05, 0.17]),
 \Ball: ($\beta = $ 
-0.1, $UI_{90}$[0, 
-0.2], and
+0.11, $UI_{90}$[-0.03, 
+0.25], and
 \Bpop:  ($\beta = $ 
-0, $UI_{90}$[-0.2, 
-0.2]].
+0, $UI_{90}$[-0.16, 
+0.15]].
 However,
 \Bpap grew more with longer thermal season ($\beta = $ 
-0.3, $UI_{90}$[0, 
-0.6])) (Figure \ref{fig:wcmuplotbspp} a) and e)).
+0.32, $UI_{90}$[0.04, 
+0.62])) (Figure \ref{fig:wcmuplotbspp}a and e) (Table \ref{tab:wc_slope_table}).
 
 % GSL
 \item In contrast, most species grew more with longer calendar seasons 
-(\Ainc: ($\beta = $ 0.1, $UI_{90}$[0.1, 0.2]),
-\Ball: ($\beta = $ 0.1, $UI_{90}$[0, 0.2]) and
-\Bpap: ($\beta = $ 0.3, $UI_{90}$[0.1, 0.5]).
+(\Ainc: ($\beta = $ 0.13, $UI_{90}$[0.05, 0.2]),
+\Ball: ($\beta = $ 0.1, $UI_{90}$[0, 0.18]) and
+\Bpap: ($\beta = $ 0.27, $UI_{90}$[0.07, 0.46]).
 Similarly to its response to the thermal season,
-\Bpop did not grow more with longer calendar seasons ($\beta = $ 0, $UI_{90}$[-0.1, 0.1])
-(Figure \ref{fig:wcmuplotbspp} b) and f).
+\Bpop did not grow more with longer calendar seasons ($\beta = $ 0, $UI_{90}$[-0.12, 0.12])
+(Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
 
 % SOS
 \item Growth decreased with a later start of season (SOS) for
-\Ainc: $\beta = $ -0.1, $UI_{90}$[-0.2, -0.1]) and 
-\Bpop ($\beta = $ -0.1, $UI_{90}$[-0.2, 0]), but didn't change for the other two 
-(\Ball ($\beta = $ 0, $UI_{90}$[-0.1, 0]) and
-\Bpap ($\beta = $ -0.1, $UI_{90}$[-0.2, 0])) (Figure \ref{fig:wcmuplotbspp} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$239 vs $n=$227 Figure \ref{fig:wcSOSEOScomparison} (a)). 
+\Ainc: $\beta = $ -0.13, $UI_{90}$[-0.16, -0.09]) and 
+\Bpop ($\beta = $ -0.09, $UI_{90}$[-0.16, -0.02]), but didn't change for the other two species
+(\Ball ($\beta = $ -0.03, $UI_{90}$[-0.09, 0.04]) and
+\Bpap ($\beta = $ -0.08, $UI_{90}$[-0.19, 0.03])) (Figure \ref{fig:wcmuplotbspp}c and g). The estimates were unchanged when using the full or restricted datasets ($n =$239 vs $n=$227 Figure \ref{fig:wcSOSEOScomparison}a) (Table \ref{tab:wc_slope_table}). 
 
 % EOS
 \item Growth decreased with a later end of season (EOS) only for for 
-\Ainc ($\beta = $ -0.1, $UI_{90}$[-0.1, 0]). 
+\Ainc ($\beta = $ -0.07, $UI_{90}$[-0.1, -0.03]). 
 Growth did not change for the other species
-(\Bpop: ($\beta = $ 0, $UI_{90}$[-0.1, 0], 
-\Ball ($\beta = $ 0, $UI_{90}$[0, 0.1]) and
-\Bpap ($\beta = $ 0.1, $UI_{90}$[0, 0.2]) (Figure \ref{fig:wcmuplotbspp} d) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$230 vs $n=$227 Figure \ref{fig:wcSOSEOScomparison} (b)Figure \ref{fig:}). 
+(\Bpop: ($\beta = $ -0.04, $UI_{90}$[-0.09, 0.01], 
+\Ball ($\beta = $ 0.04, $UI_{90}$[-0.01, 0.09]) and
+\Bpap ($\beta = $ 0.06, $UI_{90}$[-0.03, 0.15]) (Figure \ref{fig:wcmuplotbspp}d and g). The estimates were unchanged when using the full or restricted datasets ($n =$230 vs $n=$227 (Figure \ref{fig:wcSOSEOScomparison}b) (Table \ref{tab:wc_slope_table}). 
 
 % Site
 \item Growth did not change across any sites ( 
-S. Hypolyte ($\alpha_{site} = $ 0.1, $UI_{90}$[-0.8, 0.9]),
-D. College ($\alpha_{site} = $ -0.1, $UI_{90}$[-1, 0.7]), 
-W. Mountains ($\alpha_{site} = $ 0.1, $UI_{90}$[-0.7, 1]) and 
-H. Forest ($\alpha_{site} = $ = -0.1, $UI_{90}$[-1, 0.7]) 
-(Figure \ref{fig:wcmuplotasite}))
+S. Hypolyte ($\alpha_{site} = $ 0.07, $UI_{90}$[-0.8, 0.9]),
+D. College ($\alpha_{site} = $ -0.09, $UI_{90}$[-0.96, 0.74]), 
+W. Mountains ($\alpha_{site} = $ 0.14, $UI_{90}$[-0.72, 0.99]) and 
+H. Forest ($\alpha_{site} = $ = -0.14, $UI_{90}$[-1.01, 0.7]) (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}).
 
 % Wildchrokie site mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of sites on growth across a latitudinal gradient. a) Model intercept parameters for each site with growing degree days as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\caption{The effect of sites on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The sites are color-coded from (b), th map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
 % Effect size on standardized scale
-\item Across the four predictors the response was the strongest to 
-SOS for
-\Ainc ($\beta = $ 
--0.3, 
-$UI_{90}$[-0.3, 
--0.2]) and 
-\Bpop ($\beta = $ 
+\item The largest effect size across predictors varied considerably depending on species. We standardized the predictors through z-scoring to compare their respective effect size.
+\Ball ($\beta = $
+0.13, 
+$UI_{90}$[0.01, 
+0.26]) and
+\Bpap ($\beta = $
+0.39, 
+$UI_{90}$[0.12, 
+0.67]) responded most to GSL, and
+\Ainc ($\beta = $
+-0.27, 
+$UI_{90}$[-0.35, 
+-0.19]) and
+\Bpop ($\beta = $
 -0.2, 
-$UI_{90}$[-0.3, 
-0]),
-GSL for 
-\Ball ($\beta = $ 
-0.1, 
-$UI_{90}$[0, 
-0.3]) and 
-\Bpap ($\beta = $ 
-0.4, 
-$UI_{90}$[0.1, 
-0.7])
+$UI_{90}$[-0.35, 
+-0.04]) had the strongest response to SOS (Figure \ref{fig:bsppZscored}).
 
 \end{enumerate}
 
@@ -310,7 +296,7 @@ $UI_{90}$[0.1,
 \subsection{Species, years and observations}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item CoringTreespotters includes eleven deciduous tree species with phenological observations from 2016 to 2024. In total, our final dataset has 239 leafout observations and 230. We used these observations to set the boundaries of individual-level growing seasons, which together yield 280 complete growing season lengths (GSL).
+\item CoringTreespotters includes eleven deciduous tree species with phenological observations from 2016 to 2024. In total, our final dataset has 321 leafout observations and 286. We used these observations to set the boundaries of individual-level growing seasons, which together yield 280 complete growing season observations.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -353,7 +339,7 @@ an average temperature of
 (2023), 
 \Asac: 111 
 (2017), 
-\Afla: 102.7 
+\Afla: 102.67 
 (2016), 
 \Ball: 104 
 (2017), 
@@ -367,7 +353,7 @@ an average temperature of
 (2018), 
 \Qalb: 112 
 (2017), 
-\Qrub: 118.2 
+\Qrub: 118.25 
 (2020), 
 \Tame: 109 
 (2017), 
@@ -403,7 +389,7 @@ an average temperature of
 
 % Drought occurence
 \item 2017, 2020, 2021, 2022, 2023 had at least one month of moderate drought ($PDSI [-3, -2]$) throughout their growing seasons.
-Severe droughts periods occurred in 2016, 2017, 2020, 2022 was the only period with a severe drought ($PDSI < -3$) 
+Severe droughts periods occurred in 2016, 2017, 2020, 2022 for at least one month ($PDSI < -3$).
 
 \end{enumerate}
 
@@ -411,13 +397,13 @@ Severe droughts periods occurred in 2016, 2017, 2020, 2022 was the only period w
 \subsection{Ring widths}
 %-------------------------------------------------------------------------------
 \begin{enumerate}
-\item The ring widths of our species---for the study period---vary from 0.4 mm to 11.7 mm. 
+\item The ring widths of our species---for the study period---vary from 0.43 mm to 11.75 mm. 
 \item Ring widths for \Cova were the smallest and varied from 
-0.7 mm to 
-1.8 mm, and 
+0.66 mm to 
+1.84 mm, and 
 \Asac had the largest rings which spanned from 
-0.4 to
-11.1.
+0.43 to
+11.14.
 \end{enumerate}
 
 %-------------------------------------------------------------------------------
@@ -427,7 +413,7 @@ Severe droughts periods occurred in 2016, 2017, 2020, 2022 was the only period w
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope parameters across the different model predictors. GDD represent the accumulated growing degree days between leafout and budset, GSL the number of days between these phases. SOS represent the start of season, which is leafout and EOS, the end of season through budset. All predictors were fit using the same model and same observation, with only the independent variable changing (see Figure \ref{fig:wcSOScomparison} for a comparison between two different data set length for SOS, and Figure \ref{fig:tsSOSEOScomparison}, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\caption{Model slope parameters across the different model predictors for CoringTreespotters species. GDD represent the accumulated growing degree days between leafout and leaf colouring  (a) the models estimates shows log ring width change per 10 average spring days GDD (174). GSL is the number of days between leafout and leaf colouring (b). SOS represents the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing (see Figure \ref{fig:tsSOSEOScomparison}a for a comparison between two different data set length for SOS, and Figure \ref{fig:tsSOSEOScomparison}b, for end of EOS). The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The pannels on the right are the reconstructed species estimates posterior distribution with error at each GDD(e), GSL(f), SOS(g) and EOS (h) values. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI.}
 \label{fig:wcmuplotbsppTS}
 \end{figure}
 
@@ -435,145 +421,189 @@ Severe droughts periods occurred in 2016, 2017, 2020, 2022 was the only period w
 
 % GDD
 \item Growth did not change with greater thermal season for most species 
-(\Arub: $\beta = $ 0, $UI_{90}$[-0.2, 0.1],
+(\Arub: $\beta = $ -0.04, $UI_{90}$[-0.22, 0.14],
 \Asac: $\beta = $
-0.1, $UI_{90}$[-0.1,
-0.2],
+0.06, $UI_{90}$[-0.05,
+0.16],
 \Afla: $\beta = $
-0, $UI_{90}$[0,
-0],
+-0.01, $UI_{90}$[-0.05,
+0.02],
 \Bnig: $\beta = $
-0, $UI_{90}$[0,
-0.1],
+0.03, $UI_{90}$[-0.05,
+0.11],
 \Cgla: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+0.01, $UI_{90}$[-0.11,
+0.13],
 \Cova: $\beta = $
--0.1, $UI_{90}$[-0.2,
-0],
+-0.08, $UI_{90}$[-0.2,
+0.05],
 \Pdel: $\beta = $
-0, $UI_{90}$[-0.1,
-0],
+-0.04, $UI_{90}$[-0.1,
+0.03],
 \Qalb: $\beta = $
-0.1, $UI_{90}$[-0.2,
-0.3],
+0.06, $UI_{90}$[-0.17,
+0.29],
 \Qrub: $\beta = $
-0, $UI_{90}$[-0.2,
-0.2],
+0.01, $UI_{90}$[-0.16,
+0.18],
 \Tame $\beta = $
-0, $UI_{90}$[-0.1,
-0]). 
+-0.04, $UI_{90}$[-0.1,
+0.03]). 
 However, growth for \Ball decreased with greater thermal season 
-$\beta = $ -0.3, 
-$UI_{90}$[-0.4,
--0.1])
-) (Figure \ref{fig:wcmuplotbsppTS} a) and e)). These estimates were unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (a))
+$\beta = $ -0.26, 
+$UI_{90}$[-0.38,
+-0.13])
+) (Figure \ref{fig:wcmuplotbsppTS}a and e). These estimates were unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS}a) (Table \ref{tab:ts_slope_table}).
  
 % GSL
 \item Similarly to the response to thermal season, the species did not increase growth with longer calendar season 
-(\Arub: $\beta = $ 0.1, $UI_{90}$[-0.1, 0.2],
+(\Arub: $\beta = $ 0.08, $UI_{90}$[-0.06, 0.22],
 \Asac: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+0.01, $UI_{90}$[-0.06,
+0.07],
 \Afla: $\beta = $
-0, $UI_{90}$[0,
-0],
+-0.01, $UI_{90}$[-0.04,
+0.02],
 \Bnig: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+0.01, $UI_{90}$[-0.05,
+0.08],
 \Cgla: $\beta = $
-0, $UI_{90}$[-0.1,
+0.02, $UI_{90}$[-0.06,
 0.1],
 \Cova: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+-0.04, $UI_{90}$[-0.13,
+0.05],
 \Pdel: $\beta = $
-0, $UI_{90}$[-0.1,
-0],
+-0.02, $UI_{90}$[-0.09,
+0.04],
 \Qalb: $\beta = $
-0.1, $UI_{90}$[-0.1,
+0.07, $UI_{90}$[-0.06,
 0.2],
 \Qrub: $\beta = $
-0, $UI_{90}$[-0.2,
-0.1], and
+-0.01, $UI_{90}$[-0.17,
+0.14], and
 \Tame: $\beta = $
-0, $UI_{90}$[-0.1,
-0]))
+-0.03, $UI_{90}$[-0.08,
+0.01]))
 , including \Ball: $\beta = $
--0.1, $UI_{90}$[-0.2,
-0] (Figure \ref{fig:wcmuplotbsppTS} b) and f)). These estimates were also unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (b))
+-0.07, $UI_{90}$[-0.16,
+0.01] (Figure \ref{fig:wcmuplotbsppTS} b) and f)). These estimates were also unchanged when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS}b) (Table \ref{tab:ts_slope_table}).
 
 % SOS
 \item Growth did not change in response to the start of season for any species
-(\Arub: $\beta = $ -0.1, $UI_{90}$[-0.3, 0],
+(\Arub: $\beta = $ -0.12, $UI_{90}$[-0.27, 0.03],
 \Asac: $\beta = $
-0, $UI_{90}$[0,
-0.1],
+0.01, $UI_{90}$[-0.05,
+0.08],
 \Afla: $\beta = $
-0, $UI_{90}$[-0.2,
-0.1],
+-0.05, $UI_{90}$[-0.16,
+0.06],
 \Ball: $\beta = $
--0.1, $UI_{90}$[-0.2,
-0],
+-0.09, $UI_{90}$[-0.19,
+0.01],
 \Bnig: $\beta = $
-0, $UI_{90}$[-0.1,
-0],
+-0.04, $UI_{90}$[-0.13,
+0.05],
 \Cgla: $\beta = $
 0, $UI_{90}$[-0.1,
 0.1],
 \Cova: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+0, $UI_{90}$[-0.09,
+0.09],
 \Pdel: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+-0.03, $UI_{90}$[-0.13,
+0.07],
 \Qalb: $\beta = $
--0.1, $UI_{90}$[-0.2,
-0.1],
+-0.05, $UI_{90}$[-0.17,
+0.07],
 \Qrub: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1], and
+-0.01, $UI_{90}$[-0.14,
+0.12], and
 \Tame: $\beta = $
-0.1, $UI_{90}$[0,
-0.1])
-(Figure \ref{fig:wcmuplotbsppTS} c) and g)). The estimates were unchanged when using the full or restricted datasets ($n =$321 vs $n=$280 Figure \ref{fig:tsSOSEOScomparison} (b)) (Figure*), nor when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS} (c)).
+0.06, $UI_{90}$[-0.02,
+0.14])
+(Figure \ref{fig:wcmuplotbsppTS}c and g). The estimates were unchanged when using the full or restricted datasets ($n =$321 vs $n=$280 Figure \ref{fig:tsSOSEOScomparison}b), nor when using budburst instead of leafout as  the start of the growing season (Figure \ref{fig:buburstVSleafoutTS}c) (Table \ref{tab:ts_slope_table}).
 
 % EOS
 \item Similarly to the response to thermal season, the species did not increase growth with longer calendar season 
-(\Arub: $\beta = $ 0, $UI_{90}$[-0.1, 0.2],
+(\Arub: $\beta = $ 0.03, $UI_{90}$[-0.11, 0.17],
 \Asac: $\beta = $
-0, $UI_{90}$[-0.1,
+0.02, $UI_{90}$[-0.06,
 0.1],
 \Afla: $\beta = $
-0, $UI_{90}$[0,
-0],
+-0.01, $UI_{90}$[-0.04,
+0.02],
 \Bnig: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1],
+0, $UI_{90}$[-0.06,
+0.07],
 \Cgla: $\beta = $
-0, $UI_{90}$[-0.1,
+0.02, $UI_{90}$[-0.06,
 0.1],
 \Cova: $\beta = $
-0, $UI_{90}$[-0.1,
-0],
+-0.05, $UI_{90}$[-0.14,
+0.05],
 \Pdel: $\beta = $
-0, $UI_{90}$[-0.1,
-0],
+-0.02, $UI_{90}$[-0.08,
+0.03],
 \Qalb: $\beta = $
-0.1, $UI_{90}$[-0.1,
-0.2],
+0.05, $UI_{90}$[-0.09,
+0.19],
 \Qrub: $\beta = $
-0, $UI_{90}$[-0.1,
-0.1], and
+-0.01, $UI_{90}$[-0.14,
+0.12], and
 \Tame: $\beta = $
-0, $UI_{90}$[-0.1,
-0]))
+-0.03, $UI_{90}$[-0.07,
+0.02]))
 , except \Ball for which its growth decreased with later end of season ($\beta = $
--0.1, $UI_{90}$[-0.2,
-0]) (Figure \ref{fig:wcmuplotbsppTS} d) and h)). The estimates were unchanged when using the full or restricted datasets ($n =$286 vs $n=$280 Figure \ref{fig:tsSOSEOScomparison} (b)).
+-0.14, $UI_{90}$[-0.24,
+-0.03]) (Figure \ref{fig:wcmuplotbsppTS}d and h). The estimates were unchanged when using the full or restricted datasets ($n =$286 vs $n=$280 Figure \ref{fig:tsSOSEOScomparison}b) (Table \ref{tab:ts_slope_table}).
 
 % Effect size across species
-\item 
+\item Tough we report an effect only for \Ball, we standardized the predictors through z-scoring to compare their respective effect size. 
+\Asac ($\beta = $
+0.1, 
+$UI_{90}$[-0.09, 
+0.29]),
+\Ball ($\beta = $
+-0.45, 
+$UI_{90}$[-0.66, 
+-0.24]),
+\Cova ($\beta = $
+-0.14, 
+$UI_{90}$[-0.35, 
+0.08]) and
+\Pdel ($\beta = $
+-0.06, 
+$UI_{90}$[-0.17, 
+0.05]) responded most to GDD,
+\Arub ($\beta = $
+-0.22, 
+$UI_{90}$[-0.47, 
+0.04]),
+\Afla ($\beta = $
+-0.07, 
+$UI_{90}$[-0.26, 
+0.12]),
+\Bnig ($\beta = $
+-0.07, 
+$UI_{90}$[-0.21, 
+0.07]) and
+\Tame ($\beta = $
+0.1, 
+$UI_{90}$[-0.03, 
+0.22]) had the strongest response to SOS, and to EOS for
+\Cgla ($\beta = $
+0.05, 
+$UI_{90}$[-0.11, 
+0.22]),
+\Qalb ($\beta = $
+0.17, 
+$UI_{90}$[-0.19, 
+0.53]) and
+\Qrub ($\beta = $
+-0.03, 
+$UI_{90}$[-0.36, 
+0.29]). No species responsed most to GSL (Figure \ref{fig:bsppZscoredTS}).
 
 \end{enumerate}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -589,14 +619,14 @@ $UI_{90}$[-0.4,
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor. Each pannel represent the different parameters used to fit the models.}
+\caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor for Wildchrokie. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
 % Full vs restricted data comparison for Coringtreespotters
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor. Each pannel represent the different parameters used to fit the models.}
+\caption{Full vs most restricted rows of data for the model with SOS (a)) EOS (b)) as the predictor for CoringTreespotters. Each pannel represent the different parameters used to fit the models.}
 \label{fig:tsSOSEOScomparison}
 \end{figure}
 
@@ -608,53 +638,77 @@ $UI_{90}$[-0.4,
 \end{figure}
 
 % Budset X climate predictors
-\begin{figure}[!ht]
-\includegraphics[width=0.7\textwidth]{../../analyses/figures/climate/climSumBudset.jpeg}
-\caption{Budset as a function of different climate predictors across spring (MAM), summer (JJA) and autumn (SON). MAM is for March, April and May, JJA is for June, July and August and SON is for September, October and November. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
-\label{fig:budsetClim}
-\end{figure}
+% \begin{figure}[!ht]
+% \includegraphics[width=0.7\textwidth]{../../analyses/figures/climate/climSumBudset.jpeg}
+% \caption{Budset as a function of different climate predictors across spring (MAM), summer (JJA) and autumn (SON). MAM is for March, April and May, JJA is for June, July and August and SON is for September, October and November. PDSI represents the Palmer Drought Severity Index averaged for each period. TempMeanMax, TempMeanMean and TempMeanMin are the averaged maximum, mean and mininimum monthly temperature over the 3-month periods. Precip is the total precipitation (mm) received over the 3-month periods.}
+% \label{fig:budsetClim}
+% \end{figure}
 
 % Wildchrokie aspp mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.7\textwidth]{../../analyses/figures/growthModelsMain/muALLaspp.jpeg}
-\caption{}
+\caption{Species intercept estimates for each predictor: GDD (a), GSL (b), SOS (c) and EOS(d) for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:wcmuplotaspp}
 \end{figure}
 
-% Figure Growth X GDD
+% CoringTreespotters aspp mu plot
+\begin{figure}[!ht]
+\includegraphics[width=0.7\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/muALLaspp.jpeg}
+\caption{Species intercept estimates for each predictor: GDD (a), GSL (b), SOS (c) and EOS(d) for CoringTreespotters. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:tsmuplotaspp}
+\end{figure}
+
+% Wildchrokie figure Growth X GDD
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and budset date for Wildchrokie. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \label{fig:wcgrowthSlopesGDD}
 \end{figure}
 
-% Figure Growth X GSL
+% Wildchrokie figure Growth X GSL
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width responses to the length of the primary growing season (days). The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\caption{Ring width responses to the length of the primary growing season (days) for Wildchrokie. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\label{fig:wcgrowthSlopesGSL}
+\end{figure}
+
+% CoringTreespotters figure Growth X GDD
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGDD.jpeg}
+\caption{Ring width responses to total growing degree days (GDD) accumulated between the leafout and leaf colouring date for CoringTreespotters. The length of the growing season is calculated between the leafout and budset date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
+\label{fig:wcgrowthSlopesGDD}
+\end{figure}
+
+% CoringTreespotters figure Growth X GSL
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width responses to the length of the primary growing season (days) for CoringTreespotters. The length of the growing season is calculated between the leafout and leaf colouring date. The shaded areas represent the 50\% confidence intervals of the posterior distribution with measurement error, and the lines are their means. The dots represent the empirical data}
 \label{fig:wcgrowthSlopesGSL}
 \end{figure}
 
 % Budburst vs leafout for CoringTreespotters
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/budburstVSLeafout/DporousVSRporous.jpeg}
-\caption{}
+\caption{Parameter estimates when calculating the GDD (a), GSL (b) from budburst vs leafout to leaf colouring. (c) shows the model estimates when taking budburst vs leafout as the SOS.}
 \label{fig:buburstVSleafoutTS}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
-\caption{}
+\caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscored}
 \end{figure}
+
+% Z-scored slope table Wildchrokie 
 
 % Z-scored slope results CoringTreespotters
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
-\caption{}
+\caption{Standardized (z-scored) slope estimates for CoringTreespotters The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscoredTS}
 \end{figure}
+
 
 % % Climate variables
 % <<climate_summary_table, results='asis', echo=FALSE>>=
@@ -717,5 +771,71 @@ $UI_{90}$[-0.4,
 %       )
 % )
 % @
+
+% Table slope for Wildchrokie
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Tue Apr  7 14:47:03 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllll}
+  \hline
+Species & GDD & GSL & SOS & EOS \\ 
+  \hline
+\textit{A. incana} & $\beta = $0.06, [-0.05, 0.17] & $\beta = $0.13, [0.05, 0.20] & $\beta = $-0.13, [-0.16, -0.09] & $\beta = $-0.07, [-0.10, -0.03] \\ 
+  \textit{B. alleghaniensis} & $\beta = $0.11, [-0.03, 0.25] & $\beta = $0.10, [0.00, 0.18] & $\beta = $-0.03, [-0.09, 0.04] & $\beta = $0.04, [-0.01, 0.09] \\ 
+  \textit{B. papyrifera} & $\beta = $0.33, [0.04, 0.61] & $\beta = $0.27, [0.07, 0.46] & $\beta = $-0.08, [-0.19, 0.03] & $\beta = $0.06, [-0.03, 0.15] \\ 
+  \textit{B. populifolia} & $\beta = $-0.00, [-0.16, 0.15] & $\beta = $-0.00, [-0.12, 0.12] & $\beta = $-0.09, [-0.16, -0.02] & $\beta = $-0.04, [-0.09, 0.01] \\ 
+   \hline
+\end{tabular}
+\caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_slope_table}
+\end{table}
+
+
+% Table site intercept for Wildchrokie
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Tue Apr  7 14:47:03 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{llrr}
+  \hline
+Site & Intercept.estimate & Latitude & Longitude \\ 
+  \hline
+Dartmouth College (NH) & $\alpha = $-0.09, [-0.96, 0.74] & 44.79 & -71.15 \\ 
+  Harvard Forest (MA) & $\alpha = $-0.14, [-1.01, 0.7] & 42.53 & -72.19 \\ 
+  St-Hyppolyte (Qc) & $\alpha = $0.07, [-0.8, 0.9] & 45.93 & -74.03 \\ 
+  White Mountains (NH) & $\alpha = $0.14, [-0.72, 0.99] & 44.11 & -71.23 \\ 
+   \hline
+\end{tabular}
+\caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
+\label{tab:wc_asite_table}
+\end{table}
+
+
+% Table slope for CoringTreespotters
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Tue Apr  7 14:47:03 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllll}
+  \hline
+Species & GDD & GSL & SOS & EOS \\ 
+  \hline
+\textit{\textit{A. rubrum}} & $\beta = $-0.04, [-0.22, 0.14] & $\beta = $0.08, [-0.06, 0.22] & $\beta = $-0.12, [-0.27, 0.03] & $\beta = $0.03, [-0.11, 0.17] \\ 
+  \textit{\textit{A. saccharum}} & $\beta = $0.06, [-0.05, 0.17] & $\beta = $0.01, [-0.06, 0.07] & $\beta = $0.01, [-0.05, 0.08] & $\beta = $0.02, [-0.06, 0.10] \\ 
+  \textit{\textit{A. flava}} & $\beta = $-0.01, [-0.05, 0.02] & $\beta = $-0.01, [-0.04, 0.02] & $\beta = $-0.05, [-0.16, 0.07] & $\beta = $-0.01, [-0.04, 0.02] \\ 
+  \textit{\textit{B. alleghaniensis}} & $\beta = $-0.26, [-0.38, -0.13] & $\beta = $-0.07, [-0.16, 0.01] & $\beta = $-0.09, [-0.19, 0.01] & $\beta = $-0.14, [-0.24, -0.03] \\ 
+  \textit{\textit{B. nigra}} & $\beta = $0.03, [-0.05, 0.11] & $\beta = $0.01, [-0.05, 0.08] & $\beta = $-0.04, [-0.13, 0.05] & $\beta = $0.01, [-0.06, 0.07] \\ 
+  \textit{\textit{C. glabra}} & $\beta = $0.01, [-0.11, 0.13] & $\beta = $0.02, [-0.06, 0.10] & $\beta = $-0.00, [-0.10, 0.10] & $\beta = $0.02, [-0.06, 0.10] \\ 
+  \textit{\textit{C. ovata}} & $\beta = $-0.08, [-0.20, 0.05] & $\beta = $-0.04, [-0.13, 0.05] & $\beta = $-0.00, [-0.09, 0.09] & $\beta = $-0.05, [-0.14, 0.05] \\ 
+  \textit{\textit{P. deltoides}} & $\beta = $-0.04, [-0.10, 0.03] & $\beta = $-0.02, [-0.09, 0.04] & $\beta = $-0.03, [-0.13, 0.07] & $\beta = $-0.02, [-0.08, 0.03] \\ 
+  \textit{\textit{Q. alba}} & $\beta = $0.06, [-0.17, 0.29] & $\beta = $0.07, [-0.06, 0.20] & $\beta = $-0.05, [-0.17, 0.07] & $\beta = $0.05, [-0.09, 0.19] \\ 
+  \textit{\textit{Q. rubra}} & $\beta = $0.01, [-0.16, 0.18] & $\beta = $-0.01, [-0.17, 0.14] & $\beta = $-0.01, [-0.14, 0.12] & $\beta = $-0.01, [-0.14, 0.12] \\ 
+  \textit{\textit{T. americana}} & $\beta = $-0.04, [-0.10, 0.03] & $\beta = $-0.03, [-0.08, 0.01] & $\beta = $0.06, [-0.02, 0.14] & $\beta = $-0.03, [-0.07, 0.02] \\ 
+   \hline
+\end{tabular}
+\caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for CoringTreespotters. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:ts_slope_table}
+\end{table}
 
 \end{document}
