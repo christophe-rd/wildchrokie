@@ -47,10 +47,12 @@ gddyr <- read.csv("output/gddByYear.csv")
 nrow(empfullsos)
 nrow(empfulleos)
 
+lineplotseqlength <- 25
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 emp <- emp[!is.na(emp$pgsGDD5),]
+nrow(emp)
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -71,9 +73,9 @@ temp <- temp[order(temp$year, temp$doy), ]
 
 temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 10))
 gdd_10day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
-gddscale <- mean(gdd_10day$gdddiff)
+wcgddscale <- mean(gdd_10day$gdddiff)
 
-gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = 100)
+gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
 
 # data list for gdd
 dgdd <- list(
@@ -88,9 +90,9 @@ dgdd <- list(
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
-  gdd = emp$pgsGDD5 / gddscale,
+  gdd = emp$pgsGDD5 / wcgddscale,
   gddseq = gddseq,
-  gddscale = gddscale,
+  wcgddscale = wcgddscale,
   Ngddseq = length(gddseq)
 )
 dgdd
@@ -98,7 +100,7 @@ dgdd
 # Set model GSL data
 gslscale <- 10
 gsl <- emp$pgsGSL / gslscale
-gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = 100)
+gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = lineplotseqlength)
 
 # data list for GSL
 dgsl <- list(
@@ -120,7 +122,7 @@ dgsl <- list(
 )
 sosscale <- 5
 sos <- emp$leafout / sosscale
-sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = 100)
+sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = lineplotseqlength)
 
 # data list for sos
 dsos <- list(
@@ -143,7 +145,7 @@ dsos <- list(
 
 eosscale <- 5
 eos <- emp$leafout / eosscale
-eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = 100)
+eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = lineplotseqlength)
 
 # data list for eos
 deos <- list(
@@ -673,26 +675,35 @@ empfullsos$site_num <- match(empfullsos$site, unique(empfullsos$site))
 empfullsos$spp_num <- match(empfullsos$spp, unique(empfullsos$spp))
 empfullsos$treeid_num <- match(empfullsos$treeid, unique(empfullsos$treeid))
 
-# transform data in vectors for gsl
-y <- empfullsos$loglength # ring width in mm
-N <- nrow(empfullsos)
-Nspp <- length(unique(empfullsos$spp_num))
-Nsite <- length(unique(empfullsos$site_num))
-site <- as.numeric(as.character(empfullsos$site_num))
-species <- as.numeric(as.character(empfullsos$spp_num))
-treeid <- as.numeric(empfullsos$treeid_num)
-Ntreeid <- length(unique(treeid))
-sos <- empfullsos$leafout / 5
+# order by tree id
+treeid_spp_site_sos <- unique(empfullsos[, c("treeid_num", "spp_num", "site_num",
+                                  "treeid", "spp", "site", "latbi")])
 
+treeid_spp_site_ordered_sos <- treeid_spp_site_sos[order(treeid_spp_site_sos$treeid_num), ]
+
+# transform data in vectors for gsl
+dsosfull <- list(
+  y = empfullsos$loglength,
+  N = nrow(empfullsos),
+  Nspp = length(unique(empfullsos$spp_num)),
+  Nsite = length(unique(empfullsos$site_num)),
+  site = as.numeric(as.character(empfullsos$site_num)),
+  species = as.numeric(as.character(empfullsos$spp_num)),
+  treeid = as.numeric(empfullsos$treeid_num),
+  Ntreeid = length(unique(empfullsos$treeid_num)),
+  treeid_species = treeid_spp_site_ordered_sos$spp_num,
+  treeid_site = treeid_spp_site_ordered_sos$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered_sos$spp_num)),
+  sos = empfullsos$leafout / sosscale,
+  sosseq = sosseq,
+  sosscale = sosscale,
+  Nsosseq = length(sosseq)
+)
 
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsosfull <- sampling(sosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "sos"),
+fitsosfull <- sampling(sosmodel, data = dsosfull,
                    warmup = 1000, iter = 2000, chains=4)
-saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
+saveRDS(fitsosfull, "output/stanOutput/fitGrowthSOSFull")
 
 # Fit model EOS
 # transform my groups to numeric values
@@ -700,26 +711,35 @@ empfulleos$site_num <- match(empfulleos$site, unique(empfulleos$site))
 empfulleos$spp_num <- match(empfulleos$spp, unique(empfulleos$spp))
 empfulleos$treeid_num <- match(empfulleos$treeid, unique(empfulleos$treeid))
 
-# transform data in vectors for gsl
-y <- empfulleos$loglength # ring width in mm
-N <- nrow(empfulleos)
-Nspp <- length(unique(empfulleos$spp_num))
-Nsite <- length(unique(empfulleos$site_num))
-site <- as.numeric(as.character(empfulleos$site_num))
-species <- as.numeric(as.character(empfulleos$spp_num))
-treeid <- as.numeric(empfulleos$treeid_num)
-Ntreeid <- length(unique(treeid))
-eos <- empfulleos$budset/10
+# order by tree id
+treeid_spp_site_eos <- unique(empfulleos[, c("treeid_num", "spp_num", "site_num",
+                                             "treeid", "spp", "site", "latbi")])
 
+treeid_spp_site_ordered_eos <- treeid_spp_site_eos[order(treeid_spp_site_eos$treeid_num), ]
+
+
+# transform data in vectors for gsl
+deosfull <- list(
+  y = empfulleos$loglength,
+  N = nrow(empfulleos),
+  Nspp = length(unique(empfulleos$spp_num)),
+  Nsite = length(unique(empfulleos$site_num)),
+  site = as.numeric(as.character(empfulleos$site_num)),
+  species = as.numeric(as.character(empfulleos$spp_num)),
+  treeid = as.numeric(empfulleos$treeid_num),
+  Ntreeid = length(unique(as.numeric(empfulleos$treeid_num))),
+  treeid_species = treeid_spp_site_ordered_eos$spp_num,
+  treeid_site = treeid_spp_site_ordered_eos$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered_eos$spp_num)),
+  eos = empfulleos$budset / eosscale,
+  eosseq = eosseq,
+  eosscale = eosscale,
+  Neosseq = length(eosseq)
+)
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteosfull <- sampling(eosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "eos"),
-                   warmup = 1000, iter = 2000,
-                   chains=4)
-saveRDS(fiteos, "output/stanOutput/fitGrowthEOSFull")
+fiteosfull <- sampling(eosmodel, data = deosfull,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fiteosfull, "output/stanOutput/fitGrowthEOSFull")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Recover and plot parameters SOS restricted vs full #####
@@ -782,9 +802,9 @@ arrows(x0 = sigma_df2_sos$mean_per25, y0 = sigma_df2_full_sos$mean,
        x1 = sigma_df2_sos$mean_per75, y1 = sigma_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-       pch = 16, col = "#79ad41", cex = 1.5)
+       pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
-points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#79ad41", cex = 1.5)
+points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
 text(sigma_df2_sos$mean_per75, sigma_df2_full_sos$mean_per25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
@@ -799,7 +819,7 @@ arrows(x0 = bspp_df2_sos$fit_bspp_per25, y0 = bspp_df2_full_sos$fit_bspp,
        x1 = bspp_df2_sos$fit_bspp_per75, y1 = bspp_df2_full_sos$fit_bspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
-       pch = 16, col = "#79ad41", cex = 1.5)
+       pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
@@ -814,7 +834,7 @@ arrows(x0 = aspp_df2_sos$fit_aspp_per25, y0 = aspp_df2_full_sos$fit_aspp,
        x1 = aspp_df2_sos$fit_aspp_per75, y1 = aspp_df2_full_sos$fit_aspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
-       pch = 16, col = "#79ad41", cex = 1.5)
+       pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 
@@ -833,9 +853,9 @@ arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
        x1 = sigma_df2_eos$mean_per75, y1 = sigma_df2_full_eos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-       pch = 16, col = "#e67424", cex = 1.5)
+       pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
-points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#e67424", cex = 1.5)
+points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#d39822", cex = 1.5)
 text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
@@ -850,7 +870,7 @@ arrows(x0 = bspp_df2_eos$fit_bspp_per25, y0 = bspp_df2_full_eos$fit_bspp,
        x1 = bspp_df2_eos$fit_bspp_per75, y1 = bspp_df2_full_eos$fit_bspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
-       pch = 16, col = "#e67424", cex = 1.5)
+       pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
@@ -865,7 +885,7 @@ arrows(x0 = aspp_df2_eos$fit_aspp_per25, y0 = aspp_df2_full_eos$fit_aspp,
        x1 = aspp_df2_eos$fit_aspp_per75, y1 = aspp_df2_full_eos$fit_aspp,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
-       pch = 16, col = "#e67424", cex = 1.5)
+       pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # add label

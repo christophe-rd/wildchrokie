@@ -246,7 +246,7 @@ colnames(fullintercept) <- 1:ncol(fullintercept)
 
 # recover each slope
 treeid_slope_cols <- grep("^treeid_slope", colnames(df_fitgdd), value = TRUE)
-treeid_bspp <- df_fitgdd[, treeid_slope_cols] / gddscale
+treeid_bspp <- df_fitgdd[, treeid_slope_cols] / wcgddscale
 colnames(treeid_bspp) <- 1:ncol(treeid_bspp)
 
 # recover sim ypred for each gdd X tree id for each iterations
@@ -1379,52 +1379,52 @@ par(mar = c(5, 8, 2, 2))
 plot(aspp_df2$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     yaxt = "n", pch = 15, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_gsl$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     yaxt = "n", pch = 15, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_gsl$fit_aspp_per5,  y_pos, aspp_df2_gsl$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_gsl$fit_aspp_per25, y_pos, aspp_df2_gsl$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_sos$fit_aspp, y_pos,
      xlim = c(-15, 15),ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "", 
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     yaxt = "n", pch = 15, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_sos$fit_aspp_per5,  y_pos, aspp_df2_sos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_sos$fit_aspp_per25, y_pos, aspp_df2_sos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
 plot(aspp_df2_eos$fit_aspp, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "", 
-     yaxt = "n", pch = 16, cex = 2, col = sppcols, frame.plot = FALSE, 
+     yaxt = "n", pch = 15, cex = 2, col = sppcols, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(aspp_df2_eos$fit_aspp_per5,  y_pos, aspp_df2_eos$fit_aspp_per95, y_pos,
          col = sppcols, lwd = 1.5)
 segments(aspp_df2_eos$fit_aspp_per25, y_pos, aspp_df2_eos$fit_aspp_per75, y_pos,
          col = sppcols, lwd = 3)
-mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Slot 5: species legend
 par(mar = c(1, 1, 1, 1))
@@ -1609,7 +1609,7 @@ combined <- plot_grid(forest_grob, map_plot, ncol = 2, rel_widths = c(0.4, 0.7))
 
 combined_labeled <- ggdraw(combined) +
   draw_plot_label(
-    label    = c("a)", "b)"),
+    label    = c("(a)", "(b)"),
     x        = c(0.098, 0.418),   # x position: left edge of each panel
     y        = c(0.84, 0.84),     # y position: top of figure
     size     = 14,
