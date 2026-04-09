@@ -903,6 +903,7 @@ dev.off()
 if (fitmodelsZscored) {
 # different response variables Z scored
 gdd <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
+dgdd
 gsl <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
 sos <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
 eos <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
