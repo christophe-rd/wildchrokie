@@ -13,8 +13,8 @@ array[N] real y;
 }
 
 parameters{
-real a;		// mean intercept across everything
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
+real a;
 vector[Nspp] aspp;
 vector[Nyear] ayear;
 vector[Nspp] bsp;
@@ -24,7 +24,7 @@ transformed parameters{
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
     ypred[i]=
-        a + 
+        a +
         aspp[species[i]] + 
         ayear[year[i]] + 
         bsp[species[i]]*climpredictor[i];
@@ -32,7 +32,7 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  a ~ normal(0, 20);
+  a ~ normal(0, 10);
   aspp ~ normal(0, 20);
   ayear ~ normal(0, 15);
   bsp ~ normal(0, 5);
@@ -53,7 +53,7 @@ generated quantities {
   }
 
   // prior predictive samples
-  real a_prior = normal_rng(0, 20);
+  real a_prior = normal_rng(0, 10);
   real aspp_prior = normal_rng(0, 20);
   real ayear_prior = normal_rng(0, 15);
   real bsp_prior = normal_rng(0, 5);
