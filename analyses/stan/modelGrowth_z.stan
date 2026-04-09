@@ -10,7 +10,7 @@ int<lower=0> Nsite;  // number of sites (grouping factor)
 array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
-vector[N] gdd; 	// gdd (predictor for slope)
+vector[N] covariate; 	// covariate (predictor for slope)
 array[N] real y;
 }
 
@@ -35,20 +35,20 @@ for (i in 1:N){ // don't change this for reparameterization
         aspp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
-        bsp[species[i]]*gdd[i];
+        bsp[species[i]]*covariate[i];
 
     }
 }
 
 model{	
   a ~ normal(2, 4);
+  zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 5);
   asite ~ normal(0, 1);
   bsp ~ normal(0, 0.8);
   sigma_atreeid ~ normal(0, 1); 
   sigma_y ~ normal(0, 1);
   
-  zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
@@ -61,7 +61,7 @@ generated quantities {
         aspp[species[i]] + 
         asite[site[i]] +
         atreeid[treeid[i]] + 
-        bsp[species[i]]*gdd[i], sigma_y);
+        bsp[species[i]]*covariate[i], sigma_y);
   }
 
   // prior predictive samples
@@ -74,10 +74,4 @@ generated quantities {
 
   real zatreeid_prior = normal_rng(0, 1);
   real atreeid_prior = abs(normal_rng(0, 0.5)) * zatreeid_prior;
-  
-    // For LOO cross-validation
-  vector[N] log_lik;
-  for (i in 1:N) {
-    log_lik[i] = normal_lpdf(y[i] | ypred[i], sigma_y);
-  }
 }
