@@ -24,7 +24,7 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
-source('rcode/utilExtractParam.R')
+source('rcode/tools.R')
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
