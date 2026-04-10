@@ -21,6 +21,10 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 } else  {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
+util <- new.env()
+source('mcmc_analysis_tools_rstan.R', local=util)
+source('mcmc_visualization_tools.R', local=util)
+source('rcode/tools.R')
 
 # flags
 makeplots <- FALSE
@@ -31,63 +35,48 @@ climatesummonth <- read.csv("output/climateSummariesByMonth.csv")
 gddyr <- read.csv("output/gddByYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
-commonNames <- c(
-  "Alnus incana"          = "Grey alder",
-  "Betula alleghaniensis" = "Yellow birch",
-  "Betula papyrifera"     = "Paper birch",
-  "Betula populifolia"    = "Gray birch"
-)
-
-empir$commonName <- commonNames[empir$latbi]
-
-emp4 <- empir[!is.na(empir$leafout),]
-empir <- empir[!is.na(empir$pgsGDD5),]
-
 # transform my groups to numeric values
 empir$site_num <- match(empir$site, unique(empir$site))
 empir$spp_num <- match(empir$spp, unique(empir$spp))
-empir$treeid_num <- match(empir$treeid, unique(empir$treeid))
 empir$year_num <- match(empir$year, unique(empir$year))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate data #### 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp4$leafout <- as.integer(emp4$leafout)
-emp4$budset <- as.integer(emp4$budset)
+empir$leafout <- as.integer(empir$leafout)
+empir$budset <- as.integer(empir$budset)
 
 gddyr$yeardoy <- paste(gddyr$year, gddyr$doy, sep = "_")
-emp4$yeardoybudburst <- paste(emp4$year, emp4$budburst, sep = "_")
-emp4$yeardoyleafout <- paste(emp4$year, emp4$leafout, sep = "_")
-emp4$yeardoybudset <- paste(emp4$year, emp4$budset, sep = "_")
+empir$yeardoybudburst <- paste(empir$year, empir$budburst, sep = "_")
+empir$yeardoyleafout <- paste(empir$year, empir$leafout, sep = "_")
+empir$yeardoybudset <- paste(empir$year, empir$budset, sep = "_")
 
 yearcolors <- c("#931e18", "#da7901", "#247d3f")
 par(mfrow = c(1,1))
-years <- sort(unique(emp4$year))
+years <- sort(unique(empir$year))
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-empir$anomleafout <- empir$leafout - mean(empir$leafout)
-empir$anombudset <- empir$budset - mean(empir$budset)
 
 # precipitation at leafout
 if (makeplots) {
-emp4$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
+empir$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
   # takes the previous year accumulation of ppt in december
   sub <- weldhillclim[(weldhillclim$year == obs_year - 1 & weldhillclim$doy >= 335) |
                         # then going into the current year condition
                         (weldhillclim$year == obs_year & weldhillclim$doy <= leafout_doy), ]
   sum(sub$pptMM, na.rm = TRUE) # sum the ppt over our period of interest
-  }, emp4$leafout, emp4$year) # apply the function to each of those 2 arguments
+  }, empir$leafout, empir$year) # apply the function to each of those 2 arguments
 
-plot(emp4$winterPptLeafout, emp4$leafout,
+plot(empir$winterPptLeafout, empir$leafout,
      xlab = "precipitation accumulation (mm) at leafout", ylab = "leafout",
      pch = 16, frame = FALSE,
-     col = yearcolors[match(emp4$year, years)],
+     col = yearcolors[match(empir$year, years)],
      main = "leafout X precipitation accumulation (mm) at leafout")
 
 for (i in seq_along(years)) { # i = 2018
-  year_dat <- emp4[emp4$year == years[i], ]
+  year_dat <- empir[empir$year == years[i], ]
   
   lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)
   x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
@@ -117,6 +106,17 @@ colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
 colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
 
+emp_climlo <- emp_clim[!is.na(emp_clim$leafout),]
+emp_climbs <- emp_clim[!is.na(emp_clim$budset),]
+
+emp_climlo$anomleafout <- emp_climlo$leafout - mean(emp_climlo$leafout)
+emp_climbs$anombudset <- emp_climbs$budset - mean(emp_climbs$budset)
+
+nrow(emp_climlo)
+nrow(emp_climbs)
+nrow(emp_clim)
+
+
 # define plot objects and stuff
 species_order <- c(
   "Alnus incana", 
@@ -124,19 +124,9 @@ species_order <- c(
   "Betula papyrifera", 
   "Betula populifolia")
 
-my_colors <- c(
-  "Alnus incana" = wes_palette("AsteroidCity1")[1],
-  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
-  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
-  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
-  
-)
-
 years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-
-climmodelts <- stan_model("stan/TSclimatePredictors.stan")
-
+climmodelts <- stan_model("stan/climatePredictors.stan")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -229,11 +219,11 @@ for (i in seq_along(clim_vars)) { # i = 2
       intercept_s <- a + aspp[s]
       slope_s <- bsp[s]
       y_vals <- intercept_s + slope_s * x_vals
-      lines(x_vals, y_vals, col = my_colors[s], lwd = 2)
+      lines(x_vals, y_vals, col = wccolslatbi[s], lwd = 2)
     }
     
     points(data$climpredictor, data$y,
-           col = my_colors[data$species], pch = 16, cex = 0.8)
+           col = wccolslatbi[data$species], pch = 16, cex = 0.8)
     
     # one year label per unique clim value, at top of each plot
     text(x_vals, rep(max(dat$anomleafout), length(x_vals)),
@@ -244,7 +234,7 @@ for (i in seq_along(clim_vars)) { # i = 2
 par(mar = c(0, 0, 0, 0))
 plot(NULL, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
 legend("center", legend = species_order,
-       col = my_colors[species_order], pch = 16, lwd = 2,
+       col = wccolslatbi[species_order], pch = 16, lwd = 2,
        bty = "n", cex = 0.9, pt.cex = 1.5)
 
 
@@ -277,7 +267,7 @@ clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
 periods <- c("DJF", "MAM")
 
 emp_climtslo$spp_num <- match(emp_climtslo$latbi, unique(emp_climtslo$latbi))
-emp_climtslo$treeid_num <- match(emp_climtslo$id, unique(emp_climtslo$id))
+emp_climtslo$year_num <- match(emp_climtslo$id, unique(emp_climtslo$id))
 emp_climtslo$year_num <- match(emp_climtslo$year, unique(emp_climtslo$year))
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -408,8 +398,8 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-leafoutbyyr <- aggregate(leafout ~ year + latbi, emp4, FUN = mean)
-budsetbyyr <- aggregate(budset ~ year + latbi, emp4, FUN = mean)
+leafoutbyyr <- aggregate(leafout ~ year + latbi, empir, FUN = mean)
+budsetbyyr <- aggregate(budset ~ year + latbi, empir, FUN = mean)
 
 leafoutbyyrts <- aggregate(leafout ~ year + latbi, empts, FUN = mean)
 colleavesbyyrts <- aggregate(coloredLeaves ~ year + latbi, empts, FUN = mean)
@@ -425,17 +415,19 @@ moderatedrought <- subset(climatesummonth, pdsi < -2 & pdsi > -3)
 severedrought <- subset(climatesummonth, pdsi < -3)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Fit the figures with stan ####
+# Tests with stan the figures with stan ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Wildchrokie #####
 if (FALSE){
 
 clim_vars <- c("TempMeanMax", "TempMeanMin", "TempMeanMean")
 climvar <- clim_vars[1] 
-period <- "DJF"
+period <- "MAM"
 
-d <- emp_climts[emp_climts$period == period & !is.na(emp_climts$TempMeanMax) & 
-                !is.na(emp_climts$anombudset), ]
+d <- emp_climlo[emp_climlo$period == period & !is.na(emp_climlo$TempMeanMax) & 
+                !is.na(emp_climlo$anomleafout), ]
 
+d$TempMeanMean <- (d$TempMeanMean - mean(d$TempMeanMean)) / sd(d$TempMeanMean)
 # transform data in vectors for gsl
 data <- list(
   y = d$anomleafout,
@@ -453,15 +445,13 @@ data <- list(
 climmodel <- stan_model("stan/climatePredictors.stan")
 fit <- sampling(climmodel, data = data, iter = 2000, chains=4, cores = 4)
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot posterior vs priors for gdd fit ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+###### Plot posterior vs priors for gdd fit ######
 pdf(file = "figures/climate/climateModelPriorVSPosterior.pdf", 
     width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(2, 2))
 df_fit <- as.data.frame(fit)
 
 columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
@@ -471,13 +461,13 @@ bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
 site_df <- df_fit[, columns[grepl("asite", columns)]]
 ayear_df <- df_fit[, columns[grepl("ayear", columns)]]
 
-# a
-plot(density(df_fit[, "a_prior"]), 
-     col = pal[1], lwd = 2, 
-     main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
-lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
-legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+# # a
+# plot(density(df_fit[, "a_prior"]), 
+#      col = pal[1], lwd = 2, 
+#      main = "priorVSposterior_a", 
+#      xlab = "a", ylim = c(0,0.5))
+# lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
+# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
 plot(density(df_fit[, "sigma_y_prior"]), 
@@ -491,21 +481,21 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-50, 50), ylim = c(0, 0.1))
+     xlab = "aspp", xlim = c(-200, 200), ylim = c(0, 0.05))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
-
-# asite
-plot(density(df_fit[, "asite_prior"]), 
-     col = pal[1], lwd = 2, 
-     main = "priorVSposterior_asite", 
-     xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.2))
-for (col in colnames(site_df)) {
-  lines(density(site_df[, col]), col = pal[2], lwd = 1)
-}
-legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+# 
+# # asite
+# plot(density(df_fit[, "asite_prior"]), 
+#      col = pal[1], lwd = 2, 
+#      main = "priorVSposterior_asite", 
+#      xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.2))
+# for (col in colnames(site_df)) {
+#   lines(density(site_df[, col]), col = pal[2], lwd = 1)
+# }
+# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # ayear
 plot(density(df_fit[, "ayear_prior"]), 
@@ -519,9 +509,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # bsp
 plot(density(df_fit[, "bsp_prior"]), 
-     col = pal[1], lwd = 2, xlim = c(-10, 10),
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
+     xlab = "bsp", ylim = c(0, 0.5))
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
@@ -529,22 +519,120 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### PPC #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+samples <- util$extract_expectand_vals(fit)
+
+# whole distribution
+par(mfrow = c(1,1))
+util$plot_hist_quantiles(samples, "y_rep", 
+                         -50, # lower x axis limit
+                         50, # upper x axis limit
+                         3, # binning
+                         baseline_values = data$y,
+                         xlab = "anom Leafout")
+
+par(mfrow = c(1, data$Nspp))
+for (s in 1:data$Nspp) {
+  util$plot_expectand_pushforward(samples[[paste0("aspp[", s, "]")]],
+                                  B = 50,
+                                  main = paste("aspp species", s))
+}
+
+# discs by species
+par(mfrow = c(1,data$Nspp))
+for (s in unique(data$species)) { # s = 1
+  idxs <- which(data$species == s)
+  util$plot_disc_pushforward_quantiles(samples,
+                                       paste0("y_rep[", idxs, "]"),
+                                       baseline_values = data$y[idxs],
+                                       ylab = "Leafout",
+                                       main = paste("Spp", s))
+}
+
+# discs by year
+par(mfrow = c(1,data$Nyear))
+for (y in unique(data$year)) { # s = 1
+  idxs <- which(data$year == y)
+  util$plot_disc_pushforward_quantiles(samples,
+                                       paste0("y_rep[", idxs, "]"),
+                                       baseline_values = data$y[idxs],
+                                       ylab = "Leafout",
+                                       main = paste("Year", y))
+}
+# Mu plots 
+df_fit <- as.data.frame(fit)
+
+# full posterior
+columns <- colnames(df_fit)
+columns <- columns[!grepl("prior", columns)]
+sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
+ayear_df <- df_fit[, grepl("year", columns)]
+aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
+
+# change colnames
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(ayear) <- 1:ncol(year_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+
+# posterior summaries
+sigma_df2_ts  <- extract_params(df_fit, "sigma", "mean", "sigma")
+bspp_df2_ts   <- extract_params(df_fit, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+year_df2_ts <- extract_params(df_fit, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+aspp_df2_ts   <- extract_params(df_fit, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+
+year_df2_ts$year_name <- emp_climtslo$year[match(year_df2_ts$year, emp_climtslo$year_num)]
+aspp_df2_ts$spp_name <- emp_climtslo$latbi[match(aspp_df2_ts$spp, emp_climtslo$spp_num)]
+bspp_df2_ts$spp_name <- emp_climtslo$latbi[match(bspp_df2_ts$spp, emp_climtslo$spp_num)]
+# jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
+#      width = 1800, height = 2500, res = 300)
+n_spp <- length(unique(emp_climtslo$latbi))
+y_pos <- rev(1:n_spp)
+
+# set margins throught
+
+# Row 1: GDD
+par(mfrow = c(1,2))
+plot(bspp_df2_ts$fit_bspp, y_pos,
+     xlim = c(-10, 10), ylim = c(0.5, n_spp + 0.5), 
+     xlab = "", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = tscolslatbi, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_ts$fit_bspp_per5,  y_pos, bspp_df2_ts$fit_bspp_per95, y_pos,
+         col = tscolslatbi, lwd = 1.5)
+segments(bspp_df2_ts$fit_bspp_per25, y_pos, bspp_df2_ts$fit_bspp_per75, y_pos,
+         col = tscolslatbi, lwd = 3)
+mtext("", side = 3, adj = 0, font = 2, cex = 0.9)
+
+
+# Slot 5: species legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("right",
+       legend = sapply(unique(bspp_df2_ts$spp_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(tscolslatbi),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
 ##### CoringTreespotters #####
 clim_vars <- c("TempMeanMax", "TempMeanMin", "TempMeanMean")
 climvar <- clim_vars[1] 
 period <- "DJF"
 
-d <- emp_climts[emp_climts$period == period & !is.na(emp_climts$TempMeanMax) & 
-                  !is.na(emp_climts$anombudset), ]
+d <- emp_climtslo[emp_climtslo$period == period & !is.na(emp_climtslo$TempMeanMax) & 
+                  !is.na(emp_climtslo$anomleafout), ]
 
 data <- list(
-  y = dat$anomleafout,
-  N = nrow(dat),
-  year = as.numeric(as.character(dat$year_num)),
-  species = as.numeric(as.character(dat$spp_num)),
-  Nspp = length(unique(dat$spp_num)),
-  Nyear = length(unique(dat$year_num)),
-  climpredictor = dat[[climvar]]
+  y = d$anomleafout,
+  N = nrow(d),
+  year = as.numeric(as.character(d$year_num)),
+  species = as.numeric(as.character(d$spp_num)),
+  Nspp = length(unique(d$spp_num)),
+  Nyear = length(unique(d$year_num)),
+  climpredictor = d[[climvar]]
 )
 data
 
@@ -567,13 +655,13 @@ aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
 bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
 ayear_df <- df_fit[, columns[grepl("ayear", columns)]]
 
-# a
-plot(density(df_fit[, "a_prior"]), 
-     col = pal[1], lwd = 2, 
-     main = "priorVSposterior_a", 
-     xlab = "a", ylim = c(0,0.5))
-lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
-legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+# # a
+# plot(density(df_fit[, "a_prior"]), 
+#      col = pal[1], lwd = 2, 
+#      main = "priorVSposterior_a", 
+#      xlab = "a", ylim = c(0,0.5))
+# lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
+# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
 plot(density(df_fit[, "sigma_y_prior"]), 
@@ -615,4 +703,63 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Plot spp parameter output #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+df_fit <- as.data.frame(fit)
+
+# full posterior
+columns <- colnames(df_fit)
+columns <- columns[!grepl("prior", columns)]
+sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
+ayear_df <- df_fit[, grepl("year", columns)]
+aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
+
+# change colnames
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(ayear) <- 1:ncol(year_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+
+# posterior summaries
+sigma_df2_ts  <- extract_params(df_fit, "sigma", "mean", "sigma")
+bspp_df2_ts   <- extract_params(df_fit, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+year_df2_ts <- extract_params(df_fit, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+aspp_df2_ts   <- extract_params(df_fit, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
+
+year_df2_ts$year_name <- emp_climtslo$year[match(year_df2_ts$year, emp_climtslo$year_num)]
+aspp_df2_ts$spp_name <- emp_climtslo$latbi[match(aspp_df2_ts$spp, emp_climtslo$spp_num)]
+bspp_df2_ts$spp_name <- emp_climtslo$latbi[match(bspp_df2_ts$spp, emp_climtslo$spp_num)]
+# jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
+#      width = 1800, height = 2500, res = 300)
+n_spp <- length(unique(emp_climtslo$latbi))
+y_pos <- rev(1:n_spp)
+
+# set margins throught
+
+# Row 1: GDD
+par(mfrow = c(1,2))
+plot(bspp_df2_ts$fit_bspp, y_pos,
+     xlim = c(-10, 10), ylim = c(0.5, n_spp + 0.5), 
+     xlab = "", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = tscolslatbi, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_ts$fit_bspp_per5,  y_pos, bspp_df2_ts$fit_bspp_per95, y_pos,
+         col = tscolslatbi, lwd = 1.5)
+segments(bspp_df2_ts$fit_bspp_per25, y_pos, bspp_df2_ts$fit_bspp_per75, y_pos,
+         col = tscolslatbi, lwd = 3)
+mtext("", side = 3, adj = 0, font = 2, cex = 0.9)
+
+
+# Slot 5: species legend
+par(mar = c(1, 1, 1, 1))
+plot.new()
+legend("right",
+       legend = sapply(unique(bspp_df2_ts$spp_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(tscolslatbi),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
+# dev.off()
 }
