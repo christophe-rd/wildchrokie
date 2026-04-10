@@ -27,7 +27,7 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
-source('rcode/utilExtractParam.R')
+source('rcode/tools.R')
 
 # flags
 fitmodels <- FALSE
@@ -901,40 +901,43 @@ dev.off()
 # Z-SCORED ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (fitmodelsZscored) {
-# different response variables Z scored
-gdd <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
-dgdd
-gsl <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
-sos <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
-eos <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
+genericmodel <- stan_model("stan/modelGrowth_z.stan")
 
-gddmodel <- stan_model("stan/modelGrowthGDD_z.stan")
-fitgdd <- sampling(gddmodel, data = dgdd,
+# Fit model GDD
+gddz <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
+dgddz <- dgdd[1:8]
+dgddz$covariate <- gddz
+
+fitgdd <- sampling(genericmodel, data = dgddz,
                    warmup = 1000, iter=2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored")
 
-# check warnings
-diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
-util$check_all_hmc_diagnostics(diagnostics)
-
 # Fit model GSL
-gslmodel <- stan_model("stan/modelGrowthGSL_z.stan")
-fitgsl <- sampling(gslmodel, data = dgsl,
+gslz <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
+dgslz <- dgdd[1:8]
+dgslz$covariate <- gslz
+
+fitgsl <- sampling(genericmodel, data = dgslz,
                    warmup = 1000, iter = 2000, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored")
 
 # Fit model SOS
-sosmodel <- stan_model("stan/modelGrowthSOS_z.stan")
-fitsos <- sampling(sosmodel, data = dsos,
+sosz <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
+dsosz <- dgdd[1:8]
+dsosz$covariate <- sosz
+
+fitsos <- sampling(genericmodel, data = dsosz,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored")
 
 # Fit model EOS
-eosmodel <- stan_model("stan/modelGrowthEOS_z.stan")
-fiteos <- sampling(eosmodel, data = deos,
+eosz <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
+deosz <- dgdd[1:8]
+deosz$covariate <- eosz
+
+fiteos <- sampling(genericmodel, data = deosz,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored")
-
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
