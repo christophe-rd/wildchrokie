@@ -13,7 +13,6 @@ options(digits = 3)
 
 # Load library 
 library(rstan)
-library(wesanderson)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")

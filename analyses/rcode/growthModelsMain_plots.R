@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- TRUE
+makeplots <- FALSE
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -314,15 +314,9 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
-  # define spp num
-  sppname <- spp_column_name
-  
+  spp_name <- as.character(sppvecname[i])
   # subset empirical data correctly
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
   
   y_post <- t(spp_post_array[, , i])
   
@@ -339,7 +333,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = ylimline,
        xlab = "Primary growing season GDD",
        ylab = "Ring width (mm) log",
-            main = bquote(italic(.(spp_column_name))),
+            main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
   # add panel letter 
@@ -347,7 +341,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         side = 3, adj = 0, line = 0.3, font = 2, cex = 1.2)
   
   # color
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(
     c(gddseq, rev(gddseq)),
@@ -390,19 +384,15 @@ plot(emp$pgsGDD5, dgdd$y, type = "n",
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
+  spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
-  
+
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   # shaded interval
   polygon(c(gddseq, rev(gddseq)), 
@@ -416,7 +406,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
 
   points(
     emp_spp$pgsGDD5,
@@ -428,7 +418,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   legend(
     "topleft",
     legend = sppvecname,
-    col = wccolslatbi[spp_column_name],
+    col = wccolslatbi[spp_name],
     lwd = 2,
     pch = 16,
     bty = "n",
@@ -477,19 +467,19 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
   
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
+  
+  spp_name <- as.character(sppvecname[i])
   
   # define spp num
-  spp_num <- as.integer(spp_column)
+  
   
   # spp color
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   # subset empirical data correctly
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
   
-  spp_column <- as.character(sppvecnum[i]) 
+   
   
   y_post_gsl <- t(spp_post_array_gsl[, , i])
   
@@ -506,7 +496,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = ylimline,
        xlab = "Primary growing season GSL",
        ylab = "Ring width (mm)",
-       main = bquote(italic(.(spp_column_name))),
+       main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
   # add panel letter 
@@ -566,21 +556,14 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
-  # define spp num
-  spp_num <- as.integer(spp_column)
+  spp_name <- as.character(sppvecname[i])
   
   # spp color
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   # subset empirical data correctly
-  emp_spp <- emp[emp$spp_num == spp_num, ]
-  
-  spp_column <- as.character(sppvecnum[i]) 
-  
+  emp_spp <- emp[emp$latbi == spp_name, ]
+
   y_post_sos <- t(spp_post_array_sos[, , i])
   
   # summaries
@@ -596,7 +579,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = ylimline,
        xlab = "Leafout day of year",
        ylab = "Ring width (mm)",
-       main = bquote(italic(.(spp_column_name))),
+       main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
   # add panel letter 
@@ -644,20 +627,15 @@ plot(emp$leafout, dsos$y, type = "n", frame = FALSE,
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
+  spp_name <- as.character(sppvecname[i])
   y_post_sos <- t(spp_post_array_sos[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
   
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post_sos, 1, mean)
   y_low  <- apply(y_post_sos, 1, quantile, 0.25)
   y_high <- apply(y_post_sos, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   # shaded interval
   polygon(c(sosseq, rev(sosseq)),
@@ -671,7 +649,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
   
   # points(
   #   x = emp_spp$leafout, y = emp_spp$loglength,
@@ -718,20 +696,15 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
-  # define spp num
-  spp_num <- as.integer(spp_column)
+  spp_name <- as.character(sppvecname[i])
   
   # spp color
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   # subset empirical data correctly
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
   
-  spp_column <- as.character(sppvecnum[i]) 
+   
   
   y_post_eos <- t(spp_post_array_eos[, , i])
   
@@ -748,7 +721,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        ylim = ylimline,
        xlab = "Budset day of year",
        ylab = "Ring width (mm)",
-       main = bquote(italic(.(spp_column_name))),
+       main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
   # add panel letter 
@@ -796,20 +769,15 @@ plot(emp$budset, deos$y, type = "n", frame = FALSE,
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
+  spp_name <- as.character(sppvecname[i])
   y_post_eos <- t(spp_post_array_eos[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
-  
-  # calculate mean and 50% credible interval (25%-75%)
+
+    # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post_eos, 1, mean)
   y_low  <- apply(y_post_eos, 1, quantile, 0.25)
   y_high <- apply(y_post_eos, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(c(eosseq, rev(eosseq)),
           c(y_low, rev(y_high)), # low and high interval
@@ -819,7 +787,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
   
   # points(
   #   x = emp_spp$budset, y = emp_spp$loglength,
@@ -1196,20 +1164,15 @@ mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
+  spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
   
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(c(gddseq, rev(gddseq)),
           c(y_low, rev(y_high)), # low and high interval
@@ -1219,7 +1182,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
 }
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
@@ -1231,20 +1194,15 @@ mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
-  
+  spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_gsl[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
   
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(c(gslseq, rev(gslseq)),
           c(y_low, rev(y_high)), # low and high interval
@@ -1254,7 +1212,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
 # Row 3, Col 2, Slot 7 : SOS
@@ -1267,19 +1225,15 @@ mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
+  spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_sos[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
   
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(c(sosseq, rev(sosseq)),
           c(y_low, rev(y_high)), # low and high interval
@@ -1289,7 +1243,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
 # Row 4, Col 2, Slot 8 : EOS
@@ -1302,19 +1256,15 @@ mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  spp_column <- as.character(sppvecnum[i])
-  spp_column_name <- as.character(sppvecname[i])
+  spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_eos[, , i])
-  
-  # color line by spp
-  spp_num <- as.integer(spp_column)
-  
+
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  line_col <- wccolslatbi[spp_column_name]
+  line_col <- wccolslatbi[spp_name]
   
   polygon(c(eosseq, rev(eosseq)),
           c(y_low, rev(y_high)), # low and high interval
@@ -1324,7 +1274,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  emp_spp <- emp[emp$spp_num == spp_num, ]
+  emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
 # Slot 9: species legend
@@ -1747,3 +1697,4 @@ max_ES <- merge(agg_z, bspp_z_binded[, c("fit_bspp", "fit_bspp_per5", "fit_bspp_
 max_ES$fit_bspp_abs <- NULL
 
 max_ES <- max_ES[order(max_ES$pred),]
+
