@@ -539,7 +539,10 @@ for (s in 1:data$Nspp) {
                                   B = 50,
                                   main = paste("aspp species", s))
 }
-
+jpeg(
+  filename = "figures/climate/retrodictiveDiskSpp.jpeg",
+  width = 3600, height = 2000, res = 300          
+)
 # discs by species
 par(mfrow = c(1,data$Nspp))
 for (s in unique(data$species)) { # s = 1
@@ -550,7 +553,7 @@ for (s in unique(data$species)) { # s = 1
                                        ylab = "Leafout",
                                        main = paste("Spp", s))
 }
-
+dev.off()
 # discs by year
 par(mfrow = c(1,data$Nyear))
 for (y in unique(data$year)) { # s = 1
