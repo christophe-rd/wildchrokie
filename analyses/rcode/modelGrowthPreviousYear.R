@@ -27,7 +27,7 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
-source('rcode/utilExtractParam.R')
+source('rcode/tools.R')
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 rw <- read.csv("output/wildchrokieRingWidth.csv")
@@ -36,8 +36,8 @@ gdd <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# calculate gdd by year between 1st april (91) and 1st august (213)  
-gddsub <- subset(gdd, doy >90 & doy < 214)
+# calculate gdd by year between 1st May (121) and 1st august (244)  
+gddsub <- subset(gdd, doy >121 & doy < 244)
 agg <- aggregate(GDD_5 ~ year, gddsub, FUN = min)
 gddsub$mingdd <- agg$GDD_5[match(gddsub$year, agg$year)]
 gddsub$diff <- gddsub$GDD_5 - gddsub$mingdd
@@ -64,7 +64,7 @@ rw$treeid_num <- match(rw$treeid, unique(rw$treeid))
 # transform data in vectors for GDD
 rw <- rw[!is.na(rw$lengthMM) & !is.na(rw$gddcurrentyr) & !is.na(rw$gddpreviousyr),]
 rw <- subset(rw, site != "XX" & !spp %in% c("QUERNA", "QUEROB"))
-y <- rw$lengthMM
+y <- log(rw$lengthMM)
 N <- nrow(rw)
 Nspp <- length(unique(rw$spp_num))
 Nsite <- length(unique(rw$site_num))
@@ -72,18 +72,17 @@ site <- as.numeric(as.character(rw$site_num))
 species <- as.numeric(as.character(rw$spp_num))
 treeid <- as.numeric(rw$treeid_num)
 Ntreeid <- length(unique(treeid))
-gdd	<- rw$gddcurrentyr
-gddyr <- rw$gddpreviousyr
+gdd	<- rw$gddcurrentyr / 200
+gddyr <- rw$gddpreviousyr / 200
 
-# Fit model GDD
-rstan_options(auto_write = TRUE)
+# Fit model GDD 
 gddmodel <- stan_model("stan/modelGrowthPreviousYear.stan")
 fit <- sampling(gddmodel, data = c("N","y",
                                       "Nspp","species",
                                       "Nsite", "site", 
                                       "Ntreeid", "treeid", 
                                       "gdd", "gddyr"),
-                   warmup = 1000, iter=2000, chains=4)
+                   warmup = 1000, iter = 2000, chains = 4)
 saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -91,15 +90,13 @@ saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 samples <- util$extract_expectand_vals(fit)
 jpeg(
-  filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg",
-  width = 2400,      
-  height = 2400,
-  res = 300          
+  filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg", 
+  width = 2400, height = 2400, res = 300          
 )
 util$plot_hist_quantiles(samples, "y_rep", 
-                         -5, # lower x axis limit
-                         15, # upper x axis limit
-                         0.5, # binning
+                         -2, # lower x axis limit
+                         5, # upper x axis limit
+                         0.2, # binning
                          baseline_values = y,
                          xlab = "Ring width (mm)")
 dev.off()
@@ -111,13 +108,15 @@ df_fit <- as.data.frame(fit)
 
 columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
 sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
+bspp_df <- df_fit[, columns[grepl("bsp", columns) & !grepl("yr", columns)]]
+bsppyr_df <- df_fit[, columns[grepl("bspyr", columns)]]
 treeid_df <- df_fit[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
 site_df <- df_fit[, columns[grepl("asite", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(bsppyr_df) <- 1:ncol(bsppyr_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
@@ -183,14 +182,54 @@ for (col in colnames(bspp_df)) {
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # bspyr
-plot(density(df_fit[, "bspyr_prior"]), 
-     col = pal[1], lwd = 2, 
-     main = "priorVSposterior_bspPreviousYr", 
+plot(density(df_fit[, "bspyr_prior"]),
+     col = pal[1], lwd = 2,
+     main = "priorVSposterior_bspPreviousYr",
      xlab = "bspPreviousYr", ylim = c(0, 1.8))
 for (col in colnames(bspp_df)) {
-  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+  lines(density(bsppyr_df[, col]), col = pal[2], lwd = 1)
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Compare bspp vs bsppyr ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Open device
+# posterior summaries
+bspp_df2_current <- extract_params(df_fit, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
+bspp_df2_current <- subset(bspp_df2_current, spp %in% bspp_df2_current$spp[!grepl("yr", bspp_df2_current$spp)])
+bspp_df2_previous <- extract_params(df_fit, "bspyr", "fit_bspp", "spp", "bspyr\\[(\\d+)\\]")
+
+jpeg("figures/growthPreviousYearModel/bsppCurrentVSpreviousYR.jpeg", width = 6, height = 9, units = "in", res = 300)
+par(mfrow = c(2,1))
+n_spp <- length(unique(bspp_df2_current$spp))
+y_pos <- rev(1:n_spp)
+
+# Current year
+plot(bspp_df2_current$fit_bspp, y_pos,
+     xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5), 
+     xlab = "slope current year", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_current$fit_bspp_per5,  y_pos, bspp_df2_current$fit_bspp_per95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_current$fit_bspp_per25, y_pos, bspp_df2_current$fit_bspp_per75, y_pos,
+         col = wccolslatbi, lwd = 3)
+mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
+
+# Row 2: Previous year
+plot(bspp_df2_previous$fit_bspp, y_pos,
+     xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5),
+     xlab = "slope previous year", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,      
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_previous$fit_bspp_per5,  y_pos, bspp_df2_previous$fit_bspp_per95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_previous$fit_bspp_per25, y_pos, bspp_df2_previous$fit_bspp_per75, y_pos,
+         col = wccolslatbi, lwd = 3)
+mtext("Previous year", side = 3, adj = 0, font = 2, cex = 0.9)
+dev.off()
+
 
