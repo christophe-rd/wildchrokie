@@ -766,3 +766,30 @@ legend("right",
 
 # dev.off()
 }
+
+
+# Checks for temperatures and PDSI ####
+wcgsl <- aggregate(pgsGSL ~ year, emp, FUN = mean, na.rm =TRUE)
+wcgsl[order(wcgsl$pgsGSL),]
+
+wcsos <- aggregate(leafout ~ year, emp, FUN = mean, na.rm =TRUE)
+wcsos[order(wcsos$leafout),]
+
+wceos <- aggregate(budset ~ year, emp, FUN = mean, na.rm =TRUE)
+wceos[order(wceos$budset),]
+
+wcclim <- subset(climatesum, year %in% 2018:2020)
+wcdjf <- subset(wcclim, period %in% "DJF")
+wcdjf[order(wcdjf$tmeanmean),]
+wcmam <- subset(wcclim, period %in% "MAM")
+wcmam[order(wcmam$tmeanmean),]
+wcjja <- subset(wcclim, period %in% "JJA")
+wcjja[order(wcjja$tmeanmean),]
+wcson <- subset(wcclim, period %in% "SON")
+wcson[order(wcson$tmeanmean),]
+wcmam[order(wcmam$pdsi),]
+wcjja[order(wcjja$pdsi),]
+wcson[order(wcson$pdsi),]
+
+wcrw <- aggregate(lengthCM ~ year, emp, FUN = mean, na.rm =TRUE)
+wcrw[order(wcrw$lengthCM),]

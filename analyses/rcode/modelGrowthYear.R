@@ -25,7 +25,7 @@ util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
 # my function to extract parameters
-source('rcode/utilExtractParam.R')
+source('rcode/tools.R')
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -39,12 +39,12 @@ emp <- emp[!is.na(emp$pgsGDD5),]
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
-
+emp$year_num <- as.integer(as.factor(emp$year))
 emp$lengthMM <- emp$lengthCM*10
 
 # transform data in vectors for GDD
 data <- list( 
-  y = emp$lengthMM,
+  y = log(emp$lengthMM),
   N = nrow(emp),
   Nspp = length(unique(emp$spp_num)),
   Nsite = length(unique(emp$site_num)),
@@ -53,18 +53,22 @@ data <- list(
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(emp$treeid)),
   Nyear = length(unique(emp$year)),
-  year = as.integer(as.factor(emp$year)))
+  year = emp$year_num)
 
-# Fit model GDD
-rstan_options(auto_write = TRUE)
-
+# Fit model year with other parameters
 yearmodel <- stan_model("stan/modelGrowthYear.stan")
 fityear <- sampling(yearmodel, data = data,
                 warmup = 1000, iter=2000, chains=4)
 saveRDS(fityear, "output/stanOutput/fitGrowthYear")
 
+# Fit model year without other parameters
+yearmodelonly <- stan_model("stan/modelGrowthOnlyYear.stan")
+fityearonly <- sampling(yearmodelonly, data = data,
+                    warmup = 1000, iter=2000, chains=4)
+saveRDS(fityearonly, "output/stanOutput/fitGrowthOnlyYear")
+
 # check warnings
-diagnostics <- util$extract_hmc_diagnostics(fityear) 
+diagnostics <- util$extract_hmc_diagnostics(fityearonly) 
 util$check_all_hmc_diagnostics(diagnostics)
 
 # loo
@@ -187,6 +191,72 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot Year fit ONLY ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+##### Recover parameters #####
+df_fityearonly <- as.data.frame(fityearonly)
+
+# full posterior
+columns <- colnames(df_fityearonly)[!grepl("prior", colnames(df_fityearonly))]
+sigma_df <- df_fityearonly[, columns[grepl("sigma", columns)]]
+ayear_df <- df_fityearonly[, columns[grepl("ayear", columns)]]
+
+# change colnames
+colnames(ayear_df) <- 1:ncol(ayear_df)
+
+# posterior summaries
+year_df2_only <- extract_params(df_fityearonly, "ayear", "fit_ayear", 
+                             "year", "ayear\\[(\\d+)\\]")
+year_df2_only$year_name <- emp$year[match(year_df2_only$year, emp$year_num)]
+
+##### Plot posterior vs priors for year fit #####
+pdf(file = "figures/growthYearModel/yearOnlyModelPriorVSPosterior.pdf", width = 6, height = 9)
+
+par(mfrow = c(2, 1))
+pal <- wes_palette("AsteroidCity1")[3:4]
+
+# a
+plot(density(df_fityearonly[, "a_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_a", 
+     xlab = "a", ylim = c(0,0.5))
+lines(density(df_fityearonly[, "a"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fityearonly[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", ylim = c(0, 0.6))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+colsyear <- c("#dd5129", "#0f7ba2", "#43b284")
+# plots years
+jpeg("figures/growthYearModel/muYears.jpeg", width = 6, height = 6, 
+     units = "in", res = 300)
+par(mfrow = c(1,1))
+n_year <- length(unique(year_df2_only$year))
+y_pos <- 1:n_year
+
+# Current year
+plot(year_df2_only$fit_ayear, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_year + 0.5), 
+     xlab = "year intercept", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(year_df2_only$fit_ayear_per5, y_pos, year_df2_only$fit_ayear_per95, y_pos,
+         col = colsyear, lwd = 1.5)
+segments(year_df2_only$fit_ayear_per25, y_pos, year_df2_only$fit_ayear_per75, y_pos,
+         col = colsyear, lwd = 3)
+axis(2, at = y_pos, labels = year_df2_only$year_name, las = 1)
+dev.off()
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (FALSE){
@@ -205,221 +275,4 @@ util$plot_hist_quantiles(samples, "y_rep",
                          baseline_values = data$y,
                          xlab = "Ring width (mm)")
 dev.off()
-
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# FULL DATA ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp <- read.csv("output/empiricalDataMAIN.csv")
-# Fit model SOS --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-empsos <- emp[!is.na(emp$leafout),]
-
-# transform my groups to numeric values
-empsos$site_num <- match(empsos$site, unique(empsos$site))
-empsos$spp_num <- match(empsos$spp, unique(empsos$spp))
-empsos$treeid_num <- match(empsos$treeid, unique(empsos$treeid))
-
-# transform data in vectors for gsl
-y <- empsos$lengthCM*10 # ring width in mm
-N <- nrow(empsos)
-Nspp <- length(unique(empsos$spp_num))
-Nsite <- length(unique(empsos$site_num))
-site <- as.numeric(as.character(empsos$site_num))
-species <- as.numeric(as.character(empsos$spp_num))
-treeid <- as.numeric(empsos$treeid_num)
-Ntreeid <- length(unique(treeid))
-sos <- empsos$leafout / 5
-
-rstan_options(auto_write = TRUE)
-sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsosfull <- sampling(sosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "sos"),
-                   warmup = 1000, iter = 2000, chains=4)
-saveRDS(fitsos, "output/stanOutput/fitGrowthSOSFull")
-
-# Fit model EOS
-empeos <- emp[!is.na(emp$budset),]
-
-# transform my groups to numeric values
-empeos$site_num <- match(empeos$site, unique(empeos$site))
-empeos$spp_num <- match(empeos$spp, unique(empeos$spp))
-empeos$treeid_num <- match(empeos$treeid, unique(empeos$treeid))
-
-# transform data in vectors for gsl
-y <- empeos$lengthCM*10 # ring width in mm
-N <- nrow(empeos)
-Nspp <- length(unique(empeos$spp_num))
-Nsite <- length(unique(empeos$site_num))
-site <- as.numeric(as.character(empeos$site_num))
-species <- as.numeric(as.character(empeos$spp_num))
-treeid <- as.numeric(empeos$treeid_num)
-Ntreeid <- length(unique(treeid))
-eos <- empeos$budset/10
-
-rstan_options(auto_write = TRUE)
-eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteosfull <- sampling(eosmodel, data = c("N","y",
-                                      "Nspp","species",
-                                      "Nsite", "site",
-                                      "Ntreeid", "treeid",
-                                      "eos"),
-                   warmup = 1000, iter = 2000,
-                   chains=4)
-saveRDS(fiteos, "output/stanOutput/fitGrowthEOSFull")
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Recover and plot parameters SOS restricted vs full #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-df_fitsos <- as.data.frame(fitsos)
-# posterior summaries
-sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
-aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
-site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
-
-# SOS full
-df_fitsos <- as.data.frame(fitsosfull)
-# posterior summaries
-sigma_df2_full_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
-bspp_df2_full_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_full_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("z|sigma", treeid))
-aspp_df2_full_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("prior", treeid))
-site_df2_full_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
-
-# Recover and plot parameters EOS restricted vs full 
-df_fiteos <- as.data.frame(fiteos)
-# posterior summaries
-sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
-aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
-site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
-
-# EOS full
-df_fiteos <- as.data.frame(fiteosfull)
-# posterior summaries
-sigma_df2_full_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
-bspp_df2_full_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
-treeid_df2_full_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("z|sigma", treeid))
-aspp_df2_full_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("prior", treeid))
-site_df2_full_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
-
-# Open device
-jpeg("figures/empiricalData/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
-par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
-
-plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full_sos$mean_per25, sigma_df2_full_sos$mean_per75)),
-     xlim = range(c(sigma_df2_sos$mean_per25, sigma_df2_sos$mean_per75)))
-arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$mean_per25,
-       x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$mean_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2_sos$mean_per25, y0 = sigma_df2_full_sos$mean,
-       x1 = sigma_df2_sos$mean_per75, y1 = sigma_df2_full_sos$mean,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#046C9A", cex = 1.5)
-text(sigma_df2_sos$mean_per75, sigma_df2_full_sos$mean_per25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
-
-# bspp
-plot(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
-     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full_sos$fit_bspp_per25, bspp_df2_full_sos$fit_bspp_per75)),
-     xlim = range(c(bspp_df2_sos$fit_bspp_per25, bspp_df2_sos$fit_bspp_per75)))
-arrows(x0 = bspp_df2_sos$fit_bspp, y0 = bspp_df2_full_sos$fit_bspp_per25,
-       x1 = bspp_df2_sos$fit_bspp, y1 = bspp_df2_full_sos$fit_bspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2_sos$fit_bspp_per25, y0 = bspp_df2_full_sos$fit_bspp,
-       x1 = bspp_df2_sos$fit_bspp_per75, y1 = bspp_df2_full_sos$fit_bspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-# aspp
-plot(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
-     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full_sos$fit_aspp_per25, aspp_df2_full_sos$fit_aspp_per75)),
-     xlim = range(c(aspp_df2_sos$fit_aspp_per25, aspp_df2_sos$fit_aspp_per75)))
-arrows(x0 = aspp_df2_sos$fit_aspp, y0 = aspp_df2_full_sos$fit_aspp_per25,
-       x1 = aspp_df2_sos$fit_aspp, y1 = aspp_df2_full_sos$fit_aspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2_sos$fit_aspp_per25, y0 = aspp_df2_full_sos$fit_aspp,
-       x1 = aspp_df2_sos$fit_aspp_per75, y1 = aspp_df2_full_sos$fit_aspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-
-# add label
-mtext("a)", side = 2, outer = TRUE, at = 0.95, font = 2, las = 1, line = 0.5)
-
-# EOS
-plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full_eos$mean_per25, sigma_df2_full_eos$mean_per75)),
-     xlim = range(c(sigma_df2_eos$mean_per25, sigma_df2_eos$mean_per75)))
-arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$mean_per25,
-       x1 = sigma_df2_eos$mean, y1 = sigma_df2_full_eos$mean_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
-       x1 = sigma_df2_eos$mean_per75, y1 = sigma_df2_full_eos$mean,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#046C9A", cex = 1.5)
-text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
-
-# bspp
-plot(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
-     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full_eos$fit_bspp_per25, bspp_df2_full_eos$fit_bspp_per75)),
-     xlim = range(c(bspp_df2_eos$fit_bspp_per25, bspp_df2_eos$fit_bspp_per75)))
-arrows(x0 = bspp_df2_eos$fit_bspp, y0 = bspp_df2_full_eos$fit_bspp_per25,
-       x1 = bspp_df2_eos$fit_bspp, y1 = bspp_df2_full_eos$fit_bspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2_eos$fit_bspp_per25, y0 = bspp_df2_full_eos$fit_bspp,
-       x1 = bspp_df2_eos$fit_bspp_per75, y1 = bspp_df2_full_eos$fit_bspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-# aspp
-plot(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
-     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full_eos$fit_aspp_per25, aspp_df2_full_eos$fit_aspp_per75)),
-     xlim = range(c(aspp_df2_eos$fit_aspp_per25, aspp_df2_eos$fit_aspp_per75)))
-arrows(x0 = aspp_df2_eos$fit_aspp, y0 = aspp_df2_full_eos$fit_aspp_per25,
-       x1 = aspp_df2_eos$fit_aspp, y1 = aspp_df2_full_eos$fit_aspp_per75,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2_eos$fit_aspp_per25, y0 = aspp_df2_full_eos$fit_aspp,
-       x1 = aspp_df2_eos$fit_aspp_per75, y1 = aspp_df2_full_eos$fit_aspp,
-       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
-       pch = 16, col = "#046C9A", cex = 1.5)
-abline(0, 1, lty = 2, col = "#B40F20", lwd = 2)
-
-# add label
-mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
-
-dev.off()
-
 }

@@ -46,7 +46,7 @@ gddyr <- read.csv("output/gddByYear.csv")
 nrow(empfullsos)
 nrow(empfulleos)
 
-lineplotseqlength <- 25
+lineplotseqlength <- 10
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -164,11 +164,12 @@ deos <- list(
   eosscale = eosscale,
   Neosseq = length(eosseq)
 )
+
 if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 1000, iter = 2000, chains=4)
+                warmup = 500, iter = 1000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings

@@ -15,7 +15,7 @@ array[Ntreeid] int treeid_site;    // site index for each treeid
 array[Nspp] int Ntreeid_per_spp;
 int<lower=0> Ngddseq;
 vector[Ngddseq] gddseq;
-real gddscale; # scale
+real wcgddscale; # scale
 vector[N] gdd; 	// gdd (predictor for slope)
 array[N] real y;
 }
@@ -81,49 +81,55 @@ generated quantities {
   real zatreeid_prior = normal_rng(0, 1);
   real atreeid_prior = abs(normal_rng(0, 0.5)) * zatreeid_prior;
   
-    // For LOO cross-validation
-  vector[N] log_lik;
-  for (i in 1:N) {
-    log_lik[i] = normal_lpdf(y[i] | ypred[i], sigma_y);
-  }
-  
-  # Recover the full intercept per treeid
-  vector[Ntreeid] fullintercept;
-  vector[Ntreeid] treeid_slope;
-  
-  for (t in 1:Ntreeid) {
-  fullintercept[t] = a 
-                    + aspp[treeid_species[t]] 
-                    + asite[treeid_site[t]] 
-                    + atreeid[t];
-  treeid_slope[t]  = bsp[treeid_species[t]];
-  }
-  # Sim for each tree id, at each gddseq
-  matrix[Ngddseq, Ntreeid] y_post;
-  
-  for (t in 1:Ntreeid) {
-    for (g in 1:Ngddseq) {
-      y_post[g, t] = normal_rng(fullintercept[t] + (treeid_slope[t]/ gddscale) * gddseq[g], sigma_y);
+//     // For LOO cross-validation
+//   vector[N] log_lik;
+//   for (i in 1:N) {
+//     log_lik[i] = normal_lpdf(y[i] | ypred[i], sigma_y);
+//   }
+//   
+//   # Recover the full intercept per treeid
+//   vector[Ntreeid] fullintercept;
+//   vector[Ntreeid] treeid_slope;
+//   
+//   for (t in 1:Ntreeid) {
+//   fullintercept[t] = a 
+//                     + aspp[treeid_species[t]] 
+//                     + asite[treeid_site[t]] 
+//                     + atreeid[t];
+//   treeid_slope[t]  = bsp[treeid_species[t]];
+//   }
+//   # Sim for each tree id, at each gddseq
+//   matrix[Ngddseq, Ntreeid] y_post;
+//   
+//   for (t in 1:Ntreeid) {
+//     for (g in 1:Ngddseq) {
+//       y_post[g, t] = normal_rng(fullintercept[t] + (treeid_slope[t]/ wcgddscale) * gddseq[g], sigma_y);
+//     }
+// }
+//   # Sim for each species
+//   matrix[Ngddseq, Nspp] spp_mean;
+//   matrix[Ngddseq, Nspp] spp_post;
+//   
+//   spp_mean = rep_matrix(0, Ngddseq, Nspp);
+// 
+//   for (t in 1:Ntreeid) {
+//     int s = treeid_species[t];
+//     for (g in 1:Ngddseq) {
+//       spp_mean[g, s] += (fullintercept[t] + (treeid_slope[t] / wcgddscale) * gddseq[g])
+//                         / Ntreeid_per_spp[s];
+//     }
+//   }
+//   
+//   for (s in 1:Nspp) {
+//     for (g in 1:Ngddseq) {
+//       spp_post[g, s] = normal_rng(spp_mean[g, s], sigma_y);
+//   }
+// }
+# exp 
+matrix[Ngddseq, Nspp] ypred_exp;
+for (s in 1:Nspp) {
+  for (g in 1:Ngddseq) {
+    ypred_exp[g, s] = exp(a) * exp(bsp[s]/wcgddscale * gddseq[g]);
     }
-}
-  # Sim for each species
-  matrix[Ngddseq, Nspp] spp_mean;
-  matrix[Ngddseq, Nspp] spp_post;
-  
-  spp_mean = rep_matrix(0, Ngddseq, Nspp);
-
-  for (t in 1:Ntreeid) {
-    int s = treeid_species[t];
-    for (g in 1:Ngddseq) {
-      spp_mean[g, s] += (fullintercept[t] + (treeid_slope[t] / gddscale) * gddseq[g])
-                        / Ntreeid_per_spp[s];
-    }
   }
-  
-  for (s in 1:Nspp) {
-    for (g in 1:Ngddseq) {
-      spp_post[g, s] = normal_rng(spp_mean[g, s], sigma_y);
-  }
-}
-
 }
