@@ -1015,13 +1015,13 @@ legend("right",
 
 
 # Checks for temperatures and PDSI ####
-wcgsl <- aggregate(pgsGSL ~ year, emp, FUN = mean, na.rm =TRUE)
+wcgsl <- aggregate(pgsGSL ~ year, empir, FUN = mean, na.rm =TRUE)
 wcgsl[order(wcgsl$pgsGSL),]
 
-wcsos <- aggregate(leafout ~ year, emp, FUN = mean, na.rm =TRUE)
+wcsos <- aggregate(leafout ~ year, empir, FUN = mean, na.rm =TRUE)
 wcsos[order(wcsos$leafout),]
 
-wceos <- aggregate(budset ~ year, emp, FUN = mean, na.rm =TRUE)
+wceos <- aggregate(budset ~ year, empir, FUN = mean, na.rm =TRUE)
 wceos[order(wceos$budset),]
 
 wcclim <- subset(climatesum, year %in% 2018:2020)
@@ -1037,5 +1037,8 @@ wcmam[order(wcmam$pdsi),]
 wcjja[order(wcjja$pdsi),]
 wcson[order(wcson$pdsi),]
 
-wcrw <- aggregate(lengthCM ~ year, emp, FUN = mean, na.rm =TRUE)
+wcrw <- aggregate(lengthCM ~ year, empir, FUN = mean, na.rm =TRUE)
 wcrw[order(wcrw$lengthCM),]
+
+agggdd <- aggregate(pgsGDD5 ~ year, empir, FUN = mean)
+agggdd[order(agggdd$pgsGDD5),]

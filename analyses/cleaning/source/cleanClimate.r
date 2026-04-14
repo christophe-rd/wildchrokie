@@ -167,6 +167,7 @@ ggsave("figures/climate/climateComparisonMultipleyears.jpeg", width = 8, height 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # PDSI ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# from Product: Historical Climate (Monthly) - TerraClimate(http://www.climatologylab.org/terraclimate.html)	
 readLines("input/_notcookies/terraclimate_42.2960N_71.1206W.csv", n = 20)
 terra <- read.csv("input/_notcookies/terraclimate_42.2960N_71.1206W.csv", skip = 14)
 str(terra)
