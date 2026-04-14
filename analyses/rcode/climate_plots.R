@@ -96,7 +96,7 @@ for (i in seq_along(years)) { # i = 2018
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if(makeplots){
+
 # common objects across budset and leafout
 clim_vars  <- c("TempMeanMax", "TempMeanMean","TempMeanMin")
 
@@ -130,7 +130,7 @@ climmodelts <- stan_model("stan/climatePredictors.stan")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Leafout ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
+if(makeplots){
 clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
 periods <- c("DJF", "MAM")
 
@@ -428,6 +428,12 @@ d <- emp_climlo[emp_climlo$period == period & !is.na(emp_climlo$TempMeanMax) &
                 !is.na(emp_climlo$anomleafout), ]
 
 d$TempMeanMean <- (d$TempMeanMean - mean(d$TempMeanMean)) / sd(d$TempMeanMean)
+
+ainc <- subset(d, spp %in% "ALNINC")
+ball <- subset(d, spp %in% "BETALL")
+bpap <- subset(d, spp %in% "BETPAP")
+bpop <- subset(d, spp %in% "BETPOP")
+
 # transform data in vectors for gsl
 data <- list(
   y = d$anomleafout,
@@ -441,9 +447,70 @@ data <- list(
   climpredictor = d$TempMeanMean
 )
 
+datainc <- list(
+  y = ainc$anomleafout,
+  N = nrow(ainc),
+  year = as.numeric(as.character(ainc$year_num)),
+  species = as.numeric(as.character(ainc$spp_num)),
+  site = as.numeric(as.character(ainc$site_num)),
+  Nspp = length(unique(ainc$spp_num)),
+  Nsite = length(unique(ainc$site_num)),
+  Nyear = length(unique(ainc$year_num)),
+  climpredictor = ainc$TempMeanMean
+)
+
+dataall <- list(
+  y = ball$anomleafout,
+  N = nrow(ball),
+  year = as.numeric(as.character(ball$year_num)),
+  species = as.integer(factor(ball$spp_num)),
+  site = as.numeric(as.character(ball$site_num)),
+  Nspp = length(unique(ball$spp_num)),
+  Nsite = length(unique(ball$site_num)),
+  Nyear = length(unique(ball$year_num)),
+  climpredictor = ball$TempMeanMean
+)
+
+datapap <- list(
+  y = bpap$anomleafout,
+  N = nrow(bpap),
+  year = as.numeric(as.character(bpap$year_num)),
+  species = as.integer(factor(bpap$spp_num)),
+  site = as.numeric(as.character(bpap$site_num)),
+  Nspp = length(unique(bpap$spp_num)),
+  Nsite = length(unique(bpap$site_num)),
+  Nyear = length(unique(bpap$year_num)),
+  climpredictor = bpap$TempMeanMean
+)
+
+datapop <- list(
+  y = bpop$anomleafout,
+  N = nrow(bpop),
+  year = as.numeric(as.character(bpop$year_num)),
+  species =  as.integer(factor(bpop$spp_num)),
+  site = as.numeric(as.character(bpop$site_num)),
+  Nspp = length(unique(bpop$spp_num)),
+  Nsite = length(unique(bpop$site_num)),
+  Nyear = length(unique(bpop$year_num)),
+  climpredictor = bpop$TempMeanMean
+)
+
+
 # Fit models
 climmodel <- stan_model("stan/climatePredictors.stan")
-fit <- sampling(climmodel, data = data, iter = 2000, chains=4, cores = 4)
+fit <- sampling(climmodel, data = data, iter = 2000, chains = 4, cores = 4)
+fitainc <- sampling(climmodel, data = datainc, iter = 2000, chains=4, cores = 4)
+fitball <- sampling(climmodel, data = dataall, iter = 2000, chains=4, cores = 4)
+fitbpap <- sampling(climmodel, data = datapap, iter = 2000, chains=4, cores = 4)
+fitbpop <- sampling(climmodel, data = datapop, iter = 2000, chains=4, cores = 4)
+
+diagnostics <- util$extract_hmc_diagnostics(fitball) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+df_fitainc <- as.data.frame(fitainc)
+df_fitball <- as.data.frame(fitball)
+df_fitbpap <- as.data.frame(fitbpap)
+df_fitbpop <- as.data.frame(fitbpop)
 
 ###### Plot posterior vs priors for gdd fit ######
 pdf(file = "figures/climate/climateModelPriorVSPosterior.pdf", 
@@ -458,16 +525,7 @@ columns <- colnames(df_fit)[!grepl("prior", colnames(df_fit))]
 sigma_df <- df_fit[, columns[grepl("sigma", columns)]]
 aspp_df <- df_fit[, columns[grepl("aspp", columns)]]
 bspp_df <- df_fit[, columns[grepl("bsp", columns)]]
-site_df <- df_fit[, columns[grepl("asite", columns)]]
 ayear_df <- df_fit[, columns[grepl("ayear", columns)]]
-
-# # a
-# plot(density(df_fit[, "a_prior"]), 
-#      col = pal[1], lwd = 2, 
-#      main = "priorVSposterior_a", 
-#      xlab = "a", ylim = c(0,0.5))
-# lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
-# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
 plot(density(df_fit[, "sigma_y_prior"]), 
@@ -481,21 +539,11 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-200, 200), ylim = c(0, 0.05))
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
-# 
-# # asite
-# plot(density(df_fit[, "asite_prior"]), 
-#      col = pal[1], lwd = 2, 
-#      main = "priorVSposterior_asite", 
-#      xlab = "asite", xlim = c(-20, 20), ylim = c(0, 0.2))
-# for (col in colnames(site_df)) {
-#   lines(density(site_df[, col]), col = pal[2], lwd = 1)
-# }
-# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # ayear
 plot(density(df_fit[, "ayear_prior"]), 
@@ -515,6 +563,204 @@ plot(density(df_fit[, "bsp_prior"]),
 for (col in colnames(bspp_df)) {
   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
 }
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+###### Plot posterior vs priors for gdd fit AINC######
+pdf(file = "figures/climate/climateModelPriorVSPosteriorAinc.pdf", 
+    width = 8, height = 10)
+
+columns <- colnames(df_fitainc)[!grepl("prior", colnames(df_fitainc))]
+sigma_df <- df_fitainc[, columns[grepl("sigma", columns)]]
+aspp_df <- df_fitainc[, columns[grepl("aspp", columns)]]
+bspp_df <- df_fitainc[, columns[grepl("bsp", columns)]]
+site_df <- df_fitainc[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitainc[, columns[grepl("ayear", columns)]]
+
+par(mfrow = c(2, 2))
+
+# sigma_y
+plot(density(df_fitainc[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0,2))
+lines(density(df_fitainc[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitainc[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05))
+lines(density(aspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fitainc[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", xlim = c(-50, 50), ylim = c(0, 0.1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitainc[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 0.5))
+lines(density(bspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+###### Plot posterior vs priors for gdd fit BALL ######
+pdf(file = "figures/climate/climateModelPriorVSPosteriorBall.pdf", 
+    width = 8, height = 10)
+
+par(mfrow = c(2, 2))
+
+columns <- colnames(df_fitball)[!grepl("prior", colnames(df_fitball))]
+sigma_df <- df_fitball[, columns[grepl("sigma", columns)]]
+aspp_df <- df_fitball[, columns[grepl("aspp", columns)]]
+bspp_df <- df_fitball[, columns[grepl("bsp", columns)]]
+site_df <- df_fitball[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitball[, columns[grepl("ayear", columns)]]
+
+# sigma_y
+plot(density(df_fitball[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0,2))
+lines(density(df_fitball[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitball[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05)) 
+lines(density(aspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fitball[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", xlim = c(-50, 50), ylim = c(0, 0.1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitball[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 0.5))
+lines(density(bspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+
+###### Plot posterior vs priors for gdd fit BPAP######
+pdf(file = "figures/climate/climateModelPriorVSPosteriorBpap.pdf", 
+    width = 8, height = 10)
+
+par(mfrow = c(2, 2))
+
+columns <- colnames(df_fitbpap)[!grepl("prior", colnames(df_fitbpap))]
+sigma_df <- df_fitbpap[, columns[grepl("sigma", columns)]]
+aspp_df <- df_fitbpap[, columns[grepl("aspp", columns)]]
+bspp_df <- df_fitbpap[, columns[grepl("bsp", columns)]]
+site_df <- df_fitbpap[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitbpap[, columns[grepl("ayear", columns)]]
+
+# sigma_y
+plot(density(df_fitbpap[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0,2))
+lines(density(df_fitbpap[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitbpap[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05))
+lines(density(aspp_df), col = pal[2], lwd = 1) 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fitbpap[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", xlim = c(-50, 50), ylim = c(0, 0.1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitbpap[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 0.5))
+lines(density(bspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+
+###### Plot posterior vs priors for gdd fit BPOP ######
+pdf(file = "figures/climate/climateModelPriorVSPosteriorBpop.pdf", 
+    width = 8, height = 10)
+
+par(mfrow = c(2, 2))
+
+columns <- colnames(df_fitbpop)[!grepl("prior", colnames(df_fitbpop))]
+sigma_df <- df_fitbpop[, columns[grepl("sigma", columns)]]
+aspp_df <- df_fitbpop[, columns[grepl("aspp", columns)]]
+bspp_df <- df_fitbpop[, columns[grepl("bsp", columns)]]
+site_df <- df_fitbpop[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitbpop[, columns[grepl("ayear", columns)]]
+
+# sigma_y
+plot(density(df_fitbpop[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0,2))
+lines(density(df_fitbpop[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitbpop[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05))
+lines(density(aspp_df), col = pal[2], lwd = 1)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fitbpop[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", xlim = c(-50, 50), ylim = c(0, 0.1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitbpop[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 0.5))
+lines(density(bspp_df), col = pal[2], lwd = 1)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()

@@ -125,11 +125,5 @@ generated quantities {
 //       spp_post[g, s] = normal_rng(spp_mean[g, s], sigma_y);
 //   }
 // }
-# exp 
-matrix[Ngddseq, Nspp] ypred_exp;
-for (s in 1:Nspp) {
-  for (g in 1:Ngddseq) {
-    ypred_exp[g, s] = exp(a) * exp(bsp[s]/wcgddscale * gddseq[g]);
-    }
-  }
+
 }

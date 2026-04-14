@@ -26,15 +26,16 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
-source('rcode/utilExtractParam.R')
+source('rcode/tools.R')
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Simulate data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 set.seed(124)
 
-Nspp <- 10
-N_tree_per_spp <- sample(1:15, Nspp)
+Nspp <- 1
+# N_tree_per_spp <- sample(1:15, Nspp)
+N_tree_per_spp <- sample(1:250, Nspp)
 Nyear <- 3
 Ntreeid <- sum(N_tree_per_spp)
 N <- Ntreeid * Nyear
@@ -46,10 +47,10 @@ treeid <- rep(1:Ntreeid, each = Nyear)
 species <- tree_species_idxs[treeid]
 year <- rep(1:Nyear, times = Ntreeid)
 
-sigma_y <- 4
-sigma_aspp <- 3
+sigma_y <- 3
+sigma_aspp <- 2
 sigma_bspp <- 1.5
-sigma_ayear <- 3.5
+sigma_ayear <- 2.5
 
 # sim climate variable
 climpredictoryr <- rnorm(Nyear, 10, 0.8)
@@ -72,12 +73,14 @@ sim$aspp <- aspp[sim$species]
 sim$bspp <- bspp[sim$species]
 sim$ayear <- ayear[sim$year]
 
-y <- sim$a + sim$aspp + sim$ayear + (sim$bspp * climpredictor[year])
+y <- sim$aspp + sim$ayear + (sim$bspp * climpredictor[year])
 
 y <- rnorm(N, y, sigma_y)
 
+# plot sim data
 hist(y)
-fit <- stan("stan/TSclimatePredictors.stan", 
+plot(y ~ climpredictor)
+fit <- stan("stan/climatePredictors.stan", 
                   data = c("N","y",
                          "Nspp","species",
                          "Nyear", "year",
@@ -112,10 +115,11 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 plot(density(df_fit[, "aspp_prior"]), 
      col = pal[1], lwd = 2, 
      main = "priorVSposterior_aspp", 
-     xlab = "aspp", xlim = c(-50, 50), ylim = c(0, 0.1))
-for (col in colnames(aspp_df)) {
-  lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
-} 
+     xlab = "aspp", xlim = c(-100, 100), ylim = c(0, 0.05))
+# for (col in colnames(aspp_df)) {
+#   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
+# } 
+lines(density(aspp_df), col = pal[2], lwd = 1)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # ayear
@@ -130,12 +134,13 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # bsp
 plot(density(df_fit[, "bsp_prior"]), 
-     col = pal[1], lwd = 2, xlim = c(-10, 10),
+     col = pal[1], lwd = 2, xlim = c(-50, 50),
      main = "priorVSposterior_bsp", 
-     xlab = "bsp", ylim = c(0, 1.8))
-for (col in colnames(bspp_df)) {
-  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
-}
+     xlab = "bsp", ylim = c(0, 0.5))
+# for (col in colnames(bspp_df)) {
+#   lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+# }
+lines(density(bspp_df), col = pal[2], lwd = 1)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
