@@ -84,6 +84,7 @@ for (i in seq_along(years)) { # i = 1
 
 years   <- unique(emp$year)
 wcclimatesum <- subset(climatesum, year %in% years)
+
 seasons <- c("DJF", "MAM", "JJA", "SON")
 
 # check the mean temperature for each season
@@ -114,9 +115,23 @@ colnames(pdsi) <- c("DJF", "JJA", "MAM", "SON")
 
 # tree ring width
 fityr <- readRDS("output/stanOutput/fitGrowthOnlyYear")
-growth <- colMeans(extract(fityr)$"ayear")
+growth <- colMeans(rstan::extract(fityr)$"ayear")
 names(growth) <- years
 
+leafoutagg <- aggregate(leafout~ year, emp, FUN = mean)
+leafoutagg$leafout <- leafoutagg$leafout - mean(emp$leafout, na.rm = TRUE)
+leafout <- leafoutagg$leafout 
+names(leafout) <- years
+
+budsetagg <- aggregate(budset~ year, emp, FUN = mean)
+budsetagg$budset <- budsetagg$budset - mean(emp$budset, na.rm = TRUE)
+budset <- budsetagg$budset 
+names(budset) <- years
+
+gslagg <- aggregate(pgsGSL~ year, emp, FUN = mean)
+gslagg$pgsGSL <- gslagg$pgsGSL - mean(emp$pgsGSL, na.rm = TRUE)
+gsl <- gslagg$pgsGSL
+names(gsl) <- years
 
 # Define number of levels
 n_levels <- 100
@@ -154,8 +169,7 @@ growth_pal <- colorRampPalette(c(
   "#9e9ac8",
   "#807dba",
   "#6a51a3",
-  "#54278f",
-  "#3f007d"
+  "#54278f"
 ))(n_levels)
 
 # define limits
@@ -165,6 +179,12 @@ p_min <- -4
 p_max <- 4
 g_min <- min(growth) 
 g_max <- max(growth)
+lo_min <- min(leafout) 
+lo_max <- max(leafout)
+bs_min <- min(budset)  
+bs_max <- max(budset)
+gs_min <- min(gsl)     
+gs_max <- max(gsl)
 
 ny  <- length(years)
 ns  <- length(seasons)
@@ -177,23 +197,36 @@ gw  <- 0.7   # growth col width
 lw  <- 0.8   # year-label col width (left margin)
 gap <- 0.15  # gap between season groups
 
-total_w <- lw + ns * cw + (ns - 1) * gap + gap + gw
+pw <- 0.7 # pheno cell width (leafout, budset, gsl)
+total_w <- lw + ns * cw + (ns - 1) * gap + gap + 3 * pw + gap + gw
+
+# define horizontal positions 
+pheno_x <- lw + ns * cw + (ns - 1) * gap + gap
+growth_x <- pheno_x + 3 * pw + gap
+
+
+pheno_pal <- colorRampPalette(c(
+  "#f0f0f0",
+  "#d9d9d9",
+  "#bdbdbd",
+  "#969696",
+  "#737373",
+  "#525252"
+))(n_levels)
+
 total_h <- ny * ch + 1
 
 par(mar = c(0.5, 0.5, 0.5, 0.5))
 
-jpeg(
-  filename = "figures/climate/heatGS.jpeg", 
-  width = 3000, height = 2400, res = 300)
+# jpeg(
+# filename = "figures/climate/heatGS.jpeg", 
+# width = 3000, height = 2400, res = 300)
 
 # open plot
 plot.new()
 
 # define the coordinates of the box
 plot.window(xlim = c(0, total_w), ylim = c(0, total_h))
-
-# x coordinates
-growth_x <- lw + ns * cw + (ns - 1) * gap + gap
 
 for (i in 1:ny) { # i = 1
   for (j in 1:ns) { # i = 1
@@ -219,16 +252,40 @@ for (i in 1:ny) { # i = 1
     rect(x0 + sw, y0, x0 + cw, y0 + ch, col = pc, border = "white", lwd = 1.5)
     # outer border
     rect(x0, y0, x0 + cw, y0 + ch, col = NA, border = "grey30", lwd = 1.2)
+    # temp
+    rect(x0, y0, x0 + sw, y0 + ch, col = tc, border = "white", lwd = 1.5)
+    text(x0 + sw/2, y0 + ch/2, sprintf("%.1f", t_val), cex = 0.55, font = 2)
+    # PDSI
+    rect(x0 + sw, y0, x0 + cw, y0 + ch, col = pc, border = "white", lwd = 1.5)
+    text(x0 + sw + sw/2, y0 + ch/2, sprintf("%.1f", p_val), cex = 0.55, font = 2)
   }
   
-  # 5. growth Cell
+  # 5. Phenology cells
   y0_g <- (ny - i) * ch + 0.6
+  lo_val <- leafout[i]
+  lo_idx <- round((lo_val - lo_min) / (lo_max - lo_min) * (n_levels - 1)) + 1
+  rect(pheno_x, y0_g, pheno_x + pw, y0_g + ch, col = pheno_pal[lo_idx], border = "grey30")
+  text(pheno_x + pw/2, y0_g + ch/2, sprintf("%.0f", lo_val), cex = 0.62, font = 2)
+  
+  bs_val <- budset[i]
+  bs_idx <- round((bs_val - bs_min) / (bs_max - bs_min) * (n_levels - 1)) + 1
+  rect(pheno_x + pw, y0_g, pheno_x + 2*pw,     y0_g + ch, col = pheno_pal[bs_idx], border = "grey30")
+  text(pheno_x + 1.5*pw, y0_g + ch/2, sprintf("%.0f", bs_val), cex = 0.62, font = 2)
+  
+  gs_val <- gsl[i]
+  gs_idx <- round((gs_val - gs_min) / (gs_max - gs_min) * (n_levels - 1)) + 1
+  rect(pheno_x + 2*pw, y0_g, pheno_x + 3*pw,     y0_g + ch, col = pheno_pal[gs_idx], border = "grey30")
+  text(pheno_x + 2.5*pw, y0_g + ch/2, sprintf("%.0f", gs_val), cex = 0.62, font = 2)
+  
+  # 6. growth Cell
   g_val <- growth[i]
   g_idx <- round((g_val - g_min) / (g_max - g_min) * (n_levels - 1)) + 1
-  gc    <- growth_pal[g_idx]
+  gc <- growth_pal[g_idx]
   
   rect(growth_x, y0_g, growth_x + gw, y0_g + ch, col = gc, border = "grey30")
   text(growth_x + gw/2, y0_g + ch/2, sprintf("%.2f", g_val), cex=0.72, font=2)
+  
+  
 }
 #legend under the first season col
 legend_x0 <- lw           # Start legend under the first season column
@@ -278,6 +335,20 @@ text(gx0_leg + bar_w/2, legend_y0 + bar_h + 0.07, "Growth (mm)", cex=0.65, font=
 text(gx0_leg, legend_y0 - 0.09, "More growth", cex = 0.7, adj = 0.3)
 text(gx0_leg + bar_w, legend_y0 - 0.09, "Less growth", cex = 0.7, adj = 0.7)
 
+# 4. pheno legend
+phenox0_leg <- gx0_leg + bar_w + 0.35
+for (k in 1:n_seg) {
+  idx <- round((k - 1) / (n_seg - 1) * (n_levels - 1)) + 1
+  rect(phenox0_leg + (k-1)*seg_w, legend_y0,
+       phenox0_leg + k*seg_w, legend_y0 + bar_h,
+       col = pheno_pal[idx], border = NA)
+}
+rect(phenox0_leg, legend_y0, phenox0_leg + bar_w, legend_y0 + bar_h, border = "grey30")
+text(phenox0_leg + bar_w/2, legend_y0 + bar_h + 0.07, "Phenology (doy)/Season length", cex=0.65, font=2)
+text(phenox0_leg, legend_y0 - 0.09, "Earlier/Shorter", cex = 0.7, adj = 0.3)
+text(phenox0_leg + bar_w, legend_y0 - 0.09, "Later/Longer", cex = 0.7, adj = 0.7)
+
+
 # season titles
 for (j in 1:ns) {
   cx <- lw + (j - 1) * (cw + gap) + (cw / 2)
@@ -289,6 +360,11 @@ for (j in 1:ns) {
   # temp and pdsi markers just a little below the seasonsd
   text(cx + sw/2, total_h - 0.3, "PDSI", cex = 0.55, col = "grey40")
   text(cx - sw/2, total_h - 0.3, "Temp",    cex = 0.55, col = "grey40")
+  
+  # Pheno titles
+  text(pheno_x + pw/2,   total_h - 0.22, "Leafout\n(anomalized)", cex = 0.8, font = 2, col = "grey15")
+  text(pheno_x + 1.5*pw, total_h - 0.22, "Budset\n(anomalized)",  cex = 0.8, font = 2, col = "grey15")
+  text(pheno_x + 2.5*pw, total_h - 0.22, "GSL\n(anomalized)",    cex = 0.8, font = 2, col = "grey15")
 }
 
 # growth title

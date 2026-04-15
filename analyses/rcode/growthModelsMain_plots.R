@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- FALSE
+makeplots <- TRUE
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -363,54 +363,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
 dev.off()
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### GDD: per Spp, facet EXP #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-spp_post_array_exp <- extract(fitgdd, "ypred_exp")$ypred_exp
-# dimensions: [n_draws, Ngddseq, Nspp]
-
-# jpeg output
-jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
-  height = 2400,
-  res = 300          # good print-quality resolution
-)
-par(mfrow = c(1, 1), mar = c(4, 4, 2, 1))
-plot(emp$pgsGDD5, dgdd$y, type = "n", frame = FALSE,
-     ylim = range(min(-100), max(15000)), 
-     xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
-     main = "")
-# mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
-
-for (i in seq_along(sppvecnum)) { # i = 3
-  spp_name <- as.character(sppvecname[i])
-  y_post <- t(spp_post_array_exp[, , i])
-  
-  # calculate mean and 50% credible interval (25%-75%)
-  y_mean <- apply(y_post, 1, median)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
-  
-  line_col <- wccolslatbi[spp_name]
-  
-  polygon(c(dgdd$gddseq, rev(dgdd$gddseq)),
-          c(y_low, rev(y_high)), # low and high interval
-          col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
-  
-  lines(dgdd$gddseq, y_mean,
-        col = line_col,
-        lwd = 2)
-  
-  emp_spp <- emp[emp$latbi == spp_name, ]
-}
-
-bsp_post <- extract(fitgdd)$bsp
-apply(bsp_post, 2, mean)
-apply(bsp_post, 2, quantile, c(0.025, 0.975))
-
-dev.off()
-
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### GDD: per spp, non facetted #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -514,20 +466,12 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
-  
-  
   spp_name <- as.character(sppvecname[i])
-  
-  # define spp num
-  
-  
   # spp color
   line_col <- wccolslatbi[spp_name]
   
   # subset empirical data correctly
   emp_spp <- emp[emp$latbi == spp_name, ]
-  
-   
   
   y_post_gsl <- t(spp_post_array_gsl[, , i])
   
