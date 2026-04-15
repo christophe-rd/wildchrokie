@@ -611,26 +611,17 @@ names(obsdata)[names(obsdata) == "name"] <- "treeid"
 
 write.csv(obsdata, file="output/obsData.csv", row.names=FALSE)
 
-# # frequency of observations
-# str(freq18)
-# freq18 <- freq18[, c("Ind", "doy", "bbch")]
-# colnames(freq18) <- c("ID", "doy", "bbch")
-# freq18$year <- 2018
-# freq19 <- freq19[, c("ID", "doy", "bbch")]
-# freq19$year <- 2019
-# freq20 <- freq20[, c("ID", "doy", "bbch")]
-# freq20$year <- 2020
-# 
-# comb <- rbind(freq18, freq19, freq20)
-# comb$yeardoy <- paste(comb$year, comb$doy, sep = "_")
-# comb2 <- comb[!duplicated(comb$yeardoy),]
-# 
-# minbb <- aggregate(budburst ~ year, obsdata, FUN = min)
-# meanbb <- aggregate(budburst ~ year, obsdata, FUN = mean)
-# maxbb <- aggregate(budburst ~ year, obsdata, FUN = max)
-# 
-# par(mfrow = c(length(unique(comb2$year)), 1))
-# for (yr in sort(unique(comb2$year))) {
-#   hist(comb2$doy[comb2$year == yr], breaks = seq(0, 366, by = 14),
-#        main = yr, xlab = "Day of year", xlim = c(0, 366))
-# }
+# frequency of observations
+str(freq18)
+freq18 <- freq18[, c("Ind", "doy", "bbch")]
+colnames(freq18) <- c("ID", "doy", "bbch")
+freq18$year <- 2018
+freq19 <- freq19[, c("ID", "doy", "bbch")]
+freq19$year <- 2019
+freq20 <- freq20[, c("ID", "doy", "bbch")]
+freq20$year <- 2020
+
+comb <- rbind(freq18, freq19, freq20)
+
+write.csv(comb, "output/uncleanedTimeseriesPheno.csv")
+
