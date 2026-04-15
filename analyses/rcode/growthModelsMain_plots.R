@@ -177,21 +177,18 @@ sitefull <- c(
   "WM" = "White Mountains (NH)"
 )
 
-site_order <- c(
-  "HF",
-  "WM",
-  "GR", 
-  "SH")
-
 locations <- data.frame(
-  name = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
-  shortnames = c("HF", "WM", "GR", "SH"),
-  lon = c(-72.2, -71, -70.66, -74.01),
-  lat = c(42.6, 44.1, 44.9, 45.9)
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
+  shortnames = c("HF", "WM", "GR", "SH"),   
+  Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
+  Latitude   = c( 42.55,  44.11,  44.92,  45.98)
 )
+
+site_order <- locations$shortnames[order(locations$Latitude)]
+y_pos_site <- match(site_df2$site_name, site_order)
+
 # shapes for sites
 my_shapes <- c(HF = 19, WM = 18, GR = 15, SH = 17)
-
 
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
@@ -1405,7 +1402,6 @@ layout(matrix(c(
 ), nrow = 4, byrow = TRUE),
 widths = c(0.7, 0.4))
 
-y_pos <- match(site_df2$site_name, site_order)
 site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
 sitecolors <- site_color_map[site_df2$site_name]
 
@@ -1419,57 +1415,57 @@ lat_labels <- locations$lat[match(site_order, locations$shortnames)]
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(site_df2$fit_a_site, y_pos,
+plot(site_df2$fit_a_site, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2$fit_a_site_per5,  y_pos, site_df2$fit_a_site_per95, y_pos,
+segments(site_df2$fit_a_site_per5,  y_pos_site, site_df2$fit_a_site_per95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos, site_df2$fit_a_site_per75, y_pos,
+segments(site_df2$fit_a_site_per25, y_pos_site, site_df2$fit_a_site_per75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_gsl$fit_a_site, y_pos,
+plot(site_df2_gsl$fit_a_site, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_gsl$fit_a_site_per5,  y_pos, site_df2_gsl$fit_a_site_per95, y_pos,
+segments(site_df2_gsl$fit_a_site_per5,  y_pos_site, site_df2_gsl$fit_a_site_per95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_gsl$fit_a_site_per25, y_pos, site_df2_gsl$fit_a_site_per75, y_pos,
+segments(site_df2_gsl$fit_a_site_per25, y_pos_site, site_df2_gsl$fit_a_site_per75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_sos$fit_a_site, y_pos,
+plot(site_df2_sos$fit_a_site, y_pos_site,
      xlim = c(-2, 2),ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_sos$fit_a_site_per5,  y_pos, site_df2_sos$fit_a_site_per95, y_pos,
+segments(site_df2_sos$fit_a_site_per5,  y_pos_site, site_df2_sos$fit_a_site_per95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_sos$fit_a_site_per25, y_pos, site_df2_sos$fit_a_site_per75, y_pos,
+segments(site_df2_sos$fit_a_site_per25, y_pos_site, site_df2_sos$fit_a_site_per75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_eos$fit_a_site, y_pos,
+plot(site_df2_eos$fit_a_site, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_eos$fit_a_site_per5,  y_pos, site_df2_eos$fit_a_site_per95, y_pos,
+segments(site_df2_eos$fit_a_site_per5,  y_pos_site, site_df2_eos$fit_a_site_per95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_eos$fit_a_site_per25, y_pos, site_df2_eos$fit_a_site_per75, y_pos,
+segments(site_df2_eos$fit_a_site_per25, y_pos_site, site_df2_eos$fit_a_site_per75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
@@ -1491,14 +1487,6 @@ library(rnaturalearthdata)
 library(sf)
 library(cowplot)
 
-# set full names of sites
-locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
-  shortnames = c("HF", "WM", "GR", "SH"),   
-  Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
-  Latitude   = c( 42.55,  44.11,  44.92,  45.98)
-)
-site_order <- locations$shortnames[order(locations$Latitude)]     
 site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
 
 # order same as figure
@@ -1506,8 +1494,6 @@ locations2 <- locations[order(locations$Latitude), ]
 locations2$col <- wes_palette("Darjeeling1")[1:4]     
 
 # site map 
-n_site     <- length(site_order)
-y_pos      <- match(site_df2$site_name, site_order)
 sitecolors <- site_color_map[site_df2$site_name]
 lat_labels <- locations$Latitude[match(site_order, locations$shortnames)]
 
@@ -1543,18 +1529,18 @@ map_plot <- ggplot(data = world) +
 forest_grob <- as_grob(function() {
   par(mar = c(7, 5, 5, 0.5))
   
-  plot(site_df2$fit_a_site, y_pos,
+  plot(site_df2$fit_a_site, y_pos_site,
        xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
        xlab = "Ring width intercept values (mm)", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
        panel.first = abline(v = 0, lty = 2, col = "black"))
   axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-  segments(site_df2$fit_a_site_per5,  y_pos,
-           site_df2$fit_a_site_per95, y_pos,
+  segments(site_df2$fit_a_site_per5,  y_pos_site,
+           site_df2$fit_a_site_per95, y_pos_site,
            col = sitecolors, lwd = 1.5)
-  segments(site_df2$fit_a_site_per25, y_pos,
-           site_df2$fit_a_site_per75, y_pos,
+  segments(site_df2$fit_a_site_per25, y_pos_site,
+           site_df2$fit_a_site_per75, y_pos_site,
            col = sitecolors, lwd = 3)
 })
 
@@ -1568,7 +1554,6 @@ combined_labeled <- ggdraw(combined) +
     size     = 14,
     fontface = "bold"
   )
-
 
 ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 

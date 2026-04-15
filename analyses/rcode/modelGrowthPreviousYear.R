@@ -88,6 +88,7 @@ saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# fit <- readRDS("output/stanOutput/fitGrowthPreviousYear")
 samples <- util$extract_expectand_vals(fit)
 jpeg(
   filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg", 
@@ -98,7 +99,7 @@ util$plot_hist_quantiles(samples, "y_rep",
                          5, # upper x axis limit
                          0.2, # binning
                          baseline_values = y,
-                         xlab = "Ring width (mm)")
+                         xlab = "log(ring width")
 dev.off()
 
 
