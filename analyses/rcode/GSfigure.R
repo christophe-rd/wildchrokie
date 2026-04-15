@@ -84,7 +84,7 @@ for (i in seq_along(years)) { # i = 1
 
 years   <- unique(emp$year)
 wcclimatesum <- subset(climatesum, year %in% years)
-seasons <- unique(climatesum$period)
+seasons <- c("DJF", "MAM", "JJA", "SON")
 
 # check the mean temperature for each season
 anom <- aggregate(tmeanmean ~ period, climatesum, FUN = mean)
@@ -122,13 +122,41 @@ names(growth) <- years
 n_levels <- 100
 
 # temp palet
-temp_pal <- colorRampPalette(c("#9cc184", "#192813"))(n_levels)
+# https://colorbrewer2.org/#type=sequential&scheme=Blues&n=9
+temp_pal <- colorRampPalette(c("#ffffcc",
+                               "#ffeda0",
+                               "#fed976",
+                               "#feb24c",
+                               "#fd8d3c",
+                               "#fc4e2a",
+                               "#e31a1c",
+                               "#bd0026",
+                               "#800026"))(n_levels)
+# temp_pal <- colorRampPalette(c("#9cc184", "#192813"))(n_levels)
 
 # pdsi palet
-pdsi_pal <- colorRampPalette(c("#74c8c3", "#0a2e57"))(n_levels)
+# pdsi_pal <- colorRampPalette(c("#74c8c3", "#0a2e57"))(n_levels)
+pdsi_pal <- colorRampPalette(c(
+  "#f7fbff",
+  "#deebf7",
+  "#c6dbef",
+  "#9ecae1",
+  "#6baed6",
+  "#4292c6",
+  "#2171b5",
+  "#08519c",
+  "#08306b"))(n_levels)
 
 # growth palet (model parameter)
-growth_pal <- colorRampPalette(c("#a9845b", "#0f252f"))(n_levels)
+growth_pal <- colorRampPalette(c(
+  "#dadaeb",
+  "#bcbddc",
+  "#9e9ac8",
+  "#807dba",
+  "#6a51a3",
+  "#54278f",
+  "#3f007d"
+))(n_levels)
 
 # define limits
 t_min <- -1.5

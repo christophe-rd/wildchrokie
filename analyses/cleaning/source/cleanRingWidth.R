@@ -52,9 +52,9 @@ c <- do.call(rbind, all_data)
 # it involves a couple of mistakes when I entered the data that I will fix bellow #
 ### === === === === === ###
 # read table
-setwd(directory)
+# setwd(directory)
 list.files()
-d <- read.xlsx("_notcookies/treecookies.xlsx", sheetName = "Sheet1")
+d <- read.xlsx("input/_notcookies/treecookies.xlsx", sheetName = "Sheet1")
 # remove _ between siteenance and number
 d$id <- gsub("(_)([A-Z]+)_([0-9]+[A-Z]?)$", "\\1\\2\\3", d$id)
 # paste id and plot

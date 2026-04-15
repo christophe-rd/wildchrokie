@@ -11,16 +11,21 @@ options(max.print = 200)
 
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 
-### First start with 2018 data...
+# First start with 2018 data... ####
 # Set Working Directory
 cg18 <-read.csv("fromMainRepo/2018_data/2018_CG_datasheet.csv", header=TRUE)
 
 ## Clean data
+cg18$treeid <- paste(cg18$Ind, cg18$Plot, sep="_")
 cg18<-gather(cg18, "date","bbch", -Ind, -Plot) # bbch: international convention of dev stages of plants
 cg18<-na.omit(cg18)
 cg18$date<-substr(cg18$date, 2,8) # removes characters from position 2 and 8
 cg18$date<-as.character(as.Date(cg18$date,"%m.%d.%y"))
 cg18$doy<-yday(cg18$date)
+
+# save copy to check the frequency of observations
+freq18 <- cg18
+
 cg18$species<-substr(cg18$Ind, 0,6)
 cg18<-dplyr::select(cg18, -date)
 cg18$species<-ifelse(cg18$species=="betpap", "BETPAP", cg18$species)
@@ -141,7 +146,9 @@ cg18clean$risk<-cg18clean$leafout-cg18clean$budburst
 cg18clean$year <- 2018
 #write.csv(cg18clean, file="output/clean_cg_2018.csv", row.names=FALSE)
 
-### Now some starter code for 2019!
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Now some starter code for 2019! ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Set Working Directory
 cg19 <-read.csv("fromMainRepo/2019_data/2019_CG_dataupdated.csv", header=TRUE) 
 
@@ -149,7 +156,7 @@ cg19 <-read.csv("fromMainRepo/2019_data/2019_CG_dataupdated.csv", header=TRUE)
 cg19$treeid <- paste(cg19$ID, cg19$Plot, sep="_")
 cg19$Ind<-NULL
 cg19$Plot<-NULL
-cg19 <- gather(cg19, "date", "bbch", -treeid, -Phase)
+cg19 <- gather(cg19, "date", "bbch", -treeid, -Phase, -ID)
 cg19 <- cg19[!(cg19$date=="ID"),]
 cg19 <- na.omit(cg19)
 cg19 <- cg19[!(cg19$bbch==""),]
@@ -157,6 +164,9 @@ cg19 <- cg19[!(cg19$bbch==""),]
 cg19$date <- gsub("X", "", cg19$date)
 cg19$date <- as.Date(cg19$date, format="%m.%d.%Y")
 cg19$doy <- yday(cg19$date)
+
+# save copy to check the frequency of observations
+freq19 <- cg19
 
 cg19leaves <- cg19[(cg19$Phase=="Leaves"),]
 
@@ -331,7 +341,9 @@ cg18clean$Plot <- NA
 
 cg <- full_join(cg19clean, cg18clean)
 
-### Now some starter code for 2020!
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Now some starter code for 2020! ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Set Working Directory
 cg20 <-read.csv("fromMainRepo/2020_data/2020_CG_datasheet.csv", header=TRUE) 
 
@@ -339,13 +351,17 @@ cg20 <-read.csv("fromMainRepo/2020_data/2020_CG_datasheet.csv", header=TRUE)
 cg20$treeid <- paste(cg20$ID, cg20$Plot, sep="_")
 cg20$Ind<-NULL
 cg20$Plot<-NULL
-cg20 <- gather(cg20, "date", "bbch", -treeid, -Phase)
+cg20 <- gather(cg20, "date", "bbch", -treeid, -Phase, -ID)
+
 cg20 <- na.omit(cg20)
 cg20 <- cg20[!(cg20$bbch==""),]
 
 cg20$date <- gsub("X", "", cg20$date)
 cg20$date <- as.Date(cg20$date, format="%m.%d.%Y")
 cg20$doy <- yday(cg20$date)
+
+# save copy for frequency of observations
+freq20 <- cg20
 
 cg20leaves <- cg20[(cg20$Phase=="Leaves"),]
 
@@ -579,17 +595,6 @@ cgclean$name <- paste0(cgclean$spp, "_", cgclean$site, cgclean$ind, "_P", cgclea
 
 #write.csv(cgclean, file="~/Documents/git/wildhellgarden/analyses/output/clean_obs_allyrs.csv", row.names=FALSE)
 
-if(FALSE){
-cgclean$dvr <- cgclean$leafout - cgclean$budburst
-
-foo <- subset(cgclean, select=c("spp", "year", "site", "ind", "plot", "dvr"))
-foo <- foo[!duplicated(foo),]
-foo <- foo[complete.cases(foo),]
-
-#moddvr <- rstanarm::stan_glmer(dvr ~ as.factor(year) + (as.factor(year) | spp/site), data=foo)
-
-}
-
 #### Prepare to join to source file ####
 dtemp <- cgclean 
 str(dtemp)
@@ -606,6 +611,26 @@ names(obsdata)[names(obsdata) == "name"] <- "treeid"
 
 write.csv(obsdata, file="output/obsData.csv", row.names=FALSE)
 
-
-
-
+# # frequency of observations
+# str(freq18)
+# freq18 <- freq18[, c("Ind", "doy", "bbch")]
+# colnames(freq18) <- c("ID", "doy", "bbch")
+# freq18$year <- 2018
+# freq19 <- freq19[, c("ID", "doy", "bbch")]
+# freq19$year <- 2019
+# freq20 <- freq20[, c("ID", "doy", "bbch")]
+# freq20$year <- 2020
+# 
+# comb <- rbind(freq18, freq19, freq20)
+# comb$yeardoy <- paste(comb$year, comb$doy, sep = "_")
+# comb2 <- comb[!duplicated(comb$yeardoy),]
+# 
+# minbb <- aggregate(budburst ~ year, obsdata, FUN = min)
+# meanbb <- aggregate(budburst ~ year, obsdata, FUN = mean)
+# maxbb <- aggregate(budburst ~ year, obsdata, FUN = max)
+# 
+# par(mfrow = c(length(unique(comb2$year)), 1))
+# for (yr in sort(unique(comb2$year))) {
+#   hist(comb2$doy[comb2$year == yr], breaks = seq(0, 366, by = 14),
+#        main = yr, xlab = "Day of year", xlim = c(0, 366))
+# }

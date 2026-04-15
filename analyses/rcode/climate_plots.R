@@ -1042,3 +1042,29 @@ wcrw[order(wcrw$lengthCM),]
 
 agggdd <- aggregate(pgsGDD5 ~ year, empir, FUN = mean)
 agggdd[order(agggdd$pgsGDD5),]
+
+# Late spring frosts ####
+combined <- merge(empir[, c("treeid", "year", "budburst")], 
+                  weldhillclim[, c("year", "doy", "minTempC")], 
+                  by = "year")
+# Define frost threshold (usually 0 or -2.2 for hardy buds)
+frost_threshold <- 0
+
+# Subset to days after budburst where it froze
+late_frosts <- combined[combined$doy > combined$budburst & 
+                          combined$minTempC <= frost_threshold, ]
+combined$year[which(combined$budburst %in% min(combined$budburst, na.rm = TRUE))]
+# Remove rows with NA budburst (if any)
+late_frosts <- late_frosts[!is.na(late_frosts$budburst), ]
+
+# Create a summary data frame
+frost_summary <- aggregate(minTempC ~ treeid + year, 
+                           data = late_frosts, 
+                           FUN = function(x) c(Count = length(x), MinTemp = min(x)))
+
+# Flatten the aggregate result into a clean data frame
+frost_summary <- do.call(data.frame, frost_summary)
+colnames(frost_summary) <- c("treeid", "year", "frost_days_after_burst", "minimum_frost_temp")
+
+# View the results
+head(frost_summary)

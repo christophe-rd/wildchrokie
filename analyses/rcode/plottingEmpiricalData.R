@@ -714,8 +714,33 @@ ggplot(data = world) +
   )
 ggsave("figures/mapSourcePop.jpeg", width = 9, height = 6, units = "in", dpi = 300)
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Time series phenological data ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+comb <- read.csv("output/uncleanedTimeseriesPheno.csv")
+comb$yeardoy <- paste(comb$year, comb$doy, sep = "_")
+comb2 <- comb[!duplicated(comb$yeardoy),]
 
-[1] "#FF0000" "#00A08A" "#F2AD00" "#F98400"
+minbb <- aggregate(budburst ~ year, obsdata, FUN = min)
+meanbb <- aggregate(budburst ~ year, obsdata, FUN = mean)
+maxbb <- aggregate(budburst ~ year, obsdata, FUN = max)
+bb <- merge(minbb, meanbb, by = "year")
+bb <- merge(bb, maxbb, by = "year")
+colnames(bb) <- c("year", "min", "mean", "max")
 
- # Fitting empirical data with stan_lmer ####
+jpeg(
+  filename = "figures/empiricalData/phenoTimeseries.jpeg", 
+  width = 2000, height = 2800, res = 400)
+
+par(mfrow = c(length(unique(comb2$year)), 1))
+for (yr in sort(unique(comb2$year))) { # i =1
+  hist(comb2$doy[comb2$year == yr], breaks = seq(0, 366, by = 14),
+       main = yr, xlab = "Day of year", xlim = c(0, 366), ylim = c(0,4),
+       ylab = "Number of observations per 14 days")
+  bbx <- bb[bb$year == yr,]
+  segments(x0 = bbx$min, y0 = 0, y1 = 4, lwd = 2, lty = 2, col = "darkgreen")
+  segments(x0 = bbx$mean, y0 = 0, y1 = 4, lwd = 2, lty = 2, col = "black")
+  segments(x0 = bbx$max, y0 = 0, y1 = 4, lwd = 2, lty = 2, col = "orange2")
+}
+dev.off()
 
