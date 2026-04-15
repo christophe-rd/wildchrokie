@@ -295,7 +295,7 @@ for (j in 1:ns) {
 text(growth_x + gw / 2, total_h - 0.22, "Growth\n(mm)", 
      cex = 0.8, font = 2, col = "grey15")
 
-for (i in 1:ny) {
+for (i in 1:ny) { 
   # Calculate the vertical center of the current row
   # This matches the 'y0' logic in your rectangle loop
   y_center <- (ny - i) * ch + 0.6 + (ch / 2)
