@@ -1008,13 +1008,18 @@ custommar <- c(4, 4, 2, 1.2)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
      width = 1800, height = 2200, res = 300)
-
+library(rsvg)
+img_thermom <- rsvg::rsvg("figures/thermometer.svg")
+img_calenda <- rsvg::rsvg("figures/calendar.svg")
+img_leafout <- rsvg::rsvg("figures/bepaPicLeafout.svg")
+img_budset <- rsvg::rsvg("figures/bepaPicBudset.svg")
+custommar <- c(4, 4, 4, 1.2)
 layout(matrix(c(
-  1, 5,
-  2, 5,
-  3, 5,
-  4, 5
-), nrow = 4, byrow = TRUE), widths = c(1.3, 1.2))
+  1, 5, 9,
+  2, 6, 9,
+  3, 7, 9,
+  4, 8, 9
+), nrow = 4, byrow = TRUE), widths = c(2, 1, 1.2))
 
 # Row 1: GDD
 par(mar = custommar)
@@ -1028,7 +1033,13 @@ segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
 segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
 
-mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("Growing degree days", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.4, n_spp + 0.85, "Less growth with warmer season", pos = 3, xpd = TRUE, cex = 0.7)
+arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.6, n_spp + 0.85, "More growth with with warmer season", pos = 3, xpd = TRUE, cex = 0.7)
+
 
 # Row 2: GSL
 par(mar = custommar)
@@ -1041,7 +1052,12 @@ segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("Growing season length", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.4, n_spp + 0.85, "Less growth with longer season", pos = 3, xpd = TRUE, cex = 0.7)
+arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.6, n_spp + 0.85, "More growth with with longer season", pos = 3, xpd = TRUE, cex = 0.7)
 
 # Row 3: SOS
 par(mar = custommar)
@@ -1054,7 +1070,12 @@ segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("Start of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.4, n_spp + 0.85, "Less growth with later leafout", pos = 3, xpd = TRUE, cex = 0.7)
+arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.6, n_spp + 0.85, "More growth with with later leafout", pos = 3, xpd = TRUE, cex = 0.7)
 
 # Row 4: EOS
 par(mar = custommar)
@@ -1067,7 +1088,17 @@ segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("End of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.4, n_spp + 0.85, "Less growth with later budset", pos = 3, xpd = TRUE, cex = 0.7)
+arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.6, n_spp + 0.85, "More growth with with later budset", pos = 3, xpd = TRUE, cex = 0.7)
+
+par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_thermom, 0, 0.4, 0.3, 0.7)
+par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_calenda, 0, 0.4, 0.3, 0.7)
+par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_leafout, 0, 0.4, 0.3, 0.7)
+par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_budset,  0, 0.4, 0.3, 0.7)
 
 # Slot 5: species legend
 par(mar = c(1, 1, 1, 1))
@@ -1083,7 +1114,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
      width = 3000, height = 2800, res = 300)
 
 layout(matrix(c(

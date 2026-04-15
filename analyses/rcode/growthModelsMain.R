@@ -29,7 +29,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/tools.R')
 
 # flags
-fitmodels <- TRUE
+fitmodels <- FALSE
 fitmodelfull <- FALSE
 fitmodelsZscored <- FALSE
 
