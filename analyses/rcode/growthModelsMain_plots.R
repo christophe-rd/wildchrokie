@@ -1006,10 +1006,10 @@ custommar <- c(4, 4, 2, 1.2)
 jpeg(file = "figures/growthModelsMain/muALLbspp.jpeg",
      width = 1800, height = 2200, res = 300)
 library(rsvg)
-img_thermom <- rsvg::rsvg("figures/thermometer.svg")
-img_calenda <- rsvg::rsvg("figures/calendar.svg")
-img_leafout <- rsvg::rsvg("figures/bepaPicLeafout.svg")
-img_budset <- rsvg::rsvg("figures/bepaPicBudset.svg")
+img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
+img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
 custommar <- c(4, 4, 4, 1.2)
 layout(matrix(c(
   1, 5, 9,
