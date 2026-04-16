@@ -39,7 +39,7 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  a ~ normal(1, 3);
+  a ~ normal(2, 3);
   // zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   // aspp ~ normal(0, 6);
   // asite ~ normal(0, 2);
@@ -64,7 +64,7 @@ generated quantities {
   }
 
   // prior predictive samples
-  real a_prior = normal_rng(1, 3);
+  real a_prior = normal_rng(2, 3);
   // real sigma_atreeid_prior = abs(normal_rng(0, 0.5));
   real sigma_y_prior = abs(normal_rng(0, 3));
   // real aspp_prior = normal_rng(0, 6);
