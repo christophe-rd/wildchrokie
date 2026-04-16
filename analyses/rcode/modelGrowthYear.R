@@ -67,6 +67,63 @@ fityearonly <- sampling(yearmodelonly, data = data,
                     warmup = 1000, iter=2000, chains=4)
 saveRDS(fityearonly, "output/stanOutput/fitGrowthOnlyYear")
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Retrodictive checks ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+samples <- util$extract_expectand_vals(fityear)
+
+# By species
+jpeg(
+  filename = "figures/growthYearModel/retrodictiveDiskSpp.jpeg",
+  width = 3600, height = 2000, res = 300          
+)
+par(mfrow = c(1,data$Nspp))
+for (s in unique(data$species)) { # s = 1
+  idxs <- which(data$species == s)
+  util$plot_disc_pushforward_quantiles(samples,
+                                       paste0("y_rep[", idxs, "]"),
+                                       baseline_values = data$y[idxs],
+                                       ylab = "log(rw)",
+                                       main = paste("Spp", s))
+}
+dev.off()
+
+# By year
+jpeg(
+  filename = "figures/growthYearModel/retrodictiveDiskYr.jpeg",
+  width = 3600, height = 2000, res = 300          
+)
+par(mfrow = c(1,data$Nyear))
+for (y in unique(data$year)) { # s = 1
+  idxs <- which(data$year == y)
+  util$plot_disc_pushforward_quantiles(samples,
+                                       paste0("y_rep[", idxs, "]"),
+                                       baseline_values = data$y[idxs],
+                                       ylab = "log(rw)",
+                                       main = paste("Yr", y))
+}
+dev.off()
+
+# Hist by year
+jpeg(
+  filename = "figures/growthYearModel/retrodictiveHistYr.jpeg",
+  width = 3600, height = 2000, res = 300          
+)
+par(mfrow = c(1, data$Nyear))
+for (y in unique(data$year)) {
+  idxs <- which(data$year == y)
+  samples_sub <- samples[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = data$y[idxs],
+                           xlab = "anom Leafout",
+                           main = paste("Yr", y))
+}
+dev.off()
+
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fityearonly) 
 util$check_all_hmc_diagnostics(diagnostics)

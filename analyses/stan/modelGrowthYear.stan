@@ -16,7 +16,6 @@ parameters{
 real a;		// mean intercept across everything
 real<lower=0> sigma_atreeid;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
-
 vector[Ntreeid] zatreeid; // variation of intercept across tree ids, no-centered
 vector[Nspp] aspp;
 vector[Nsite] asite;
