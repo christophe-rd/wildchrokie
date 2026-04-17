@@ -38,10 +38,10 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \section*{Research questions}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
-\item Did growth change across years, and if so what cue dominates?
-\item How do species ring widths vary with thermal season vs calendar season
-\item Do previous year cummulated GDD influence the following year's growth?
-\item How species spring and autumn phenophases shift with the temperature of different seasons?
+\item Did growth change across years, and if so what cue had the largest effects?
+\item How do species ring widths vary with thermal season vs calendar season?
+\item Does the previous year cummulated GDD influence the following year's growth?
+\item How do species spring and autumn phenophases shift with the temperature of different seasons?
 \item Does growth change across sites?
 \end{enumerate}
 
@@ -54,24 +54,23 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Wildchrokie includes four deciduous tree species from four sites with \Sexpr{nrow(emp)} complete growing seasons (GS)
   
   \item Phenology data span three years from 2018 to 2020 with \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations
-  \item The earliest leafout was \Sexpr{min(emp$leafout)}, in \Sexpr{emp$year[which.min(emp$leafout)]} and the latest budset was
-  \Sexpr{max(emp$budset)}, in \Sexpr{emp$year[which.max(emp$budset)]}
+  \item The earliest leafout day of year was \Sexpr{min(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}) and the latest, \Sexpr{max(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}). 
+  \item The earliest budset day of year was \Sexpr{min(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]}) and the latest, \Sexpr{max(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]})
   
   \item GS thermal sum ranged from 
-  \Sexpr{round(min(emp$pgsGDD5),1)} GDD in \Sexpr{emp$year[which.min(emp$pgsGDD5)]} to 
-  \Sexpr{round(max(emp$pgsGDD5),1)} GDD in \Sexpr{emp$year[which.max(emp$pgsGDD5)]}
+  \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
+  \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
   
   \item GSL ranged from 
-  \Sexpr{min(emp$pgsGSL)} days in \Sexpr{emp$year[which.min(emp$pgsGSL)]} to 
-  \Sexpr{max(emp$pgsGSL)} days in \Sexpr{emp$year[which.max(emp$pgsGSL)]}
+  \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
+  \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
   
-  \item Ring widths vary from 
+  \item Annual ring widths across years varied from 
   \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
   \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}). 
-  \item Ring widths for {\Ball} were the smallest, and {\Bpop} had the largest rings on average.
 \end{enumerate}
 
-\item Did growth change across years, and if so what cue dominates?
+\item Did growth change across years, and if so what cue had the largest effects?
   \begin{enumerate}
   \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS or highest thermal sum)
   \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
@@ -79,6 +78,16 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 \item How do species ring widths vary with thermal season vs calendar season?
   \begin{enumerate}
+  \item A later start of season decreased growth for two species 
+  ({\Ainc}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, 
+  \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}] and 
+  {\Bpop}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+  
+  \item A later end of season decreased growth only for {\Ainc} 
+  ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
+  
   \item Longer thermal season increased growth only for {\Bpap} 
   ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$
 [\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, 
@@ -91,26 +100,17 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
   \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored})
   
-  \item A later start of season decreased growth for two species 
-  ({\Ainc}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, 
-  \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}] and 
-  {\Bpop}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
-  
-  \item A later end of season decreased growth only for {\Ainc} 
-  ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
   \end{enumerate}
 
-\item Do previous year cummulated GDD influence the following year's growth?
+\item Does the previous year cummulated GDD influence the following year's growth?
   \begin{enumerate}
   \item Growth decreased for all species with current year GDD
   \item But growth decreased for only two species with previous year GDD
   \end{enumerate}
   
-\item How species spring and autumn phenophases shift with the temperature of different seasons?
+\item How do species spring and autumn phenophases shift with the temperature of different seasons?
   \begin{enumerate}
-  \item \textit{results in progress so this is just an example:} warmer winter delayed leafout, but warmer springs advanced leafout.
+  \item \textit{results in progress so this is just an example of where it would belong:} warmer winter delayed leafout, but warmer springs advanced leafout.
   \end{enumerate}
 
 \item Does growth change across sites?
@@ -179,7 +179,8 @@ tab <- xtable(df_all,
 
 print(tab,
       include.rownames = FALSE,
-      sanitize.text.function = identity)
+      sanitize.text.function = identity,
+      caption.placement = "top")
 @
 
 % Table site intercept for Wildchrokie
@@ -210,7 +211,8 @@ tab <- xtable(sitefortable,
 
 print(tab,
       include.rownames = FALSE,
-      sanitize.text.function = identity)
+      sanitize.text.function = identity,
+      caption.placement = "top")
 @
 
 % Z-scored slope results Wildchrokie
