@@ -42,6 +42,10 @@ emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 emp$year_num <- as.integer(as.factor(emp$year))
 emp$lengthMM <- emp$lengthCM*10
 
+emp$yrdum18 <- ifelse(emp$year == 2018, 0, 0)
+emp$yrdum19 <- ifelse(emp$year == 2019, 1, 0)
+emp$yrdum20 <- ifelse(emp$year == 2020, 1, 0)
+
 # transform data in vectors for GDD
 data <- list( 
   y = log(emp$lengthMM),
@@ -53,19 +57,23 @@ data <- list(
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(emp$treeid)),
   Nyear = length(unique(emp$year)),
-  year = emp$year_num)
+  year18 = emp$yrdum18,
+  year19 = emp$yrdum19,
+  year20 = emp$yrdum20)
 
 # Fit model year with other parameters
 yearmodel <- stan_model("stan/modelGrowthYear.stan")
 fityear <- sampling(yearmodel, data = data,
                 warmup = 1000, iter=2000, chains=4)
 saveRDS(fityear, "output/stanOutput/fitGrowthYear")
+# fityear <- readRDS("output/stanOutput/fitGrowthYear")
 
 # Fit model year without other parameters
 yearmodelonly <- stan_model("stan/modelGrowthOnlyYear.stan")
 fityearonly <- sampling(yearmodelonly, data = data,
                     warmup = 1000, iter=2000, chains=4)
 saveRDS(fityearonly, "output/stanOutput/fitGrowthOnlyYear")
+# fityearonly <- readRDS("output/stanOutput/fitGrowthOnlyYear")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
@@ -119,7 +127,7 @@ for (y in unique(data$year)) {
                            4,
                            0.3,
                            baseline_values = data$y[idxs],
-                           xlab = "anom Leafout",
+                           xlab = "log(ring width)",
                            main = paste("Yr", y))
 }
 dev.off()
@@ -247,6 +255,28 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
+
+# plots years
+colsyear <- c("#dd5129", "#0f7ba2", "#43b284")
+jpeg("figures/growthYearModel/muYears.jpeg", width = 6, height = 6, 
+     units = "in", res = 300)
+par(mfrow = c(1,1))
+n_year <- length(unique(year_df2$year))
+y_pos <- 1:n_year
+
+# Current year
+plot(year_df2$fit_ayear, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_year + 0.5), 
+     xlab = "year intercept", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(year_df2$fit_ayear_per5, y_pos, year_df2$fit_ayear_per95, y_pos,
+         col = colsyear, lwd = 1.5)
+segments(year_df2$fit_ayear_per25, y_pos, year_df2$fit_ayear_per75, y_pos,
+         col = colsyear, lwd = 3)
+axis(2, at = y_pos, labels = year_df2$year_name, las = 1)
+dev.off()
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot Year fit ONLY ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -256,15 +286,15 @@ df_fityearonly <- as.data.frame(fityearonly)
 # full posterior
 columns <- colnames(df_fityearonly)[!grepl("prior", colnames(df_fityearonly))]
 sigma_df <- df_fityearonly[, columns[grepl("sigma", columns)]]
-ayear_df <- df_fityearonly[, columns[grepl("ayear", columns)]]
+# ayear_df <- df_fityearonly[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
-year_df2_only <- extract_params(df_fityearonly, "ayear", "fit_ayear", 
-                             "year", "ayear\\[(\\d+)\\]")
-year_df2_only$year_name <- emp$year[match(year_df2_only$year, emp$year_num)]
+# year_df2_only <- extract_params(df_fityearonly, "ayear", "fit_ayear", 
+#                              "year", "ayear\\[(\\d+)\\]")
+# year_df2_only$year_name <- emp$year[match(year_df2_only$year, emp$year_num)]
 
 ##### Plot posterior vs priors for year fit #####
 pdf(file = "figures/growthYearModel/yearOnlyModelPriorVSPosterior.pdf", width = 6, height = 9)
@@ -272,45 +302,64 @@ pdf(file = "figures/growthYearModel/yearOnlyModelPriorVSPosterior.pdf", width = 
 par(mfrow = c(2, 1))
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-# a
+# a (2018)
 plot(density(df_fityearonly[, "a_prior"]), 
      col = pal[1], lwd = 2, 
-     main = "priorVSposterior_a", 
+     main = "priorVSposterior_2018 ", 
      xlab = "a", ylim = c(0,0.5))
 lines(density(df_fityearonly[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
-# ayear
-plot(density(df_fityearonly[, "ayear_prior"]), 
+# byear19
+plot(density(df_fityearonly[, "byear19_prior"]), 
      col = pal[1], lwd = 2, 
-     main = "priorVSposterior_ayear", 
+     main = "priorVSposterior_2019", 
      xlab = "ayear", ylim = c(0, 0.6))
-for (col in colnames(ayear_df)) {
-  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
-}
+lines(density(df_fityearonly[, "byear19"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# byear20
+plot(density(df_fityearonly[, "byear20_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_2020", 
+     xlab = "ayear", ylim = c(0, 0.6))
+lines(density(df_fityearonly[, "byear20"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
+df_fityearonly[, "a"]
+df_fityearonly[, "byear19"]
+df_fityearonly[, "byear20"]
 
-colsyear <- c("#dd5129", "#0f7ba2", "#43b284")
+
+# Summarize posteriors
+year_only_df2 <- data.frame(
+  year_name = c("2018", "2019", "2020"),
+  fit_mean  = c(mean(df_fityearonly[, "a"]),
+                mean(df_fityearonly[, "a"] + df_fityearonly[, "byear19"]),
+                mean(df_fityearonly[, "a"] + df_fityearonly[, "byear20"])),
+  per5  = c(quantile(df_fityearonly[, "a"], 0.05),
+            quantile(df_fityearonly[, "a"] + df_fityearonly[, "byear19"], 0.05),
+            quantile(df_fityearonly[, "a"] + df_fityearonly[, "byear20"], 0.05)),
+  per95 = c(quantile(df_fityearonly[, "a"], 0.95),
+            quantile(df_fityearonly[, "a"] + df_fityearonly[, "byear19"], 0.95),
+            quantile(df_fityearonly[, "a"] + df_fityearonly[, "byear20"], 0.95))
+)
+
+n_year <- nrow(year_only_df2)
+y_pos  <- n_year:1
 # plots years
-jpeg("figures/growthYearModel/muYears.jpeg", width = 6, height = 6, 
+jpeg("figures/growthYearModel/muYearsOnly.jpeg", width = 6, height = 6, 
      units = "in", res = 300)
 par(mfrow = c(1,1))
-n_year <- length(unique(year_df2_only$year))
-y_pos <- 1:n_year
-
-# Current year
-plot(year_df2_only$fit_ayear, y_pos,
-     xlim = c(-5, 5), ylim = c(0.5, n_year + 0.5), 
+plot(year_only_df2$fit_mean, y_pos,
+     xlim = c(0, 3), ylim = c(0.5, n_year + 0.5),
      xlab = "year intercept", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE,
-     panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(year_df2_only$fit_ayear_per5, y_pos, year_df2_only$fit_ayear_per95, y_pos,
-         col = colsyear, lwd = 1.5)
-segments(year_df2_only$fit_ayear_per25, y_pos, year_df2_only$fit_ayear_per75, y_pos,
-         col = colsyear, lwd = 3)
-axis(2, at = y_pos, labels = year_df2_only$year_name, las = 1)
+     yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE)
+par("usr")  # run immediately after the full plot call
+abline(v = year_only_df2$fit_mean[1], lty = 2, col = "black")
+segments(year_only_df2$per5,  y_pos, year_only_df2$per95, y_pos, col = colsyear, lwd = 2)
+axis(2, at = y_pos, labels = year_only_df2$year_name, las = 1)
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
