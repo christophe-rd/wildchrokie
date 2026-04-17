@@ -91,7 +91,7 @@ for (i in seq_along(years)) { # i = 2018
          col= yearcolors, pch = 16, lty = 1, lwd = 2,
          title  = "Year")
 }
-}
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Climate summaries ####
@@ -1013,6 +1013,7 @@ legend("right",
 # dev.off()
 }
 
+}
 
 # Checks for temperatures and PDSI ####
 wcgsl <- aggregate(pgsGSL ~ year, empir, FUN = mean, na.rm =TRUE)

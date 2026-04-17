@@ -17,7 +17,8 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- TRUE
+makeplots <- F
+runzscore <- F
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -1030,12 +1031,12 @@ segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
 segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
 
-mtext("Growing degree days", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+mtext("(a) Growing degree days", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
 
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.4, n_spp + 0.85, "Less growth with warmer season", pos = 3, xpd = TRUE, cex = 0.7)
+text(-0.4, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.8)
 arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.6, n_spp + 0.85, "More growth with with warmer season", pos = 3, xpd = TRUE, cex = 0.7)
+text(0.6, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.8)
 
 
 # Row 2: GSL
@@ -1049,12 +1050,12 @@ segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("Growing season length", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+mtext("(b) Growing season length", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
 
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.4, n_spp + 0.85, "Less growth with longer season", pos = 3, xpd = TRUE, cex = 0.7)
+text(-0.4, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.8)
 arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.6, n_spp + 0.85, "More growth with with longer season", pos = 3, xpd = TRUE, cex = 0.7)
+text(0.6, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.8)
 
 # Row 3: SOS
 par(mar = custommar)
@@ -1067,12 +1068,12 @@ segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("Start of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+mtext("(c) Start of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
 
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.4, n_spp + 0.85, "Less growth with later leafout", pos = 3, xpd = TRUE, cex = 0.7)
+text(-0.4, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.8)
 arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.6, n_spp + 0.85, "More growth with with later leafout", pos = 3, xpd = TRUE, cex = 0.7)
+text(0.6, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.8)
 
 # Row 4: EOS
 par(mar = custommar)
@@ -1085,12 +1086,12 @@ segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("End of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
+mtext("(d) End of season", adj = 0, side = 3, line = 2, font = 2, cex = 0.9)
 
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.4, n_spp + 0.85, "Less growth with later budset", pos = 3, xpd = TRUE, cex = 0.7)
+text(-0.4, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.8)
 arrows(x0 = 0.2, y0 = n_spp + 0.85, x1 = 0.75, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.6, n_spp + 0.85, "More growth with with later budset", pos = 3, xpd = TRUE, cex = 0.7)
+text(0.6, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.8)
 
 par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_thermom, 0, 0.4, 0.3, 0.7)
 par(mar = c(1,1,1,1)); plot.new(); rasterImage(img_calenda, 0, 0.4, 0.3, 0.7)
@@ -1531,7 +1532,7 @@ forest_grob <- as_grob(function() {
   
   plot(site_df2$fit_a_site, y_pos_site,
        xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
-       xlab = "Ring width intercept values (mm)", ylab = "Latitude",
+       xlab = "log(ring width) intercept values", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
        panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -1580,6 +1581,7 @@ colnames(rwsum) <- c("spp","min", "max")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Z-scored output ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if(runzscore){
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### GDD posterior recovery #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -1705,4 +1707,4 @@ max_ES <- merge(agg_z, bspp_z_binded[, c("fit_bspp", "fit_bspp_per5", "fit_bspp_
 max_ES$fit_bspp_abs <- NULL
 
 max_ES <- max_ES[order(max_ES$pred),]
-
+}
