@@ -1,42 +1,233 @@
-\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
-\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
-\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
-%\geometry{landscape}                		% Activate for rotated page geometry
-%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
-\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
-								% TeX will automatically convert eps --> pdf in pdflatex		
-\usepackage{amssymb}
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
 
-%SetFonts
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
 
-%SetFonts
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
 
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
-\title{Results outline real}
-\author{CRD}
-\date{\today}						
-
+\usepackage{alltt}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage[top=1.5cm, bottom=1.5cm, left=2cm, right=2cm]{geometry}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{Results outline}
+\author{Christophe Rouleau-Desrochers}
+\date{\today}
 \maketitle
 
-\section{Growth with GS conditions}
 
+% Set Wildchrokie species shortcut
+\newcommand{\Ainc}{\textit{A. incana}}
+\newcommand{\Ball}{\textit{B. alleghaniensis}}
+\newcommand{\Bpap}{\textit{B. papyrifera}}
+\newcommand{\Bpop}{\textit{B. populifolia}}
+
+
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Research questions}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
-\item There is no consistent pattern of growth trends the temperature and water availability across years.
-\item The highest growth year (2018) didn't happen in either the warmest or wettest year.
-\item The lowest growth was during the driest, but also the warmest season. 
-\item In terms of season length, we don't observe a clear trend either.
-\item The highest growth in 2018 was neither the earliest or latest SOS and EOS or the longest season. 
-\item The least growth happened in the shortest season, but during the latest SOS unlike what we expected (warmer conditions experienced when SOS is late would lead to increased growth). 
+\item Did growth change across years, and if so what cue dominates?
+\item How do species ring widths vary with thermal season vs calendar season
+\item Do previous year cummulated GDD influence the following year's growth?
+\item How species spring and autumn phenophases shift with the temperature of different seasons?
+\item Does growth change across sites?
 \end{enumerate}
 
-\section{Ringwidths}
-I would cut as this does nothing.
-
-\section{Model results}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\section*{Results}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
-\item Did trees grow more in a certain year? 
-Warmer thermal seasons increased growth only for one species while the calendar season increased it for three species.
+\item Summary results
+  \begin{enumerate}
+  \item Wildchrokie includes four deciduous tree species from four sites with 227 complete growing seasons (GS)
+  
+  \item Phenology data span three years from 2018 to 2020 with 239 leafout and 230 budset observations
+  \item The earliest leafout was 112, in 2019 and the latest budset was
+  297, in 2018
+  
+  \item GS thermal sum ranged from 
+  1465.1 GDD in 2018 to 
+  2513.6 GDD in 2018
+  
+  \item GSL ranged from 
+  90 days in 2018 to 
+  173 days in 2018
+  
+  \item Ring widths vary from 
+  0.39 mm ({\Ball} in 2020) to 
+  13.55 mm ({\Bpop} in 2018). 
+  \item Ring widths for {\Ball} were the smallest, and {\Bpop} had the largest rings on average.
 \end{enumerate}
 
-\end{document}  
+\item Did growth change across years, and if so what cue dominates?
+  \begin{enumerate}
+  \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS or highest thermal sum)
+  \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
+  \end{enumerate}
+
+\item How do species ring widths vary with thermal season vs calendar season?
+  \begin{enumerate}
+  \item Longer thermal season increased growth only for {\Bpap} 
+  ($\beta = $ 0.32, $UI_{90}$
+[0.04, 
+0.6]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
+
+  \item But longer calendar season increased growth for two additional species
+  (\Ainc: $\beta = $ 0.13, $UI_{90}$[0.05, 0.21],
+\Ball: $\beta = $ 0.1, $UI_{90}$[0, 0.19] and
+\Bpap: $\beta = $ 0.26, $UI_{90}$[0.06, 0.46]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
+
+  \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored})
+  
+  \item A later start of season decreased growth for two species 
+  ({\Ainc}: $\beta = $ -0.13, $UI_{90}$
+  [-0.16, 
+  -0.09] and 
+  {\Bpop}: $\beta = $ -0.09, $UI_{90}$[-0.16, -0.02]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+  
+  \item A later end of season decreased growth only for {\Ainc} 
+  ($\beta = $ -0.07, $UI_{90}$
+  [-0.11, -0.03]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
+  \end{enumerate}
+
+\item Do previous year cummulated GDD influence the following year's growth?
+  \begin{enumerate}
+  \item Growth decreased for all species with current year GDD
+  \item But growth decreased for only two species with previous year GDD
+  \end{enumerate}
+  
+\item How species spring and autumn phenophases shift with the temperature of different seasons?
+  \begin{enumerate}
+  \item \textit{results in progress so this is just an example:} warmer winter delayed leafout, but warmer springs advanced leafout.
+  \end{enumerate}
+
+\item Does growth change across sites?
+  \begin{enumerate}
+  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}).
+  \end{enumerate}
+
+\end{enumerate}
+
+
+% Figure mu across all species and climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbspp.jpeg}
+\caption{Model slope parameters across the different model predictors for Wildchrokie species. GDD represent the accumulated growing degree days between leafout and budset (a) the models estimates shows log ring width change per 10 average spring days GDD (174.32). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:wcmuplotbspp}
+\end{figure}
+
+% Wildchrokie site mu plot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
+\caption{The effect of sites on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The sites are color-coded from (b), th map showing their locations.}
+\label{fig:wcmuplotasite}
+\end{figure}
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplemental results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
+\section*{Supplemental results}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+% Table slope for Wildchrokie
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Fri Apr 17 13:59:21 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllll}
+  \hline
+Species & GDD & GSL & SOS & EOS \\ 
+  \hline
+\textit{A. incana} & $\beta = $0.06, [-0.05, 0.17] & $\beta = $0.13, [0.05, 0.21] & $\beta = $-0.13, [-0.16, -0.09] & $\beta = $-0.07, [-0.11, -0.03] \\ 
+  \textit{B. alleghaniensis} & $\beta = $0.10, [-0.03, 0.24] & $\beta = $0.10, [0.00, 0.19] & $\beta = $-0.03, [-0.09, 0.03] & $\beta = $0.04, [-0.01, 0.09] \\ 
+  \textit{B. papyrifera} & $\beta = $0.33, [0.04, 0.60] & $\beta = $0.27, [0.06, 0.46] & $\beta = $-0.08, [-0.19, 0.04] & $\beta = $0.07, [-0.03, 0.15] \\ 
+  \textit{B. populifolia} & $\beta = $0.00, [-0.16, 0.16] & $\beta = $0.00, [-0.12, 0.12] & $\beta = $-0.09, [-0.16, -0.02] & $\beta = $-0.04, [-0.09, 0.01] \\ 
+   \hline
+\end{tabular}
+\caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_slope_table}
+\end{table}
+
+
+% Table site intercept for Wildchrokie
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Fri Apr 17 13:59:21 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{llrr}
+  \hline
+Site & Intercept.estimate & Latitude & Longitude \\ 
+  \hline
+Dartmouth College (NH) & $\alpha = $-0.11, [-0.9, 0.7] & 44.79 & -71.15 \\ 
+  Harvard Forest (MA) & $\alpha = $-0.16, [-0.97, 0.67] & 42.53 & -72.19 \\ 
+  St-Hyppolyte (Qc) & $\alpha = $0.05, [-0.76, 0.87] & 45.93 & -74.03 \\ 
+  White Mountains (NH) & $\alpha = $0.13, [-0.67, 0.95] & 44.11 & -71.23 \\ 
+   \hline
+\end{tabular}
+\caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
+\label{tab:wc_asite_table}
+\end{table}
+
+
+% Z-scored slope results Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
+\caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:bsppZscored}
+\end{figure}
+
+
+\end{document}
