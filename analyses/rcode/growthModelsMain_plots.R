@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- TRUE
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1006,10 +1006,12 @@ custommar <- c(4, 4, 2, 1.2)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 pdf("figures/growthModelsMain/muALLbspp.pdf", width = 7.5, height = 6)
 library(rsvg)
+
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
 img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")
 img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
 img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+# img_budset <- image_trim(img_budset) 
 
 layout(matrix(c(
   1, 2, 5,
@@ -1033,7 +1035,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.18, usr[1] + diff(usr[1:2]) * 0.12, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.30, usr[4])
 
 # Panel 2: GSL
 par(mar = mumar)
@@ -1050,7 +1052,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.18, usr[1] + diff(usr[1:2]) * 0.12, usr[4])
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
 # Panel 3: SOS
 par(mar = mumar)
@@ -1067,7 +1069,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.18, usr[1] + diff(usr[1:2]) * 0.12, usr[4])
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
 # Panel 4: EOS
 par(mar = mumar)
@@ -1084,7 +1086,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.18, usr[1] + diff(usr[1:2]) * 0.12, usr[4])
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
 # Panel 5: species legend
 par(mar = c(mumar))
