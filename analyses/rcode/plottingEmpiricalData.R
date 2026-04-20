@@ -721,9 +721,9 @@ comb <- read.csv("output/uncleanedTimeseriesPheno.csv")
 comb$yeardoy <- paste(comb$year, comb$doy, sep = "_")
 comb2 <- comb[!duplicated(comb$yeardoy),]
 
-minbb <- aggregate(budburst ~ year, obsdata, FUN = min)
-meanbb <- aggregate(budburst ~ year, obsdata, FUN = mean)
-maxbb <- aggregate(budburst ~ year, obsdata, FUN = max)
+minbb <- aggregate(budburst ~ year, emp, FUN = min)
+meanbb <- aggregate(budburst ~ year, emp, FUN = mean)
+maxbb <- aggregate(budburst ~ year, emp, FUN = max)
 bb <- merge(minbb, meanbb, by = "year")
 bb <- merge(bb, maxbb, by = "year")
 colnames(bb) <- c("year", "min", "mean", "max")
