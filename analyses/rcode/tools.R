@@ -24,8 +24,9 @@ extract_params <- function(df_fit, pattern, col_prefix, id_col, rename_pattern =
   }))
   
   colnames(result)[1] <- id_col
-  colnames(result)[-1] <- paste0(col_prefix, c("", "_per5", "_per25", "_per75", "_per95"))
+  colnames(result)[-1] <- c("mean", "p5", "p25", "p75", "p95")
   result
+
 }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
