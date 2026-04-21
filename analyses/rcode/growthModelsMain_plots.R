@@ -1035,7 +1035,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.30, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 2: GSL
 par(mar = mumar)
@@ -1052,7 +1052,7 @@ text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 3: SOS
 par(mar = mumar)
@@ -1065,9 +1065,9 @@ segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
 segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
+text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
+text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
 rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
@@ -1082,9 +1082,9 @@ segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
 segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
+text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
+text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
 rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
