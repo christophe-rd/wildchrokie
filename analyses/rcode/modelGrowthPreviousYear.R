@@ -242,26 +242,26 @@ n_spp <- length(unique(bspp_df2_current$spp))
 y_pos <- rev(1:n_spp)
 
 # Current year
-plot(bspp_df2_current$fit_bspp, y_pos,
+plot(bspp_df2_current$mean, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5), 
      xlab = "slope current year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_current$fit_bspp_per5,  y_pos, bspp_df2_current$fit_bspp_per95, y_pos,
+segments(bspp_df2_current$p5,  y_pos, bspp_df2_current$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_current$fit_bspp_per25, y_pos, bspp_df2_current$fit_bspp_per75, y_pos,
+segments(bspp_df2_current$p25, y_pos, bspp_df2_current$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: Previous year
-plot(bspp_df2_previous$fit_bspp, y_pos,
+plot(bspp_df2_previous$mean, y_pos,
      xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5),
      xlab = "slope previous year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,      
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_previous$fit_bspp_per5,  y_pos, bspp_df2_previous$fit_bspp_per95, y_pos,
+segments(bspp_df2_previous$p5,  y_pos, bspp_df2_previous$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_previous$fit_bspp_per25, y_pos, bspp_df2_previous$fit_bspp_per75, y_pos,
+segments(bspp_df2_previous$p25, y_pos, bspp_df2_previous$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("Previous year", side = 3, adj = 0, font = 2, cex = 0.9)
 dev.off()

@@ -160,15 +160,14 @@ jpeg(file = "figures/powerPoint/muSOS.jpeg",
 
 mumar <- c(4, 1, 4, 1)
 
-# Panel 3: SOS
 par(mfrow = c(1,1))
-plot(bspp_df2_sos$fit_bspp, y_pos,
+plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 5 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(c) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
@@ -185,16 +184,18 @@ legend("right",
        title  = "Species", title.font = 2)
 dev.off()
 
-# Panel 4: EOS
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### bspp EOS ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg(file = "figures/powerPoint/muEOS.jpeg", width = 2400, height = 1800, res = 300)
 par(mfrow = c(1,1))
-plot(bspp_df2_eos$fit_bspp, y_pos,
+plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
@@ -210,46 +211,54 @@ legend("right",
        title  = "Species", title.font = 2)
 dev.off()
 
-# Panel 1: GDD
-par(mar = mumar)
-plot(bspp_df2$fit_bspp, y_pos,
-     xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in 10 spring days GDD", ylab = "",
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### bspp GDD ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(file = "figures/powerPoint/muGDD.jpeg", width = 2400, height = 1800, res = 300)
+par(mfrow = c(1,1))
+plot(bspp_df2$mean, y_pos,
+     xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
-mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
-usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.30, usr[4])
+segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
+# mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
+arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
+# usr <- par("usr")
+# rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+legend("right",
+       legend = sapply(unique(bspp_df2$spp_name),
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(wccolslatbi),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+dev.off()
 
-# Panel 2: GSL
-par(mar = mumar)
-plot(bspp_df2_gsl$fit_bspp, y_pos,
-     xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### bspp GSL ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg(file = "figures/powerPoint/muGSL.jpeg", width = 2400, height = 1800, res = 300)
+par(mfrow = c(1,1))
+plot(bspp_df2_gsl$mean, y_pos,
+     xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
-mtext("(b) Growing season length", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
-usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
-
-
-
-# Panel 5: species legend
-par(mar = c(mumar))
-plot.new()
-legend("center",
+segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
+# mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
+arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
+# usr <- par("usr")
+# rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+legend("right",
        legend = sapply(unique(bspp_df2$spp_name),
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(wccolslatbi),

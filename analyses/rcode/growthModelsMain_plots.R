@@ -1022,13 +1022,13 @@ mumar <- c(4, 1, 4, 1)
 
 # Panel 1: GDD
 par(mar = mumar)
-plot(bspp_df2$fit_bspp, y_pos,
+plot(bspp_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in 10 spring days GDD", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
@@ -1039,13 +1039,13 @@ rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 
 # Panel 2: GSL
 par(mar = mumar)
-plot(bspp_df2_gsl$fit_bspp, y_pos,
+plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
@@ -1056,13 +1056,13 @@ rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 
 # Panel 3: SOS
 par(mar = mumar)
-plot(bspp_df2_sos$fit_bspp, y_pos,
+plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 5 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
@@ -1073,13 +1073,13 @@ rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(u
 
 # Panel 4: EOS
 par(mar = mumar)
-plot(bspp_df2_eos$fit_bspp, y_pos,
+plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
@@ -1117,53 +1117,53 @@ widths = c(1.3, 1.2, 0.5))
 
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
-plot(bspp_df2$fit_bspp, y_pos,
+plot(bspp_df2$mean, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$fit_bspp_per5,  y_pos, bspp_df2$fit_bspp_per95, y_pos,
+segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$fit_bspp_per25, y_pos, bspp_df2$fit_bspp_per75, y_pos,
+segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
-plot(bspp_df2_gsl$fit_bspp, y_pos,
+plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_gsl$fit_bspp_per5,  y_pos, bspp_df2_gsl$fit_bspp_per95, y_pos,
+segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_gsl$fit_bspp_per25, y_pos, bspp_df2_gsl$fit_bspp_per75, y_pos,
+segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
-plot(bspp_df2_sos$fit_bspp, y_pos,
+plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 5 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_sos$fit_bspp_per5,  y_pos, bspp_df2_sos$fit_bspp_per95, y_pos,
+segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_sos$fit_bspp_per25, y_pos, bspp_df2_sos$fit_bspp_per75, y_pos,
+segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = custommar)
-plot(bspp_df2_eos$fit_bspp, y_pos,
+plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_eos$fit_bspp_per5,  y_pos, bspp_df2_eos$fit_bspp_per95, y_pos,
+segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_eos$fit_bspp_per25, y_pos, bspp_df2_eos$fit_bspp_per75, y_pos,
+segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
@@ -1687,13 +1687,13 @@ ball_z <- subset(bspp_z_binded, spp_name %in% "Betula alleghaniensis")
 bpap_z <- subset(bspp_z_binded, spp_name %in% "Betula papyrifera")
 bpop_z <- subset(bspp_z_binded, spp_name %in% "Betula populifolia")
 
-bspp_z_binded$fit_bspp_abs <- abs(bspp_z_binded$fit_bspp)
+bspp_z_binded$fit_bspp_abs <- abs(bspp_z_binded$mean)
 
 agg_z <- aggregate(fit_bspp_abs ~ spp_name, bspp_z_binded, function(f) abs(max(f)))
 
 # Aggregate to get only the max effect size for each species
 
-max_ES <- merge(agg_z, bspp_z_binded[, c("fit_bspp", "fit_bspp_per5", "fit_bspp_per95", "pred", "fit_bspp_abs", "spp_name")], 
+max_ES <- merge(agg_z, bspp_z_binded[, c("mean", "p5", "p95", "pred", "fit_bspp_abs", "spp_name")], 
                    by = c("spp_name", "fit_bspp_abs"))
 
 max_ES$fit_bspp_abs <- NULL

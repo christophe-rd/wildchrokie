@@ -169,7 +169,7 @@ if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 500, iter = 1000, chains=4)
+                warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -197,6 +197,10 @@ saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+# fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
+# fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
+# fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
 ##### Recover parameters #####
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -270,7 +274,7 @@ plot(density(df_fitgdd[, "aspp_prior"]),
      main = "priorVSposterior_aspp", 
      xlab = "aspp", 
      # xlim = c(-5, 5), 
-     ylim = c(0, 1))
+     ylim = c(0, 0.3))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -372,7 +376,7 @@ plot(density(df_fitgsl[, "aspp_prior"]),
      main = "priorVSposterior_aspp", 
      xlab = "aspp", 
      # xlim = c(-5, 5), 
-     ylim = c(0, 1))
+     ylim = c(0, 0.3))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -474,7 +478,7 @@ plot(density(df_fitsos[, "aspp_prior"]),
      main = "priorVSposterior_aspp", 
      xlab = "aspp", 
      # xlim = c(-5, 5), 
-     ylim = c(0, 1))
+     ylim = c(0, 0.3))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -576,7 +580,7 @@ plot(density(df_fiteos[, "aspp_prior"]),
      main = "priorVSposterior_aspp", 
      xlab = "aspp", 
      # xlim = c(-5, 5), 
-     ylim = c(0, 1))
+     ylim = c(0, 0.3))
 for (col in colnames(aspp_df)) {
   lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
 } 
@@ -623,7 +627,7 @@ util$plot_hist_quantiles(samples, "y_rep",
                          baseline_values = y,
                          xlab = "Ring width (mm)")
 dev.off()
-
+}
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -893,7 +897,7 @@ mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
 
 dev.off()
 }
-}
+
 # === === === === === === === === === === === === === === === === === === === #
 # === === === === === === === === === === === === === === === === === === === #
 
