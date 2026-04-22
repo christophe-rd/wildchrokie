@@ -47,7 +47,7 @@ agggsl$p75 <- aggregate(anomgsl ~ latbi + year, emp,
 agggsl$p95 <- aggregate(anomgsl ~ latbi + year, emp, 
                         FUN = quantile, probs = 0.95)$anomgsl
 jpeg(file = "figures/empiricalData/gslVariationSppYr.jpeg",
-     width = 2000, height = 2000, res = 300)
+     width = 2400, height = 2000, res = 300)
 # mu plot dimensions and stuff
 species_order <- c(
   "Alnus incana", 
@@ -70,12 +70,12 @@ for(yr in years){
   current_y <- current_y - length(idx) - gap
 }
 
-par(mar = c(4,6,4,4))
+par(mar = c(4,6,4,2))
 
 plot(agggsl$mean, agggsl$y_pos,
-     xlim = c(-30, 30), 
+     xlim = c(-50, 60), 
      ylim = c(0.5, max(agggsl$y_pos) + 0.5),
-     xlab = "anomalized gsl (days)", ylaab = "",
+     xlab = "anomalized gsl (days)", ylab = "",
      yaxt = "n",
      pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -99,7 +99,14 @@ axis(
 sum <- aggregate(anomgsl ~ latbi + year, emp, function(x) length(x))
 agggsl$count <- sum$anomgsl
 
-text(36, agggsl$y_pos - 0.4, paste("n = ", agggsl$count), pos = 3, xpd = TRUE, cex = 0.9)
+
+text(-40, agggsl$y_pos - 0.4, paste("n = ", agggsl$count), pos = 3, xpd = TRUE, cex = 0.9)
+legend("right",
+       legend = sapply(unique(agggsl$latbi), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = wccolslatbi,
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
 dev.off()                 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

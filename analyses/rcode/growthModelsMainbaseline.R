@@ -101,7 +101,7 @@ saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDbaseline")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
 util$check_all_hmc_diagnostics(diagnostics)
-# 
+
 # # fit gsl
 # gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 # fitgsl <- sampling(gslmodel, data = dgsl,
