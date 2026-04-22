@@ -46,6 +46,61 @@ agggsl$p75 <- aggregate(anomgsl ~ latbi + year, emp,
                         FUN = quantile, probs = 0.75)$anomgsl
 agggsl$p95 <- aggregate(anomgsl ~ latbi + year, emp, 
                         FUN = quantile, probs = 0.95)$anomgsl
+jpeg(file = "figures/empiricalData/gslVariationSppYr.jpeg",
+     width = 2000, height = 2000, res = 300)
+# mu plot dimensions and stuff
+species_order <- c(
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
+
+gap <- 2
+years <- c(2018, 2019, 2020)
+n_sp <- length(species_order)
+
+total_rows <- nrow(agggsl) + (length(species_order) - 1) * gap
+
+current_y <- total_rows
+agggsl$y_pos <- NA
+
+for(yr in years){
+  idx <- which(agggsl$year == yr)
+  agggsl$y_pos[idx] <- current_y:(current_y - length(idx) + 1)
+  current_y <- current_y - length(idx) - gap
+}
+
+par(mar = c(4,6,4,4))
+
+plot(agggsl$mean, agggsl$y_pos,
+     xlim = c(-30, 30), 
+     ylim = c(0.5, max(agggsl$y_pos) + 0.5),
+     xlab = "anomalized gsl (days)", ylaab = "",
+     yaxt = "n",
+     pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(agggsl$p5,  agggsl$y_pos, agggsl$p95, agggsl$y_pos, col = wccolslatbi, lwd = 1.5)
+segments(agggsl$p25, agggsl$y_pos, agggsl$p75, agggsl$y_pos, col = wccolslatbi, lwd = 3)
+abline(v = 0, lty = 2)
+
+
+# custom y axis label
+ylabel <- aggregate(y_pos ~ year, agggsl, mean)
+agggsl$ylabel <- ylabel$y_pos[match(agggsl$year, ylabel$year)]
+axis(
+  side = 2,
+  at = agggsl$ylabel,
+  labels = agggsl$year,
+  cex.axis = 2,
+  las = 1
+)
+
+# add n per year and species
+sum <- aggregate(anomgsl ~ latbi + year, emp, function(x) length(x))
+agggsl$count <- sum$anomgsl
+
+text(36, agggsl$y_pos - 0.4, paste("n = ", agggsl$count), pos = 3, xpd = TRUE, cex = 0.9)
+dev.off()                 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Frost free days ####
