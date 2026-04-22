@@ -14,19 +14,13 @@ library(ggplot2)
 library(rstan)
 library(future)
 library(wesanderson)
-
+source('rcode/tools.R')
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 
 sim <- read.csv("output/simdata.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
 gdd <- read.csv("output/gddByYear.csv")
 
-# add full species
-emp$sppfull <- NA
-emp$sppfull[which(emp$spp == "ALNINC")] <- "Alnus incana"
-emp$sppfull[which(emp$spp == "BETPOP")] <- "Betula populifolia"
-emp$sppfull[which(emp$spp == "BETPAP")] <- "Betula papyrifera"
-emp$sppfull[which(emp$spp == "BETALL")] <- "Betula alleghaniensis"
 emp$lengthMM <- emp$lengthCM*10
 
 # color coded by number of frost free days
@@ -38,6 +32,24 @@ colnames(countfrost) <- c("year", "countFrostFree")
 
 emp <- merge(emp, countfrost, by = "year")
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Variation by year vs by species
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+emp$anomgsl <- emp$pgsGSL - mean(emp$pgsGSL, na.rm = TRUE)
+agggsl <- aggregate(anomgsl ~ latbi + year, emp, FUN = mean)
+colnames(agggsl) <- c("latbi", "year", "mean")
+agggsl$p5  <- aggregate(anomgsl ~ latbi + year, emp, 
+                        FUN = quantile, probs = 0.05)$anomgsl
+agggsl$p25 <- aggregate(anomgsl ~ latbi + year, emp, 
+                        FUN = quantile, probs = 0.25)$anomgsl
+agggsl$p75 <- aggregate(anomgsl ~ latbi + year, emp, 
+                        FUN = quantile, probs = 0.75)$anomgsl
+agggsl$p95 <- aggregate(anomgsl ~ latbi + year, emp, 
+                        FUN = quantile, probs = 0.95)$anomgsl
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Frost free days ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # associate cols
 emp$colfrost <- NA
 unique(emp$countFrostFree)
@@ -52,7 +64,7 @@ ggplot(emp, aes(x = pgsGDD5, y = lengthMM)) +
                  fill = countFrostFree)) + 
   geom_smooth(method = "lm", se = TRUE, alpha = 0.2, color = "black") +
   scale_shape_manual(values = c(21, 22, 23, 24, 25)) +  
-  facet_wrap(~sppfull) +
+  facet_wrap(~latbi) +
   labs(y = "Ring width (mm)", 
        x = "Growing degree days (GDD)", 
        color = "Number of frost free days",
