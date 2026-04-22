@@ -85,7 +85,7 @@ dgdd <- list(
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
-  gdd = (emp$pgsGDD5 - 1800),
+  gdd = (emp$pgsGDD5 - 1800)/wcgddscale,
   gddseq = gddseq,
   wcgddscale = wcgddscale,
   Ngddseq = length(gddseq)
@@ -101,24 +101,6 @@ saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDbaseline")
 # check warnings
 diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
 util$check_all_hmc_diagnostics(diagnostics)
-
-# # fit gsl
-# gslmodel <- stan_model("stan/modelGrowthGSL.stan")
-# fitgsl <- sampling(gslmodel, data = dgsl,
-#                 warmup = 1000, iter = 2000, chains = 4)
-# saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
-# 
-# # Fit model SOS
-# sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-# fitsos <- sampling(sosmodel, data = dsos,
-#                 warmup = 1000, iter = 2000, chains=4)
-# saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
-# 
-# # Fit model EOS
-# eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-# fiteos <- sampling(eosmodel, data = deos,
-#                 warmup = 1000, iter = 2000, chains=4)
-# saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
@@ -225,8 +207,18 @@ dev.off()
 # recover no baseline site
 fitgddnobase <- readRDS("output/stanOutput/fitGrowthGDD")
 df_fitgdd_nobase <- as.data.frame(fitgddnobase)
+
+sigma_df2_nobase  <- extract_params(df_fitgdd_nobase, "sigma", "mean", "sigma")
+bspp_df2_nobase   <- extract_params(df_fitgdd_nobase, "bsp", "fit_bspp", 
+                             "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_nobase <- extract_params(df_fitgdd_nobase, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_nobase <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2_nobase   <- extract_params(df_fitgdd_nobase, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
 site_df2_nobase <- extract_params(df_fitgdd_nobase, "asite", "fit_a_site", 
                                   "site", "asite\\[(\\d+)\\]")
+
 jpeg("figures/growthModelsMain/baselineVSnoneAsite.jpeg", width = 6, height = 6, units = "in", res = 300)
 par(mfrow = c(1,1))
 
@@ -244,4 +236,57 @@ arrows(x0 = site_df2$p25, y0 = site_df2_nobase$mean,
 points(site_df2$mean, site_df2_nobase$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
+dev.off()
+
+# just look at the intercepts
+aspp_df2$a <- mean(df_fitgdd[,"a"])
+aspp_df2_nobase$a <- mean(df_fitgdd_nobase[,"a"])
+aspp_df2$a_aspp <- aspp_df2$mean + aspp_df2$a
+aspp_df2_nobase$a_aspp <- aspp_df2_nobase$mean + aspp_df2_nobase$a
+
+aspp_df2$bspp <- bspp_df2$mean[match(aspp_df2$spp, bspp_df2$spp)]
+aspp_df2_nobase$bspp <- bspp_df2_nobase$mean[match(aspp_df2_nobase$spp, bspp_df2$spp)]
+
+# spp names
+aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
+aspp_df2_nobase$spp_name <- emp$latbi[match(aspp_df2_nobase$spp, emp$spp_num)]
+
+jpeg("figures/growthModelsMain/baselineVSnoneSlopes.jpeg", width = 6, height = 8, units = "in", res = 300)
+par(mfrow = c(2,1))
+# no baseline
+plot(x = emp$pgsGDD5, y = dgdd$y,
+     xlim = c(0, max(emp$pgsGDD5)), ylim = c(-4, 3),
+     xlab = "gdd with no baseline", ylab = "log(ring width)",
+     main = "gdd model without a baseline")
+sppvenum <- as.numeric(aspp_df2_nobase$spp)
+for (i in sppvenum) { # i = 3
+  d <- aspp_df2_nobase[aspp_df2_nobase$spp == i,]
+  
+  spp_name <- aspp_df2_nobase$spp_name[i]
+  line_col <- wccolslatbi[spp_name]
+  
+  abline(a = d$a_aspp, b = d$bspp / wcgddscale, col = line_col)  
+  abline(a = d$a, b = 0, lty = 2)
+  # abline(v = 1800, lty = 1, lwd = 0.5)
+
+}
+             
+# with a baseline
+plot(x = emp$pgsGDD5 - 1800, y = dgdd$y,
+     xlim = c(-1000, 1000), ylim = c(-4, 3),
+     xlab = "gdd with a baseline", ylab = "log(ring width)",
+     main = "gdd model with a baseline")
+sppvenum <- as.numeric(aspp_df2$spp)
+
+for (i in sppvenum) { # i = 3
+  d <- aspp_df2[aspp_df2$spp == i,]
+  
+  spp_name <- aspp_df2$spp_name[i]
+  line_col <- wccolslatbi[spp_name]
+  
+  abline(a = d$a_aspp, b = d$bspp / wcgddscale, col = line_col)  
+  abline(a = d$a, b = 0, lty = 2)
+  abline(0,1, lty = 1, lwd = 0.5)
+  text(x = 350, y = -3, "baseline = 1800 gdd")
+}
 dev.off()
