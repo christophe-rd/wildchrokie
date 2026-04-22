@@ -217,7 +217,7 @@ dev.off()
 jpeg(file = "figures/powerPoint/muGDD.jpeg", width = 2400, height = 1800, res = 300)
 par(mfrow = c(1,1))
 plot(bspp_df2$mean, y_pos,
-     xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.2, 1), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -225,9 +225,9 @@ segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
+text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
+text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 # usr <- par("usr")
 # rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 legend("right",
@@ -245,7 +245,7 @@ dev.off()
 jpeg(file = "figures/powerPoint/muGSL.jpeg", width = 2400, height = 1800, res = 300)
 par(mfrow = c(1,1))
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.2, 1), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -253,9 +253,9 @@ segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lw
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
+text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
+text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
 # usr <- par("usr")
 # rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 legend("right",
