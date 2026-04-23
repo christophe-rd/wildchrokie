@@ -930,22 +930,22 @@ spp_y_top <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, max)
 aspp_df2$y_pos <- spp_y_top[aspp_df2$spp_name] + 1
 
 segments(
-  x0 = aspp_df2$fit_aspp_per5,
-  x1 = aspp_df2$fit_aspp_per95,
+  x0 = aspp_df2$p5,
+  x1 = aspp_df2$p95,
   y0 = aspp_df2$y_pos,
   col = adjustcolor(wccolslatbi[aspp_df2$spp_name], alpha.f = 0.9),
   lwd = 2
 )
 
 segments(
-  x0 = aspp_df2$fit_aspp_per25,
-  x1 = aspp_df2$fit_aspp_per75,
+  x0 = aspp_df2$p25,
+  x1 = aspp_df2$p75,
   y0 = aspp_df2$y_pos,
   col = wccolslatbi[aspp_df2$spp_name],
   lwd = 3
 )
 points(
-  aspp_df2$fit_aspp,
+  aspp_df2$mean,
   aspp_df2$y_pos,
   pch = 16,
   bg  = wccolslatbi[aspp_df2$spp_name],
@@ -1319,53 +1319,53 @@ widths = c(0.7, 0.4))
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2$fit_aspp, y_pos,
+plot(aspp_df2$mean, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
      yaxt = "n", pch = 15, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2$fit_aspp_per5,  y_pos, aspp_df2$fit_aspp_per95, y_pos,
+segments(aspp_df2$p5,  y_pos, aspp_df2$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(aspp_df2$fit_aspp_per25, y_pos, aspp_df2$fit_aspp_per75, y_pos,
+segments(aspp_df2$p25, y_pos, aspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_gsl$fit_aspp, y_pos,
+plot(aspp_df2_gsl$mean, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
      yaxt = "n", pch = 15, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_gsl$fit_aspp_per5,  y_pos, aspp_df2_gsl$fit_aspp_per95, y_pos,
+segments(aspp_df2_gsl$p5,  y_pos, aspp_df2_gsl$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(aspp_df2_gsl$fit_aspp_per25, y_pos, aspp_df2_gsl$fit_aspp_per75, y_pos,
+segments(aspp_df2_gsl$p25, y_pos, aspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_sos$fit_aspp, y_pos,
+plot(aspp_df2_sos$mean, y_pos,
      xlim = c(-15, 15),ylim = c(0.5, n_spp + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "", 
      yaxt = "n", pch = 15, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_sos$fit_aspp_per5,  y_pos, aspp_df2_sos$fit_aspp_per95, y_pos,
+segments(aspp_df2_sos$p5,  y_pos, aspp_df2_sos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(aspp_df2_sos$fit_aspp_per25, y_pos, aspp_df2_sos$fit_aspp_per75, y_pos,
+segments(aspp_df2_sos$p25, y_pos, aspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(aspp_df2_eos$fit_aspp, y_pos,
+plot(aspp_df2_eos$mean, y_pos,
      xlim = c(-15, 15), ylim = c(0.5, n_spp + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "", 
      yaxt = "n", pch = 15, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(aspp_df2_eos$fit_aspp_per5,  y_pos, aspp_df2_eos$fit_aspp_per95, y_pos,
+segments(aspp_df2_eos$p5,  y_pos, aspp_df2_eos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(aspp_df2_eos$fit_aspp_per25, y_pos, aspp_df2_eos$fit_aspp_per75, y_pos,
+segments(aspp_df2_eos$p25, y_pos, aspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
@@ -1408,57 +1408,57 @@ lat_labels <- locations$lat[match(site_order, locations$shortnames)]
 
 # Row 1: GDD
 par(mar = c(5, 8, 2, 2))
-plot(site_df2$fit_a_site, y_pos_site,
+plot(site_df2$mean, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2$fit_a_site_per5,  y_pos_site, site_df2$fit_a_site_per95, y_pos_site,
+segments(site_df2$p5,  y_pos_site, site_df2$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$fit_a_site_per25, y_pos_site, site_df2$fit_a_site_per75, y_pos_site,
+segments(site_df2$p25, y_pos_site, site_df2$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: GSL
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_gsl$fit_a_site, y_pos_site,
+plot(site_df2_gsl$mean, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_gsl$fit_a_site_per5,  y_pos_site, site_df2_gsl$fit_a_site_per95, y_pos_site,
+segments(site_df2_gsl$p5,  y_pos_site, site_df2_gsl$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_gsl$fit_a_site_per25, y_pos_site, site_df2_gsl$fit_a_site_per75, y_pos_site,
+segments(site_df2_gsl$p25, y_pos_site, site_df2_gsl$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 3: SOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_sos$fit_a_site, y_pos_site,
+plot(site_df2_sos$mean, y_pos_site,
      xlim = c(-2, 2),ylim = c(0.5, n_site + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_sos$fit_a_site_per5,  y_pos_site, site_df2_sos$fit_a_site_per95, y_pos_site,
+segments(site_df2_sos$p5,  y_pos_site, site_df2_sos$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_sos$fit_a_site_per25, y_pos_site, site_df2_sos$fit_a_site_per75, y_pos_site,
+segments(site_df2_sos$p25, y_pos_site, site_df2_sos$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 4: EOS
 par(mar = c(5, 8, 2, 2))
-plot(site_df2_eos$fit_a_site, y_pos_site,
+plot(site_df2_eos$mean, y_pos_site,
      xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5), 
      xlab = "Ring width intercept values (mm)", ylab = "Latitude", 
      yaxt = "n", pch = 16, cex = 2, col = sitecolors, frame.plot = FALSE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-segments(site_df2_eos$fit_a_site_per5,  y_pos_site, site_df2_eos$fit_a_site_per95, y_pos_site,
+segments(site_df2_eos$p5,  y_pos_site, site_df2_eos$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2_eos$fit_a_site_per25, y_pos_site, site_df2_eos$fit_a_site_per75, y_pos_site,
+segments(site_df2_eos$p25, y_pos_site, site_df2_eos$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 
@@ -1522,18 +1522,18 @@ map_plot <- ggplot(data = world) +
 forest_grob <- as_grob(function() {
   par(mar = c(7, 5, 5, 0.5))
   
-  plot(site_df2$fit_a_site, y_pos_site,
+  plot(site_df2$mean, y_pos_site,
        xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
        xlab = "log(ring width) intercept values", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
        panel.first = abline(v = 0, lty = 2, col = "black"))
   axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-  segments(site_df2$fit_a_site_per5,  y_pos_site,
-           site_df2$fit_a_site_per95, y_pos_site,
+  segments(site_df2$p5,  y_pos_site,
+           site_df2$p95, y_pos_site,
            col = sitecolors, lwd = 1.5)
-  segments(site_df2$fit_a_site_per25, y_pos_site,
-           site_df2$fit_a_site_per75, y_pos_site,
+  segments(site_df2$p25, y_pos_site,
+           site_df2$p75, y_pos_site,
            col = sitecolors, lwd = 3)
 })
 
@@ -1700,3 +1700,4 @@ max_ES$fit_bspp_abs <- NULL
 
 max_ES <- max_ES[order(max_ES$pred),]
 }
+
