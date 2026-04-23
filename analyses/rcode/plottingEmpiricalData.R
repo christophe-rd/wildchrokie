@@ -14,6 +14,8 @@ library(ggplot2)
 library(rstan)
 library(future)
 library(wesanderson)
+library(dplyr)
+
 source('rcode/tools.R')
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 
@@ -59,39 +61,44 @@ gap <- 2
 years <- c(2018, 2019, 2020)
 n_sp <- length(species_order)
 
-total_rows <- nrow(agggsl) + (length(species_order) - 1) * gap
+total_rows <- nrow(agggsl) + (length(years) - 1) * gap
 
 current_y <- total_rows
 agggsl$y_pos <- NA
 
-for(yr in years){
-  idx <- which(agggsl$year == yr)
+agggsl <- agggsl[order(agggsl$latbi),]
+agggsl$spp_num <- as.integer(as.factor(agggsl$latbi))
+
+for(s in unique(agggsl$spp_num)){ # s = 2
+  idx <- which(agggsl$spp_num == s)
   agggsl$y_pos[idx] <- current_y:(current_y - length(idx) + 1)
   current_y <- current_y - length(idx) - gap
 }
-
+agggsl
 par(mar = c(4,6,4,2))
 
 plot(agggsl$mean, agggsl$y_pos,
      xlim = c(-50, 60), 
-     ylim = c(0.5, max(agggsl$y_pos) + 0.5),
+     ylim = c(min(agggsl$y_pos), max(agggsl$y_pos) + 0.5),
      xlab = "anomalized gsl (days)", ylab = "",
      yaxt = "n",
-     pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     pch = 16, cex = 2, col = wccolslatbi[agggsl$latbi], frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(agggsl$p5,  agggsl$y_pos, agggsl$p95, agggsl$y_pos, col = wccolslatbi, lwd = 1.5)
-segments(agggsl$p25, agggsl$y_pos, agggsl$p75, agggsl$y_pos, col = wccolslatbi, lwd = 3)
+segments(agggsl$p5,  agggsl$y_pos, agggsl$p95, agggsl$y_pos, 
+         col = wccolslatbi[agggsl$latbi], lwd = 1.5)
+segments(agggsl$p25, agggsl$y_pos, agggsl$p75, agggsl$y_pos, 
+         col = wccolslatbi[agggsl$latbi], lwd = 3)
 abline(v = 0, lty = 2)
 
-
 # custom y axis label
-ylabel <- aggregate(y_pos ~ year, agggsl, mean)
+ylabel <- aggregate(y_pos ~ latbi + year, agggsl, mean)
+ylabel
 agggsl$ylabel <- ylabel$y_pos[match(agggsl$year, ylabel$year)]
 axis(
   side = 2,
-  at = agggsl$ylabel,
+  at = agggsl$y_pos,
   labels = agggsl$year,
-  cex.axis = 2,
+  cex.axis = 1,
   las = 1
 )
 
@@ -108,6 +115,9 @@ legend("right",
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Species", title.font = 2)
 dev.off()                 
+
+
+plot(emp$pgsGSL ~ emp$pgsGDD5)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Frost free days ####
