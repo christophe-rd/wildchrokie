@@ -42,10 +42,8 @@ emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
 emp$year_num <- as.integer(as.factor(emp$year))
 emp$lengthMM <- emp$lengthCM*10
 
-emp$yrdum18 <- ifelse(emp$year == 2018, 0, 0)
-emp$yrdum19 <- ifelse(emp$year == 2019, 1, 0)
-emp$yrdum20 <- ifelse(emp$year == 2020, 1, 0)
 
+# Fit model year without other parameters
 # transform data in vectors for GDD
 data <- list( 
   y = log(emp$lengthMM),
@@ -57,23 +55,14 @@ data <- list(
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(emp$treeid)),
   Nyear = length(unique(emp$year)),
-  year18 = emp$yrdum18,
-  year19 = emp$yrdum19,
-  year20 = emp$yrdum20)
+  year = emp$year_num)
 
-# Fit model year with other parameters
+# Fit model year with indexing, so 4 intercepts
 yearmodel <- stan_model("stan/modelGrowthYear.stan")
 fityear <- sampling(yearmodel, data = data,
                 warmup = 1000, iter=2000, chains=4)
 saveRDS(fityear, "output/stanOutput/fitGrowthYear")
 # fityear <- readRDS("output/stanOutput/fitGrowthYear")
-
-# Fit model year without other parameters
-yearmodelonly <- stan_model("stan/modelGrowthOnlyYear.stan")
-fityearonly <- sampling(yearmodelonly, data = data,
-                    warmup = 1000, iter=2000, chains=4)
-saveRDS(fityearonly, "output/stanOutput/fitGrowthOnlyYear")
-# fityearonly <- readRDS("output/stanOutput/fitGrowthOnlyYear")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
@@ -132,11 +121,10 @@ for (y in unique(data$year)) {
 }
 dev.off()
 
-# check warnings
-diagnostics <- util$extract_hmc_diagnostics(fityearonly) 
-util$check_all_hmc_diagnostics(diagnostics)
-
-# loo
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# LOO ####
+# https://mc-stan.org/loo/articles/loo2-example.html
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 log_lik_1 <- extract_log_lik(fityear, merge_chains = FALSE)
 
 # relative effective sample sizes
@@ -265,21 +253,46 @@ n_year <- length(unique(year_df2$year))
 y_pos <- 1:n_year
 
 # Current year
-plot(year_df2$fit_ayear, y_pos,
+year_df2$year_name <- emp$year[match(year_df2$year, emp$year_num)]
+plot(year_df2$mean, y_pos,
      xlim = c(-5, 5), ylim = c(0.5, n_year + 0.5), 
      xlab = "year intercept", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(year_df2$fit_ayear_per5, y_pos, year_df2$fit_ayear_per95, y_pos,
+segments(year_df2$p5, y_pos, year_df2$p95, y_pos,
          col = colsyear, lwd = 1.5)
-segments(year_df2$fit_ayear_per25, y_pos, year_df2$fit_ayear_per75, y_pos,
+segments(year_df2$p25, y_pos, year_df2$p75, y_pos,
          col = colsyear, lwd = 3)
 axis(2, at = y_pos, labels = year_df2$year_name, las = 1)
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot Year fit ONLY ####
+# Fit year coded as dummy variables ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Fit model year without other parameters
+emp$yrdum18 <- ifelse(emp$year == 2018, 0, 0)
+emp$yrdum19 <- ifelse(emp$year == 2019, 1, 0)
+emp$yrdum20 <- ifelse(emp$year == 2020, 1, 0)
+# transform data in vectors for GDD
+data <- list( 
+  y = log(emp$lengthMM),
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(emp$treeid)),
+  Nyear = length(unique(emp$year)),
+  year18 = emp$yrdum18,
+  year19 = emp$yrdum19,
+  year20 = emp$yrdum20)
+
+yearmodelonly <- stan_model("stan/modelGrowthOnlyYear.stan")
+fityearonly <- sampling(yearmodelonly, data = data,
+                        warmup = 1000, iter=2000, chains=4)
+saveRDS(fityearonly, "output/stanOutput/fitGrowthOnlyYear")
+# fityearonly <- readRDS("output/stanOutput/fitGrowthOnlyYear")
 ##### Recover parameters #####
 df_fityearonly <- as.data.frame(fityearonly)
 
