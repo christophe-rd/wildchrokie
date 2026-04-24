@@ -123,18 +123,19 @@ dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # LOO ####
-# https://mc-stan.org/loo/articles/loo2-example.html
+# https://mc-stan.org/loo/articles/loo2-with-rstan.html
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Start with Fit year
 log_lik_1 <- extract_log_lik(fityear, merge_chains = FALSE)
 
 # relative effective sample sizes
 r_eff <- relative_eff(exp(log_lik_1)) 
 
-loo_1 <- loo(log_lik_1, r_eff = r_eff)
+loo_year <- loo(log_lik_1, r_eff = r_eff)
 
-plot(loo_1)
+plot(loo_year)
 # which observations are problematic
-pareto_k <- loo_1$diagnostics$pareto_k
+pareto_k <- loo_year$diagnostics$pareto_k
 bad_obs <- which(pareto_k > 0.7)
 bad_obs
 
@@ -147,7 +148,7 @@ r_eff_gdd <- relative_eff(exp(log_lik_gdd))
 loo_gdd <- loo(log_lik_gdd, r_eff = r_eff_gdd)
 
 comp <- loo_compare(loo_1, loo_gdd)
-
+print(comp)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot Year fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
