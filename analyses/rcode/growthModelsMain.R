@@ -613,9 +613,9 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (FALSE){
   
-samples <- util$extract_expectand_vals(fitgsl)
+# samples <- util$extract_expectand_vals(fitgsl)
 jpeg(
-  filename = "figures/modelGrowthGDD/retrodictiveCheckHist.jpeg",
+  filename = "figures/growthModelsMain/retrodictiveCheckHist.jpeg",
   width = 2400,      
   height = 2400,
   res = 300          
@@ -627,7 +627,83 @@ util$plot_hist_quantiles(samples, "y_rep",
                          baseline_values = y,
                          xlab = "Ring width (mm)")
 dev.off()
+
+
+# Hist by species
+# GDD
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDD.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgdd$Nspp/2))
+for (s in unique(dgdd$species)) { # s = 2
+  idxs <- which(dgdd$species == s)
+  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.4,
+                           baseline_values = dgdd$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
 }
+dev.off()
+
+# GSL
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGSL.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgsl$Nspp/2))
+for (s in unique(dgsl$species)) { # s = 2
+  idxs <- which(dgsl$species == s)
+  samples_sub <- samples_gsl[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gsl))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = dgsl$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+
+# SOS
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistSOS.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dsos$Nspp/2))
+for (s in unique(dsos$species)) { # s = 2
+  idxs <- which(dsos$species == s)
+  samples_sub <- samples_sos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_sos))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = dsos$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+# EOS
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistEOS.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, deos$Nspp/2))
+for (s in unique(deos$species)) { # s = 2
+  idxs <- which(deos$species == s)
+  samples_sub <- samples_eos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_eos))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = deos$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+}
+unique(emp$latbi[which(emp$spp_num == s)])
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -655,24 +731,33 @@ if (FALSE) {
   diagnostics_sos <- util$extract_hmc_diagnostics(fitsos) 
   diagnostics_eos <- util$extract_hmc_diagnostics(fiteos) 
   
-  samples_gdd <- util$extract_expectand_vals(gddmodel)
-  samples_gsl <- util$extract_expectand_vals(gslmodel)
-  samples_sos <- util$extract_expectand_vals(sosmodel)
-  samples_eos <- util$extract_expectand_vals(eosmodel)
+  samples_gdd <- util$extract_expectand_vals(fitgdd)
+  samples_gsl <- util$extract_expectand_vals(fitgsl)
+  samples_sos <- util$extract_expectand_vals(fitsos)
+  samples_eos <- util$extract_expectand_vals(fiteos)
   
-  util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples_gdd, diagnostics, transforms = list("sigma_atreeid" = 1))
+  util$plot_div_pairs("zatreeid[1]", "sigma_atreeid", samples_gdd, diagnostics_gdd, transforms = list("sigma_atreeid" = 1))
   
   # check aspp
   aspp <- paste0("aspp[", 1:4, "]")
-  util$plot_div_pairs(aspp, aspp, samples, diagnostics)
+  util$plot_div_pairs(aspp, aspp, samples_gdd, diagnostics_gdd)
+  util$plot_div_pairs(aspp, aspp, samples_gsl, diagnostics_gsl)
+  util$plot_div_pairs(aspp, aspp, samples_sos, diagnostics_sos)
+  util$plot_div_pairs(aspp, aspp, samples_eos, diagnostics_eos)
   
   # check asite
   asite <- paste0("asite[", 1:4, "]")
-  util$plot_div_pairs(asite, asite, samples, diagnostics)
+  util$plot_div_pairs(asite, asite, samples_gdd, diagnostics_gdd)
+  util$plot_div_pairs(asite, asite, samples_gsl, diagnostics_gsl)
+  util$plot_div_pairs(asite, asite, samples_sos, diagnostics_sos)
+  util$plot_div_pairs(asite, asite, samples_eos, diagnostics_eos)
   
   # check bspp
   bspp <- paste0("bsp[", 1:4, "]")
-  util$plot_div_pairs(bspp, bspp, samples, diagnostics)
+  util$plot_div_pairs(bspp, bspp, samples_gdd, diagnostics_gdd)
+  util$plot_div_pairs(bspp, bspp, samples_gsl, diagnostics_gsl)
+  util$plot_div_pairs(bspp, bspp, samples_sos, diagnostics_sos)
+  util$plot_div_pairs(bspp, bspp, samples_eos, diagnostics_eos)
   
   # check bsppyr
   bsppyr <- paste0("bspyr[", 1:4, "]")

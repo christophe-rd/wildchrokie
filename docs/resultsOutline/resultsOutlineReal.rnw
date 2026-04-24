@@ -11,7 +11,6 @@
 \date{\today}
 \maketitle
 
-
 % Set Wildchrokie species shortcut
 \newcommand{\Ainc}{\textit{A. incana}}
 \newcommand{\Ball}{\textit{B. alleghaniensis}}
@@ -35,16 +34,16 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 @
 
 
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Lay abstract}
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Shifted phenology with climate change has extended the vegetative growing season, which is widely expected to increase tree growth. Multiple recent studies, however, have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we ask if trees grow more with longer seasons in an environment where drought and competition are limited. We aim to answer this question by leveraging 9 years of vegetative phenology data from two studies located in an urban arboretum and by relating it to tree growth (Figure \ref{fig:chaptersDesign}). We found contrasting evidence that trees grow more during longer seasons. Nine of our species did not change their growth; one grew less at its adult stage but more at its juvenile stage, and two additional species grew more with longer seasons. These responses increased when using the calendar instead of the thermal growing season. Our main findings demonstrate that tree growth responses with climate change may be more complex than previously suggested. The shifts in response to season lengths were not massive, and when they happened it was from juvenile more than mature trees.
+% % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% \section*{Lay abstract}
+% % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Shifted phenology with climate change has extended the vegetative growing season, which is widely expected to increase tree growth. Multiple recent studies, however, have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we ask if trees grow more with longer seasons in an environment where drought and competition are limited. We aim to answer this question by leveraging 9 years of vegetative phenology data from two studies located in an urban arboretum and by relating it to tree growth (Figure \ref{fig:chaptersDesign}). We found contrasting evidence that trees grow more during longer seasons. Nine of our species did not change their growth; one grew less at its adult stage but more at its juvenile stage, and two additional species grew more with longer seasons. These responses increased when using the calendar instead of the thermal growing season. Our main findings demonstrate that tree growth responses with climate change may be more complex than previously suggested. The shifts in response to season lengths were not massive, and when they happened it was from juvenile more than mature trees.
 
-\begin{figure}[h!]
-\includegraphics[width=0.85\textwidth]{../../notes/chaptersDesign/chaptersDesign.pdf}
-\caption{Overview of the age class, species, provenance of the trees used in each study along with the type of study each project consists of. The colored lines represent the period of the growth data and the shaded areas are the phenological data. Both are colour-coded by project. Each phylogram illustrates the species used in each project. The map illustrates the four different provenances used in Wildchrokie, and the star represents the location of Wildchrokie and CoringTreespotters.}
-\label{fig:chaptersDesign}
-\end{figure}
+% \begin{figure}[h!]
+% \includegraphics[width=0.85\textwidth]{../../notes/chaptersDesign/chaptersDesign.pdf}
+% \caption{Overview of the age class, species, provenance of the trees used in each study along with the type of study each project consists of. The colored lines represent the period of the growth data and the shaded areas are the phenological data. Both are colour-coded by project. Each phylogram illustrates the species used in each project. The map illustrates the four different provenances used in Wildchrokie, and the star represents the location of Wildchrokie and CoringTreespotters.}
+% \label{fig:chaptersDesign}
+% \end{figure}
 
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -53,9 +52,9 @@ Shifted phenology with climate change has extended the vegetative growing season
 \begin{enumerate}
 \item Did growth change across years, and if so what cue had the largest effects?
 \item How do species ring widths vary with thermal season vs calendar season?
-\item Does the previous year cummulated GDD influence the following year's growth?
+\item Does the previous year cumulated GDD influence the following year's growth?
 \item How do species spring and autumn phenophases shift with the temperature of different seasons?
-\item Does growth change across sites?
+\item Does growth change across provenances?
 \end{enumerate}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -74,6 +73,8 @@ Shifted phenology with climate change has extended the vegetative growing season
   \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
   \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
   
+  \item No drought for the three years except in 2020, where a moderate drought ramped up to a severe drought in September.
+  
   \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
   \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
@@ -85,7 +86,7 @@ Shifted phenology with climate change has extended the vegetative growing season
 
 \item Did growth change across years, and if so what cue had the largest effects?
   \begin{enumerate}
-  \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS or highest thermal sum)
+  \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS nor the highest thermal sum)
   \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
   \end{enumerate}
 
