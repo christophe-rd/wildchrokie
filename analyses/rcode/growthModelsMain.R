@@ -650,19 +650,33 @@ if (FALSE) {
 
 # other diagnostics?
 if (FALSE) {
+  diagnostics_gdd <- util$extract_hmc_diagnostics(fitgdd) 
+  diagnostics_gsl <- util$extract_hmc_diagnostics(fitgsl) 
+  diagnostics_sos <- util$extract_hmc_diagnostics(fitsos) 
+  diagnostics_eos <- util$extract_hmc_diagnostics(fiteos) 
   
-  diagnostics <- util$extract_hmc_diagnostics(fit_noncentered) 
-  util$check_all_hmc_diagnostics(diagnostics)
+  samples_gdd <- util$extract_expectand_vals(gddmodel)
+  samples_gsl <- util$extract_expectand_vals(gslmodel)
+  samples_sos <- util$extract_expectand_vals(sosmodel)
+  samples_eos <- util$extract_expectand_vals(eosmodel)
   
-  samples <- util$extract_expectand_vals(fit_noncentered)
+  util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples_gdd, diagnostics, transforms = list("sigma_atreeid" = 1))
   
-  util$plot_div_pairs("zbsp[1]", "sigma_bsp", samples, diagnostics, transforms = list("sigma_bsp" = 1))
+  # check aspp
+  aspp <- paste0("aspp[", 1:4, "]")
+  util$plot_div_pairs(aspp, aspp, samples, diagnostics)
   
-  util$plot_div_pairs("zaspp[1]", "sigma_aspp", samples, diagnostics, transforms = list("sigma_aspp" = 1))
+  # check asite
+  asite <- paste0("asite[", 1:4, "]")
+  util$plot_div_pairs(asite, asite, samples, diagnostics)
   
-  util$plot_div_pairs("zasite[1]", "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+  # check bspp
+  bspp <- paste0("bsp[", 1:4, "]")
+  util$plot_div_pairs(bspp, bspp, samples, diagnostics)
   
-  util$plot_div_pairs("atreeid[1]", "sigma_atreeid", samples, diagnostics, transforms = list("sigma_atreeid" = 1))
+  # check bsppyr
+  bsppyr <- paste0("bspyr[", 1:4, "]")
+  util$plot_div_pairs(bsppyr, bsppyr, samples, diagnostics)
   
 }
 

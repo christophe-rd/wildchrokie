@@ -18,8 +18,9 @@ real a;		// mean intercept across everything
 // real<lower=0> sigma_atreeid;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 // vector[Ntreeid] atreeid; // variation of intercept across tree ids, no-centered
-vector[Nspp] aspp;
-vector[Nsite] asite;
+// vector[Nspp] aspp;
+vector[Nsite - 1] asite_raw;
+vector[Nspp - 1] aspp_raw;
 vector[Nspp] bsp;
 vector[Nspp] bspyr;
 }
@@ -27,6 +28,11 @@ vector[Nspp] bspyr;
 transformed parameters{
 // vector[Ntreeid] atreeid;
 // atreeid = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
+  vector[Nsite] asite;
+  asite = append_row(asite_raw, - sum(asite_raw));
+
+  vector[Nspp] aspp;
+  aspp = append_row(aspp_raw, - sum(aspp_raw));
 
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
@@ -43,8 +49,8 @@ for (i in 1:N){ // don't change this for reparameterization
 model{	
   a ~ normal(2, 10);
   // atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
-  aspp ~ normal(0, 12);
-  asite ~ normal(0, 5);
+  aspp_raw ~ normal(0, 12);
+  asite_raw ~ normal(0, 5);
   bsp ~ normal(0, 5);
   bspyr ~ normal(0, 5);
   // sigma_atreeid ~ normal(0, 0.5); 

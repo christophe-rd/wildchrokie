@@ -62,6 +62,15 @@ rw$site_num <- match(rw$site, unique(rw$site))
 rw$spp_num <- match(rw$spp, unique(rw$spp))
 rw$treeid_num <- match(rw$treeid, unique(rw$treeid))
 
+par(mfrow = c(1,1))
+plot(rw$gddcurrentyr~ rw$gddpreviousyr, xlab = "gdd previous year",
+     ylab = "gdd current year")
+abline(a = 0, b = 1)
+
+
+
+
+
 rw <- subset(rw, year %in% c(2018, 2019, 2020))
 rw <- subset(rw, treeid %in% unique(emp$treeid))
 
@@ -75,8 +84,8 @@ data <- list(
   species = as.numeric(as.character(rw$spp_num)),
   treeid = as.numeric(rw$treeid_num),
   Ntreeid = length(unique(as.numeric(rw$treeid_num))),
-  gdd = rw$gddcurrentyr / 200,
-  gddyr = rw$gddpreviousyr / 200
+  gdd = rw$gddcurrentyr - 1800,
+  gddyr = rw$gddpreviousyr -1800
   # gdd = (rw$gddcurrentyr - mean(rw$gddcurrentyr)) / sd(rw$gddcurrentyr),
   # gddyr = (rw$gddpreviousyr - mean(rw$gddpreviousyr)) / sd(rw$gddpreviousyr)
 )
@@ -89,7 +98,25 @@ fit <- sampling(gddmodel, data = data, iter = 2000, chains = 4)
 saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
+samples <- util$extract_expectand_vals(fit)
 }
+
+# Diagnostics ####
+# check aspp
+aspp <- paste0("aspp[", 1:4, "]")
+util$plot_div_pairs(aspp, aspp, samples, diagnostics)
+
+# check asite
+asite <- paste0("asite[", 1:4, "]")
+util$plot_div_pairs(asite, asite, samples, diagnostics)
+
+# check bspp
+bspp <- paste0("bsp[", 1:4, "]")
+util$plot_div_pairs(bspp, bspp, samples, diagnostics)
+
+# check bsppyr
+bsppyr <- paste0("bspyr[", 1:4, "]")
+util$plot_div_pairs(bsppyr, bsppyr, samples, diagnostics)
 
 library(ggplot2)
 ggplot(rw) + 
@@ -100,8 +127,6 @@ ggplot(rw) +
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # fit <- readRDS("output/stanOutput/fitGrowthPreviousYear")
-samples <- util$extract_expectand_vals(fit)
-
 jpeg(
   filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg",
   width = 2400, height = 2400, res = 300)
@@ -246,7 +271,7 @@ y_pos <- rev(1:n_spp)
 
 # Current year
 plot(bspp_df2_current$mean, y_pos,
-     xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5), 
+     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5), 
      xlab = "slope current year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -258,7 +283,7 @@ mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: Previous year
 plot(bspp_df2_previous$mean, y_pos,
-     xlim = c(-2, 2), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5),
      xlab = "slope previous year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,      
      panel.first = abline(v = 0, lty = 2, col = "black"))
