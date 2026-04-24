@@ -21,6 +21,8 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/home/crouleau/wildchrokie/analyses")
 }
 
+source("rcode/tools.R")
+
 # flags
 makeplots <- FALSE
 
@@ -43,7 +45,11 @@ emp$yeardoybudburst <- paste(emp$year, emp$budburst, sep = "_")
 emp$yeardoyleafout <- paste(emp$year, emp$leafout, sep = "_")
 emp$yeardoybudset <- paste(emp$year, emp$budset, sep = "_")
 
-plot(x = gddyr$doy, y = gddyr$GDD_5,
+# calculate daily gdd with caping to 0 with cold temp
+gddyr$dgdd <- pmax(gddyr$meanTempC - 5, 0)
+dgddagg <- aggregate(dgdd ~ doy, gddyr, FUN = mean)
+
+plot(x = dgddagg$doy, y = dgddagg$dgdd,
      xlab = "", ylab = "gdd",
      pch = 16, frame = FALSE, cex = 0,
      # col = yearcolors[match(emp$year, years)],
@@ -54,20 +60,25 @@ lo <- aggregate(leafout ~ latbi, emp, FUN = mean)
 bs <- aggregate(budset ~ latbi, emp, FUN = mean)
 gslength <- merge(lo, bs, by = "latbi")
 
+
 years <- unique(gddyr$year)
+
+lines(dgddagg$doy, dgddagg$dgdd, col = "black", cex = 0.2)
+
 for (i in seq_along(years)) { # i = 1
   
   year_dat <- gddyr[gddyr$year == years[i], ]
   
-  # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)
+  # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)?>
   # x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
   #               max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
   # pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
   # 
-  lines(year_dat$do, year_dat$GDD_5, 
-        col = "black",
-        # col = yearcolors[i],
-        lwd = 2)
+ # cumulated gdd 
+    # lines(year_dat$do, year_dat$GDD_5, 
+    #     col = "black",
+    #     # col = yearcolors[i],
+    #     lwd = 2)
   spp <- unique(gslength$latbi)
   y_base <- 100
   y_step <- 50
@@ -75,6 +86,57 @@ for (i in seq_along(years)) { # i = 1
     gs <- gslength[gslength$latbi == spp[s],]
     y_pos <- y_base + (s-1) * y_step
     segments(x0 = gs$leafout, x1 = gs$budset, y0 = y_pos, y1 = y_pos)
+  }
+}
+
+
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Conceptual figure ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+plot(x = dgddagg$doy, y = dgddagg$dgdd,
+     xlab = "", ylab = "gdd",
+     pch = 16, frame = FALSE, cex = 0,
+     # col = yearcolors[match(emp$year, years)],
+     main = "")
+
+# start of season average
+lo <- aggregate(leafout ~ latbi, emp, FUN = mean)
+bs <- aggregate(budset ~ latbi, emp, FUN = mean)
+gslength <- merge(lo, bs, by = "latbi")
+
+
+years <- unique(gddyr$year)
+
+lines(dgddagg$doy, dgddagg$dgdd, col = "black", lwd = 0.4)
+
+abline(v = mean(lo$leafout))
+text(x = mean(lo$leafout) - 15, y = 15, "SOS")
+abline(v = mean(bs$budset))
+text(x = mean(bs$budset) + 15, y = 15, "EOS")
+
+for (i in seq_along(years)) { # i = 1
+  
+  year_dat <- gddyr[gddyr$year == years[i], ]
+  
+  # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)?>
+  # x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
+  #               max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
+  # pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
+  # 
+  # cumulated gdd 
+  # lines(year_dat$do, year_dat$GDD_5, 
+  #     col = "black",
+  #     # col = yearcolors[i],
+  #     lwd = 2)
+  spp <- unique(gslength$latbi)
+  y_base <- 5
+  y_step <- 2
+  for (s in seq_along(spp)) { # i = 1
+    gs <- gslength[gslength$latbi == spp[s],]
+    y_pos <- y_base + (s-1) * y_step
+    segments(x0 = gs$leafout, x1 = gs$budset, y0 = y_pos, y1 = y_pos,
+             col = wccolslatbi[gs$latbi])
   }
 }
 

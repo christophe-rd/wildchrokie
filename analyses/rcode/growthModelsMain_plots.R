@@ -174,12 +174,12 @@ colnames(site_df_eos) <- 1:ncol(site_df_eos)
 sitefull <- c(
   "GR" = "Dartmouth College (NH)",
   "HF" = "Harvard Forest (MA)",
-  "SH" = "St-Hyppolyte (Qc)",
+  "SH" = "St-Hippolyte (Qc)",
   "WM" = "White Mountains (NH)"
 )
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
   shortnames = c("HF", "WM", "GR", "SH"),   
   Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)

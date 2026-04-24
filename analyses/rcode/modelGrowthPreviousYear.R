@@ -62,6 +62,9 @@ rw$site_num <- match(rw$site, unique(rw$site))
 rw$spp_num <- match(rw$spp, unique(rw$spp))
 rw$treeid_num <- match(rw$treeid, unique(rw$treeid))
 
+rw <- subset(rw, year %in% c(2018, 2019, 2020))
+rw <- subset(rw, treeid %in% unique(emp$treeid))
+
 # transform data in vectors for GDD
 data <- list(
   y = log(rw$lengthMM),
@@ -77,6 +80,7 @@ data <- list(
   # gdd = (rw$gddcurrentyr - mean(rw$gddcurrentyr)) / sd(rw$gddcurrentyr),
   # gddyr = (rw$gddpreviousyr - mean(rw$gddpreviousyr)) / sd(rw$gddpreviousyr)
 )
+data
 
 # Fit model GDD 
 if(runmodels) {
@@ -91,22 +95,21 @@ library(ggplot2)
 ggplot(rw) + 
   geom_smooth(aes(x = gddcurrentyr, y = lengthMM)) + 
   geom_point(aes(x = gddcurrentyr, y = lengthMM)) 
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # fit <- readRDS("output/stanOutput/fitGrowthPreviousYear")
 samples <- util$extract_expectand_vals(fit)
 
-
 jpeg(
-  filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg", 
-  width = 2400, height = 2400, res = 300          
-)
+  filename = "figures/growthPreviousYearModel/retrodictiveCheckHistPrvsYr.jpeg",
+  width = 2400, height = 2400, res = 300)
 util$plot_hist_quantiles(samples, "y_rep", 
                          -2, # lower x axis limit
                          5, # upper x axis limit
                          0.2, # binning
-                         baseline_values = y,
+                         baseline_values = data$y,
                          xlab = "log(ring width")
 dev.off()
 
@@ -159,7 +162,7 @@ jpeg("figures/growthPreviousYearModel/gddModelPriorVSPosteriorPrvsYr.jpeg",
      width =2400, height = 3600, res =300)
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 3))
+par(mfrow = c(2, 3))
 
 # a
 plot(density(df_fit[, "a_prior"]), 
@@ -169,13 +172,13 @@ plot(density(df_fit[, "a_prior"]),
 lines(density(df_fit[, "a"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
-# sigma_atreeid
-plot(density(df_fit[, "sigma_atreeid_prior"]), 
-     col = pal[1], lwd = 2, 
-     main = "priorVSposterior_sigma_atreeid", 
-     xlab = "sigma_atreeid", ylim = c(0,2))
-lines(density(df_fit[, "sigma_atreeid"]), col = pal[2], lwd = 2)
-legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+# # sigma_atreeid
+# plot(density(df_fit[, "sigma_atreeid_prior"]), 
+#      col = pal[1], lwd = 2, 
+#      main = "priorVSposterior_sigma_atreeid", 
+#      xlab = "sigma_atreeid", ylim = c(0,2))
+# lines(density(df_fit[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+# legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
 plot(density(df_fit[, "sigma_y_prior"]), 
