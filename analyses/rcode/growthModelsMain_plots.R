@@ -1024,35 +1024,19 @@ mumar <- c(4, 1, 4, 1)
 par(mar = mumar)
 plot(bspp_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in 10 spring days GDD", ylab = "",
+     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
 rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
-# Panel 2: GSL
-par(mar = mumar)
-plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
-mtext("(b) Growing season length", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
-usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 3: SOS
 par(mar = mumar)
@@ -1063,13 +1047,30 @@ plot(bspp_df2_sos$mean, y_pos,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos, col = wccolslatbi, lwd = 3)
-mtext("(c) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+mtext("(b) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
 rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+
+# Panel 2: GSL
+par(mar = mumar)
+plot(bspp_df2_gsl$mean, y_pos,
+     xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
+mtext("(c) Growing season length", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
+arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 4: EOS
 par(mar = mumar)
@@ -1083,8 +1084,8 @@ segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos, col = wccolslatbi, lw
 mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
 rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 

@@ -114,7 +114,8 @@ abline(v = mean(lo$leafout))
 text(x = mean(lo$leafout) - 15, y = 15, "SOS")
 abline(v = mean(bs$budset))
 text(x = mean(bs$budset) + 15, y = 15, "EOS")
-
+arrows(x0 = mean(lo$leafout), x1 = mean(lo$leafout) -20,
+       y0 = 12, y1 = 12)
 for (i in seq_along(years)) { # i = 1
   
   year_dat <- gddyr[gddyr$year == years[i], ]
