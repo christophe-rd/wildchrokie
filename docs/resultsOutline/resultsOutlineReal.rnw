@@ -50,7 +50,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \section*{Research questions}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
-\item Did growth change across years, and if so what cue had the largest effects?
+\item Did growth change across years, and if so what cue (\textit{climate variable/temperature or drought?}) had the largest effects?
 \item How do species ring widths vary with thermal season vs calendar season?
 \item Does the previous year cumulated GDD influence the following year's growth?
 \item How do species spring and autumn phenophases shift with the temperature of different seasons?
@@ -73,7 +73,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
   \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
   
-  \item No drought for the three years except in 2020, where a moderate drought ramped up to a severe drought in September.
+  \item No drought for the three years except in 2020, where a moderate summer drought ramped up to a severe drought in September.
   
   \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
@@ -92,27 +92,28 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 \item How do species ring widths vary with thermal season vs calendar season?
   \begin{enumerate}
-  \item A later start of season decreased growth for two species 
-  ({\Ainc}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, 
-  \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}] and 
-  {\Bpop}: $\beta = $ \Sexpr{bspp_df2_sos$fit_bspp[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$fit_bspp_per5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$fit_bspp_per95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
-  
-  \item A later end of season decreased growth only for {\Ainc} 
-  ($\beta = $ \Sexpr{bspp_df2_eos$fit_bspp[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_eos$fit_bspp_per5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$fit_bspp_per95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
-  
-  \item Longer thermal season increased growth only for {\Bpap} 
-  ($\beta = $ \Sexpr{bspp_df2$fit_bspp[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$
-[\Sexpr{bspp_df2$fit_bspp_per5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, 
-\Sexpr{bspp_df2$fit_bspp_per95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
 
+  \item Longer thermal season increased growth only for {\Bpap} 
+  ($\beta = $ \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, $UI_{90}$
+[\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "Betula papyrifera")]}, 
+\Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
+ 
   \item But longer calendar season increased growth for two additional species
-  (\Ainc: $\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}],
-\Ball: $\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}] and
-\Bpap: $\beta = $ \Sexpr{bspp_df2_gsl$fit_bspp[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$fit_bspp_per5[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_gsl$fit_bspp_per95[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
+  (\Ainc: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "Alnus incana")]}],
+\Ball: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "Betula alleghaniensis")]}] and
+\Bpap: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "Betula papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
 
   \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored})
+  
+  \item A later start of season decreased growth for two species 
+  ({\Ainc}: $\beta = $ \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}, 
+  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "Alnus incana")]}] and 
+  {\Bpop}: $\beta = $ \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}, \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "Betula populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+
+  \item A later end of season decreased growth only for {\Ainc} 
+  ($\beta = $ \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}, \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "Alnus incana")]}]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
 
@@ -165,9 +166,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 # Bspp parameter estimates table
 fmt <- function(df) {
   sprintf("$\\beta = $%.2f, [%.2f, %.2f]",
-          df$fit_bspp,
-          df$fit_bspp_per5,
-          df$fit_bspp_per95)
+          df$mean,
+          df$p5,
+          df$p95)
 }
 
 bspp_df2$GDD <- fmt(bspp_df2)
@@ -199,13 +200,13 @@ print(tab,
 
 % Table site intercept for Wildchrokie
 <<results='asis', echo = FALSE>>=
-site_df2$fit_a_site <- round(site_df2$fit_a_site, 2)
-site_df2$fit_a_site_per5 <- round(site_df2$fit_a_site_per5, 2)
-site_df2$fit_a_site_per95 <- round(site_df2$fit_a_site_per95, 2)
+site_df2$mean <- round(site_df2$mean, 2)
+site_df2$p5 <- round(site_df2$p5, 2)
+site_df2$p95 <- round(site_df2$p95, 2)
 
 sitefortable <- data.frame(
   Site = site_df2$site_name,
-  "Intercept estimate" = paste("$\\alpha = $", site_df2$fit_a_site, ", ", "[", site_df2$fit_a_site_per5, ", ", site_df2$fit_a_site_per95, "]", sep = ""),
+  "Intercept estimate" = paste("$\\alpha = $", site_df2$mean, ", ", "[", site_df2$p5, ", ", site_df2$p95, "]", sep = ""),
   Latitude = emp$provenance.lat[match(site_df2$site_name, emp$site)],
   Longitude = emp$provenance.long[match(site_df2$site_name, emp$site)]
 )

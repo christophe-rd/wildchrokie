@@ -86,7 +86,7 @@
 \section*{Research questions}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
-\item Did growth change across years, and if so what cue had the largest effects?
+\item Did growth change across years, and if so what cue (\textit{climate variable/temperature or drought?}) had the largest effects?
 \item How do species ring widths vary with thermal season vs calendar season?
 \item Does the previous year cumulated GDD influence the following year's growth?
 \item How do species spring and autumn phenophases shift with the temperature of different seasons?
@@ -109,6 +109,8 @@
   1465.1 GDD ({\Ball} in 2018) to 
   2513.6 GDD, ({\Ainc} in 2018)
   
+  \item No drought for the three years except in 2020, where a moderate summer drought ramped up to a severe drought in September.
+  
   \item GSL ranged from 
   90 days ({\Ball} in 2018) to 
   173 days ({\Ainc} in 2018)
@@ -126,27 +128,28 @@
 
 \item How do species ring widths vary with thermal season vs calendar season?
   \begin{enumerate}
-  \item A later start of season decreased growth for two species 
-  ({\Ainc}: $\beta = $ , $UI_{90}$
-  [, 
-  ] and 
-  {\Bpop}: $\beta = $ , $UI_{90}$[, ]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
-  
-  \item A later end of season decreased growth only for {\Ainc} 
-  ($\beta = $ , $UI_{90}$
-  [, ]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
-  
-  \item Longer thermal season increased growth only for {\Bpap} 
-  ($\beta = $ , $UI_{90}$
-[, 
-]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
 
+  \item Longer thermal season increased growth only for {\Bpap} 
+  ($\beta = $ 0.32, $UI_{90}$
+[0.04, 
+0.6]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
+ 
   \item But longer calendar season increased growth for two additional species
-  (\Ainc: $\beta = $ , $UI_{90}$[, ],
-\Ball: $\beta = $ , $UI_{90}$[, ] and
-\Bpap: $\beta = $ , $UI_{90}$[, ]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
+  (\Ainc: $\beta = $ 0.13, $UI_{90}$[0.05, 0.2],
+\Ball: $\beta = $ 0.1, $UI_{90}$[0, 0.19] and
+\Bpap: $\beta = $ 0.27, $UI_{90}$[0.07, 0.45]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
 
   \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored})
+  
+  \item A later start of season decreased growth for two species 
+  ({\Ainc}: $\beta = $ -0.13, $UI_{90}$
+  [-0.16, 
+  -0.09] and 
+  {\Bpop}: $\beta = $ -0.09, $UI_{90}$[-0.17, -0.02]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+
+  \item A later end of season decreased growth only for {\Ainc} 
+  ($\beta = $ -0.07, $UI_{90}$
+  [-0.11, -0.03]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
 
@@ -195,45 +198,28 @@
 \renewcommand{\thefigure}{S\arabic{figure}}
 
 % Table slope for Wildchrokie
-\begin{kframe}
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Mon Apr 27 09:13:00 2026
+\begin{table}[ht]
+\centering
+\caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_slope_table}
+\begin{tabular}{lllll}
+  \hline
+Species & GDD & GSL & SOS & EOS \\ 
+  \hline
+\textit{A. incana} & $\beta = $0.06, [-0.05, 0.17] & $\beta = $0.13, [0.05, 0.20] & $\beta = $-0.13, [-0.16, -0.09] & $\beta = $-0.07, [-0.11, -0.03] \\ 
+  \textit{B. alleghaniensis} & $\beta = $0.11, [-0.03, 0.24] & $\beta = $0.10, [0.01, 0.19] & $\beta = $-0.03, [-0.09, 0.04] & $\beta = $0.04, [-0.01, 0.09] \\ 
+  \textit{B. papyrifera} & $\beta = $0.32, [0.04, 0.60] & $\beta = $0.27, [0.07, 0.45] & $\beta = $-0.08, [-0.18, 0.04] & $\beta = $0.06, [-0.03, 0.15] \\ 
+  \textit{B. populifolia} & $\beta = $0.00, [-0.15, 0.16] & $\beta = $-0.00, [-0.12, 0.11] & $\beta = $-0.09, [-0.17, -0.02] & $\beta = $-0.04, [-0.09, 0.01] \\ 
+   \hline
+\end{tabular}
+\end{table}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `\$<-.data.frame`:\\\#\# ! replacement has 0 rows, data has 4}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `\$<-.data.frame`:\\\#\# ! replacement has 0 rows, data has 4}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `\$<-.data.frame`:\\\#\# ! replacement has 0 rows, data has 4}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `\$<-.data.frame`:\\\#\# ! replacement has 0 rows, data has 4}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `[.data.frame`:\\\#\# ! undefined columns selected}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `[.data.frame`:\\\#\# ! undefined columns selected}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `[.data.frame`:\\\#\# ! undefined columns selected}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `[.data.frame`:\\\#\# ! undefined columns selected}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'gdd' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'df\_all' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'df\_all' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'df\_all' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'tab' not found}}\end{kframe}
 
 % Table site intercept for Wildchrokie
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `round()`:\\\#\# ! non-numeric argument to mathematical function}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `round()`:\\\#\# ! non-numeric argument to mathematical function}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `round()`:\\\#\# ! non-numeric argument to mathematical function}}\end{kframe}% latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Apr 23 16:28:34 2026
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Mon Apr 27 09:13:00 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
@@ -242,10 +228,10 @@
   \hline
 Site & Intercept.estimate & Latitude & Longitude \\ 
   \hline
-Dartmouth College (NH) & $\alpha = $, [, ] & 44.79 & -71.15 \\ 
-  Harvard Forest (MA) & $\alpha = $, [, ] & 42.53 & -72.19 \\ 
-  St-Hyppolyte (Qc) & $\alpha = $, [, ] & 45.93 & -74.03 \\ 
-  White Mountains (NH) & $\alpha = $, [, ] & 44.11 & -71.23 \\ 
+Dartmouth College (NH) & $\alpha = $-0.1, [-0.92, 0.72] & 44.79 & -71.15 \\ 
+  Harvard Forest (MA) & $\alpha = $-0.16, [-0.97, 0.67] & 42.53 & -72.19 \\ 
+  St-Hyppolyte (Qc) & $\alpha = $0.05, [-0.77, 0.88] & 45.93 & -74.03 \\ 
+  White Mountains (NH) & $\alpha = $0.13, [-0.68, 0.96] & 44.11 & -71.23 \\ 
    \hline
 \end{tabular}
 \end{table}
