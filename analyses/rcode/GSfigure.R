@@ -97,7 +97,6 @@ for (i in seq_along(years)) { # i = 1
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
-
 # pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 1, 3))
 
@@ -116,61 +115,25 @@ presos <- 130
 preeos <- 240
 peak <- 185
 
-# [1] "#a00e00" "#d04e00" "#f6c200" "#0086a8" "#132b69"
-# [1] "#04a3bd" "#f0be3d" "#931e18" "#da7901" "#247d3f" "#20235b"
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-# Slot 1: accumulated GDD 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(0, 4, 2, 2))
 par(mar = c(0, 4, 2, 2))
 
 # simulate logistic curves
-doy <- 1:365
-gdd_pre <- 2500 / (1 + exp(-0.04 * (doy - 172)))
-gdd_cc  <- 3000 / (1 + exp(-0.05 * (doy - 150)))
+doy <- 1:330
+gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.04 * (doy - 140)))
 
 # Pre CC
 plot(doy, gdd_cc, ylim = c(0, 3000),
      type = "n", lwd = 1.2,
-     xlab = "", ylab = "GDD",
-     xaxt = "n",             
-     frame = FALSE, col = adjustcolor(colpre),
-     main = "")
+     xlab = "", ylab = "Accumulated GDD",
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "")
 
 # draw logistic curves pre CC
 lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
 
-# polygon under the curve
-mask <- doy >= presos & doy <= preeos
-x_sub <- doy[mask]
-y_sub <- gdd_pre[mask]
-
-polygon(
-  x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
-  y = c(0, y_sub, 0),
-  col = adjustcolor(colpre, alpha.f = 0.3),
-  border = NA,
-  density = 20,     
-  angle = 45        
-)
-
 # Post CC
 # draw logistic curves pre CC
 lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
-
-# polygon under the curve
-mask <- doy >= ccsos & doy <= cceos
-x_sub <- doy[mask]
-y_sub <- gdd_cc[mask]
-
-polygon(
-  x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
-  y = c(0, y_sub, 0),
-  col = adjustcolor(colcc, alpha.f = 0.3),
-  border = NA,
-  density = 20,     
-  angle = -45        
-)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # Slot 2: Season length arrows
@@ -220,9 +183,9 @@ text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, "GSL post CC", col = "black", c
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = c(4, 4, 0, 2))
 
-x <- seq(0, 365, length.out = 500)
-xs <- seq(0, peak, length.out = 500)
-xf <- seq(peak, 365 , length.out = 500)
+x <- as.integer(seq(0, 330, length.out = 330))
+xs <- seq(0, peak, length.out = 365)
+xf <- seq(peak, 365 , length.out = 365)
 
 y1 <- dnorm(x, mean = peak, sd = 45)
 ys <- dnorm(xs, mean = peak, sd = 55)
@@ -241,10 +204,10 @@ plot(x, y1_scaled, type = "l", lwd = 2, col = colpre,
 lines(xs, ys_scaled2, lwd = 2, col = colcc)
 lines(xf, yf_scaled2, lwd = 2, col = colcc)
 
-# start of season average
-lo <- aggregate(leafout ~ latbi, emp, FUN = mean)
-bs <- aggregate(budset ~ latbi, emp, FUN = mean)
-gslength <- merge(lo, bs, by = "latbi")
+# abline for 5C
+abline(a = 5, b = 0, lty = 2)
+text(x = 37, y = 5 + 2, labels = "GDD base temperature", 
+     cex = 1.5, col = "black") 
 
 # # Draw the shaded polygon under the curve
 # polygon(
@@ -258,35 +221,36 @@ gslength <- merge(lo, bs, by = "latbi")
 
 # Spring arrow
 arrow_y <- 30
-shaft_h <- 1
-head_h  <- 1.5
+shaft_h <- 1.2
+head_h  <- 2
 x_start <- ccsos
 x_neck  <- ccsos + 12
 
 polygon(
-  x = c(x_start, x_neck, x_neck, x_start + 30, x_start + 30, x_neck, x_neck),
+  x = c(x_start, x_neck, x_neck, x_start + 35, x_start + 35, x_neck, x_neck),
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
   col = adjustcolor(colspring, alpha.f = 0.7),
   border = NA
 )
 
-text(x = x_start, y = arrow_y + 2, labels = "Earlier spring",
-     adj = c(0, 0.5), cex = 0.8, col = "black") 
+text(x = x_start - 24, y = arrow_y + 3, labels = "Earlier spring",
+     adj = c(0, 0.5), cex = 1.5, col = "black") 
 
-# # Spring arrow
-arrow_y <- 30
-shaft_h <- 0.5
-head_h  <- 0.9
-x_start <- cceos
-x_neck  <- cceos - 12
-
-polygon(
-  x = c(x_start, x_neck, x_neck, x_start - 20, x_start - 20, x_neck, x_neck),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor("#d39822", alpha.f = 0.7), border = F)
-
-text(x = x_start - 12, y = arrow_y + 2, labels = "Later autumn",
-     adj = c(0, 0.5), cex = 0.8, col = "black")
+# # Autumn arrow
+# arrow_y <- 30
+# shaft_h <- 0.5
+# head_h  <- 0.9
+# x_start <- cceos
+# x_neck  <- cceos - 12
+# 
+# polygon(
+#   x = c(x_start, x_neck, x_neck, x_start - 20, x_start - 20, x_neck, x_neck),
+#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+#   col = adjustcolor("#d39822", alpha.f = 0.7), border = F)
+# 
+# text(x = x_start - 12, y = arrow_y + 2, labels = "Later autumn",
+#      adj = c(0, 0.5), cex = 0.8, col = "black")
+# dev.off()
 dev.off()
 
 

@@ -266,3 +266,183 @@ legend("right",
        title  = "Species", title.font = 2)
 dev.off()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Conceptual figure broken down ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
+
+
+##### Set common things that will be repeated #####
+# cols
+# pre cc
+colpre <- "#04a3bd"
+colcc <- "#a00e00"
+
+colspring <- "#247d3f"
+colfall <- "#da7901"
+
+# assign sos and eos values
+ccsos <- 110
+cceos <- 250
+presos <- 130
+preeos <- 240
+peak <- 185
+
+
+# Logistic curves
+doy <- 1:330
+gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.04 * (doy - 140)))
+
+# Normal curves
+x <- as.integer(seq(0, 330, length.out = 330))
+xs <- seq(0, peak, length.out = 330)
+xf <- seq(peak, 330 , length.out = 330)
+
+y1 <- dnorm(x, mean = peak, sd = 45)
+ys <- dnorm(xs, mean = peak, sd = 55)
+yf <- dnorm(xf, mean = peak, sd = 50)
+
+# Scale y2 so both curves peak at the same height
+scale_to <- 30
+
+y1_scaled <- y1  * (scale_to / max(y1))
+ys_scaled2 <- ys  * (scale_to / max(ys))
+yf_scaled2 <- yf  * (scale_to / max(yf))
+
+
+# 1. Pre-CC accumulated GDD
+jpeg("figures/powerPoint/concept1.jpeg", width = 10, height = 8, units = "in", res = 150)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 1, 3))
+
+# Panel 1
+par(mar = c(0, 4, 2, 2))
+plot.new()
+plot.window(xlim = c(0, 330), ylim = c(0, 3))
+
+# Panel 2
+par(mar = c(0, 4, 0, 2))
+plot.new()
+plot.window(xlim = c(0, 330), ylim = c(0, 1))
+
+# Panel 3 with just pre industrial
+par(mar = c(4, 4, 0, 2))
+
+plot(x, y1_scaled, type = "l", lwd = 2, col = colpre,
+     ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE)
+lines(xs, ys_scaled2, lwd = 2, col = colcc)
+lines(xf, yf_scaled2, lwd = 2, col = colcc)
+
+# abline for 5C
+abline(a = 5, b = 0, lty = 2)
+text(x = 37, y = 5 + 2, labels = "GDD base temperature", 
+     cex = 1.5, col = "black") 
+
+
+
+# Pre CC
+plot(doy, gdd_cc, ylim = c(0, 3000),
+     type = "n", lwd = 1.2,
+     xlab = "", ylab = "Accumulated GDD",
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "")
+
+# draw logistic curves pre CC
+lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+
+# Post CC
+# draw logistic curves pre CC
+lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Slot 2: Season length arrows
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+par(mar = c(0, 4, 0, 2))
+plot.new()
+plot.window(xlim = c(0, 365), ylim = c(0, 1))
+
+# gsl arrow line pre CC
+arrow_y <- 0.5
+shaft_h <- 0.08
+head_h  <- 0.08
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.7),
+  border = NA
+)
+#0a6a3c
+text(x = presos + (preeos - presos)/2, y = arrow_y, "GSL pre CC", col = "black", cex = 1)
+
+# gsl arrow line CC
+arrow_y <- 0.3
+shaft_h <- 0.08
+head_h  <- 0.08
+x_start <- ccsos
+x_end <- cceos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colcc, alpha.f = 0.7),
+  border = NA
+)
+#0a6a3c
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, "GSL post CC", col = "black", cex = 1)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Slot 3: Daily GDD 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+par(mar = c(4, 4, 0, 2))
+
+plot(x, y1_scaled, type = "l", lwd = 2, col = colpre,
+     ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE)
+lines(xs, ys_scaled2, lwd = 2, col = colcc)
+lines(xf, yf_scaled2, lwd = 2, col = colcc)
+
+# abline for 5C
+abline(a = 5, b = 0, lty = 2)
+text(x = 37, y = 5 + 2, labels = "GDD base temperature", 
+     cex = 1.5, col = "black") 
+
+# Spring arrow
+arrow_y <- 30
+shaft_h <- 1.2
+head_h  <- 2
+x_start <- ccsos
+x_neck  <- ccsos + 12
+
+polygon(
+  x = c(x_start, x_neck, x_neck, x_start + 35, x_start + 35, x_neck, x_neck),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colspring, alpha.f = 0.7),
+  border = NA
+)
+
+text(x = x_start - 24, y = arrow_y + 3, labels = "Earlier spring",
+     adj = c(0, 0.5), cex = 1.5, col = "black") 
+
+# # Autumn arrow
+# arrow_y <- 30
+# shaft_h <- 0.5
+# head_h  <- 0.9
+# x_start <- cceos
+# x_neck  <- cceos - 12
+# 
+# polygon(
+#   x = c(x_start, x_neck, x_neck, x_start - 20, x_start - 20, x_neck, x_neck),
+#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+#   col = adjustcolor("#d39822", alpha.f = 0.7), border = F)
+# 
+# text(x = x_start - 12, y = arrow_y + 2, labels = "Later autumn",
+#      adj = c(0, 0.5), cex = 0.8, col = "black")
+# dev.off()
+dev.off()
