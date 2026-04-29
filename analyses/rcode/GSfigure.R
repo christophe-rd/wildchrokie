@@ -97,167 +97,176 @@ for (i in seq_along(years)) { # i = 1
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
-layout(matrix(c(1, 2), nrow = 2), heights = c(2, 3))
 
+# pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 1, 3))
+
+# cols
+# pre cc
+colpre <- "#04a3bd"
+colcc <- "#a00e00"
+
+colspring <- "#247d3f"
+colfall <- "#da7901"
+
+# assign sos and eos values
+ccsos <- 110
+cceos <- 250
+presos <- 130
+preeos <- 240
+peak <- 185
+
+# [1] "#a00e00" "#d04e00" "#f6c200" "#0086a8" "#132b69"
+# [1] "#04a3bd" "#f0be3d" "#931e18" "#da7901" "#247d3f" "#20235b"
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Slot 1: accumulated GDD 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+par(mar = c(0, 4, 2, 2))
 par(mar = c(0, 4, 2, 2))
 
-lo_doy <- mean(lo$leafout) 
-bs_doy <- mean(bs$budset) 
+# simulate logistic curves
+doy <- 1:365
+gdd_pre <- 2500 / (1 + exp(-0.04 * (doy - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.05 * (doy - 150)))
 
-gddac <- aggregate(GDD_5 ~ doy, gddyr, FUN = mean)
-
-plot(gddac$doy, gddac$GDD_5,
-     type = "l", lwd = 1.2,
+# Pre CC
+plot(doy, gdd_cc, ylim = c(0, 3000),
+     type = "n", lwd = 1.2,
      xlab = "", ylab = "GDD",
      xaxt = "n",             
-     frame = FALSE,
+     frame = FALSE, col = adjustcolor(colpre),
      main = "")
 
-mask <- gddac$doy >= lo_doy & gddac$doy <= bs_doy
-x_sub <- gddac$doy[mask]
-y_sub <- gddac$GDD_5[mask]
+# draw logistic curves pre CC
+lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+
+# polygon under the curve
+mask <- doy >= presos & doy <= preeos
+x_sub <- doy[mask]
+y_sub <- gdd_pre[mask]
 
 polygon(
   x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
   y = c(0, y_sub, 0),
-  col = adjustcolor("black", alpha.f = 0.3),
+  col = adjustcolor(colpre, alpha.f = 0.3),
   border = NA,
-  density = 20,      # number of hatching lines — gives a "dashed/hatched" look
-  angle = 45         # angle of hatching
+  density = 20,     
+  angle = 45        
 )
 
+# Post CC
+# draw logistic curves pre CC
+lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
+
+# polygon under the curve
+mask <- doy >= ccsos & doy <= cceos
+x_sub <- doy[mask]
+y_sub <- gdd_cc[mask]
+
+polygon(
+  x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
+  y = c(0, y_sub, 0),
+  col = adjustcolor(colcc, alpha.f = 0.3),
+  border = NA,
+  density = 20,     
+  angle = -45        
+)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Slot 2: Season length arrows
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+par(mar = c(0, 4, 0, 2))
+plot.new()
+plot.window(xlim = c(0, 365), ylim = c(0, 1))
+
+# gsl arrow line pre CC
+arrow_y <- 0.5
+shaft_h <- 0.08
+head_h  <- 0.08
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.7),
+  border = NA
+)
+#0a6a3c
+text(x = presos + (preeos - presos)/2, y = arrow_y, "GSL pre CC", col = "black", cex = 1)
+
+# gsl arrow line CC
+arrow_y <- 0.3
+shaft_h <- 0.08
+head_h  <- 0.08
+x_start <- ccsos
+x_end <- cceos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colcc, alpha.f = 0.7),
+  border = NA
+)
+#0a6a3c
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, "GSL post CC", col = "black", cex = 1)
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Slot 3: Daily GDD 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = c(4, 4, 0, 2))
-plot(x = dgddagg$doy, y = dgddagg$dgdd,
-     xlab = "", ylab = "gdd",
-     ylim = c(0, 35),
-     pch = 16, frame = FALSE, cex = 0,
-     main = "")
+
+x <- seq(0, 365, length.out = 500)
+xs <- seq(0, peak, length.out = 500)
+xf <- seq(peak, 365 , length.out = 500)
+
+y1 <- dnorm(x, mean = peak, sd = 45)
+ys <- dnorm(xs, mean = peak, sd = 55)
+yf <- dnorm(xf, mean = peak, sd = 50)
+
+# Scale y2 so both curves peak at the same height
+scale_to <- 30
+
+y1_scaled <- y1  * (scale_to / max(y1))
+ys_scaled2 <- ys  * (scale_to / max(ys))
+yf_scaled2 <- yf  * (scale_to / max(yf))
+
+plot(x, y1_scaled, type = "l", lwd = 2, col = colpre,
+     ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE)
+lines(xs, ys_scaled2, lwd = 2, col = colcc)
+lines(xf, yf_scaled2, lwd = 2, col = colcc)
 
 # start of season average
 lo <- aggregate(leafout ~ latbi, emp, FUN = mean)
 bs <- aggregate(budset ~ latbi, emp, FUN = mean)
 gslength <- merge(lo, bs, by = "latbi")
 
-
-years <- unique(gddyr$year)
-
-lines(dgddagg$doy, dgddagg$dgdd, col = "black", lwd = 0.4)
-
-# spring curve 
-dgddagg2 <- dgddagg
-dgddagg2$doy <- dgddagg2$doy - 20
-dgddagg2 <- subset(dgddagg2, doy <188)
-lines(dgddagg2$doy, dgddagg2$dgdd, col = "black", lwd = 0.4)
-
-# autumn curve
-dgddagg3 <- dgddagg
-dgddagg3$doy <- dgddagg3$doy +5
-dgddagg3 <- subset(dgddagg3, doy >198)
-lines(dgddagg3$doy, dgddagg3$dgdd, col = "black", lwd = 0.4)
-
-
-# abline(v = mean(lo$leafout))
-# text(x = mean(lo$leafout) - 15, y = 15, "SOS")
-# abline(v = mean(bs$budset))
-# text(x = mean(bs$budset) + 15, y = 15, "EOS")
-# arrows(x0 = mean(lo$leafout), x1 = mean(lo$leafout) -20,
-# y0 = 12, y1 = 12)
-# points(x = c(mean(lo$leafout), mean(bs$budset)), y = c(24, 24),
-#        pch = 21, bg = "orange", col = "orange", cex = 1.2)
-
-# segments(x0 = mean(lo$leafout), x1 = mean(bs$budset), y0 = 24, y1 = 24,
-#          col = "orange")
-# segments(x0 = mean(lo$leafout), x1 = mean(lo$leafout), y0 = 23.2, y1 = 24.8, col = "orange", lwd = 1.5)
-# segments(x0 = mean(bs$budset),  x1 = mean(bs$budset),  y0 = 23.2, y1 = 24.8, col = "orange", lwd = 1.5)
-
-# dots
-# points(x = c(mean(lo$leafout), mean(bs$budset)), y = c(24, 24),
-# pch = 21, bg = "orange", col = "orange", cex = 1.2)
-# Compute mean leaf-out and bud-set DOY (assuming these are DOY values)
-lo_doy <- mean(lo$leafout)
-bs_doy <- mean(bs$budset)
-
-
-# text(x = lo_doy + (bs_doy - lo_doy)/2, y = 27, "Growing season length", col = "white", cex = 0.8)
-# gsl arrow line
-
-arrow_y <- 24
-shaft_h <- 0.7
-head_h  <- 0.7
-x_start <- mean(lo$leafout)
-x_end   <- mean(bs$budset)
-x_neck_l <- x_start + 10  
-x_neck_r <- x_end - 10    
-
-polygon(
-  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end,   x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor("#0a6a3c", alpha.f = 0.7),
-  border = NA
-)
-#0a6a3c
-text(x = lo_doy + (bs_doy - lo_doy)/2, y = arrow_y, "Growing season length", col = "black", cex = 1)
-# Subset the curve to the growing season window
-mask <- dgddagg$doy >= lo_doy & dgddagg$doy <= bs_doy
-x_sub <- dgddagg$doy[mask]
-y_sub <- dgddagg$dgdd[mask]
-
-# Draw the shaded polygon under the curve
-polygon(
-  x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
-  y = c(0, y_sub, 0),
-  col = adjustcolor("black", alpha.f = 0.3),
-  border = NA,
-  # density = 20,      
-  angle = 45         
-)
-
-# autumn dashed line: 
-lo_doy <- mean(lo$leafout) - 20
-bs_doy <- mean(bs$budset) + 5
-mask2 <- dgddagg2$doy >= lo_doy & dgddagg2$doy <= 188
-x_sub2 <- dgddagg2$doy[mask2]
-y_sub2 <- dgddagg2$dgdd[mask2]
-
-polygon(
-  x = c(x_sub2[1], x_sub2, x_sub2[length(x_sub2)]),
-  y = c(0, y_sub2, 0),
-  col = adjustcolor("#0a6a3c", alpha.f = 1),
-  border = NA,
-  density = 30,
-  angle = 45
-)
-
-# autumn dashed line: 
-lo_doy <- mean(lo$leafout) - 20
-bs_doy <- mean(bs$budset) 
-mask2 <- dgddagg3$doy >= bs_doy & dgddagg3$doy <= 350
-x_sub2 <- dgddagg3$doy[mask2]
-y_sub2 <- dgddagg3$dgdd[mask2]
-
-polygon(
-  x = c(x_sub2[1], x_sub2, x_sub2[length(x_sub2)]),
-  y = c(0, y_sub2, 0),
-  col = adjustcolor("#d39822", alpha.f = 1),
-  border = NA,
-  density = 30,
-  angle = 45
-)
-
-
-
+# # Draw the shaded polygon under the curve
+# polygon(
+#   x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
+#   y = c(0, y_sub, 0),
+#   col = adjustcolor("black", alpha.f = 0.3),
+#   border = NA,
+#   # density = 20,      
+#   angle = 45         
+# )
 
 # Spring arrow
-arrow_y <- 15
-shaft_h <- 0.5
-head_h  <- 0.9
-x_start <- mean(lo$leafout) - 20
-x_neck  <- x_start + 10
+arrow_y <- 30
+shaft_h <- 1
+head_h  <- 1.5
+x_start <- ccsos
+x_neck  <- ccsos + 12
 
 polygon(
-  x = c(x_start, x_neck, x_neck, x_start + 20, x_start + 20, x_neck, x_neck),
+  x = c(x_start, x_neck, x_neck, x_start + 30, x_start + 30, x_neck, x_neck),
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor("#0a6a3c", alpha.f = 0.7),
+  col = adjustcolor(colspring, alpha.f = 0.7),
   border = NA
 )
 
@@ -265,46 +274,22 @@ text(x = x_start, y = arrow_y + 2, labels = "Earlier spring",
      adj = c(0, 0.5), cex = 0.8, col = "black") 
 
 # # Spring arrow
-# arrow_y <- 15
-# shaft_h <- 0.5
-# head_h  <- 0.9
-# x_start <- mean(lo$leafout) - 20
-# x_neck  <- x_start + 10
-# 
-# polygon(
-#   x = c(x_start, x_neck, x_neck, x_start + 20, x_start + 20, x_neck, x_neck),
-#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-#   col = adjustcolor("#d39822", alpha.f = 0.7),
-#   border = NA
-# )
+arrow_y <- 30
+shaft_h <- 0.5
+head_h  <- 0.9
+x_start <- cceos
+x_neck  <- cceos - 12
 
-# text(x = x_start, y = arrow_y + 2, labels = "Later autumn",
-# adj = c(0, 0.5), cex = 0.8, col = "black") 
+polygon(
+  x = c(x_start, x_neck, x_neck, x_start - 20, x_start - 20, x_neck, x_neck),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor("#d39822", alpha.f = 0.7), border = F)
+
+text(x = x_start - 12, y = arrow_y + 2, labels = "Later autumn",
+     adj = c(0, 0.5), cex = 0.8, col = "black")
 dev.off()
-# for (i in seq_along(years)) { # i = 1
-#   
-#   year_dat <- gddyr[gddyr$year == years[i], ]
-#   
-#   # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)?>
-#   # x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
-#   #               max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
-#   # pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
-#   # 
-#   # cumulated gdd 
-#   # lines(year_dat$do, year_dat$GDD_5, 
-#   #     col = "black",
-#   #     # col = yearcolors[i],
-#   #     lwd = 2)
-#   spp <- unique(gslength$latbi)
-#   y_base <- 5
-#   y_step <- 2
-#   for (s in seq_along(spp)) { # i = 1
-#     gs <- gslength[gslength$latbi == spp[s],]
-#     y_pos <- y_base + (s-1) * y_step
-#     segments(x0 = gs$leafout, x1 = gs$budset, y0 = y_pos, y1 = y_pos,
-#              col = wccolslatbi[gs$latbi])
-#   }
-# }
+
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # kind of a heat map ####
