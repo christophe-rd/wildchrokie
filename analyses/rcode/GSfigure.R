@@ -96,10 +96,13 @@ for (i in seq_along(years)) { # i = 1
 # Conceptual figure ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-
+pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
 layout(matrix(c(1, 2), nrow = 2), heights = c(2, 3))
 
 par(mar = c(0, 4, 2, 2))
+
+lo_doy <- mean(lo$leafout) 
+bs_doy <- mean(bs$budset) 
 
 gddac <- aggregate(GDD_5 ~ doy, gddyr, FUN = mean)
 
@@ -261,22 +264,23 @@ polygon(
 text(x = x_start, y = arrow_y + 2, labels = "Earlier spring",
      adj = c(0, 0.5), cex = 0.8, col = "black") 
 
-# Spring arrow
-arrow_y <- 15
-shaft_h <- 0.5
-head_h  <- 0.9
-x_start <- mean(lo$leafout) - 20
-x_neck  <- x_start + 10
+# # Spring arrow
+# arrow_y <- 15
+# shaft_h <- 0.5
+# head_h  <- 0.9
+# x_start <- mean(lo$leafout) - 20
+# x_neck  <- x_start + 10
+# 
+# polygon(
+#   x = c(x_start, x_neck, x_neck, x_start + 20, x_start + 20, x_neck, x_neck),
+#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+#   col = adjustcolor("#d39822", alpha.f = 0.7),
+#   border = NA
+# )
 
-polygon(
-  x = c(x_start, x_neck, x_neck, x_start + 20, x_start + 20, x_neck, x_neck),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor("#d39822", alpha.f = 0.7),
-  border = NA
-)
-
-text(x = x_start, y = arrow_y + 2, labels = "Later autumn",
-     adj = c(0, 0.5), cex = 0.8, col = "black") 
+# text(x = x_start, y = arrow_y + 2, labels = "Later autumn",
+# adj = c(0, 0.5), cex = 0.8, col = "black") 
+dev.off()
 # for (i in seq_along(years)) { # i = 1
 #   
 #   year_dat <- gddyr[gddyr$year == years[i], ]
