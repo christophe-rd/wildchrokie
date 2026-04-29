@@ -613,11 +613,10 @@ dev.off()
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (FALSE){
-  
-samples <- util$extract_expectand_vals(fitgdd)
+
 jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveCheckHist.jpeg",
   width = 2400, height = 2400, res = 300)
-util$plot_hist_quantiles(samples, "y_rep", 
+util$plot_hist_quantiles(samples_gdd, "y_rep", 
                          -2, # lower x axis limit
                          4, # upper x axis limit
                          0.3, # binning
@@ -697,6 +696,24 @@ for (s in unique(deos$species)) { # s = 2
                            baseline_values = deos$y[idxs],
                            xlab = "log(ring width)",
                            main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+# Site GDD
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDDSite.jpeg",
+     width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgdd$Nsite/2))
+for (s in unique(dgdd$site)) { # s = 2
+  idxs <- which(dgdd$site == s)
+  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.4,
+                           baseline_values = dgdd$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$site[which(emp$site_num == s)]))
 }
 dev.off()
 }
