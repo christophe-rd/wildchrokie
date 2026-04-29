@@ -9,7 +9,7 @@ array[N] int site;   // site identity, coded as int
 // int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 // array[N] int treeid;   // tree id identity, coded as int
 vector[N] gdd; 	// gdd (predictor for slope)
-vector[N] gddyr; 	// gdd of previous year
+// vector[N] gddyr; 	// gdd of previous year
 array[N] real y;
 }
 
@@ -22,7 +22,7 @@ real<lower=0> sigma_y; 	// measurement error, noise etc.
 vector[Nsite - 1] asite_raw;
 vector[Nspp - 1] aspp_raw;
 vector[Nspp] bsp;
-vector[Nspp] bspyr;
+// vector[Nspp] bspyr;
 }
 
 transformed parameters{
@@ -41,8 +41,8 @@ for (i in 1:N){ // don't change this for reparameterization
         aspp[species[i]] + 
         asite[site[i]] + 
         // atreeid[treeid[i]] + 
-        bsp[species[i]] * gdd[i] +
-        bspyr[species[i]] * gddyr[i];
+        bsp[species[i]] * gdd[i] ;
+        // bspyr[species[i]] * gddyr[i];
     }
 }
 
@@ -52,35 +52,35 @@ model{
   aspp_raw ~ normal(0, 12);
   asite_raw ~ normal(0, 5);
   bsp ~ normal(0, 5);
-  bspyr ~ normal(0, 5);
+  // bspyr ~ normal(0, 5);
   // sigma_atreeid ~ normal(0, 0.5); 
   sigma_y ~ normal(0, 1);
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
-generated quantities {
-  // posterior predictive samples
-  array[N] real y_rep;
-  for (i in 1:N) {
-    y_rep[i] = normal_rng(
-        a + 
-        aspp[species[i]] + 
-        asite[site[i]] +
-        // atreeid[treeid[i]] + 
-        bsp[species[i]]*gdd[i] +
-        bspyr[species[i]]*gddyr[i],
-        sigma_y);
-  }
-
-  // prior predictive samples
-  real a_prior = normal_rng(2, 10);
-  // real atreeid_prior = abs(normal_rng(0, 0.5));
-  real aspp_prior = normal_rng(0, 12);
-  real bsp_prior = normal_rng(0, 5);
-  real bspyr_prior = normal_rng(0, 5);
-  real asite_prior = normal_rng(0, 5);
-
-  // real zatreeid_prior = normal_rng(0, 1);
-  // real sigma_atreeid_prior = abs(normal_rng(0, 0.5));  
-  real sigma_y_prior = abs(normal_rng(0, 1));    
-}
+// generated quantities {
+//   // posterior predictive samples
+//   array[N] real y_rep;
+//   for (i in 1:N) {
+//     y_rep[i] = normal_rng(
+//         a + 
+//         aspp[species[i]] + 
+//         asite[site[i]] +
+//         // atreeid[treeid[i]] + 
+//         bsp[species[i]]*gdd[i] +
+//         bspyr[species[i]]*gddyr[i],
+//         sigma_y);
+//   }
+// 
+//   // prior predictive samples
+//   real a_prior = normal_rng(2, 10);
+//   // real atreeid_prior = abs(normal_rng(0, 0.5));
+//   real aspp_prior = normal_rng(0, 12);
+//   real bsp_prior = normal_rng(0, 5);
+//   real bspyr_prior = normal_rng(0, 5);
+//   real asite_prior = normal_rng(0, 5);
+// 
+//   // real zatreeid_prior = normal_rng(0, 1);
+//   // real sigma_atreeid_prior = abs(normal_rng(0, 0.5));  
+//   real sigma_y_prior = abs(normal_rng(0, 1));    
+// }

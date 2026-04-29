@@ -4,7 +4,7 @@
 # Goal: check if the condition of the previous year on current year's growth
 
 # housekeeping
-rm(list=ls()) 
+rm(list=ls())
 options(stringsAsFactors = FALSE)
 options(max.print = 150) 
 options(mc.cores = parallel::detectCores())
@@ -294,6 +294,42 @@ segments(bspp_df2_previous$p25, y_pos, bspp_df2_previous$p75, y_pos,
 mtext("Previous year", side = 3, adj = 0, font = 2, cex = 0.9)
 dev.off()
 
+
+jpeg("figures/growthPreviousYearModel/bsppCurrentVSpreviousYROnly.jpeg", width = 6, height = 6, units = "in", res = 300)
+par(mfrow = c(1,1))
+n_spp <- length(unique(bspp_df2_current$spp))
+y_pos <- rev(1:n_spp)
+
+
+# Row 2: Previous year
+plot(bspp_df2_previous$mean, y_pos,
+     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5),
+     xlab = "slope previous year", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,      
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_previous$p5,  y_pos, bspp_df2_previous$p95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_previous$p25, y_pos, bspp_df2_previous$p75, y_pos,
+         col = wccolslatbi, lwd = 3)
+mtext("Previous year", side = 3, adj = 0, font = 2, cex = 0.9)
+dev.off()
+
+jpeg("figures/growthPreviousYearModel/bsppCurrentVScurrentYROnly.jpeg", width = 6, height = 6, units = "in", res = 300)
+par(mfrow = c(1,1))
+n_spp <- length(unique(bspp_df2_current$spp))
+y_pos <- rev(1:n_spp)
+# Current year
+plot(bspp_df2_current$mean, y_pos,
+     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5), 
+     xlab = "slope current year", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_current$p5,  y_pos, bspp_df2_current$p95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_current$p25, y_pos, bspp_df2_current$p75, y_pos,
+         col = wccolslatbi, lwd = 3)
+mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
+dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Simulated data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
