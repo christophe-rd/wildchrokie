@@ -51,7 +51,7 @@ lineplotseqlength <- 10
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 emp <- emp[!is.na(emp$pgsGDD5),]
-nrow(emp)
+
 # transform my groups to numeric values
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
@@ -197,10 +197,11 @@ saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
-# fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
-# fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
-# fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
+fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
+fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
+
 ##### Recover parameters #####
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -613,18 +614,14 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (FALSE){
   
-# samples <- util$extract_expectand_vals(fitgsl)
-jpeg(
-  filename = "figures/growthModelsMain/retrodictiveCheckHist.jpeg",
-  width = 2400,      
-  height = 2400,
-  res = 300          
-)
+samples <- util$extract_expectand_vals(fitgdd)
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveCheckHist.jpeg",
+  width = 2400, height = 2400, res = 300)
 util$plot_hist_quantiles(samples, "y_rep", 
-                         -5, # lower x axis limit
-                         15, # upper x axis limit
-                         0.5, # binning
-                         baseline_values = y,
+                         -2, # lower x axis limit
+                         4, # upper x axis limit
+                         0.3, # binning
+                         baseline_values = dgdd$y,
                          xlab = "Ring width (mm)")
 dev.off()
 
@@ -745,12 +742,23 @@ if (FALSE) {
   util$plot_div_pairs(aspp, aspp, samples_sos, diagnostics_sos)
   util$plot_div_pairs(aspp, aspp, samples_eos, diagnostics_eos)
   
-  # check asite
+  # check asite vs a
   asite <- paste0("asite[", 1:4, "]")
-  util$plot_div_pairs(asite, asite, samples_gdd, diagnostics_gdd)
-  util$plot_div_pairs(asite, asite, samples_gsl, diagnostics_gsl)
-  util$plot_div_pairs(asite, asite, samples_sos, diagnostics_sos)
-  util$plot_div_pairs(asite, asite, samples_eos, diagnostics_eos)
+  util$plot_div_pairs(asite, "a", samples_gdd, diagnostics_gdd)
+  util$plot_div_pairs(asite, "a", samples_gsl, diagnostics_gsl)
+  util$plot_div_pairs(asite, "a", samples_sos, diagnostics_sos)
+  util$plot_div_pairs(asite, "a", samples_eos, diagnostics_eos)
+  
+  # check asite vs aspp
+  par(mfrow = c(4,4))
+  pdf("figures/growthModelsMain/diagnostics/pairsSiteVSaspp.pdf", 
+      width = 6, height = 9)
+  util$plot_div_pairs(asite, aspp, samples_gdd, diagnostics_gdd)
+  dev.off()
+  util$plot_div_pairs(asite, aspp, samples_gsl, diagnostics_gsl)
+  util$plot_div_pairs(asite, aspp, samples_sos, diagnostics_sos)
+  util$plot_div_pairs(asite, aspp, samples_eos, diagnostics_eos)
+  
   
   # check bspp
   bspp <- paste0("bsp[", 1:4, "]")
