@@ -28,7 +28,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/tools.R')
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
-
+gddyr <- read.csv("output/gddByYear.csv")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -64,6 +64,79 @@ fityear <- sampling(yearmodel, data = data,
 saveRDS(fityear, "output/stanOutput/fitGrowthYear")
 # fityear <- readRDS("output/stanOutput/fitGrowthYear")
 
+# Fit model gdd with indexing, so 4 intercepts
+# order by tree id
+treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
+                                  "treeid", "spp", "site", "latbi")])
+
+treeid_spp_site_ordered <- treeid_spp_site[order(treeid_spp_site$treeid_num), ]
+
+# scale gdd to how many gdd are in 10 average spring days
+temp<- subset(gddyr, doy <151 & doy > 120)
+temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
+temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+
+temp <- temp[order(temp$year, temp$doy), ]
+
+temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 10))
+gdd_10day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
+wcgddscale <- mean(gdd_10day$gdddiff)
+
+lineplotseqlength <- 10
+gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
+# data list for gdd
+dgdd <- list(
+  y = log(emp$lengthMM),
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  gdd = emp$pgsGDD5 / wcgddscale,
+  gddseq = gddseq,
+  wcgddscale = wcgddscale,
+  Ngddseq = length(gddseq)
+)
+dgdd
+
+gddmodel <- stan_model("stan/modelGrowthGDD_b.stan")
+fitgdd <- sampling(gddmodel, data = dgdd,
+                    warmup = 1000, iter=2000, chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_b")
+
+# Fit model GSL
+gslscale <- 10
+gsl <- emp$pgsGSL / gslscale
+gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = lineplotseqlength)
+
+# data list for GSL
+dgsl <- list(
+  y = log(emp$lengthMM),
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  treeid_species = treeid_spp_site_ordered$spp_num,
+  treeid_site = treeid_spp_site_ordered$site_num,
+  Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
+  gsl = emp$pgsGSL / gslscale,
+  gslseq = gslseq,
+  gslscale = gslscale,
+  Ngslseq = length(gslseq)
+)
+
+gslmodel <- stan_model("stan/modelGrowthGSL_b.stan")
+fitgsl <- sampling(gslmodel, data = dgsl,
+                   warmup = 1000, iter=2000, chains=4)
+saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL_b")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Retrodictive checks ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -142,12 +215,21 @@ bad_obs
 emp[bad_obs, ]
 
 # comparison 
-fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_b")
 log_lik_gdd <- extract_log_lik(fitgdd, merge_chains = FALSE)
 r_eff_gdd <- relative_eff(exp(log_lik_gdd)) 
 loo_gdd <- loo(log_lik_gdd, r_eff = r_eff_gdd)
 
-comp <- loo_compare(loo_1, loo_gdd)
+comp <- loo_compare(loo_year, loo_gdd)
+print(comp)
+
+# comparison 
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL_b")
+log_lik_gsl <- extract_log_lik(fitgsl, merge_chains = FALSE)
+r_eff_gsl <- relative_eff(exp(log_lik_gsl)) 
+loo_gsl <- loo(log_lik_gsl, r_eff = r_eff_gsl)
+
+comp <- loo_compare(loo_year, loo_gsl)
 print(comp)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot Year fit ####
