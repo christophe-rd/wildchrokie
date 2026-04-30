@@ -29,7 +29,7 @@ source('mcmc_visualization_tools.R', local=util)
 source('rcode/tools.R')
 
 # flags
-fitmodels <- FALSE
+fitmodels <- TRUE
 fitmodelfull <- FALSE
 fitmodelsZscored <- FALSE
 
@@ -70,9 +70,9 @@ temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
 
 temp <- temp[order(temp$year, temp$doy), ]
 
-temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 10))
-gdd_10day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
-wcgddscale <- mean(gdd_10day$gdddiff)
+temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 7))
+gdd_7day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
+wcgddscale <- mean(gdd_7day$gdddiff)
 
 gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
 
@@ -97,7 +97,7 @@ dgdd <- list(
 dgdd
 
 # Set model GSL data
-gslscale <- 10
+gslscale <- 7
 gsl <- emp$pgsGSL / gslscale
 gslseq <-  seq(min(emp$pgsGSL), max(emp$pgsGSL), length.out = lineplotseqlength)
 
@@ -119,7 +119,7 @@ dgsl <- list(
   gslscale = gslscale,
   Ngslseq = length(gslseq)
 )
-sosscale <- 5
+sosscale <- 7
 sos <- emp$leafout / sosscale
 sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = lineplotseqlength)
 
@@ -142,7 +142,7 @@ dsos <- list(
   Nsosseq = length(sosseq)
 )
 
-eosscale <- 5
+eosscale <- 7
 eos <- emp$leafout / eosscale
 eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = lineplotseqlength)
 
@@ -717,7 +717,7 @@ for (s in unique(dgdd$site)) { # s = 2
 }
 dev.off()
 }
-unique(emp$latbi[which(emp$spp_num == s)])
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Diagnostics ####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
