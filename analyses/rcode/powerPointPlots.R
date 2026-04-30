@@ -15,6 +15,7 @@ source("rcode/growthModelsMain.R")
 
 library(ggplot2)
 library(rsvg)
+
 # flags
 makeplots <- TRUE
 runzscore <- F
@@ -285,9 +286,9 @@ axissize <- 1.2
 labsize <- 1.5
 # assign sos and eos values
 ccsos <- 110
-cceos <- 250
+cceos <- 260
 presos <- 130
-preeos <- 240
+preeos <- 250
 peak <- 185
 
 
@@ -322,8 +323,12 @@ mylwd <- 3
 p1 <- c(0, 5, 2, 2)
 p2 <- c(0, 5, 0, 2)
 p3 <- c(0, 5, 0, 2)
+
+# ylim logistic
+ylimlogis <- c(0, 3400)
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### 1. Basic curve with just temp and gdd#####
+##### 1. Basic curve with just temp and gdd #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg("figures/powerPoint/concept1.jpeg", width = 10, height = 8, units = "in", res = 300)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
@@ -357,7 +362,7 @@ dev.off()
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# 2. Pre-CC accumulated GDD, with arrows of how many is accumulated daily
+##### 2. Pre-CC accumulated GDD, with arrows of how many is accumulated daily #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg("figures/powerPoint/concept2.jpeg", width = 10, height = 8, units = "in", res = 300)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
@@ -398,7 +403,7 @@ plot.window(xlim = c(0, 365), ylim = c(0, 1))
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# 3. Pre-CC accumulated GDD, with arrows of how many is accumulated overall
+##### 3. Pre-CC accumulated GDD, with arrows of how many is accumulated overall #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg("figures/powerPoint/concept3.jpeg", width = 10, height = 8, units = "in", res = 300)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
@@ -406,14 +411,14 @@ layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
 # Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
-     type = "n", lwd = 1.2,
+plot(doy, gdd_cc, ylim = ylimlogis,
+     type = "n", lwd = mylwd,
      xlab = "", ylab = "Accumulated GDD",
      xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "",
      cex.axis = axissize, cex.lab = labsize)
 
 # draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre))
 
 # Early spring
 Arrows(x0 = 79, y0 = gdd_pre[79] + 600, x1 = 79, y1 = gdd_pre[79] + 200,
@@ -459,7 +464,7 @@ plot.window(xlim = c(0, 365), ylim = c(0, 1))
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# 4. GS arrow
+##### 4. GS arrow #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg("figures/powerPoint/concept4.jpeg", width = 10, height = 8, units = "in", res = 300)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
@@ -467,8 +472,8 @@ layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
 # Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
-     type = "n", lwd = 1.2,
+plot(doy, gdd_cc, ylim = ylimlogis,
+     type = "n", lwd = mylwd,
      xlab = "", ylab = "Accumulated GDD",
      xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "",
      cex.axis = axissize, cex.lab = labsize)
@@ -504,106 +509,188 @@ polygon(
   col = adjustcolor(colpre, alpha.f = 0.7),
   border = NA)
 
-#0a6a3c
-text(x = presos + (preeos - presos)/2, y = arrow_y, 
-     "Growing season length", col = "black", cex = 1.3)
-dev.off()
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# 4. GS arrow
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-library(rsvg)
-jpeg("figures/powerPoint/concept4.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
-
-# Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
-par(mar = p1)
-# Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
-     type = "n", lwd = 1.2,
-     xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "",
-     cex.axis = axissize, cex.lab = labsize)
-
-# draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre))
-
-# Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
-par(mar = p2)
-plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
-     ylim = c(0, scale_to * 1.1),
-     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE, 
-     cex.axis = axissize, cex.lab = labsize)
-axis(1, at = ticks, labels = dates, cex.axis = axissize)
-
-# Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
-par(mar = p3)
-plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
-
-# gsl arrow line pre CC
-arrow_y <- 0.5
-shaft_h <- 0.15
-head_h  <- 0.15
-x_start <- presos
-x_end <- preeos
-x_neck_l <- x_start + 10  
-x_neck_r <- x_end - 10    
-
-polygon(
-  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colpre, alpha.f = 0.7),
-  border = NA)
-
-#0a6a3c
+# 0a6a3c
 img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
 img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
 usr <- par("usr")
-img_w <- 15  # width in plot units, tune as needed
-img_h <- 0.4  # height in plot units, tune as needed
 
-rasterImage(img_leafout, x_start - img_w/2, arrow_y - img_h/2, x_start + img_w/2, arrow_y + img_h/2)
-rasterImage(img_budset,  x_end - img_w/2,   arrow_y - img_h/2, x_end + img_w/2,   arrow_y + img_h/2)
+img_w <- 23  # width in plot units, tune as needed
+img_h <- 0.6  # height in plot units, tune as needed
+
+rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 + img_w/2, arrow_y + img_h/2)
+rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
 
 text(x = presos + (preeos - presos)/2, y = arrow_y, 
      "Growing season length", col = "black", cex = 1.9)
+
 dev.off()
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### 5. GS arrow pre and CC #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg("figures/powerPoint/concept5.jpeg", width = 10, height = 8, units = "in", res = 300)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+
+# Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p1)
 # Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
+plot(doy, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "")
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "",
+     cex.axis = axissize, cex.lab = labsize)
 
 # draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre))
 
+# Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
+par(mar = p2)
+plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
+     ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE, 
+     cex.axis = axissize, cex.lab = labsize)
+axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
+# Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p3)
+plot.new()
+plot.window(xlim = c(0, 365), ylim = c(0, 1))
 
+# gsl arrow line pre CC
+arrow_y <- 0.5
+shaft_h <- 0.15
+head_h  <- 0.15
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.7),
+  border = NA)
+
+# 0a6a3c
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+usr <- par("usr")
+
+img_w <- 23  # width in plot units, tune as needed
+img_h <- 0.6  # height in plot units, tune as needed
+
+rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 + img_w/2, arrow_y + img_h/2)
+rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
+
+text(x = presos + (preeos - presos)/2, y = arrow_y, 
+     "Growing season length", col = "black", cex = 1.9)
+
+dev.off()
+
+# === === === === === === === === === === === === === === === === === === === ===
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### 5. GS extension with Climate change #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+jpeg("figures/powerPoint/concept6.jpeg", width = 10, height = 8, units = "in", res = 300)
+
+layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+
+gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
+gdd_cc  <- 3200 / (1 + exp(-0.03 * (doy - 140)))
+
+layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+
+# Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p1)
 # Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
+plot(doy, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "")
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre, alpha.f = 0.4), main = "",
+     cex.axis = axissize, cex.lab = labsize)
 
 # draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
+# draw logistic curves CC
+lines(doy, gdd_cc, type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-# Post CC
-# draw logistic curves pre CC
-lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
-# Post CC
-# draw logistic curves pre CC
-lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
+text(x = 300, y = max(gdd_cc) + 150, "More GDD", col = "black", cex = 1.9)
+
+Arrows(x0 = 300, y0 = max(gdd_pre), x1 = 300, y1 = max(gdd_cc) - 200, arr.type = "triangle",
+       arr.width = 0.3, lwd	= 2, col = colcc)
+
+# Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
+par(mar = p2)
+plot(x, y1_scaled, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4), 
+     xaxt = "n", ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE, 
+     cex.axis = axissize, cex.lab = labsize)
+axis(1, at = ticks, labels = dates, cex.axis = axissize)
+
+lines(xs, ys_scaled2, lwd = mylwd, col = colcc)
+lines(xf, yf_scaled2, lwd = mylwd, col = colcc)
+
+# Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p3)
+plot.new()
+plot.window(xlim = c(0, 365), ylim = c(0, 1))
+
+# gsl arrow line pre CC
+arrow_y <- 0.5
+shaft_h <- 0.15
+head_h  <- 0.15
+x_start <- ccsos
+x_end <- cceos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colcc, alpha.f = 0.7),
+  border = NA)
+
+# 0a6a3c
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+usr <- par("usr")
+
+img_w <- 23  # width in plot units, tune as needed
+img_h <- 0.6  # height in plot units, tune as needed
+
+rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 + img_w/2, arrow_y + img_h/2)
+rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
+
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, 
+     "Longer growing season", col = "black", cex = 1.9)
+
+# gsl arrow line pre CC
+arrow_y <- 0.2
+shaft_h <- 0.06
+head_h  <- 0.06
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.4),
+  border = NA)
+
+dev.off()
+
+
+
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # Slot 2: Season length arrows
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = c(0, 4, 0, 2))
 plot.new()
 plot.window(xlim = c(0, 365), ylim = c(0, 1))
-
-
 
 # gsl arrow line pre CC
 arrow_y <- 0.5
