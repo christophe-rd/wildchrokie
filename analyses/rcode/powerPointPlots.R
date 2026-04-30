@@ -15,17 +15,24 @@ source("rcode/growthModelsMain.R")
 
 library(ggplot2)
 library(rsvg)
+library(shape)
 
 # flags
 makeplots <- TRUE
 runzscore <- F
 # interceptmuplots <- TRUE
 par(family = "Helvetica")
+
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
 # === === === === === === === === === === === === === === === === 
 climatesum <- read.csv("output/climateSummariesYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
+
+emp$latbi[which(emp$latbi %in% "Alnus incana")] <- "A. incana"
+emp$latbi[which(emp$latbi %in% "Betula alleghaniensis")] <- "B. alleghaniensis"
+emp$latbi[which(emp$latbi %in% "Betula papyrifera")] <- "B. papyrifera"
+emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
 
 # Load parameter summaries generated in growthModelsMain.R ####
 sigma_df2  <- read.csv("output/GM_GDDparam_sigma.csv")
@@ -85,12 +92,12 @@ aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
 sitefull <- c(
   "GR" = "Dartmouth College (NH)",
   "HF" = "Harvard Forest (MA)",
-  "SH" = "St-Hyppolyte (Qc)",
+  "SH" = "St-Hippolyte (Qc)",
   "WM" = "White Mountains (NH)"
 )
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hyppolyte (Qc)"),
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
   shortnames = c("HF", "WM", "GR", "SH"),   
   Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
@@ -139,10 +146,10 @@ y_pos <- rev(1:n_spp)
 ylimline <- c(-1, 3)
 
 species_order <- c(
-  "Alnus incana", 
-  "Betula alleghaniensis", 
-  "Betula papyrifera", 
-  "Betula populifolia")
+  "A. incana", 
+  "B. alleghaniensis", 
+  "B. papyrifera", 
+  "B. populifolia")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Combined mu plots bspp (GDD / GSL / SOS / EOS) ####
@@ -157,7 +164,7 @@ img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # pdf("figures/powerPoint/muSOS.pdf", width = 7.5, height = 6)
 jpeg(file = "figures/powerPoint/muSOS.jpeg",
-     width = 2400, height = 1800, res = 300)
+     width = 2400, height = 1800, res = 400)
 
 mumar <- c(4, 1, 4, 1)
 
@@ -170,10 +177,10 @@ plot(bspp_df2_sos$mean, y_pos,
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(c) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 1.3)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 1.3)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 1.3)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 1.3)
 # usr <- par("usr")
 # rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
@@ -188,7 +195,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp EOS ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/powerPoint/muEOS.jpeg", width = 2400, height = 1800, res = 300)
+jpeg(file = "figures/powerPoint/muEOS.jpeg", width = 2400, height = 1800, res = 400)
 par(mfrow = c(1,1))
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.3, 0.4), ylim = c(0.5, n_spp + 0.5),
@@ -198,10 +205,10 @@ plot(bspp_df2_eos$mean, y_pos,
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos, col = wccolslatbi, lwd = 3)
 # mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 1.3)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 1.3)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 1.3)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 1.3)
 # usr <- par("usr")
 # rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 legend("right",
@@ -215,57 +222,46 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp GDD ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/powerPoint/muGDD.jpeg", width = 2400, height = 1800, res = 300)
-par(mfrow = c(1,1))
+jpeg(file = "figures/powerPoint/muGDD.jpeg", width = 2400, height = 1800, res = 400)
+par(mfrow = c(1,1), mar = c(6, 7, 2, 4))
 plot(bspp_df2$mean, y_pos,
-     xlim = c(-0.2, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in 10 spring days GDD", ylab = "",
+     xlim = c(-0.2, 0.6), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) change with longer thermal seasons (GDD)", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"), cex.axis = 1.2, cex.lab = 1.2)
+     panel.first = abline(v = 0, lty = 2, lwd = 0.9, col = "black"), cex.axis = 1.2, cex.lab = 1.2)
 segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
-# mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 1.3)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 1.3)
-# usr <- par("usr")
-# rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
-legend("right",
-       legend = sapply(unique(bspp_df2$spp_name),
-                       function(x) parse(text = paste0("italic('", x, "')"))),
-       col    = unique(wccolslatbi),
-       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Species", title.font = 2)
+
+# y-axis species labels
+spp_labels <- sapply(unique(bspp_df2_gsl$spp_name),
+                     function(x) parse(text = paste0("italic('", x, "')")))
+axis(2, at = y_pos, labels = spp_labels, las = 1, tick = TRUE, cex.axis = 0.9)
+
 dev.off()
+
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp GSL ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/powerPoint/muGSL.jpeg", width = 2400, height = 1800, res = 300)
-par(mfrow = c(1,1))
+jpeg(file = "figures/powerPoint/muGSL.jpeg", width = 2400, height = 1800, res = 400)
+par(mfrow = c(1,1), mar = c(6, 7, 2, 4))  # widen left margin for species names
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.2, 1), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
+     xlim = c(-0.2, 0.6), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) with longer calendar season", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"), cex.axis = 1.2, cex.lab = 1.2)
+     panel.first = abline(v = 0, lty = 2, lwd = 0.9, col = "black"), cex.axis = 1.2, cex.lab = 1.2)
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
-# mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
-arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 1.3)
-arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.3, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
-text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 1.3)
-# usr <- par("usr")
-# rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
-legend("right",
-       legend = sapply(unique(bspp_df2$spp_name),
-                       function(x) parse(text = paste0("italic('", x, "')"))),
-       col    = unique(wccolslatbi),
-       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Species", title.font = 2)
+
+# y-axis species labels
+spp_labels <- sapply(unique(bspp_df2$spp_name),
+                     function(x) parse(text = paste0("italic('", x, "')")))
+axis(2, at = y_pos, labels = spp_labels, las = 1, tick = TRUE, cex.axis = 0.9)
+
 dev.off()
+
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Conceptual figure broken down ####
@@ -307,15 +303,18 @@ ys <- dnorm(xs, mean = peak, sd = 55)
 yf <- dnorm(xf, mean = peak, sd = 50)
 
 # Scale y2 so both curves peak at the same height
-scale_to <- 30
+scale_to <- 25
 
 y1_scaled <- y1  * (scale_to / max(y1))
 ys_scaled2 <- ys  * (scale_to / max(ys))
 yf_scaled2 <- yf  * (scale_to / max(yf))
-
+y2_scaled <- c(ys_scaled2, yf_scaled2)
+length(ys_scaled2) + length(yf_scaled2)
 # calendar days
 ticks <- seq(0, 330, by = 30)  # wherever you want ticks
 dates <- format(as.Date(ticks, origin = "2023-01-01"), "%d %b")
+
+myxlimp3 <- c(min(doy), max(doy))
 
 mylwd <- 3
 
@@ -324,19 +323,22 @@ p1 <- c(0, 5, 2, 2)
 p2 <- c(0, 5, 0, 2)
 p3 <- c(0, 5, 0, 2)
 
+# matrix heights 
+matheights <- c(2.4, 2.8, 1)
+
 # ylim logistic
 ylimlogis <- c(0, 3400)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### 1. Basic curve with just temp and gdd #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept1.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+jpeg("figures/powerPoint/concept1.jpeg", width = 10, height = 8, units = "in", res = 400)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1
 par(mar = p1)
 plot.new()
-plot.window(xlim = c(0, 330), ylim = c(0, 3))
+plot.window(xlim = myxlimp3, ylim = c(0, 3))
 
 # Panel 2 with just pre industrial
 par(mar = p2)
@@ -347,8 +349,7 @@ plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 # abline for 5C
-abline(a = 11, b = 0, lty = 2)
-
+segments(x0 = -11, x1 = 126, y0 = 11, y1 = 11, lty = 2)
 Arrows(x0 = 120, y0 = 20, x1 = 120, y1 = 12.8, arr.type = "triangle", 
        arr.width = 0.4, lwd	= 2)
 text(x = 110, y = 22, labels = expression("16"*degree*"C, GDD = 11"), 
@@ -357,22 +358,22 @@ text(x = 110, y = 22, labels = expression("16"*degree*"C, GDD = 11"),
 # Panel 3
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 330), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 dev.off()
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### 2. Pre-CC accumulated GDD, with arrows of how many is accumulated daily #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept2.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+jpeg("figures/powerPoint/concept2.jpeg", width = 10, height = 8, units = "in", res = 400)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1 --- ---  --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p1)
 plot.new()
-plot.window(xlim = c(0, 330), ylim = c(0, 3))
+plot.window(xlim = myxlimp3, ylim = c(0, 3))
 
-# Panel 2 :with just pre industrial  --- ---  --- --- --- --- --- --- --- --- 
+# Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
 
 plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
@@ -382,31 +383,31 @@ plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 # Early spring
-Arrows(x0 = 79, y0 = 7, x1 = 79, y1 = 4, arr.type = "triangle", 
+Arrows(x0 = 82, y0 = 7, x1 = 82, y1 = 3.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
-segments(x0 = -12, y0 = 2, x1 = 79, y1 = 2, lty = 3, lwd = 1.2)
+segments(x0 = -12, y0 = 2, x1 = 85, y1 = 2, lty = 2, lwd = 1.2)
 text(x = 55, y = 8.5, labels = "Early spring: 2 daily GDD", 
      cex = 1.5, col = "black")
 
 # Mid summer
-Arrows(x0 = 155, y0 = 30, x1 = 155, y1 = 27, arr.type = "triangle", 
+Arrows(x0 = 150, y0 = 25, x1 = 150, y1 = 21.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
-segments(x0 = -12, y0 = 25, x1 = 157, y1 = 25, lty = 3, lwd = 1.2)
-text(x = 130, y = 31.5, labels = "Mid summer: 25 daily GDD", 
+segments(x0 = -12, y0 = 20, x1 = 152, y1 = 20, lty = 2, lwd = 1.2)
+text(x = 130, y = 26, labels = "Mid summer: 20 daily GDD", 
      cex = 1.5, col = "black")
 
 # Panel 3  --- ---  --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### 3. Pre-CC accumulated GDD, with arrows of how many is accumulated overall #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept3.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+jpeg("figures/powerPoint/concept3.jpeg", width = 10, height = 8, units = "in", res = 400)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
@@ -423,15 +424,15 @@ lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre))
 # Early spring
 Arrows(x0 = 79, y0 = gdd_pre[79] + 600, x1 = 79, y1 = gdd_pre[79] + 200,
        arr.type = "triangle", arr.width = 0.3, lwd = mylwd)
-segments(x0 = -12, y0 = gdd_pre[79], x1 = 79, y1 = gdd_pre[79], lty = 3, lwd = 1.2)
+segments(x0 = -12, y0 = gdd_pre[79], x1 = 79, y1 = gdd_pre[79], lty = 2, lwd = 1.2)
 text(x = 57, y = gdd_pre[79] + 700, labels = "Early spring: 50 GDD",
      cex = 1.5, col = "black")
 
 # Mid summer
 Arrows(x0 = 158, y0 = gdd_pre[160] + 650, x1 = 158, y1 = gdd_pre[160] + 250,
        arr.type = "triangle", arr.width = 0.3, lwd = mylwd)
-segments(x0 = -12, y0 = gdd_pre[160], x1 = 157, y1 = gdd_pre[160], lty = 3, lwd = 1.2)
-text(x = 130, y = gdd_pre[160] + 750, labels = "Mid summer: 1000 GDD",
+segments(x0 = -12, y0 = gdd_pre[160], x1 = 157, y1 = gdd_pre[160], lty = 2, lwd = 1.2)
+text(x = 130, y = gdd_pre[160] + 800, labels = "Mid summer: 1000 GDD",
      cex = 1.5, col = "black")
 
 # Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
@@ -444,30 +445,30 @@ plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 # Early spring
-Arrows(x0 = 79, y0 = 7, x1 = 79, y1 = 4, arr.type = "triangle", 
+Arrows(x0 = 82, y0 = 7, x1 = 82, y1 = 3.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
-segments(x0 = -12, y0 = 2, x1 = 79, y1 = 2, lty = 3, lwd = 1.2)
+segments(x0 = -12, y0 = 2, x1 = 85, y1 = 2, lty = 2, lwd = 1.2)
 text(x = 55, y = 8.5, labels = "Early spring: 2 daily GDD", 
      cex = 1.5, col = "black")
 
 # Mid summer
-Arrows(x0 = 155, y0 = 30, x1 = 155, y1 = 27, arr.type = "triangle", 
+Arrows(x0 = 150, y0 = 25, x1 = 150, y1 = 21.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
-segments(x0 = -12, y0 = 25, x1 = 157, y1 = 25, lty = 3, lwd = 1.2)
-text(x = 130, y = 31.5, labels = "Mid summer: 25 daily GDD", 
+segments(x0 = -12, y0 = 20, x1 = 152, y1 = 20, lty = 2, lwd = 1.2)
+text(x = 130, y = 26, labels = "Mid summer: 20 daily GDD", 
      cex = 1.5, col = "black")
 
 # Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### 4. GS arrow #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept4.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+jpeg("figures/powerPoint/concept4.jpeg", width = 10, height = 8, units = "in", res = 400)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
@@ -489,10 +490,14 @@ plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
      cex.axis = axissize, cex.lab = labsize)
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
+# gs boundaries
+segments(x0 = preeos, x1 = preeos, y0 = -2, y1 = y1_scaled[presos] - 4, lwd = 1, lty = 2)
+segments(x0 = presos, x1 = presos, y0 = -2, y1 = y1_scaled[preeos] + 2.8, lwd = 1, lty = 2)
+
 # Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 # gsl arrow line pre CC
 arrow_y <- 0.5
@@ -525,11 +530,16 @@ text(x = presos + (preeos - presos)/2, y = arrow_y,
 
 dev.off()
 
+ 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### 5. GS arrow pre and CC #####
+##### 5. GS extension with Climate change WITHOUT Logistic CC #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept5.jpeg", width = 10, height = 8, units = "in", res = 300)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+jpeg("figures/powerPoint/concept5.jpeg", width = 10, height = 8, units = "in", res = 400)
+
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
+
+# gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
+# gdd_cc  <- 3200 / (1 + exp(-0.03 * (doy - 140)))
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
@@ -537,38 +547,45 @@ par(mar = p1)
 plot(doy, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "",
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre, alpha.f = 0.4), main = "",
      cex.axis = axissize, cex.lab = labsize)
 
 # draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre))
+lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
 
 # Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
-plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
-     ylim = c(0, scale_to * 1.1),
+plot(x, y1_scaled, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4), 
+     xaxt = "n", ylim = c(0, scale_to * 1.1),
      xlab = "Day of year", ylab = "Daily GDD", frame = FALSE, 
      cex.axis = axissize, cex.lab = labsize)
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
+lines(xs, ys_scaled2, lwd = mylwd, col = colcc)
+lines(xf, yf_scaled2, lwd = mylwd, col = colcc)
+
+# gs boundaries
+segments(x0 = ccsos, x1 = ccsos, y0 = -2, y1 = 9.2, lwd = 1, lty = 2)
+segments(x0 = cceos, x1 = cceos, y0 = -2, y1 = 8, lwd = 1, lty = 2)
+
 # Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
-# gsl arrow line pre CC
+# gsl arrow line CC RED
 arrow_y <- 0.5
 shaft_h <- 0.15
 head_h  <- 0.15
-x_start <- presos
-x_end <- preeos
+x_start <- ccsos
+x_end <- cceos
 x_neck_l <- x_start + 10  
 x_neck_r <- x_end - 10    
 
 polygon(
   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colpre, alpha.f = 0.7),
+  col = adjustcolor(colcc, alpha.f = 0.7),
   border = NA)
 
 # 0a6a3c
@@ -582,24 +599,35 @@ img_h <- 0.6  # height in plot units, tune as needed
 rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 + img_w/2, arrow_y + img_h/2)
 rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
 
-text(x = presos + (preeos - presos)/2, y = arrow_y, 
-     "Growing season length", col = "black", cex = 1.9)
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, 
+     "Longer calendar season", col = "black", cex = 1.9)
+
+# gsl arrow line pre CC BLUE
+arrow_y <- 0.2
+shaft_h <- 0.06
+head_h  <- 0.06
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
+
+polygon(
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.4),
+  border = NA)
 
 dev.off()
 
-# === === === === === === === === === === === === === === === === === === === ===
-
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### 5. GS extension with Climate change #####
+##### 6. GS extension with Climate change WITH Logistic CC #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg("figures/powerPoint/concept6.jpeg", width = 10, height = 8, units = "in", res = 300)
+jpeg("figures/powerPoint/concept6.jpeg", width = 10, height = 8, units = "in", res = 400)
 
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
-gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
-gdd_cc  <- 3200 / (1 + exp(-0.03 * (doy - 140)))
-
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 3, 1))
+# gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
+# gdd_cc  <- 3200 / (1 + exp(-0.03 * (doy - 140)))
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p1)
@@ -615,10 +643,14 @@ lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f =
 # draw logistic curves CC
 lines(doy, gdd_cc, type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-text(x = 300, y = max(gdd_cc) + 150, "More GDD", col = "black", cex = 1.9)
+text(x = 300, y = max(gdd_cc) + 150, "Longer thermal season", col = "black", cex = 1.9)
 
 Arrows(x0 = 300, y0 = max(gdd_pre), x1 = 300, y1 = max(gdd_cc) - 200, arr.type = "triangle",
        arr.width = 0.3, lwd	= 2, col = colcc)
+
+# GS delimitations
+abline(v = ccsos + 0.3, lwd = 1, lty = 2)
+abline(v = cceos + 0.3, lwd = 1, lty = 2)
 
 # Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
@@ -631,10 +663,14 @@ axis(1, at = ticks, labels = dates, cex.axis = axissize)
 lines(xs, ys_scaled2, lwd = mylwd, col = colcc)
 lines(xf, yf_scaled2, lwd = mylwd, col = colcc)
 
+# GS delimitations
+abline(v = ccsos, lwd = 1, lty = 2)
+abline(v = cceos, lwd = 1, lty = 2)
+
 # Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
 par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 # gsl arrow line pre CC
 arrow_y <- 0.5
@@ -663,7 +699,7 @@ rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 
 rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
 
 text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, 
-     "Longer growing season", col = "black", cex = 1.9)
+     "Longer calendar season", col = "black", cex = 1.9)
 
 # gsl arrow line pre CC
 arrow_y <- 0.2
@@ -682,7 +718,7 @@ polygon(
 
 dev.off()
 
-
+# === === === === === === === === === === === === === === === === === === === ===
 
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -690,7 +726,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = c(0, 4, 0, 2))
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 # gsl arrow line pre CC
 arrow_y <- 0.5
