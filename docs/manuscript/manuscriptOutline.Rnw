@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{Manuscript outline}
+\author{Christophe Rouleau-Desrochers}
+\date{\today}
+\maketitle
+
+% Set Wildchrokie species shortcut
+\newcommand{\Ainc}{\textit{A. incana}}
+\newcommand{\Ball}{\textit{B. alleghaniensis}}
+\newcommand{\Bpap}{\textit{B. papyrifera}}
+\newcommand{\Bpop}{\textit{B. populifolia}}
+
+% Set CoringTreespotters species shortcut
+\newcommand{\Arub}{\textit{A. rubrum}}
+\newcommand{\Asac}{\textit{A. saccharum}}
+\newcommand{\Afla}{\textit{A. flava}}
+\newcommand{\Bnig}{\textit{B. nigra}}
+\newcommand{\Cgla}{\textit{C. glabra}}
+\newcommand{\Cova}{\textit{C. ovata}}
+\newcommand{\Pdel}{\textit{P. deltoides}}
+\newcommand{\Qalb}{\textit{Q. alba}}
+\newcommand{\Qrub}{\textit{Q. rubra}}
+\newcommand{\Tame}{\textit{T. americana}}   
+
+% 
+% \begin{figure}[h!]
+% \includegraphics[width=0.85\textwidth]{../../notes/chaptersDesign/chaptersDesign.pdf}
+% \caption{Overview of the age class, species, provenance of the trees used in each study along with the type of study each project consists of. The colored lines represent the period of the growth data and the shaded areas are the phenological data. Both are colour-coded by project. Each phylogram illustrates the species used in each project. The map illustrates the four different provenances used in Wildchrokie, and the star represents the location of Wildchrokie and CoringTreespotters.}
+% \label{fig:chaptersDesign}
+% \end{figure}
+
+\section*{Introduction}
+
+\section*{Methods}
+\begin{enumerate}
+\item Common garden set up and location
+  \begin{enumerate}
+  \item Seed collection of 17 woody species across a latitudinal gradient
+  \item Four sites Harvard Forest, the White mountains, Second College Grant of Dartmouth,
+College, and St. Hippolyte.
+  \item Seeds germinated following standard germination protocols in 2016
+  \item Seedlings planted at Weld Hill
+  \item Design was a randomized 16 plot blocks, with shade cloth
+  \item Plots weeded and watered throughout the study, pruned in the fall of 2020
+  \end{enumerate}
+
+\item Leaf phenology observations
+  \begin{enumerate}
+  \item We observed leaf phenology twice per week (2018-2019) or once per week (2020)
+  \item We used BBCH scale
+  \end{enumerate}
+  
+\item Cookie coillection
+  \begin{enumerate}
+  \item 
+  \end{enumerate}
+\end{enumerate}
+
+
+\section*{Results}
+Separate document
+
+\section*{Discussion}
+
+\end{document}
