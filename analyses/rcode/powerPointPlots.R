@@ -248,7 +248,7 @@ jpeg(file = "figures/powerPoint/muGSL.jpeg", width = 2400, height = 1800, res = 
 par(mfrow = c(1,1), mar = c(6, 7, 2, 4))  # widen left margin for species names
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.2, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) with longer calendar season", ylab = "",
+     xlab = "log(ring width) change with longer calendar season", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, lwd = 0.9, col = "black"), cex.axis = 1.2, cex.lab = 1.2)
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -643,14 +643,16 @@ lines(doy, gdd_pre, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f =
 # draw logistic curves CC
 lines(doy, gdd_cc, type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-text(x = 300, y = max(gdd_cc) + 150, "Longer thermal season", col = "black", cex = 1.9)
+text(x = 280, y = max(gdd_cc) + 150, "Warmer thermal season", col = "black", cex = 1.9)
 
 Arrows(x0 = 300, y0 = max(gdd_pre), x1 = 300, y1 = max(gdd_cc) - 200, arr.type = "triangle",
        arr.width = 0.3, lwd	= 2, col = colcc)
 
 # GS delimitations
-abline(v = ccsos + 0.3, lwd = 1, lty = 2)
-abline(v = cceos + 0.3, lwd = 1, lty = 2)
+# abline(v = ccsos + 0.3, lwd = 1, lty = 2)
+# abline(v = cceos + 0.3, lwd = 1, lty = 2)
+segments(x0 = ccsos, x1 = ccsos, y0 = -5, y1 = 680, lwd = 1, lty = 2)
+segments(x0 = cceos, x1 = cceos, y0 = -5, y1 = 2900, lwd = 1, lty = 2)
 
 # Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
