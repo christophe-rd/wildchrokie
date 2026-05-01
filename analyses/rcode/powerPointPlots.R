@@ -290,8 +290,8 @@ peak <- 185
 
 # Logistic curves
 doy <- 1:330
-gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
-gdd_cc  <- 3000 / (1 + exp(-0.04 * (doy - 140)))
+gdd_pre <- 2500 / (1 + exp(-0.025 * (doy - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.025 * (doy - 140)))
 
 # Normal curves
 x <- as.integer(seq(0, 330, length.out = 330))
@@ -389,11 +389,11 @@ segments(x0 = -12, y0 = 2, x1 = 85, y1 = 2, lty = 2, lwd = 1.2)
 text(x = 55, y = 8.5, labels = "Early spring: 2 daily GDD", 
      cex = 1.5, col = "black")
 
-# Mid summer
+# Late spring
 Arrows(x0 = 150, y0 = 25, x1 = 150, y1 = 21.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
 segments(x0 = -12, y0 = 20, x1 = 152, y1 = 20, lty = 2, lwd = 1.2)
-text(x = 130, y = 26, labels = "Mid summer: 20 daily GDD", 
+text(x = 130, y = 26, labels = "Late spring: 20 daily GDD", 
      cex = 1.5, col = "black")
 
 # Panel 3  --- ---  --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -428,11 +428,11 @@ segments(x0 = -12, y0 = gdd_pre[79], x1 = 79, y1 = gdd_pre[79], lty = 2, lwd = 1
 text(x = 57, y = gdd_pre[79] + 700, labels = "Early spring: 50 GDD",
      cex = 1.5, col = "black")
 
-# Mid summer
+# Late spring
 Arrows(x0 = 158, y0 = gdd_pre[160] + 650, x1 = 158, y1 = gdd_pre[160] + 250,
        arr.type = "triangle", arr.width = 0.3, lwd = mylwd)
 segments(x0 = -12, y0 = gdd_pre[160], x1 = 157, y1 = gdd_pre[160], lty = 2, lwd = 1.2)
-text(x = 130, y = gdd_pre[160] + 800, labels = "Mid summer: 1000 GDD",
+text(x = 130, y = gdd_pre[160] + 800, labels = "Late spring: 1000 GDD",
      cex = 1.5, col = "black")
 
 # Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
@@ -451,11 +451,11 @@ segments(x0 = -12, y0 = 2, x1 = 85, y1 = 2, lty = 2, lwd = 1.2)
 text(x = 55, y = 8.5, labels = "Early spring: 2 daily GDD", 
      cex = 1.5, col = "black")
 
-# Mid summer
+# Late spring
 Arrows(x0 = 150, y0 = 25, x1 = 150, y1 = 21.5, arr.type = "triangle", 
        arr.width = 0.3, lwd	= 2)
 segments(x0 = -12, y0 = 20, x1 = 152, y1 = 20, lty = 2, lwd = 1.2)
-text(x = 130, y = 26, labels = "Mid summer: 20 daily GDD", 
+text(x = 130, y = 26, labels = "Late spring: 20 daily GDD", 
      cex = 1.5, col = "black")
 
 # Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
