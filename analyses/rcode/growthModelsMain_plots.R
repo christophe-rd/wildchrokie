@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -27,6 +27,19 @@ runzscore <- F
 climatesum <- read.csv("output/climateSummariesYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
+# abreviated spp names: 
+emp$latbi[which(emp$latbi %in% "Alnus incana")] <- "A. incana"
+emp$latbi[which(emp$latbi %in% "Betula alleghaniensis")] <- "B. alleghaniensis"
+emp$latbi[which(emp$latbi %in% "Betula papyrifera")] <- "B. papyrifera"
+emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
+
+# Full site names
+
+emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH)"
+emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA)"
+emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc)"
+emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH)"
+  
 # Load parameter summaries generated in growthModelsMain.R ####
 sigma_df2  <- read.csv("output/GM_GDDparam_sigma.csv")
 bspp_df2   <- read.csv("output/GM_GDDparam_bspp.csv")
@@ -171,12 +184,6 @@ colnames(site_df_eos) <- 1:ncol(site_df_eos)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Define objects used throught the models #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-sitefull <- c(
-  "GR" = "Dartmouth College (NH)",
-  "HF" = "Harvard Forest (MA)",
-  "SH" = "St-Hippolyte (Qc)",
-  "WM" = "White Mountains (NH)"
-)
 
 locations <- data.frame(
   name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
@@ -185,11 +192,12 @@ locations <- data.frame(
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
 )
 
-site_order <- locations$shortnames[order(locations$Latitude)]
+site_order <- locations$name[order(locations$Latitude)]
 y_pos_site <- match(site_df2$site_name, site_order)
 
 # shapes for sites
-my_shapes <- c(HF = 19, WM = 18, GR = 15, SH = 17)
+my_shapes <- c("Harvard Forest (MA)" = 19, "White Mountains (NH)" = 18, 
+               "Dartmouth College (NH)" = 15, "St-Hippolyte (Qc)" = 17)
 
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
@@ -228,10 +236,10 @@ y_pos <- rev(1:n_spp)
 ylimline <- c(-1, 3)
 
 species_order <- c(
-  "Alnus incana", 
-  "Betula alleghaniensis", 
-  "Betula papyrifera", 
-  "Betula populifolia")
+  "A. incana", 
+  "B. alleghaniensis", 
+  "B. papyrifera", 
+  "B. populifolia")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: Prep posterior reconstruction #####
@@ -857,11 +865,7 @@ pdf(
   width = 8,  
   height = 8
 )
-par(mar = c(
-  4, # lower margin 
-  6, 
-  4, # upper margin  
-  6)) # right margin
+par(mar = c(4, 6, 4, 6))
 
 treeid_df4$spp_name  <- factor(treeid_df4$spp_name, levels = species_order)
 treeid_df4$site_num <- factor(treeid_df4$site_num, levels = site_order)
@@ -1467,10 +1471,10 @@ mtext("End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = rev(locations$name[match(site_order, locations$shortnames)]),
+       legend = rev(locations$name[match(site_order, locations$name)]),
        col    = rev(site_color_map[site_order]),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Site", title.font = 2)
+       title  = "Provenance", title.font = 2)
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -1683,10 +1687,10 @@ bspp_df2_z_sos$pred <- "SOS"
 bspp_df2_z_eos$pred <- "EOS"
 bspp_z_binded <- rbind(bspp_df2_z, bspp_df2_z_gsl, bspp_df2_z_sos, bspp_df2_z_eos)
 
-ainc_z <- subset(bspp_z_binded, spp_name %in% "Alnus incana")
-ball_z <- subset(bspp_z_binded, spp_name %in% "Betula alleghaniensis")
-bpap_z <- subset(bspp_z_binded, spp_name %in% "Betula papyrifera")
-bpop_z <- subset(bspp_z_binded, spp_name %in% "Betula populifolia")
+ainc_z <- subset(bspp_z_binded, spp_name %in% "A. incana")
+ball_z <- subset(bspp_z_binded, spp_name %in% "B. alleghaniensis")
+bpap_z <- subset(bspp_z_binded, spp_name %in% "B. papyrifera")
+bpop_z <- subset(bspp_z_binded, spp_name %in% "B. populifolia")
 
 bspp_z_binded$fit_bspp_abs <- abs(bspp_z_binded$mean)
 

@@ -37,10 +37,10 @@ extract_params <- function(df_fit, pattern, col_prefix, id_col, rename_pattern =
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # col
 wccolslatbi <- c(
-  "Alnus incana" = wes_palette("AsteroidCity1")[1],
-  "Betula alleghaniensis" = wes_palette("AsteroidCity1")[2],
-  "Betula papyrifera" = wes_palette("AsteroidCity1")[3],
-  "Betula populifolia" = wes_palette("AsteroidCity1")[4]
+  "A. incana" = wes_palette("AsteroidCity1")[1],
+  "B. alleghaniensis" = wes_palette("AsteroidCity1")[2],
+  "B. papyrifera" = wes_palette("AsteroidCity1")[3],
+  "B. populifolia" = wes_palette("AsteroidCity1")[4]
 )
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### CoringTreespotters #####
