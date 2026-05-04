@@ -860,12 +860,9 @@ treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid,
 gap <- 3
 
 # open device
-pdf(
-  file = "figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
-  width = 8,  
-  height = 8
-)
-par(mar = c(4, 6, 4, 6))
+pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
+    width = 8.2, height = 8.5)
+par(mar = c(4, 6, 4, 2))
 
 treeid_df4$spp_name  <- factor(treeid_df4$spp_name, levels = species_order)
 treeid_df4$site_num <- factor(treeid_df4$site_num, levels = site_order)
@@ -891,83 +888,48 @@ for(sp in species_order){ # sp = "Alnus incana"
 }
 
 # Set up empty plot
-plot(
-  NA, NA,
-  xlim = range(c(treeid_df4$fit_atreeid_per5-2,
-                 treeid_df4$fit_atreeid_per95+2)),
-  ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
-  xlab = "treeid intercept values",
-  ylab = "",
-  yaxt = "n",
-  bty = "l"
-)
+plot(NA, NA,
+     xlim = range(c(treeid_df4$fit_atreeid_per5-2, treeid_df4$fit_atreeid_per95 + 4)),
+     ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
+     xlab = "treeid intercept values", ylab = "", yaxt = "n", bty = "l")
 
-
-# --- Add horizontal error bars (5–95%) ---
+#  Add horizontal error bars (5–95%) 
 segments(
-  x0 = treeid_df4$fit_atreeid_per5,
-  x1 = treeid_df4$fit_atreeid_per95,
+  x0 = treeid_df4$fit_atreeid_per5, x1 = treeid_df4$fit_atreeid_per95,
   y0 = treeid_df4$y_pos,
-  col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7),
-  lwd = 1
-)
+  col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7), lwd = 1)
 
-# --- Add thicker horizontal error bars (25–75%) ---
-segments(
-  x0 = treeid_df4$fit_atreeid_per25,
-  x1 = treeid_df4$fit_atreeid_per75,
-  y0 = treeid_df4$y_pos,
-  col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7),
-  lwd = 1.5
-)
+#  Add thicker horizontal error bars (25–75%) 
+segments(x0 = treeid_df4$fit_atreeid_per25, x1 = treeid_df4$fit_atreeid_per75,
+         y0 = treeid_df4$y_pos,
+         col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7), lwd = 1.5)
 
-# --- Add the points ---
-points(
-  treeid_df4$fit_atreeid,
-  treeid_df4$y_pos,
-  cex = 0.8,
-  pch = my_shapes[treeid_df4$site_name],
-  col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7)
-)
+#  Add the points 
+points(treeid_df4$fit_atreeid, treeid_df4$y_pos,
+       cex = 0.8, pch = my_shapes[treeid_df4$site_name],
+       col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7))
 
 spp_y_top <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, max)
 aspp_df2$y_pos <- spp_y_top[aspp_df2$spp_name] + 1
 
-segments(
-  x0 = aspp_df2$p5,
-  x1 = aspp_df2$p95,
-  y0 = aspp_df2$y_pos,
-  col = adjustcolor(wccolslatbi[aspp_df2$spp_name], alpha.f = 0.9),
-  lwd = 2
+segments(x0 = aspp_df2$p5, x1 = aspp_df2$p95, y0 = aspp_df2$y_pos,
+         col = adjustcolor(wccolslatbi[aspp_df2$spp_name], alpha.f = 0.9), lwd = 2)
+
+segments(x0 = aspp_df2$p25, x1 = aspp_df2$p75, y0 = aspp_df2$y_pos,
+         col = wccolslatbi[aspp_df2$spp_name], lwd = 3)
+
+points(aspp_df2$mean, aspp_df2$y_pos,
+       pch = 16, bg  = wccolslatbi[aspp_df2$spp_name],
+       col = wccolslatbi[aspp_df2$spp_name], cex = 1.5
 )
 
-segments(
-  x0 = aspp_df2$p25,
-  x1 = aspp_df2$p75,
-  y0 = aspp_df2$y_pos,
-  col = wccolslatbi[aspp_df2$spp_name],
-  lwd = 3
-)
-points(
-  aspp_df2$mean,
-  aspp_df2$y_pos,
-  pch = 16,
-  bg  = wccolslatbi[aspp_df2$spp_name],
-  col = wccolslatbi[aspp_df2$spp_name],
-  cex = 1.5
-)
-
-# --- Add vertical line at 0 ---
+#  Add vertical line at 0 
 abline(v = 0, lty = 2)
 
-# --- Add custom y-axis labels (reverse order if needed) ---
-axis(
-  side = 2,
-  at = treeid_df4$y_pos,
-  labels = treeid_df4$treeid_name,
-  cex.axis = 0.5,
-  las = 1
-)
+#  Add custom y-axis labels (reverse order if needed) 
+axis( side = 2, at = treeid_df4$y_pos, labels = treeid_df4$treeid_name,
+      cex.axis = 0.5, las = 1)
+
 # spp_name mean
 spp_y <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, mean)
 site_y <- tapply(treeid_df4$y_pos, treeid_df4$site_num, max)
@@ -977,28 +939,23 @@ species_legend_order <- names(sort(spp_y, decreasing = TRUE))
 site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
-legend(
-  x = max(treeid_df4$fit_atreeid_per95) - 5,
-  y = max(treeid_df4$y_pos) + 1,
-  legend = species_legend_order,
-  col = wccolslatbi[species_legend_order],    # index so colors match
-  pch = 16,
-  pt.cex = 1.2,
-  title = "Species",
-  bty = "n"
+legend(x = max(treeid_df4$fit_atreeid_per95), y = max(treeid_df4$y_pos) + 1,
+       legend = species_legend_order,
+       col = wccolslatbi[species_legend_order],    # index so colors match
+       pch = 16, pt.cex = 1, cex = 0.8, title = "Species", bty = "n"
 )
 
-site_legend_order <- c("SH", "GR", "WM", "HF")
+site_legend_order <- c("St-Hippolyte (Qc)", "Dartmouth College (NH)", 
+                       "White Mountains (NH)", "Harvard Forest (MA)")
+
 # site_num legen
-legend(
-  x = max(treeid_df4$fit_atreeid_per95) - 2,
-  y = max(treeid_df4$y_pos) - 15,
-  legend = site_legend_order,
-  pch = my_shapes[site_legend_order],
-  pt.cex = 1.2,
-  title = "Sites",
-  bty = "n"
-)
+locations
+legend(x = max(treeid_df4$fit_atreeid_per95),
+       y = max(treeid_df4$y_pos) - 15,
+       legend = site_legend_order,
+       pch = my_shapes[site_legend_order],
+       pt.cex = 1, cex = 0.8, title = "Sites", bty = "n")
+
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
