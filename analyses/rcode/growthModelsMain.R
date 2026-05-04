@@ -1455,6 +1455,8 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # asite partial pooling comparison ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (runmodels) {
+
 gddmodelpp <- stan_model("stan/modelGrowthGDD_PPsite.stan")
 fitgddppsite <- sampling(gddmodelpp, data = dgdd,
                    warmup = 1000, iter = 2000, chains=4)
@@ -1684,3 +1686,274 @@ arrows(x0 = treeid_df2_noPP$p25, y0 = treeid_df2$mean,
 points(treeid_df2_noPP$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 dev.off()
+
+}
+ 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Add ayear to model ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (runmodels) {
+emp$year_num <- match(emp$year, unique(emp$year))
+dgdd$year <- as.numeric(as.character(emp$year_num))
+dgdd$Nyear <- length(unique(dgdd$year))
+
+gddmodelayear <- stan_model("stan/modelGrowthGDD_ayear.stan")
+fitgddayear <- sampling(gddmodelayear, data = dgdd,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitgddayear, "output/stanOutput/fitGrowthGDD_ayear")
+# fitgddayear <- readRDS("output/stanOutput/fitGrowthGDD_ayear")
+
+
+##### Recover parameters #####
+df_fitgddayear <- as.data.frame(fitgddayear)
+
+# full posterior
+columns <- colnames(df_fitgddayear)[!grepl("prior", colnames(df_fitgddayear))]
+sigma_df <- df_fitgddayear[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fitgddayear[, columns[grepl("bsp", columns)]]
+treeid_df <- df_fitgddayear[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
+aspp_df <- df_fitgddayear[, columns[grepl("aspp", columns)]]
+site_df <- df_fitgddayear[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgddayear[, columns[grepl("year", columns)]]
+
+# change colnames
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
+
+# posterior summaries
+sigma_df2  <- extract_params(df_fitgddayear, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fitgddayear, "bsp", "fit_bspp", 
+                             "spp", "bsp\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fitgddayear, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fitgddayear, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+site_df2   <- extract_params(df_fitgddayear, "asite", "fit_a_site", 
+                             "site", "asite\\[(\\d+)\\]")
+ayear_df2   <- extract_params(df_fitgddayear, "ayear", "fit_a_year", 
+                             "year", "ayear\\[(\\d+)\\]")
+
+##### Plot posterior vs priors for gdd fit #####
+pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_ayear.pdf", width = 8, height = 10)
+
+pal <- wes_palette("AsteroidCity1")[3:4]
+
+par(mfrow = c(3, 3))
+
+# a
+plot(density(df_fitgddayear[, "a_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_a", 
+     xlab = "a", ylim = c(0, 1))
+lines(density(df_fitgddayear[, "a"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_atreeid
+plot(density(df_fitgddayear[, "sigma_atreeid_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_atreeid", 
+     xlab = "sigma_atreeid", ylim = c(0,4))
+lines(density(df_fitgddayear[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_y
+plot(density(df_fitgddayear[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0, 4))
+lines(density(df_fitgddayear[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitgddayear[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
+for (col in colnames(aspp_df)) {
+  lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
+} 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# ayear
+plot(density(df_fitgddayear[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+} 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# asite
+plot(density(df_fitgddayear[, "asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_asite", 
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
+for (col in colnames(site_df)) {
+  lines(density(site_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitgddayear[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 5))
+for (col in colnames(bspp_df)) {
+  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+plot(density(df_fitgddayear[, "atreeid_prior"]), 
+     col = pal[1], lwd = 2, 
+     # main = "priorVSposterior_asite", 
+     xlab = "atreeid", xlim = c(-6, 6), ylim = c(0, 5))
+for (col in colnames(treeid_df)) {
+  lines(density(treeid_df[, col]), col = pal[2], lwd = 0.4)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# Recover fitgdd without partial pooling
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+
+##### Recover parameters #####
+df_fitgdd <- as.data.frame(fitgdd)
+
+# full posterior
+columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
+sigma_df_noayr <- df_fitgdd[, columns[grepl("sigma", columns)]]
+bspp_df_noayr <- df_fitgdd[, columns[grepl("bsp", columns)]]
+treeid_df_noayr <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
+aspp_df_noayr <- df_fitgdd[, columns[grepl("aspp", columns)]]
+site_df_noayr <- df_fitgdd[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_noayr) <- 1:ncol(bspp_df_noayr)
+colnames(treeid_df_noayr) <- 1:ncol(treeid_df_noayr)
+colnames(aspp_df_noayr) <- 1:ncol(aspp_df_noayr)
+colnames(site_df_noayr) <- 1:ncol(site_df_noayr)
+
+sigma_df2_noayr  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2_noayr   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+                             "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_noayr <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_noayr <- subset(treeid_df2_noayr, !grepl("z|sigma", treeid))
+aspp_df2_noayr   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+site_df2_noayr   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+                             "site", "asite\\[(\\d+)\\]")
+
+
+##### Compare model output with and without partial pooling #####
+# Open device
+jpeg("figures/growthModelsMain/sitePPvsnoayr.jpeg", width = 9, height = 6, units = "in", res = 300)
+par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
+
+# sigma
+plot(sigma_df2_noayr$mean, sigma_df2$mean,
+     xlab = "no year intercept", ylab = "with year intercept", main = "sigmas", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2$p25, sigma_df2$p75)),
+     xlim = range(c(sigma_df2_noayr$p25, sigma_df2_noayr$p75+0.2)))
+arrows(x0 = sigma_df2_noayr$mean, y0 = sigma_df2$p25,
+       x1 = sigma_df2_noayr$mean, y1 = sigma_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2_noayr$p25, y0 = sigma_df2$mean,
+       x1 = sigma_df2_noayr$p75, y1 = sigma_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(sigma_df2_noayr$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+points(sigma_df2_noayr$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+text(sigma_df2_noayr$p75, sigma_df2$p25, labels = sigma_df2_noayr$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2_noayr$mean, bspp_df2$mean,
+     xlab = "no year intercept", ylab = "with year intercept", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2$p25, bspp_df2$p75)),
+     xlim = range(c(bspp_df2_noayr$p25, bspp_df2_noayr$p75)))
+arrows(x0 = bspp_df2_noayr$mean, y0 = bspp_df2$p25,
+       x1 = bspp_df2_noayr$mean, y1 = bspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2_noayr$p25, y0 = bspp_df2$mean,
+       x1 = bspp_df2_noayr$p75, y1 = bspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2_noayr$mean, bspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# aspp
+plot(aspp_df2_noayr$mean, aspp_df2$mean,
+     xlab = "no year intercept", ylab = "with year intercept", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2$p25, aspp_df2$p75)),
+     xlim = range(c(aspp_df2_noayr$p25, aspp_df2_noayr$p75)))
+arrows(x0 = aspp_df2_noayr$mean, y0 = aspp_df2$p25,
+       x1 = aspp_df2_noayr$mean, y1 = aspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2_noayr$p25, y0 = aspp_df2$mean,
+       x1 = aspp_df2_noayr$p75, y1 = aspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2_noayr$mean, aspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# asite
+plot(site_df2_noayr$mean, site_df2$mean,
+     xlab = "no year intercept", ylab = "with year intercept", main = "asite", type = "n", frame = FALSE,
+     ylim = range(c(site_df2$p25, site_df2$p75)),
+     xlim = range(c(site_df2_noayr$p25, site_df2_noayr$p75)))
+arrows(x0 = site_df2_noayr$mean, y0 = site_df2$p25,
+       x1 = site_df2_noayr$mean, y1 = site_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = site_df2_noayr$p25, y0 = site_df2$mean,
+       x1 = site_df2_noayr$p75, y1 = site_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(site_df2_noayr$mean, site_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+
+# atreeid
+plot(treeid_df2_noayr$mean, treeid_df2$mean,
+     xlab = "no year intercept", ylab = "with year intercept", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2$p25, treeid_df2$p75)),
+     xlim = range(c(treeid_df2_noayr$p25, treeid_df2_noayr$p75)))
+arrows(x0 = treeid_df2_noayr$mean, y0 = treeid_df2$p25,
+       x1 = treeid_df2_noayr$mean, y1 = treeid_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+arrows(x0 = treeid_df2_noayr$p25, y0 = treeid_df2$mean,
+       x1 = treeid_df2_noayr$p75, y1 = treeid_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+points(treeid_df2_noayr$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+dev.off()
+
+# plots years
+colsyear <- c("#dd5129", "#0f7ba2", "#43b284")
+jpeg("figures/growthModelsMain/muayear.jpeg", width = 6, height = 6, 
+     units = "in", res = 300)
+par(mfrow = c(1,1))
+ayear_df2$year_name <- emp$year[match(ayear_df2$year, emp$year_num)]
+n_year <- length(unique(ayear_df2$year))
+y_pos <- 1:n_year
+
+plot(ayear_df2$mean, y_pos,
+     xlim = c(-5, 5), ylim = c(0.5, n_year + 0.5), 
+     xlab = "year intercept", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = colsyear, frame.plot = FALSE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(ayear_df2$p5, y_pos, ayear_df2$p95, y_pos,
+         col = colsyear, lwd = 1.5)
+segments(ayear_df2$p25, y_pos, ayear_df2$p75, y_pos,
+         col = colsyear, lwd = 3)
+axis(2, at = y_pos, labels = ayear_df2$year_name, las = 1)
+dev.off()
+
+
+}
