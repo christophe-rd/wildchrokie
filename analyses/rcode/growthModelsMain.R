@@ -1455,7 +1455,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # asite partial pooling comparison ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if (runmodels) {
+if (fitmodels) {
 
 gddmodelpp <- stan_model("stan/modelGrowthGDD_PPsite.stan")
 fitgddppsite <- sampling(gddmodelpp, data = dgdd,
@@ -1692,7 +1692,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Add ayear to model ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if (runmodels) {
+if (fitmodels) {
 emp$year_num <- match(emp$year, unique(emp$year))
 dgdd$year <- as.numeric(as.character(emp$year_num))
 dgdd$Nyear <- length(unique(dgdd$year))
@@ -1955,5 +1955,11 @@ segments(ayear_df2$p25, y_pos, ayear_df2$p75, y_pos,
 axis(2, at = y_pos, labels = ayear_df2$year_name, las = 1)
 dev.off()
 
-
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Look at GDD > 30 degrees celsius ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+subset(gddyr, meanTempC >30)[, 1:4]
+check <- subset(gddyr, maxTempC >30)
+nrow(check)
