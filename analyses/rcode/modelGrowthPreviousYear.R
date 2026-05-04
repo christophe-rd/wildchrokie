@@ -32,7 +32,7 @@ source('rcode/tools.R')
 emp <- read.csv("output/empiricalDataMAIN.csv")
 rw <- read.csv("output/wildchrokieRingWidth.csv")
 gdd <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/output/gddByYear.csv")
-
+emp$lengthMM <- emp$lengthCM * 10
 runmodels <- F
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
@@ -62,34 +62,74 @@ rw$site_num <- match(rw$site, unique(rw$site))
 rw$spp_num <- match(rw$spp, unique(rw$spp))
 rw$treeid_num <- match(rw$treeid, unique(rw$treeid))
 
+# colinarity between prvs and current yr
 par(mfrow = c(1,1))
 plot(rw$gddcurrentyr~ rw$gddpreviousyr, xlab = "gdd previous year",
      ylab = "gdd current year")
 abline(a = 0, b = 1)
 
-
-
-
-
 rw <- subset(rw, year %in% c(2018, 2019, 2020))
 rw <- subset(rw, treeid %in% unique(emp$treeid))
 
+# check how different fixed vs flexible gdd changes
+par(mfrow = c(1,1))
+emp$gddfixed <- rw$gddcurrentyr[match(emp$year, rw$year)]
+plot(x = emp$gddfixed, y = emp$pgsGDD5, xlab = "gdd previous year",
+     ylab = "gdd current year")
+abline(a = 0, b = 1)
+
+# fit only two years of real data
+years <- 2018:2020
+# add a year diff index 
+emp$yeardiff <- NA
+for (i in years) {
+  emp$yeardiff[emp$year == i] <- emp$year[emp$year == i] - 1
+}
+emp$idyearprvs <- paste0(emp$treeid, "_", emp$yeardiff)
+emp$gddprvsyr <- emp$pgsGDD5[match(emp$idyearprvs, emp$idyear)]
+emp[, c("treeid", "year", "pgsGDD5", "gddprvsyr")]
+emp <- subset(emp, year != 2018)
+
+emp <- emp[!is.na(emp$pgsGDD5) & !is.na(emp$gddprvsyr),]
+
 # transform data in vectors for GDD
+# data <- list(
+#   y = log(rw$lengthMM),
+#   N = nrow(rw),
+#   Nspp = length(unique(rw$spp_num)),
+#   Nsite = length(unique(rw$site_num)),
+#   site = as.numeric(as.character(rw$site_num)),
+#   species = as.numeric(as.character(rw$spp_num)),
+#   treeid = as.numeric(rw$treeid_num),
+#   Ntreeid = length(unique(as.numeric(rw$treeid_num))),
+#   gdd = rw$gddcurrentyr - 1800,
+#   gddyr = rw$gddpreviousyr -1800
+#   # gdd = (rw$gddcurrentyr - mean(rw$gddcurrentyr)) / sd(rw$gddcurrentyr),
+#   # gddyr = (rw$gddpreviousyr - mean(rw$gddpreviousyr)) / sd(rw$gddpreviousyr)
+# )
+
+emp$site_num <- match(emp$site, unique(emp$site))
+emp$spp_num <- match(emp$spp, unique(emp$spp))
+emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+
 data <- list(
-  y = log(rw$lengthMM),
-  N = nrow(rw),
-  Nspp = length(unique(rw$spp_num)),
-  Nsite = length(unique(rw$site_num)),
-  site = as.numeric(as.character(rw$site_num)),
-  species = as.numeric(as.character(rw$spp_num)),
-  treeid = as.numeric(rw$treeid_num),
-  Ntreeid = length(unique(as.numeric(rw$treeid_num))),
-  gdd = rw$gddcurrentyr - 1800,
-  gddyr = rw$gddpreviousyr -1800
-  # gdd = (rw$gddcurrentyr - mean(rw$gddcurrentyr)) / sd(rw$gddcurrentyr),
-  # gddyr = (rw$gddpreviousyr - mean(rw$gddpreviousyr)) / sd(rw$gddpreviousyr)
+  y = log(emp$lengthMM),
+  N = nrow(emp),
+  Nspp = length(unique(emp$spp_num)),
+  Nsite = length(unique(emp$site_num)),
+  site = as.numeric(as.character(emp$site_num)),
+  species = as.numeric(as.character(emp$spp_num)),
+  treeid = as.numeric(emp$treeid_num),
+  Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  gdd = emp$pgsGDD5/176,
+  gddyr = emp$gddprvsyr / 176
+  # gdd = (emp$gddcurrentyr - mean(emp$gddcurrentyr)) / sd(emp$gddcurrentyr),
+  # gddyr = (emp$gddpreviousyr - mean(emp$gddpreviousyr)) / sd(emp$gddpreviousyr)
 )
 data
+
+length(!is.na(data$gdd))
+length(!is.na(data$gddyr))
 
 # Fit model GDD 
 if(runmodels) {
@@ -267,11 +307,11 @@ bspp_df2_previous <- extract_params(df_fit, "bspyr", "fit_bspp", "spp", "bspyr\\
 jpeg("figures/growthPreviousYearModel/bsppCurrentVSpreviousYR.jpeg", width = 6, height = 9, units = "in", res = 300)
 par(mfrow = c(2,1))
 n_spp <- length(unique(bspp_df2_current$spp))
-y_pos <- rev(1:n_spp)
+y_pos <- rev(1:4)
 
 # Current year
 plot(bspp_df2_current$mean, y_pos,
-     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5), 
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5), 
      xlab = "slope current year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -283,7 +323,7 @@ mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Row 2: Previous year
 plot(bspp_df2_previous$mean, y_pos,
-     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5),
      xlab = "slope previous year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,      
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -298,7 +338,7 @@ dev.off()
 jpeg("figures/growthPreviousYearModel/bsppCurrentVSpreviousYROnly.jpeg", width = 6, height = 6, units = "in", res = 300)
 par(mfrow = c(1,1))
 n_spp <- length(unique(bspp_df2_current$spp))
-y_pos <- rev(1:n_spp)
+y_pos <- rev(1:4)
 
 
 # Row 2: Previous year
@@ -320,7 +360,7 @@ n_spp <- length(unique(bspp_df2_current$spp))
 y_pos <- rev(1:n_spp)
 # Current year
 plot(bspp_df2_current$mean, y_pos,
-     xlim = c(-0.1, 0.1), ylim = c(0.5, n_spp + 0.5), 
+     xlim = c(-1, 1), ylim = c(0.5, n_spp + 0.5), 
      xlab = "slope current year", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -330,6 +370,7 @@ segments(bspp_df2_current$p25, y_pos, bspp_df2_current$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
 dev.off()
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Simulated data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
