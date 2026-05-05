@@ -30,8 +30,8 @@ source('rcode/tools.R')
 
 # flags
 fitmodels <- F
-fitmodelfull <- FALSE
-fitmodelsZscored <- FALSE
+fitmodelfull <- F
+fitmodelsZscored <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -1099,6 +1099,13 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
+# save csvs
+write.csv(sigma_df2,  "output/GM_GDDparam_Z_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2,   "output/GM_GDDparam_Z_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2, "output/GM_GDDparam_Z_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2,   "output/GM_GDDparam_Z_aspp.csv",   row.names = FALSE)
+write.csv(site_df2,   "output/GM_GDDparam_Z_site.csv",   row.names = FALSE)
+
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/ZgddModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -1194,6 +1201,13 @@ treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
 aspp_df2   <- extract_params(df_fitgsl, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+
+# save csvs
+write.csv(sigma_df2,  "output/GM_GSLparam_Z_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2,   "output/GM_GSLparam_Z_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2, "output/GM_GSLparam_Z_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2,   "output/GM_GSLparam_Z_aspp.csv",   row.names = FALSE)
+write.csv(site_df2,   "output/GM_GSLparam_Z_site.csv",   row.names = FALSE)
 
 ##### Plot posterior vs priors for GSL fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/ZgslModelPriorVSPosterior.pdf", width = 8, height = 10)
