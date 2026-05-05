@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -199,6 +199,8 @@ y_pos_site <- match(site_df2$site_name, site_order)
 my_shapes <- c("Harvard Forest (MA)" = 19, "White Mountains (NH)" = 18, 
                "Dartmouth College (NH)" = 15, "St-Hippolyte (Qc)" = 17)
 
+yrshapes <- c("2018" = 16, "2019" = 17, "2020" = 19)
+
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
   subyvec[i] <- paste("atreeid", "[",i,"]", sep = "")  
@@ -361,7 +363,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   points(
     emp_spp$pgsGDD5,
     emp_spp$loglength,
-    pch = my_shapes[emp_spp$site],
+    pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
   )
@@ -1158,7 +1160,16 @@ for (i in seq_along(sppvecnum)) { # i = 1
         lwd = 2)
   
   emp_spp <- emp[emp$latbi == spp_name, ]
+  
+  points(
+    emp_spp$pgsGDD5,
+    emp_spp$loglength,
+    pch = yrshapes[as.character(emp_spp$year)],
+    cex = 1,
+    col = line_col
+  )
 }
+
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
 plot(emp$pgsGSL, dgsl$y, type = "n", frame = FALSE,
@@ -1186,6 +1197,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
   lines(gslseq, y_mean,
         col = line_col,
         lwd = 2)
+  
+  points(
+    emp_spp$pgsGSL,
+    emp_spp$loglength,
+    pch = yrshapes[as.character(emp_spp$year)],
+    cex = 1,
+    col = line_col
+  )
   
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
@@ -1218,6 +1237,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
+  points(
+    emp_spp$leafout,
+    emp_spp$loglength,
+    pch = yrshapes[as.character(emp_spp$year)],
+    cex = 1,
+    col = line_col
+  )
+  
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
@@ -1233,7 +1260,7 @@ mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
 for (i in seq_along(sppvecnum)) { # i = 1
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_eos[, , i])
-
+  
   # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
@@ -1248,6 +1275,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
   lines(eosseq, y_mean,
         col = line_col,
         lwd = 2)
+  
+  points(
+    emp_spp$budset,
+    emp_spp$loglength,
+    pch = yrshapes[as.character(emp_spp$year)],
+    cex = 1,
+    col = line_col
+  )
   
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
@@ -1517,7 +1552,22 @@ ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, he
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# plot(budset ~ leafout, emp)
+sppvecname <- unique(emp$latbi)
+par(mfrow = c(2,2), mar = c(4, 4, 2, 1))
+
+for (i in unique(emp$spp_num)) { # i = 4
+  sppname <- sppvecname[i]
+  d <- emp[emp$spp_num == i,]
+  
+  lm <- lm(budset ~ leafout, data = d)
+  x_seq <- c(min(d$leafout), max(d$leafout))
+  new_data <- data.frame(leafout = x_seq)
+  pred <- predict(lm, newdata = new_data, re.form = NA)  
+  
+  plot(budset ~ leafout, d, main = sppname)
+  lines(x_seq, pred, col = "black", lwd = 2)
+}
+
 # lm <- lmer(budset ~ leafout + (1 | year), data = emp)
 # sum <- summary(lm)
 # new_data <- data.frame(leafout = x_seq)
