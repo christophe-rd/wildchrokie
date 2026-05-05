@@ -1470,6 +1470,9 @@ dev.off()
 # asite partial pooling comparison ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (fitmodels) {
+emp$year_num <- match(emp$year, unique(emp$year))
+dgdd$year <- as.numeric(as.character(emp$year_num))
+dgdd$Nyear <- length(unique(dgdd$year))
 
 gddmodelpp <- stan_model("stan/modelGrowthGDD_PPsite.stan")
 fitgddppsite <- sampling(gddmodelpp, data = dgdd,
@@ -1487,12 +1490,14 @@ bspp_df <- df_fitgddpp[, columns[grepl("bsp", columns)]]
 treeid_df <- df_fitgddpp[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
 aspp_df <- df_fitgddpp[, columns[grepl("aspp", columns)]]
 site_df <- df_fitgddpp[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgddpp[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
 sigma_df2  <- extract_params(df_fitgddpp, "sigma", "mean", "sigma")
@@ -1506,7 +1511,8 @@ aspp_df2   <- extract_params(df_fitgddpp, "aspp", "fit_aspp",
 site_df2   <- extract_params(df_fitgddpp, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
-
+ayear_df2   <- extract_params(df_fitgddpp, "ayear", "fit_ayear", 
+                             "year", "ayear\\[(\\d+)\\]")
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_PPsite.pdf", width = 8, height = 10)
 
@@ -1868,6 +1874,27 @@ aspp_df2_noayr   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
 site_df2_noayr   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
 
+# quick mu plot for bspp
+par(mfrow = c(2,1))
+y_pos <- rev(1:4)
+plot(bspp_df2$mean, y_pos,
+     xlim = c(-0.5, 0.6), ylim = c(0.5, 4 + 0.5),
+     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     main = "with ayear",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
+
+
+plot(bspp_df2_noayr$mean, y_pos,
+     xlim = c(-0.5, 0.6), ylim = c(0.5, 4 + 0.5),
+     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     main = "without ayear",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_noayr$p5,  y_pos, bspp_df2_noayr$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_noayr$p25, y_pos, bspp_df2_noayr$p75, y_pos, col = wccolslatbi, lwd = 3)
 
 ##### Compare model output with and without partial pooling #####
 # Open device
