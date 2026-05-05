@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -199,7 +199,7 @@ y_pos_site <- match(site_df2$site_name, site_order)
 my_shapes <- c("Harvard Forest (MA)" = 19, "White Mountains (NH)" = 18, 
                "Dartmouth College (NH)" = 15, "St-Hippolyte (Qc)" = 17)
 
-yrshapes <- c("2018" = 16, "2019" = 17, "2020" = 19)
+yrshapes <- c("2018" = 15, "2019" = 16, "2020" = 17)
 
 subyvec <- vector()
 for (i in 1:length(unique(emp$treeid_num))) {
@@ -367,6 +367,13 @@ for (i in seq_along(sppvecnum)) { # i = 1
     cex = 1,
     col = line_col
   )
+
+  legend("topleft",
+         legend = names(yrshapes),
+         pch    = yrshapes,
+         col    = line_col,
+         pt.cex = 1.5, bty = "n", cex = 1.2,
+         title  = "Year", title.font = 2)
 }
 
 dev.off()
