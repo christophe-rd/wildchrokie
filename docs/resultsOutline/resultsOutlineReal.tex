@@ -67,7 +67,10 @@
 \newcommand{\Bpap}{\textit{B. papyrifera}}
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
-
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/setup-1} 
+\end{knitrout}
 
 
 % % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -87,8 +90,9 @@
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
 \item Does tree growth increase with longer growing seasons?
-\item Did growth change with earlier/later start and end of season?
-\item Did growth change across species and populations?
+\item Did an earlier start and later end of season increase growth?
+\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
+\item How did growth change across years, and how did it relate to climate?
 \end{enumerate}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -97,7 +101,7 @@
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes four deciduous tree species from four sites with 227 complete growing seasons (GS)
+  \item Wildchrokie includes 81 individuals of four deciduous tree species from four sites with 227 complete growing seasons (GS)
   
   \item GSL ranged from 
   90 days ({\Ball} in 2018) to 
@@ -114,46 +118,55 @@
 
 \end{enumerate}
 
-\item Did longer growing seasons increase growth?
+% Question 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Does tree growth increase with longer growing seasons?
   \begin{enumerate}
 
-  \item Longer growing seasons increased growth for 3 species, depending on the metric
+  \item Longer growing seasons increased growth for 1-3 species, depending on the metric
   \item Longer thermal season increased growth for {\Bpap} 
-  ($\beta = $ 0.32, $UI_{90}$
-[0.04, 
-0.6]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
+  ($\beta = $ 
+  0.32, $UI_{90}$
+  [0.04, 
+  0.6]) (Figure \ref{fig:wcmuplotbspp}a (Table\ref{tab:wc_slope_table}).
  
-  \item But longer calendar season increased growth for two additional species
-  (\Ainc: $\beta = $ 0.09, $UI_{90}$[0.04, 0.14],
-\Ball: $\beta = $ 0.07, $UI_{90}$[0, 0.13] and
-\Bpap: $\beta = $ 0.19, $UI_{90}$[0.05, 0.33]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
+  \item Calendar season had a bigger effect on growth than the thermal season \ref{fig:bsppZscored}), and two additional species species grew more with longer calendar seasons
+  (\Ainc: $\beta = $ 
+  0.09, $UI_{90}$
+  [0.04, 
+  0.14],
+  \Ball: $\beta = $ 
+  0.07, $UI_{90}$
+  [0, 
+  0.13] and \Bpap: $\beta = $ 
+  0.19, $UI_{90}$
+  [0.05, 
+  0.33]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
 
-  \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored}).
-  
-  \item \Ball trended in the same direction; only \Bpop showed clear no effect.
+  \item Only {\Bpop} showed a clear no effect to longer growing seasons.
   
   \end{enumerate}
   
-\item Did growth change with earlier/later start and end of season?
+% Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Did an earlier start and later end of season increase growth?
   \begin{enumerate}
-
-  \item A later start of season decreased growth for two species 
-  ({\Ainc}: $\beta = $ -0.18, $UI_{90}$
+  \item A longer calendar season increased growth for three species, but an earlier start of season increased growth only for one of those three
+  ({\Ainc}: $\beta = $ 
+  -0.18, $UI_{90}$
   [-0.23, 
-  -0.13] and 
-  {\Bpop}: $\beta = $ -0.13, $UI_{90}$[-0.23, -0.02]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
-
+  -0.13], but also for  {\Bpop}: $\beta = $ 
+  -0.13, $UI_{90}$
+  [-0.23, 
+  -0.02]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+  
   \item A later end of season decreased growth only for {\Ainc} 
   ($\beta = $ -0.09, $UI_{90}$
   [-0.15, -0.04]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
 
-\item Did growth change across species and populations?
+% Question 3 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
   \begin{enumerate}
-  \item Annual ring widths across years varied from 
-  0.39 mm ({\Ball} in 2020) to 
-  13.55 mm ({\Bpop} in 2018). 
   
   \item {\Bpap} grew the least ($\beta = $ 
   -3.31, $UI_{90}$
@@ -163,10 +176,12 @@
   [-3.04, 
   5.01]) (Figure \ref{fig:wcmuplotatreeid}).
 
-  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}).
+  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $ 0.192) than across treeids ($\sigma = $ 0.099)
+  \item But 
   \end{enumerate}
 
-\item Did growth change across years, and how did it relate to climate?
+% Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
   \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS nor the highest thermal sum)
   \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
@@ -209,7 +224,7 @@
 
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue May  5 12:47:48 2026
+% Tue May  5 15:45:26 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -229,7 +244,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 % Table site intercept for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue May  5 12:47:48 2026
+% Tue May  5 15:45:26 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 

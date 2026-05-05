@@ -51,8 +51,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
 \item Does tree growth increase with longer growing seasons?
-\item Did growth change with earlier/later start and end of season?
-\item Did growth change across species and populations?
+\item Did an earlier start and later end of season increase growth?
+\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
+\item How did growth change across years, and how did it relate to climate?
 \end{enumerate}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -61,7 +62,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes four deciduous tree species from four sites with \Sexpr{nrow(emp)} complete growing seasons (GS)
+  \item Wildchrokie includes \Sexpr{length(unique(emp$treeid))} individuals of four deciduous tree species from four sites with \Sexpr{nrow(emp)} complete growing seasons (GS)
   
   \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
@@ -78,46 +79,55 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 \end{enumerate}
 
-\item Did longer growing seasons increase growth?
+% Question 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Does tree growth increase with longer growing seasons?
   \begin{enumerate}
 
-  \item Longer growing seasons increased growth for 3 species, depending on the metric
+  \item Longer growing seasons increased growth for 1-3 species, depending on the metric
   \item Longer thermal season increased growth for {\Bpap} 
-  ($\beta = $ \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
-[\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}a (Table \ref{tab:wc_slope_table}).
+  ($\beta = $ 
+  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}a (Table\ref{tab:wc_slope_table}).
  
-  \item But longer calendar season increased growth for two additional species
-  (\Ainc: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}],
-\Ball: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}] and
-\Bpap: $\beta = $ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$[\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
+  \item Calendar season had a bigger effect on growth than the thermal season \ref{fig:bsppZscored}), and two additional species species grew more with longer calendar seasons
+  (\Ainc: $\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}],
+  \Ball: $\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}] and \Bpap: $\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
 
-  \item Calendar season had a bigger effect on growth than the thermal season (Figure \ref{fig:bsppZscored}).
-  
-  \item \Ball trended in the same direction; only \Bpop showed clear no effect.
+  \item Only {\Bpop} showed a clear no effect to longer growing seasons.
   
   \end{enumerate}
   
-\item Did growth change with earlier/later start and end of season?
+% Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Did an earlier start and later end of season increase growth?
   \begin{enumerate}
-
-  \item A later start of season decreased growth for two species 
-  ({\Ainc}: $\beta = $ \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
+  \item A longer calendar season increased growth for three species, but an earlier start of season increased growth only for one of those three
+  ({\Ainc}: $\beta = $ 
+  \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
-  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}] and 
-  {\Bpop}: $\beta = $ \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}, $UI_{90}$[\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}, \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
-
+  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}], but also for  {\Bpop}: $\beta = $ 
+  \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}, 
+  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+  
   \item A later end of season decreased growth only for {\Ainc} 
   ($\beta = $ \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "A. incana")]}, \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
 
-\item Did growth change across species and populations?
+% Question 3 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
   \begin{enumerate}
-  \item Annual ring widths across years varied from 
-  \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
-  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}). 
   
   \item {\Bpap} grew the least ($\beta = $ 
   \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
@@ -127,10 +137,12 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "B. populifolia")]}, 
   \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotatreeid}).
 
-  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}).
+  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $ 0.192) than across treeids ($\sigma = $ 0.099)
+  \item But 
   \end{enumerate}
 
-\item Did growth change across years, and how did it relate to climate?
+% Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
   \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS nor the highest thermal sum)
   \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
