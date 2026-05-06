@@ -128,6 +128,8 @@ data <- list(
 )
 data
 
+
+
 length(!is.na(data$gdd))
 length(!is.na(data$gddyr))
 
@@ -136,6 +138,7 @@ if(runmodels) {
 gddmodel <- stan_model("stan/modelGrowthPreviousYear.stan")
 fit <- sampling(gddmodel, data = data, iter = 2000, chains = 4)
 saveRDS(fit, "output/stanOutput/fitGrowthPreviousYear")
+fit <- readRDS("output/stanOutput/fitGrowthPreviousYear")
 diagnostics <- util$extract_hmc_diagnostics(fit) 
 util$check_all_hmc_diagnostics(diagnostics)
 samples <- util$extract_expectand_vals(fit)
@@ -370,6 +373,153 @@ segments(bspp_df2_current$p25, y_pos, bspp_df2_current$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("Current year", side = 3, adj = 0, font = 2, cex = 0.9)
 dev.off()
+
+
+##### Compare model output with and without slope on prvs year #####
+sigma_df2_bspyr  <- extract_params(df_fit, "sigma", "mean", "sigma")
+bspp_df2_bspyr   <- extract_params(df_fit, "bsp", "fit_bspp", 
+                                   "spp", "bsp\\[(\\d+)\\]")
+bspp_df2_bspyr <- subset(bspp_df2_bspyr, !grepl("yr", spp))
+treeid_df2_bspyr <- extract_params(df_fit, "atreeid", "fit_atreeid", 
+                                   "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_bspyr <- subset(treeid_df2_bspyr, !grepl("z|sigma", treeid))
+aspp_df2_bspyr   <- extract_params(df_fit, "aspp", "fit_aspp", 
+                                   "spp", "aspp\\[(\\d+)\\]")
+site_df2_bspyr   <- extract_params(df_fit, "asite", "fit_a_site", 
+                                   "site", "asite\\[(\\d+)\\]")
+
+# Recover fitgdd without partial pooling
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+
+##### Recover parameters #####
+df_fitgdd <- as.data.frame(fitgdd)
+
+# full posterior
+columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
+sigma_df_noayr <- df_fitgdd[, columns[grepl("sigma", columns)]]
+bspp_df_nobspabv <- df_fitgdd[, columns[grepl("bsp", columns)]]
+treeid_df_nobspabv <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
+aspp_df_nobspabv <- df_fitgdd[, columns[grepl("aspp", columns)]]
+site_df_nobspabv <- df_fitgdd[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_nobspabv) <- 1:ncol(bspp_df_nobspabv)
+colnames(treeid_df_nobspabv) <- 1:ncol(treeid_df_nobspabv)
+colnames(aspp_df_nobspabv) <- 1:ncol(aspp_df_nobspabv)
+colnames(site_df_nobspabv) <- 1:ncol(site_df_nobspabv)
+
+sigma_df2  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+                             "spp", "bsp\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+                             "site", "asite\\[(\\d+)\\]")
+
+# Open device
+jpeg("figures/growthPreviousYearModel/bsppVSbspyr.jpeg", width = 9, height = 6, units = "in", res = 300)
+par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
+
+# sigma
+plot(sigma_df2_bspyr$mean, sigma_df2$mean,
+     xlab = "with bsp on prvs year", ylab = "no bsp on prvs year", main = "sigmas", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2$p25, sigma_df2$p75)),
+     xlim = range(c(sigma_df2_bspyr$p25, sigma_df2_bspyr$p75+0.2)))
+arrows(x0 = sigma_df2_bspyr$mean, y0 = sigma_df2$p25,
+       x1 = sigma_df2_bspyr$mean, y1 = sigma_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2_bspyr$p25, y0 = sigma_df2$mean,
+       x1 = sigma_df2_bspyr$p75, y1 = sigma_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(sigma_df2_bspyr$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+points(sigma_df2_bspyr$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+text(sigma_df2_bspyr$p75, sigma_df2$p25, labels = sigma_df2_bspyr$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2_bspyr$mean, bspp_df2$mean,
+     xlab = "with bsp on prvs year", ylab = "no bsp on prvs year", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2$p25, bspp_df2$p75)),
+     xlim = range(c(bspp_df2_bspyr$p25, bspp_df2_bspyr$p75)))
+arrows(x0 = bspp_df2_bspyr$mean, y0 = bspp_df2$p25,
+       x1 = bspp_df2_bspyr$mean, y1 = bspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2_bspyr$p25, y0 = bspp_df2$mean,
+       x1 = bspp_df2_bspyr$p75, y1 = bspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2_bspyr$mean, bspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# aspp
+plot(aspp_df2_bspyr$mean, aspp_df2$mean,
+     xlab = "with bsp on prvs year", ylab = "no bsp on prvs year", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2$p25, aspp_df2$p75)),
+     xlim = range(c(aspp_df2_bspyr$p25, aspp_df2_bspyr$p75)))
+arrows(x0 = aspp_df2_bspyr$mean, y0 = aspp_df2$p25,
+       x1 = aspp_df2_bspyr$mean, y1 = aspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2_bspyr$p25, y0 = aspp_df2$mean,
+       x1 = aspp_df2_bspyr$p75, y1 = aspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2_bspyr$mean, aspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# asite
+plot(site_df2_bspyr$mean, site_df2$mean,
+     xlab = "with bsp on prvs year", ylab = "no bsp on prvs year", main = "asite", type = "n", frame = FALSE,
+     ylim = range(c(site_df2$p25, site_df2$p75)),
+     xlim = range(c(site_df2_bspyr$p25, site_df2_bspyr$p75)))
+arrows(x0 = site_df2_bspyr$mean, y0 = site_df2$p25,
+       x1 = site_df2_bspyr$mean, y1 = site_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = site_df2_bspyr$p25, y0 = site_df2$mean,
+       x1 = site_df2_bspyr$p75, y1 = site_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(site_df2_bspyr$mean, site_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+
+# # atreeid
+treeid_key <- unique(emp[, c("treeid", "treeid_num", "spp", "site")])
+treeid_key <- treeid_key[order(treeid_key$treeid_num), ]
+nrow(treeid_key)
+
+# whole dataset
+emp <- read.csv("output/empiricalDataMAIN.csv")
+emp <- emp[!is.na(emp$pgsGDD5),]
+emp$site_num   <- match(emp$site,   unique(emp$site))
+emp$spp_num    <- match(emp$spp,    unique(emp$spp))
+emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+treeid_key_gdd <- unique(emp[, c("treeid", "treeid_num", "spp", "site")])
+treeid_key_gdd <- treeid_key_gdd[order(treeid_key_gdd$treeid_num), ]
+length(unique(emp$treeid))
+
+common_trees <- intersect(treeid_key$treeid, treeid_key_gdd$treeid)
+
+idx_gdd   <- treeid_key_gdd$treeid_num[match(common_trees, treeid_key_gdd$treeid)]
+idx_bspyr <- treeid_key$treeid_num[match(common_trees, treeid_key$treeid)]
+
+treeid_df2_matched       <- treeid_df2[match(idx_gdd, as.integer(treeid_df2$treeid)), ]
+treeid_df2_bspyr_matched <- treeid_df2_bspyr[match(idx_bspyr, as.integer(treeid_df2_bspyr$treeid)), ]
+
+plot(treeid_df2_bspyr_matched$mean, treeid_df2_matched$mean,
+     xlab = "with bsp on prvs year", ylab = "no bsp on prvs year", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2_matched$p25, treeid_df2_matched$p75)),
+     xlim = range(c(treeid_df2_bspyr_matched$p25, treeid_df2_bspyr_matched$p75)))
+arrows(x0 = treeid_df2_bspyr_matched$mean, y0 = treeid_df2_matched$p25,
+       x1 = treeid_df2_bspyr_matched$mean, y1 = treeid_df2_matched$p75,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+arrows(x0 = treeid_df2_bspyr_matched$p25, y0 = treeid_df2_matched$mean,
+       x1 = treeid_df2_bspyr_matched$p75, y1 = treeid_df2_matched$mean,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+points(treeid_df2_bspyr_matched$mean, treeid_df2_matched$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+dev.off()
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Simulated data ####
