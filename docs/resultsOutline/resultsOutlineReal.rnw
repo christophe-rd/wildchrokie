@@ -138,14 +138,14 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotatreeid}).
 
   \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $ 0.192) than across treeids ($\sigma = $ 0.099)
-  \item But 
+
   \end{enumerate}
 
 % Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
-  \item Growth was highest on average in 2018, but no cue dominated (it was neither: the wettest; the driest; the shortest; the latest SOS; the earliest EOS nor the highest thermal sum)
-  \item Growth was lowest on average in 2020 and that year was: the driest; the shortest; the latest SOS and EOS and had the highest thermal sum
+  \item Growth was highest on average in 2018, but it was neither the wettest, the driest, the shortest, the latest SOS, the earliest EOS nor the highest thermal sum, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcmuplotbspp} a and b).
+  \item Growth was lowest on average in 2020 and that year was the driest (also the only year with a drought that ramped up to "severe" in Septmember) the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth is higher during warmer seasons. 
   \end{enumerate}
 
 \end{enumerate}
