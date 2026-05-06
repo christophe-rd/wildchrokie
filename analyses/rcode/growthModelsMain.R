@@ -2004,6 +2004,339 @@ dev.off()
 subset(gddyr, meanTempC >30)[, 1:4]
 check <- subset(gddyr, maxTempC >30)
 nrow(check)
+gddyr$max30 <- ifelse(gddyr$maxTempC > 30, 1, 0)
+gddyr$yrdoy <- paste(gddyr$year, gddyr$doy, sep = "_")
+
+emp$yrdoy <- paste(emp$year, emp$doy, sep = "_")
+
+emp$idyr <- paste(emp$treeid, emp$year, sep = "_")
+emp$idyr_num <- match(emp$idyr, unique(emp$idyr))
+
+idvec <- unique(emp$idyr_num)
+
+emp$n30 <- NA
+for (i in seq_len(nrow(emp))) { # i = 5
+  e <- emp[emp$idyr_num == i,]
+  g <- gddyr[which(gddyr$year == e$year & 
+                     gddyr$doy >= e$leafout &
+                     gddyr$doy <= e$budset),]
+  sum <- sum(g$max30 == 1)
+  emp$n30[i] <- sum
+}
+
+dgdd$gddabv <- as.numeric(emp$n30) / 4
+
+# Fit model GDD with slope on temp above 30 C
+gddmodelabv <- stan_model("stan/modelGrowthGDD_bMax30.stan")
+fitgdd <- sampling(gddmodelabv, data = dgdd,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_abv30")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_abv30")
+
+##### Recover parameters #####
+df_fitgdd <- as.data.frame(fitgdd)
+
+# full posterior
+columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
+sigma_df <- df_fitgdd[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
+bsppabv_df <- df_fitgdd[, columns[grepl("bspabv", columns)]]
+treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
+site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(bsppabv_df) <- 1:ncol(bsppabv_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+
+# posterior summaries
+sigma_df2  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+                             "spp", "bsp\\[(\\d+)\\]")
+bspp_df2 <- subset(bspp_df2, !grepl("bsp", spp))
+bsppabv_df2   <- extract_params(df_fitgdd, "bspabv", "fit_bspp", 
+                             "spp", "bspabv\\[(\\d+)\\]")
+treeid_df2 <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+                             "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
+aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+                             "spp", "aspp\\[(\\d+)\\]")
+site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+                             "site", "asite\\[(\\d+)\\]")
 
 
-# for (i in e)
+##### Plot posterior vs priors for gdd fit #####
+pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_abv30.pdf", width = 8, height = 10)
+
+pal <- wes_palette("AsteroidCity1")[3:4]
+
+par(mfrow = c(3, 3))
+
+# a
+plot(density(df_fitgdd[, "a_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_a", 
+     xlab = "a", ylim = c(0, 1))
+lines(density(df_fitgdd[, "a"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_atreeid
+plot(density(df_fitgdd[, "sigma_atreeid_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_atreeid", 
+     xlab = "sigma_atreeid", ylim = c(0,4))
+lines(density(df_fitgdd[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_y
+plot(density(df_fitgdd[, "sigma_y_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_y", 
+     xlab = "sigma_y", ylim = c(0, 4))
+lines(density(df_fitgdd[, "sigma_y"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# aspp
+plot(density(df_fitgdd[, "aspp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_aspp", 
+     xlab = "aspp", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
+for (col in colnames(aspp_df)) {
+  lines(density(aspp_df[, col]), col = pal[2], lwd = 1)
+} 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# asite
+plot(density(df_fitgdd[, "asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_asite", 
+     xlab = "asite", xlim = c(-6, 6), ylim = c(0, 1))
+for (col in colnames(site_df)) {
+  lines(density(site_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bsp
+plot(density(df_fitgdd[, "bsp_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_bsp", 
+     xlab = "bsp", ylim = c(0, 5))
+for (col in colnames(bspp_df)) {
+  lines(density(bspp_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# bspabv
+plot(density(df_fitgdd[, "bspabv_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_bspabv30", 
+     xlab = "bspabv30", ylim = c(0, 5))
+for (col in colnames(bsppabv_df)) {
+  lines(density(bsppabv_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+dev.off()
+
+par(mfrow = c(1,1))
+y_pos <- rev(1:8)
+plot(bspp_df2$mean, y_pos,
+     xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
+     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
+
+# Plot empirical data
+
+jpeg(file = "figures/empiricalData/nMax30VariationSppYr.jpeg",
+     width = 2400, height = 2000, res = 300)
+
+# mu plot dimensions and stuff
+species_order <- c(
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
+
+gap <- 2
+years <- c(2018, 2019, 2020)
+n_sp <- length(species_order)
+
+
+aggabv30 <- aggregate(n30 ~ latbi + year, emp, FUN = mean)
+quants <- aggregate(n30 ~ latbi + year, emp, FUN = function(x) quantile(x, c(0.05, 0.25, 0.75, 0.95)))
+aggabv30$p5  <- quants$n30[,1]
+aggabv30$p25 <- quants$n30[,2]
+aggabv30$p75 <- quants$n30[,3]
+aggabv30$p95 <- quants$n30[,4]
+
+total_rows <- nrow(aggabv30) + (length(years) - 1) * gap
+
+current_y <- total_rows
+aggabv30$y_pos <- NA
+
+aggabv30 <- aggabv30[order(aggabv30$latbi),]
+aggabv30$spp_num <- as.integer(as.factor(aggabv30$latbi))
+
+for(s in unique(aggabv30$spp_num)){ # s = 2
+  idx <- which(aggabv30$spp_num == s)
+  aggabv30$y_pos[idx] <- current_y:(current_y - length(idx) + 1)
+  current_y <- current_y - length(idx) - gap
+}
+aggabv30
+par(mar = c(4,6,4,2))
+
+plot(aggabv30$n30, aggabv30$y_pos,
+     xlim = c(25, 60), 
+     ylim = c(min(aggabv30$y_pos), max(aggabv30$y_pos) + 0.5),
+     xlab = "anomalized gsl (days)", ylab = "",
+     yaxt = "n",
+     pch = 16, cex = 2, col = wccolslatbi[aggabv30$latbi], frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(aggabv30$p5,  aggabv30$y_pos, aggabv30$p95, aggabv30$y_pos, 
+         col = wccolslatbi[aggabv30$latbi], lwd = 1.5)
+segments(aggabv30$p25, aggabv30$y_pos, aggabv30$p75, aggabv30$y_pos, 
+         col = wccolslatbi[aggabv30$latbi], lwd = 3)
+abline(v = 0, lty = 2)
+
+# custom y axis label
+ylabel <- aggregate(y_pos ~ latbi + year, aggabv30, mean)
+ylabel
+aggabv30$ylabel <- ylabel$y_pos[match(aggabv30$year, ylabel$year)]
+axis(
+  side = 2,
+  at = aggabv30$y_pos,
+  labels = aggabv30$year,
+  cex.axis = 1,
+  las = 1
+)
+
+# # add n per year and species
+# sum <- aggregate(anomgsl ~ latbi + year, emp, function(x) length(x))
+# aggabv30$count <- sum$anomgsl
+
+legend("right",
+       legend = sapply(unique(aggabv30$latbi), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = wccolslatbi,
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+dev.off()                 
+
+
+##### Compare model output with and without slope on max temp #####
+# Recover fitgdd without partial pooling
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+
+##### Recover parameters #####
+df_fitgdd <- as.data.frame(fitgdd)
+
+# full posterior
+columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
+sigma_df_noayr <- df_fitgdd[, columns[grepl("sigma", columns)]]
+bspp_df_nobspabv <- df_fitgdd[, columns[grepl("bsp", columns)]]
+treeid_df_nobspabv <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
+aspp_df_nobspabv <- df_fitgdd[, columns[grepl("aspp", columns)]]
+site_df_nobspabv <- df_fitgdd[, columns[grepl("asite", columns)]]
+
+# change colnames
+colnames(bspp_df_nobspabv) <- 1:ncol(bspp_df_nobspabv)
+colnames(treeid_df_nobspabv) <- 1:ncol(treeid_df_nobspabv)
+colnames(aspp_df_nobspabv) <- 1:ncol(aspp_df_nobspabv)
+colnames(site_df_nobspabv) <- 1:ncol(site_df_nobspabv)
+
+sigma_df2_nobspabv  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2_nobspabv   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+                                   "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_nobspabv <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+                                   "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_nobspabv <- subset(treeid_df2_nobspabv, !grepl("z|sigma", treeid))
+aspp_df2_nobspabv   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+                                   "spp", "aspp\\[(\\d+)\\]")
+site_df2_nobspabv   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+                                   "site", "asite\\[(\\d+)\\]")
+
+# Open device
+jpeg("figures/growthModelsMain/bsppVSbsppabv.jpeg", width = 9, height = 6, units = "in", res = 300)
+par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
+
+# sigma
+plot(sigma_df2_nobspabv$mean, sigma_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "sigmas", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2$p25, sigma_df2$p75)),
+     xlim = range(c(sigma_df2_nobspabv$p25, sigma_df2_nobspabv$p75+0.2)))
+arrows(x0 = sigma_df2_nobspabv$mean, y0 = sigma_df2$p25,
+       x1 = sigma_df2_nobspabv$mean, y1 = sigma_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2_nobspabv$p25, y0 = sigma_df2$mean,
+       x1 = sigma_df2_nobspabv$p75, y1 = sigma_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(sigma_df2_nobspabv$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+points(sigma_df2_nobspabv$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+text(sigma_df2_nobspabv$p75, sigma_df2$p25, labels = sigma_df2_nobspabv$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2_nobspabv$mean, bspp_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2$p25, bspp_df2$p75)),
+     xlim = range(c(bspp_df2_nobspabv$p25, bspp_df2_nobspabv$p75)))
+arrows(x0 = bspp_df2_nobspabv$mean, y0 = bspp_df2$p25,
+       x1 = bspp_df2_nobspabv$mean, y1 = bspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2_nobspabv$p25, y0 = bspp_df2$mean,
+       x1 = bspp_df2_nobspabv$p75, y1 = bspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2_nobspabv$mean, bspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# aspp
+plot(aspp_df2_nobspabv$mean, aspp_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2$p25, aspp_df2$p75)),
+     xlim = range(c(aspp_df2_nobspabv$p25, aspp_df2_nobspabv$p75)))
+arrows(x0 = aspp_df2_nobspabv$mean, y0 = aspp_df2$p25,
+       x1 = aspp_df2_nobspabv$mean, y1 = aspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2_nobspabv$p25, y0 = aspp_df2$mean,
+       x1 = aspp_df2_nobspabv$p75, y1 = aspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2_nobspabv$mean, aspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# asite
+plot(site_df2_nobspabv$mean, site_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "asite", type = "n", frame = FALSE,
+     ylim = range(c(site_df2$p25, site_df2$p75)),
+     xlim = range(c(site_df2_nobspabv$p25, site_df2_nobspabv$p75)))
+arrows(x0 = site_df2_nobspabv$mean, y0 = site_df2$p25,
+       x1 = site_df2_nobspabv$mean, y1 = site_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = site_df2_nobspabv$p25, y0 = site_df2$mean,
+       x1 = site_df2_nobspabv$p75, y1 = site_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(site_df2_nobspabv$mean, site_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+
+# atreeid
+plot(treeid_df2_nobspabv$mean, treeid_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2$p25, treeid_df2$p75)),
+     xlim = range(c(treeid_df2_nobspabv$p25, treeid_df2_nobspabv$p75)))
+arrows(x0 = treeid_df2_nobspabv$mean, y0 = treeid_df2$p25,
+       x1 = treeid_df2_nobspabv$mean, y1 = treeid_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+arrows(x0 = treeid_df2_nobspabv$p25, y0 = treeid_df2$mean,
+       x1 = treeid_df2_nobspabv$p75, y1 = treeid_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+points(treeid_df2_nobspabv$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+dev.off()
