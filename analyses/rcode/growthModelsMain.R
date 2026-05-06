@@ -2004,3 +2004,6 @@ dev.off()
 subset(gddyr, meanTempC >30)[, 1:4]
 check <- subset(gddyr, maxTempC >30)
 nrow(check)
+
+
+# for (i in e)

@@ -6,28 +6,27 @@ int<lower=0> Nspp; 	// number of species (grouping factor)
 array[N] int species; 	// species identity, coded as int
 int<lower=0> Nsite;  // number of sites (grouping factor)
 array[N] int site;   // site identity, coded as int
-// int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
-// array[N] int treeid;   // tree id identity, coded as int
+int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
+array[N] int treeid;   // tree id identity, coded as int
 vector[N] gdd; 	// gdd (predictor for slope)
-// vector[N] gddyr; 	// gdd of previous year
+vector[N] gddyr; 	// gdd of previous year
 array[N] real y;
 }
 
 parameters{
 real a;		// mean intercept across everything
-// real<lower=0> sigma_atreeid;
+real<lower=0> sigma_atreeid;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
-// vector[Ntreeid] atreeid; // variation of intercept across tree ids, no-centered
-// vector[Nspp] aspp;
+vector[Ntreeid] zatreeid; // variation of intercept across tree ids, no-centered
 vector[Nsite] asite;
 vector[Nspp] aspp;
 vector[Nspp] bsp;
-// vector[Nspp] bspyr;
+vector[Nspp] bspyr;
 }
 
 transformed parameters{
-// vector[Ntreeid] atreeid;
-// atreeid = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
+vector[Ntreeid] atreeid;
+atreeid = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
 
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
@@ -35,20 +34,20 @@ for (i in 1:N){ // don't change this for reparameterization
         a + 
         aspp[species[i]] + 
         asite[site[i]] + 
-        // atreeid[treeid[i]] + 
-        bsp[species[i]] * gdd[i] ;
-        // bspyr[species[i]] * gddyr[i];
+        atreeid[treeid[i]] +
+        bsp[species[i]] * gdd[i] +
+        bspyr[species[i]] * gddyr[i];
     }
 }
 
 model{	
   a ~ normal(2, 10);
-  // atreeid ~ normal(0, sigma_atreeid); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
+  zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 12);
   asite ~ normal(0, 5);
   bsp ~ normal(0, 5);
   // bspyr ~ normal(0, 5);
-  // sigma_atreeid ~ normal(0, 0.5); 
+  sigma_atreeid ~ normal(0, 1);
   sigma_y ~ normal(0, 1);
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	

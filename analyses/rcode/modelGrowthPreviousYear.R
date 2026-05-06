@@ -33,7 +33,7 @@ emp <- read.csv("output/empiricalDataMAIN.csv")
 rw <- read.csv("output/wildchrokieRingWidth.csv")
 gdd <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/output/gddByYear.csv")
 emp$lengthMM <- emp$lengthCM * 10
-runmodels <- F
+runmodels <- T
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

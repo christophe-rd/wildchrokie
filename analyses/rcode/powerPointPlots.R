@@ -431,12 +431,13 @@ plot(x, y1_scaled, type = "l", lwd = mylwd, col = colpre, xaxt = "n",
      cex.axis = axissize, cex.lab = labsize)
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
+# shade area under curve below 5
+polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
+
 # gs boundaries
 segments(x0 = preeos, x1 = preeos, y0 = -2, y1 = y1_scaled[presos] - 3, lwd = 1, lty = 2)
 segments(x0 = presos, x1 = presos, y0 = -2, y1 = y1_scaled[preeos] + 2.6, lwd = 1, lty = 2)
 
-# shade area under curve below 5
-polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
 
 # abline for 5C
 segments(x0 = -13, x1 = presos - 2.1, y0 = y1_scaled[presos], y1 = y1_scaled[presos], 
