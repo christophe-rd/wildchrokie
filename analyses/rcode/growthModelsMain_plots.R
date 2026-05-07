@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -53,6 +53,7 @@ treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
 bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
 aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
+ayear_df2$year_name <- emp$year[match(ayear_df2$year, emp$year_num)]
 
 # GSL
 sigma_df2_gsl  <- read.csv("output/GM_GSLparam_sigma.csv")
@@ -60,12 +61,14 @@ bspp_df2_gsl   <- read.csv("output/GM_GSLparam_bspp.csv")
 treeid_df2_gsl <- read.csv("output/GM_GSLparam_treeid.csv")
 aspp_df2_gsl   <- read.csv("output/GM_GSLparam_aspp.csv")
 site_df2_gsl   <- read.csv("output/GM_GSLparam_site.csv")
+ayear_df2_gsl      <- read.csv("output/GM_GSLparam_ayear.csv")
 
 treeid_df2_gsl$treeid <- as.numeric(treeid_df2_gsl$treeid)
 treeid_df2_gsl$treeid_name <- emp$treeid[match(treeid_df2_gsl$treeid, emp$treeid_num)]
 bspp_df2_gsl$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
 site_df2_gsl$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
 aspp_df2_gsl$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
+ayear_df2_gsl$year_name <- emp$year[match(ayear_df2_gsl$year, emp$year_num)]
 
 # SOS 
 sigma_df2_sos  <- read.csv("output/GM_SOSparam_sigma.csv")
@@ -73,12 +76,14 @@ bspp_df2_sos   <- read.csv("output/GM_SOSparam_bspp.csv")
 treeid_df2_sos <- read.csv("output/GM_SOSparam_treeid.csv")
 aspp_df2_sos   <- read.csv("output/GM_SOSparam_aspp.csv")
 site_df2_sos   <- read.csv("output/GM_SOSparam_site.csv")
+ayear_df2_sos      <- read.csv("output/GM_SOSparam_ayear.csv")
 
 treeid_df2_sos$treeid <- as.numeric(treeid_df2_sos$treeid)
 treeid_df2_sos$treeid_name <- emp$treeid[match(treeid_df2_sos$treeid, emp$treeid_num)]
 bspp_df2_sos$spp_name <- emp$latbi[match(bspp_df2_sos$spp, emp$spp_num)]
 site_df2_sos$site_name <- emp$site[match(site_df2_sos$site, emp$site_num)]
 aspp_df2_sos$spp_name <- emp$latbi[match(aspp_df2_sos$spp, emp$spp_num)]
+ayear_df2_sos$year_name <- emp$year[match(ayear_df2_sos$year, emp$year_num)]
 
 # EOS
 sigma_df2_eos  <- read.csv("output/GM_EOSparam_sigma.csv")
@@ -86,13 +91,14 @@ bspp_df2_eos   <- read.csv("output/GM_EOSparam_bspp.csv")
 treeid_df2_eos <- read.csv("output/GM_EOSparam_treeid.csv")
 aspp_df2_eos   <- read.csv("output/GM_EOSparam_aspp.csv")
 site_df2_eos   <- read.csv("output/GM_EOSparam_site.csv")
+ayear_df2_eos      <- read.csv("output/GM_EOSparam_ayear.csv")
 
 treeid_df2_eos$treeid <- as.numeric(treeid_df2_eos$treeid)
 treeid_df2_eos$treeid_name <- emp$treeid[match(treeid_df2_eos$treeid, emp$treeid_num)]
 bspp_df2_eos$spp_name <- emp$latbi[match(bspp_df2_eos$spp, emp$spp_num)]
 site_df2_eos$site_name <- emp$site[match(site_df2_eos$site, emp$site_num)]
 aspp_df2_eos$spp_name <- emp$latbi[match(aspp_df2_eos$spp, emp$spp_num)]
-
+ayear_df2_eos$year_name <- emp$year[match(ayear_df2_eos$year, emp$year_num)]
 
 if(makeplots) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1086,10 +1092,10 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-custommar <- c(4, 4, 4, 1.2)
+custommar <- c(4, 4, 3, 1.2)
 
 jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
-     width = 3000, height = 2800, res = 300)
+     width = 3200, height = 2600, res = 300)
 
 layout(matrix(c(
   1, 5, 9,
@@ -1097,7 +1103,7 @@ layout(matrix(c(
   3, 7, 9,
   4, 8, 9
 ), nrow = 4, byrow = TRUE),
-widths = c(1.3, 1.2, 0.5))
+widths = c(1.1, 1.2, 0.5))
 
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
@@ -1112,7 +1118,7 @@ segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.40, usr[2], usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
@@ -1127,7 +1133,7 @@ segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_calenda, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
@@ -1141,7 +1147,8 @@ segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
-rasterImage(img_leafout, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
+usr <- par("usr")
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = custommar)
@@ -1155,7 +1162,8 @@ segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
-rasterImage(img_budset, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
+usr <- par("usr")
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
@@ -1289,7 +1297,7 @@ legend("center",
        legend = sapply(unique(bspp_df2$spp_name), 
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = wccolslatbi,
-       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.5,
        title  = "Species", title.font = 2)
 
 dev.off()
@@ -1471,6 +1479,7 @@ library(rnaturalearthdata)
 library(sf)
 library(cowplot)
 
+
 site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
 
 # order same as figure
@@ -1479,11 +1488,11 @@ locations2$col <- wes_palette("Darjeeling1")[1:4]
 
 # site map 
 sitecolors <- site_color_map[site_df2$site_name]
-lat_labels <- locations$Latitude[match(site_order, locations$names)]
+lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 lat_min <- 41; lat_max <- 48
-lon_min <- -78; lon_max <- -63
+lon_min <- -78; lon_max <- -63 
 
 special_point <- data.frame(
   name = "Arnold Arboretum of\nHarvard University (MA)",
@@ -1509,12 +1518,43 @@ map_plot <- ggplot(data = world) +
     panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
   )
 
+# Inset: North America overview
+bbox_poly <- st_as_sfc(st_bbox(c(
+  xmin = lon_min, xmax = lon_max,
+  ymin = lat_min, ymax = lat_max
+), crs = 4326))
+
+north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
+
+inset_map <- ggplot(data = north_america) +
+  geom_sf(fill = "white", color = "gray60", linewidth = 0.1) +
+  geom_sf(data = bbox_poly, 
+          # fill = NULL, 
+          color = "black", alpha = 0, linewidth = 0.7) +
+  coord_sf(xlim = c(-170, -50), ylim = c(15, 75), expand = FALSE) +
+  theme_void() +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    panel.background = element_rect(fill = "aliceblue")
+  )
+
+# Combine using cowplot
+final_map <- ggdraw(map_plot) +
+  draw_plot(
+    inset_map,
+    x = 0.67,
+    y = 0.62,
+    width = 0.31,
+    height = 0.35
+  )
+
+
 # mu plot for asite
 forest_grob <- as_grob(function() {
   par(mar = c(7, 5, 5, 0.5))
   
   plot(site_df2$mean, y_pos_site,
-       xlim = c(-2, 2), ylim = c(0.5, n_site + 0.5),
+       xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
        xlab = "log(ring width) intercept values", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
@@ -1528,7 +1568,7 @@ forest_grob <- as_grob(function() {
            col = sitecolors, lwd = 3)
 })
 
-combined <- plot_grid(forest_grob, map_plot, ncol = 2, rel_widths = c(0.4, 0.7))
+combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.7))
 
 combined_labeled <- ggdraw(combined) +
   draw_plot_label(
@@ -1538,7 +1578,6 @@ combined_labeled <- ggdraw(combined) +
     size     = 14,
     fontface = "bold"
   )
-
 ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 
 
@@ -1706,4 +1745,32 @@ max_ES$fit_bspp_abs <- NULL
 
 max_ES <- max_ES[order(max_ES$pred),]
 }
+
+# # Box plot
+# species <- unique(emp$latbi)
+# years <- sort(unique(emp$year))
+# n_sp <- length(species)
+# 
+# jpeg("figures/growthModelsMain/boxplotRingWidth.jpeg", width = 2400, height = 2000, res = 300)
+# par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
+# for(sp in species) {
+#   dat <- emp[emp$latbi == sp,]
+#   boxplot(log(lengthMM) ~ year, data = dat,
+#           main = bquote(italic(.(sp))),
+#           xlab = "Year", ylab = "Ring width (mm)",
+#           col = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.5),
+#           border = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.8), 
+#           medcol = "black",
+#           whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black")
+#   # https://www.sthda.com/english/wiki/strip-charts-1-d-scatter-plots-r-base-graphs
+#   stripchart(log(lengthMM) ~ year, data = dat,
+#              method = "jitter", jitter = 0.08,
+#              pch = 16, cex = 0.7, col = "black",
+#              vertical = TRUE, add = TRUE)
+#   points(1:3, ayear_df2$mean, pch = 18, cex = 1.5, col = "black")
+#   segments(1:3, ayear_df2$p5,  1:3, ayear_df2$p95,  lwd = 1.5)
+#   segments(1:3, ayear_df2$p25, 1:3, ayear_df2$p75, lwd = 3)
+#   dev.off()
+#   
+
 
