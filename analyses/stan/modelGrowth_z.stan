@@ -10,6 +10,8 @@ int<lower=0> Nsite;  // number of sites (grouping factor)
 array[N] int site;   // site identity, coded as int
 int<lower=0> Ntreeid;  // number of tree ids (grouping factor)
 array[N] int treeid;   // tree id identity, coded as int
+int<lower=0> Nyear;
+array[N] int year; 
 vector[N] covariate; 	// covariate (predictor for slope)
 array[N] real y;
 }
@@ -17,10 +19,12 @@ array[N] real y;
 parameters{
 real a;		// mean intercept across everything
 real<lower=0> sigma_atreeid;
+real<lower=0> sigma_asite;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 vector[Ntreeid] zatreeid; // variation of intercept across tree ids, no-centered
 vector[Nspp] aspp;
 vector[Nsite] asite;
+vector[Nyear] ayear;
 vector[Nspp] bsp;
 }
 
@@ -35,6 +39,7 @@ for (i in 1:N){ // don't change this for reparameterization
         aspp[species[i]] + 
         asite[site[i]] + 
         atreeid[treeid[i]] + 
+        ayear[year[i]] +
         bsp[species[i]]*covariate[i];
 
     }
@@ -44,7 +49,9 @@ model{
   a ~ normal(2, 4);
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
   aspp ~ normal(0, 5);
-  asite ~ normal(0, 1);
+  sigma_asite ~ normal(0, 1); 
+  asite ~ normal(0, sigma_asite);
+  ayear ~ normal(0, 1);
   bsp ~ normal(0, 0.8);
   sigma_atreeid ~ normal(0, 1); 
   sigma_y ~ normal(0, 1);
@@ -61,11 +68,14 @@ generated quantities {
         aspp[species[i]] + 
         asite[site[i]] +
         atreeid[treeid[i]] + 
+        ayear[year[i]] +
         bsp[species[i]]*covariate[i], sigma_y);
   }
 
   // prior predictive samples
   real a_prior = normal_rng(2, 4);
+  real sigma_asite_prior = abs(normal_rng(0, 1));
+  real asite_prior = normal_rng(0, sigma_asite_prior);
   real sigma_atreeid_prior = abs(normal_rng(0, 1));  
   real sigma_y_prior = abs(normal_rng(0, 1));    
   real aspp_prior = normal_rng(0, 5);

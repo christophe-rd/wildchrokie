@@ -1402,10 +1402,10 @@ widths = c(0.7, 0.4))
 site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
 sitecolors <- site_color_map[site_df2$site_name]
 
-site_df2$lat <- locations$lat[match(site_df2$site_name, locations$shortnames)]
-site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$shortnames)]
-site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$shortnames)]
-site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$shortnames)]
+site_df2$lat <- locations$lat[match(site_df2$site_name, locations$names)]
+site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$names)]
+site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$names)]
+site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$names)]
 
 lat_labels <- locations$lat[match(site_order,  locations$name)]
 
@@ -1492,7 +1492,7 @@ locations2$col <- wes_palette("Darjeeling1")[1:4]
 
 # site map 
 sitecolors <- site_color_map[site_df2$site_name]
-lat_labels <- locations$Latitude[match(site_order, locations$shortnames)]
+lat_labels <- locations$Latitude[match(site_order, locations$names)]
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 lat_min <- 41; lat_max <- 48

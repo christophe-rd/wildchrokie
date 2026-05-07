@@ -158,6 +158,8 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \label{fig:wcmuplotbspp}
 \end{figure}
 
+Ainc and Bpap grew more with longer calendar seasons, but only Ainc grew more with earlier leafout, but not with later budset. Interestingly, Bpap did not grow more with earlier leafout, but did with a later budset. Ball and Bpop did not grow more with longer calendar seasons, but Ball grew more with a later leafout and budset whereas Bpop only grew more with a later budset. 
+
 % Wildchrokie site mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}

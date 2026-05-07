@@ -181,7 +181,7 @@ if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 1000, iter = 2000, chains=4)
+                warmup = 1500, iter = 3000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -203,7 +203,7 @@ saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 # Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = deos,
-                warmup = 1000, iter = 2000, chains=4)
+                warmup = 1500, iter = 3000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -224,12 +224,14 @@ bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
 treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
 aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
 site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgdd[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
 sigma_df2  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
@@ -242,6 +244,9 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                              "spp", "aspp\\[(\\d+)\\]")
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
+site_df2 <- subset(site_df2, !grepl("z|sigma", site))
+ayear_df2  <- extract_params(df_fitgdd, "ayear", "fit_ayear", 
+                             "year", "ayear\\[(\\d+)\\]")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_sigma.csv",  row.names = FALSE)
@@ -249,13 +254,14 @@ write.csv(bspp_df2,   "output/GM_GDDparam_bspp.csv",   row.names = FALSE)
 write.csv(treeid_df2, "output/GM_GDDparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GDDparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GDDparam_site.csv",   row.names = FALSE)
+write.csv(ayear_df2,  "output/GM_GDDparam_ayear.csv",  row.names = FALSE)
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(4, 2))
 
 # a
 plot(density(df_fitgdd[, "a_prior"]), 
@@ -271,6 +277,14 @@ plot(density(df_fitgdd[, "sigma_atreeid_prior"]),
      main = "priorVSposterior_sigma_atreeid", 
      xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitgdd[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_asite
+plot(density(df_fitgdd[, "sigma_asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_asite", 
+     xlab = "sigma_asite", ylim = c(0,4))
+lines(density(df_fitgdd[, "sigma_asite"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
@@ -313,6 +327,16 @@ for (col in colnames(bspp_df)) {
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
+# ayear
+plot(density(df_fitgdd[, "ayear_prior"]),
+     col = pal[1], lwd = 2,
+     main = "priorVSposterior_ayear",
+     xlab = "ayear", xlim = c(-3, 3), ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -329,12 +353,14 @@ treeid_df <- df_fitgsl[, grepl("treeid", columns) &
                          !grepl("z|sigma", columns)]
 aspp_df <- df_fitgsl[, columns[grepl("aspp", columns)]]
 site_df <- df_fitgsl[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgsl[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
 sigma_df2  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
@@ -344,6 +370,8 @@ treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
 aspp_df2   <- extract_params(df_fitgsl, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2 <- subset(site_df2, !grepl("z|sigma", site))
+ayear_df2  <- extract_params(df_fitgsl, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_sigma.csv",  row.names = FALSE)
@@ -351,13 +379,14 @@ write.csv(bspp_df2,   "output/GM_GSLparam_bspp.csv",   row.names = FALSE)
 write.csv(treeid_df2, "output/GM_GSLparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GSLparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GSLparam_site.csv",   row.names = FALSE)
+write.csv(ayear_df2,  "output/GM_GSLparam_ayear.csv",  row.names = FALSE)
 
 ##### Plot posterior vs priors for GSL fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(4, 2))
 
 # a
 plot(density(df_fitgsl[, "a_prior"]), 
@@ -373,6 +402,14 @@ plot(density(df_fitgsl[, "sigma_atreeid_prior"]),
      main = "priorVSposterior_sigma_atreeid", 
      xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitgsl[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_asite
+plot(density(df_fitgsl[, "sigma_asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_asite", 
+     xlab = "sigma_asite", ylim = c(0,4))
+lines(density(df_fitgsl[, "sigma_asite"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
@@ -415,6 +452,16 @@ for (col in colnames(bspp_df)) {
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
+# ayear
+plot(density(df_fitgsl[, "ayear_prior"]),
+     col = pal[1], lwd = 2,
+     main = "priorVSposterior_ayear",
+     xlab = "ayear", xlim = c(-3, 3), ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -431,12 +478,14 @@ treeid_df <- df_fitsos[, grepl("treeid", columns) &
                          !grepl("z|sigma", columns)]
 aspp_df <- df_fitsos[, columns[grepl("aspp", columns)]]
 site_df <- df_fitsos[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitsos[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
 sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
@@ -446,20 +495,23 @@ treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
 aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
+ayear_df2_sos  <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 
 # save csvs
-write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",row.names = FALSE)
-write.csv(bspp_df2_sos,   "output/GM_SOSparam_bspp.csv", row.names = FALSE)
-write.csv(treeid_df2_sos, "output/GM_SOSparam_treeid.csv",row.names = FALSE)
-write.csv(aspp_df2_sos,   "output/GM_SOSparam_aspp.csv", row.names = FALSE)
-write.csv(site_df2_sos,   "output/GM_SOSparam_site.csv", row.names = FALSE)
+write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2_sos,   "output/GM_SOSparam_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2_sos, "output/GM_SOSparam_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2_sos,   "output/GM_SOSparam_aspp.csv",   row.names = FALSE)
+write.csv(site_df2_sos,   "output/GM_SOSparam_site.csv",   row.names = FALSE)
+write.csv(ayear_df2_sos,  "output/GM_SOSparam_ayear.csv",  row.names = FALSE)
 
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(4, 2))
 
 # a
 plot(density(df_fitsos[, "a_prior"]), 
@@ -475,6 +527,14 @@ plot(density(df_fitsos[, "sigma_atreeid_prior"]),
      main = "priorVSposterior_sigma_atreeid", 
      xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fitsos[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_asite
+plot(density(df_fitsos[, "sigma_asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_asite", 
+     xlab = "sigma_asite", ylim = c(0,4))
+lines(density(df_fitsos[, "sigma_asite"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
@@ -517,6 +577,16 @@ for (col in colnames(bspp_df)) {
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
+# ayear
+plot(density(df_fitsos[, "ayear_prior"]),
+     col = pal[1], lwd = 2,
+     main = "priorVSposterior_ayear",
+     xlab = "ayear", xlim = c(-3, 3), ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+}
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -533,12 +603,14 @@ treeid_df <- df_fiteos[, grepl("treeid", columns) &
                          !grepl("z|sigma", columns)]
 aspp_df <- df_fiteos[, columns[grepl("aspp", columns)]]
 site_df <- df_fiteos[, columns[grepl("asite", columns)]]
+ayear_df <- df_fiteos[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # posterior summaries
 sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
@@ -548,20 +620,23 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
 aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
+ayear_df2_eos  <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 
 # save csvs
-write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",row.names = FALSE)
-write.csv(bspp_df2_eos,   "output/GM_EOSparam_bspp.csv", row.names = FALSE)
-write.csv(treeid_df2_eos, "output/GM_EOSparam_treeid.csv",row.names = FALSE)
-write.csv(aspp_df2_eos,   "output/GM_EOSparam_aspp.csv", row.names = FALSE)
-write.csv(site_df2_eos,   "output/GM_EOSparam_site.csv", row.names = FALSE)
+write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",  row.names = FALSE)
+write.csv(bspp_df2_eos,   "output/GM_EOSparam_bspp.csv",   row.names = FALSE)
+write.csv(treeid_df2_eos, "output/GM_EOSparam_treeid.csv", row.names = FALSE)
+write.csv(aspp_df2_eos,   "output/GM_EOSparam_aspp.csv",   row.names = FALSE)
+write.csv(site_df2_eos,   "output/GM_EOSparam_site.csv",   row.names = FALSE)
+write.csv(ayear_df2_eos,  "output/GM_EOSparam_ayear.csv",  row.names = FALSE)
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
 
-par(mfrow = c(3, 2))
+par(mfrow = c(4, 2))
 
 # a
 plot(density(df_fiteos[, "a_prior"]), 
@@ -577,6 +652,14 @@ plot(density(df_fiteos[, "sigma_atreeid_prior"]),
      main = "priorVSposterior_sigma_atreeid", 
      xlab = "sigma_atreeid", ylim = c(0,4))
 lines(density(df_fiteos[, "sigma_atreeid"]), col = pal[2], lwd = 2)
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+# sigma_asite
+plot(density(df_fiteos[, "sigma_asite_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_sigma_asite", 
+     xlab = "sigma_asite", ylim = c(0,4))
+lines(density(df_fiteos[, "sigma_asite"]), col = pal[2], lwd = 2)
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 # sigma_y
@@ -619,114 +702,16 @@ for (col in colnames(bspp_df)) {
 }
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
-dev.off()
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Retrodictive checks ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if (FALSE){
-
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveCheckHist.jpeg",
-  width = 2400, height = 2400, res = 300)
-util$plot_hist_quantiles(samples_gdd, "y_rep", 
-                         -2, # lower x axis limit
-                         4, # upper x axis limit
-                         0.3, # binning
-                         baseline_values = dgdd$y,
-                         xlab = "Ring width (mm)")
-dev.off()
-
-
-# Hist by species
-# GDD
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDD.jpeg",
-  width = 3600, height = 2000, res = 300)
-par(mfrow = c(2, dgdd$Nspp/2))
-for (s in unique(dgdd$species)) { # s = 2
-  idxs <- which(dgdd$species == s)
-  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
-  util$plot_hist_quantiles(samples_sub,
-                           "y_rep",
-                           -2,
-                           4,
-                           0.4,
-                           baseline_values = dgdd$y[idxs],
-                           xlab = "log(ring width)",
-                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+# ayear
+plot(density(df_fiteos[, "ayear_prior"]),
+     col = pal[1], lwd = 2,
+     main = "priorVSposterior_ayear",
+     xlab = "ayear", xlim = c(-3, 3), ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
 }
-dev.off()
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
-# GSL
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGSL.jpeg",
-  width = 3600, height = 2000, res = 300)
-par(mfrow = c(2, dgsl$Nspp/2))
-for (s in unique(dgsl$species)) { # s = 2
-  idxs <- which(dgsl$species == s)
-  samples_sub <- samples_gsl[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gsl))]
-  util$plot_hist_quantiles(samples_sub,
-                           "y_rep",
-                           -2,
-                           4,
-                           0.3,
-                           baseline_values = dgsl$y[idxs],
-                           xlab = "log(ring width)",
-                           main = unique(emp$latbi[which(emp$spp_num == s)]))
-}
-dev.off()
-
-
-# SOS
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistSOS.jpeg",
-  width = 3600, height = 2000, res = 300)
-par(mfrow = c(2, dsos$Nspp/2))
-for (s in unique(dsos$species)) { # s = 2
-  idxs <- which(dsos$species == s)
-  samples_sub <- samples_sos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_sos))]
-  util$plot_hist_quantiles(samples_sub,
-                           "y_rep",
-                           -2,
-                           4,
-                           0.3,
-                           baseline_values = dsos$y[idxs],
-                           xlab = "log(ring width)",
-                           main = unique(emp$latbi[which(emp$spp_num == s)]))
-}
-dev.off()
-
-# EOS
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistEOS.jpeg",
-  width = 3600, height = 2000, res = 300)
-par(mfrow = c(2, deos$Nspp/2))
-for (s in unique(deos$species)) { # s = 2
-  idxs <- which(deos$species == s)
-  samples_sub <- samples_eos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_eos))]
-  util$plot_hist_quantiles(samples_sub,
-                           "y_rep",
-                           -2,
-                           4,
-                           0.3,
-                           baseline_values = deos$y[idxs],
-                           xlab = "log(ring width)",
-                           main = unique(emp$latbi[which(emp$spp_num == s)]))
-}
-dev.off()
-
-# Site GDD
-jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDDSite.jpeg",
-     width = 3600, height = 2000, res = 300)
-par(mfrow = c(2, dgdd$Nsite/2))
-for (s in unique(dgdd$site)) { # s = 2
-  idxs <- which(dgdd$site == s)
-  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
-  util$plot_hist_quantiles(samples_sub,
-                           "y_rep",
-                           -2,
-                           4,
-                           0.4,
-                           baseline_values = dgdd$y[idxs],
-                           xlab = "log(ring width)",
-                           main = unique(emp$site[which(emp$site_num == s)]))
-}
 dev.off()
 }
 
@@ -800,8 +785,6 @@ if (FALSE) {
   bsppyr <- paste0("bspyr[", 1:4, "]")
   util$plot_div_pairs(bsppyr, bsppyr, samples, diagnostics)
   
-}
-
 }
 
 
@@ -1082,6 +1065,11 @@ saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored")
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDDZscored")
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSLZscored")
+fitsos <- readRDS("output/stanOutput/fitGrowthSOSZscored")
+fiteos <- readRDS("output/stanOutput/fitGrowthEOSZscored")
+
 ##### Recover parameters #####
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -1110,6 +1098,7 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                              "spp", "aspp\\[(\\d+)\\]")
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
+site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_Z_sigma.csv",  row.names = FALSE)
@@ -1213,6 +1202,7 @@ treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
 aspp_df2   <- extract_params(df_fitgsl, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_Z_sigma.csv",  row.names = FALSE)
@@ -1315,6 +1305,7 @@ treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
 aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
 
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/ZsosModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -1410,6 +1401,7 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
 aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
 treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/ZeosModelPriorVSPosterior.pdf", width = 8, height = 10)
