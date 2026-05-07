@@ -247,6 +247,7 @@ site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site",
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgdd, "ayear", "fit_ayear", 
                              "year", "ayear\\[(\\d+)\\]")
+ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_sigma.csv",  row.names = FALSE)
@@ -372,6 +373,7 @@ treeid_df2 <- subset(treeid_df2, !grepl("prior", treeid))
 site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgsl, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_sigma.csv",  row.names = FALSE)
@@ -497,6 +499,7 @@ treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
 ayear_df2_sos  <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_sos <- subset(ayear_df2_sos, !grepl("mean", year))
 
 # save csvs
 write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",  row.names = FALSE)
@@ -622,6 +625,7 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
 ayear_df2_eos  <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_eos <- subset(ayear_df2_eos, !grepl("mean", year))
 
 # save csvs
 write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",  row.names = FALSE)

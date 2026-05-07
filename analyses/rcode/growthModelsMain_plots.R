@@ -46,6 +46,7 @@ bspp_df2   <- read.csv("output/GM_GDDparam_bspp.csv")
 treeid_df2 <- read.csv("output/GM_GDDparam_treeid.csv")
 aspp_df2   <- read.csv("output/GM_GDDparam_aspp.csv")
 site_df2   <- read.csv("output/GM_GDDparam_site.csv")
+ayear_df2   <- read.csv("output/GM_GDDparam_ayear.csv")
 
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)  
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
@@ -105,15 +106,17 @@ df_fitgdd <- as.data.frame(fitgdd)
 columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
 sigma_df <- df_fitgdd[, columns[grepl("sigma", columns)]]
 bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
-treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
+treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
 aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
-site_df <- df_fitgdd[, columns[grepl("asite", columns) & !grepl("z|sigma", columns)]]
+site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgdd[, columns[grepl("ayear", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
 colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL posterior recovery ####
@@ -124,17 +127,21 @@ df_fitgsl <- as.data.frame(fitgsl)
 
 # full posterior
 columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
-sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
-bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
-treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
-site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
+sigma_df <- df_fitgsl[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fitgsl[, columns[grepl("bsp", columns)]]
+treeid_df <- df_fitgsl[, grepl("treeid", columns) & 
+                         !grepl("z|sigma", columns)]
+aspp_df <- df_fitgsl[, columns[grepl("aspp", columns)]]
+site_df <- df_fitgsl[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgsl[, columns[grepl("ayear", columns)]]
 
 # change colnames
-colnames(bspp_df_gsl) <- 1:ncol(bspp_df_gsl)
-colnames(treeid_df_gsl) <- 1:ncol(treeid_df_gsl)
-colnames(aspp_df_gsl) <- 1:ncol(aspp_df_gsl)
-colnames(site_df_gsl) <- 1:ncol(site_df_gsl)
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
@@ -145,17 +152,20 @@ df_fitsos <- as.data.frame(fitsos)
 
 # full posterior
 columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
-sigma_df_sos <- df_fitsos[, columns[grepl("sigma", columns)]]
-bspp_df_sos <- df_fitsos[, columns[grepl("bsp", columns)]]
-treeid_df_sos <- df_fitsos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_sos <- df_fitsos[, columns[grepl("aspp", columns)]]
-site_df_sos <- df_fitsos[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
+sigma_df <- df_fitsos[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fitsos[, columns[grepl("bsp", columns)]]
+treeid_df <- df_fitsos[, grepl("treeid", columns) & 
+                         !grepl("z|sigma", columns)]
+aspp_df <- df_fitsos[, columns[grepl("aspp", columns)]]
+site_df <- df_fitsos[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitsos[, columns[grepl("ayear", columns)]]
 
 # change colnames
-colnames(bspp_df_sos) <- 1:ncol(bspp_df_sos)
-colnames(treeid_df_sos) <- 1:ncol(treeid_df_sos)
-colnames(aspp_df_sos) <- 1:ncol(aspp_df_sos)
-colnames(site_df_sos) <- 1:ncol(site_df_sos)
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS posterior recovery ####
@@ -166,17 +176,20 @@ df_fiteos <- as.data.frame(fiteos)
 
 # full posterior
 columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
-sigma_df_eos <- df_fiteos[, columns[grepl("sigma", columns)]]
-bspp_df_eos <- df_fiteos[, columns[grepl("bsp", columns)]]
-treeid_df_eos <- df_fiteos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
-aspp_df_eos <- df_fiteos[, columns[grepl("aspp", columns)]]
-site_df_eos <- df_fiteos[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
+sigma_df <- df_fiteos[, columns[grepl("sigma", columns)]]
+bspp_df <- df_fiteos[, columns[grepl("bsp", columns)]]
+treeid_df <- df_fiteos[, grepl("treeid", columns) & 
+                         !grepl("z|sigma", columns)]
+aspp_df <- df_fiteos[, columns[grepl("aspp", columns)]]
+site_df <- df_fiteos[, columns[grepl("asite", columns)]]
+ayear_df <- df_fiteos[, columns[grepl("ayear", columns)]]
 
 # change colnames
-colnames(bspp_df_eos) <- 1:ncol(bspp_df_eos)
-colnames(treeid_df_eos) <- 1:ncol(treeid_df_eos)
-colnames(aspp_df_eos) <- 1:ncol(aspp_df_eos)
-colnames(site_df_eos) <- 1:ncol(site_df_eos)
+colnames(bspp_df) <- 1:ncol(bspp_df)
+colnames(treeid_df) <- 1:ncol(treeid_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(site_df) <- 1:ncol(site_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot lines with quantiles ####
@@ -468,7 +481,6 @@ gslseq <- dgsl$gslseq
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GSL: per Spp, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
 # jpeg output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
@@ -522,7 +534,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   points(
     emp_spp$pgsGSL,
     emp_spp$loglength,
-    pch = my_shapes[emp_spp$site],
+    pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
   )
@@ -994,7 +1006,7 @@ mumar <- c(4, 1, 4, 1)
 par(mar = mumar)
 plot(bspp_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     xlab = "log(ring width) change per 7 spring days GDD", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1012,7 +1024,7 @@ rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 5 days of leafout", ylab = "",
+     xlab = "log(ring width) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1029,7 +1041,7 @@ rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
+     xlab = "log(ring width) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1046,7 +1058,7 @@ rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of budset", ylab = "",
+     xlab = "log(ring width) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1075,6 +1087,7 @@ dev.off()
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 custommar <- c(4, 4, 4, 1.2)
+
 jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
      width = 3000, height = 2800, res = 300)
 
@@ -1089,54 +1102,60 @@ widths = c(1.3, 1.2, 0.5))
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
 plot(bspp_df2$mean, y_pos,
-     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in averaged GDD of 10 spring days", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_thermom, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.40, usr[2], usr[4])
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of GSL", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_calenda, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
 plot(bspp_df2_sos$mean, y_pos,
-     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 5 days of leafout", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+rasterImage(img_leafout, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = custommar)
 plot(bspp_df2_eos$mean, y_pos,
-     xlim = c(-0.8, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of budset", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = FALSE, 
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+rasterImage(img_budset, usr[2] - diff(usr[1:2]) * 0.15, usr[4] - diff(usr[3:4]) * 0.45, usr[2], usr[4])
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
@@ -1168,13 +1187,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   emp_spp <- emp[emp$latbi == spp_name, ]
   
-  points(
-    emp_spp$pgsGDD5,
-    emp_spp$loglength,
-    pch = yrshapes[as.character(emp_spp$year)],
-    cex = 1,
-    col = line_col
-  )
 }
 
 # Row 2, Col 2, Slot 6 : GSL
@@ -1204,14 +1216,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
   lines(gslseq, y_mean,
         col = line_col,
         lwd = 2)
-  
-  points(
-    emp_spp$pgsGSL,
-    emp_spp$loglength,
-    pch = yrshapes[as.character(emp_spp$year)],
-    cex = 1,
-    col = line_col
-  )
   
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
@@ -1244,14 +1248,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  points(
-    emp_spp$leafout,
-    emp_spp$loglength,
-    pch = yrshapes[as.character(emp_spp$year)],
-    cex = 1,
-    col = line_col
-  )
-  
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
@@ -1283,14 +1279,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
         col = line_col,
         lwd = 2)
   
-  points(
-    emp_spp$budset,
-    emp_spp$loglength,
-    pch = yrshapes[as.character(emp_spp$year)],
-    cex = 1,
-    col = line_col
-  )
-  
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
 
@@ -1305,7 +1293,6 @@ legend("center",
        title  = "Species", title.font = 2)
 
 dev.off()
-
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
