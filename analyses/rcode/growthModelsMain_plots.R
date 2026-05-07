@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -107,7 +107,7 @@ sigma_df <- df_fitgdd[, columns[grepl("sigma", columns)]]
 bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
 treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
-site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
+site_df <- df_fitgdd[, columns[grepl("asite", columns) & !grepl("z|sigma", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
@@ -128,13 +128,13 @@ sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
 bspp_df_gsl <- df_fitgsl[, columns[grepl("bsp", columns)]]
 treeid_df_gsl <- df_fitgsl[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
-site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)]]
+site_df_gsl <- df_fitgsl[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
 
 # change colnames
-colnames(bspp_df_gsl) <- 1:ncol(bspp_df)
-colnames(treeid_df_gsl) <- 1:ncol(treeid_df)
-colnames(aspp_df_gsl) <- 1:ncol(aspp_df)
-colnames(site_df_gsl) <- 1:ncol(site_df)
+colnames(bspp_df_gsl) <- 1:ncol(bspp_df_gsl)
+colnames(treeid_df_gsl) <- 1:ncol(treeid_df_gsl)
+colnames(aspp_df_gsl) <- 1:ncol(aspp_df_gsl)
+colnames(site_df_gsl) <- 1:ncol(site_df_gsl)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
@@ -149,7 +149,7 @@ sigma_df_sos <- df_fitsos[, columns[grepl("sigma", columns)]]
 bspp_df_sos <- df_fitsos[, columns[grepl("bsp", columns)]]
 treeid_df_sos <- df_fitsos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df_sos <- df_fitsos[, columns[grepl("aspp", columns)]]
-site_df_sos <- df_fitsos[, columns[grepl("asite", columns)]]
+site_df_sos <- df_fitsos[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
 
 # change colnames
 colnames(bspp_df_sos) <- 1:ncol(bspp_df_sos)
@@ -170,7 +170,7 @@ sigma_df_eos <- df_fiteos[, columns[grepl("sigma", columns)]]
 bspp_df_eos <- df_fiteos[, columns[grepl("bsp", columns)]]
 treeid_df_eos <- df_fiteos[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df_eos <- df_fiteos[, columns[grepl("aspp", columns)]]
-site_df_eos <- df_fiteos[, columns[grepl("asite", columns)]]
+site_df_eos <- df_fiteos[, columns[grepl("asite", columns)& !grepl("z|sigma", columns)]]
 
 # change colnames
 colnames(bspp_df_eos) <- 1:ncol(bspp_df_eos)
@@ -1407,7 +1407,7 @@ site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$shortn
 site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$shortnames)]
 site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$shortnames)]
 
-lat_labels <- locations$lat[match(site_order, locations$shortnames)]
+lat_labels <- locations$lat[match(site_order,  locations$name)]
 
 
 # Row 1: GDD

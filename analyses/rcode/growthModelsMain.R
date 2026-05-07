@@ -25,6 +25,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 util <- new.env()
 source('mcmc_analysis_tools_rstan.R', local=util)
 source('mcmc_visualization_tools.R', local=util)
+
 # my function to extract parameters
 source('rcode/tools.R')
 
@@ -56,10 +57,12 @@ emp <- emp[!is.na(emp$pgsGDD5),]
 emp$site_num <- match(emp$site, unique(emp$site))
 emp$spp_num <- match(emp$spp, unique(emp$spp))
 emp$treeid_num <- match(emp$treeid, unique(emp$treeid))
+emp$year_num <- match(emp$year, unique(emp$year))
 
 # order by tree id
 treeid_spp_site <- unique(emp[, c("treeid_num", "spp_num", "site_num",
-                                  "treeid", "spp", "site", "latbi")])
+                                  "treeid", "spp", "site", 
+                                  "latbi")])
 
 treeid_spp_site_ordered <- treeid_spp_site[order(treeid_spp_site$treeid_num), ]
 
@@ -86,6 +89,8 @@ dgdd <- list(
   species = as.numeric(as.character(emp$spp_num)),
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  year = as.numeric(emp$year_num),
+  Nyear = length(unique(emp$year_num)),
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
@@ -111,6 +116,8 @@ dgsl <- list(
   species = as.numeric(as.character(emp$spp_num)),
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  year = as.numeric(emp$year_num),
+  Nyear = length(unique(emp$year_num)),
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
@@ -119,6 +126,7 @@ dgsl <- list(
   gslscale = gslscale,
   Ngslseq = length(gslseq)
 )
+
 sosscale <- 7
 sos <- emp$leafout / sosscale
 sosseq <-  seq(min(emp$leafout), max(emp$leafout), length.out = lineplotseqlength)
@@ -133,6 +141,8 @@ dsos <- list(
   species = as.numeric(as.character(emp$spp_num)),
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  year = as.numeric(emp$year_num),
+  Nyear = length(unique(emp$year_num)),
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
@@ -143,7 +153,7 @@ dsos <- list(
 )
 
 eosscale <- 7
-eos <- emp$leafout / eosscale
+eos <- emp$budset / eosscale
 eosseq <-  seq(min(emp$budset), max(emp$budset), length.out = lineplotseqlength)
 
 # data list for eos
@@ -156,6 +166,8 @@ deos <- list(
   species = as.numeric(as.character(emp$spp_num)),
   treeid = as.numeric(emp$treeid_num),
   Ntreeid = length(unique(as.numeric(emp$treeid_num))),
+  year = as.numeric(emp$year_num),
+  Nyear = length(unique(emp$year_num)),
   treeid_species = treeid_spp_site_ordered$spp_num,
   treeid_site = treeid_spp_site_ordered$site_num,
   Ntreeid_per_spp = as.integer(table(treeid_spp_site_ordered$spp_num)),
@@ -2001,6 +2013,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Look at GDD > 30 degrees celsius ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (FALSE){
 subset(gddyr, meanTempC >30)[, 1:4]
 check <- subset(gddyr, maxTempC >30)
 nrow(check)
@@ -2340,3 +2353,4 @@ arrows(x0 = treeid_df2_nobspabv$p25, y0 = treeid_df2$mean,
 points(treeid_df2_nobspabv$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 dev.off()
+}
