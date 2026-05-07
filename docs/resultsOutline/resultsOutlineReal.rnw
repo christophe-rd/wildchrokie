@@ -153,7 +153,13 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "B. populifolia")]}, 
   \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotatreeid}).
 
-  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $ 0.192) than across treeids ($\sigma = $ 0.099)
+  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $
+  \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
+  [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
+  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) than across treeids ($\sigma = $ 
+  \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$
+  [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
+  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]
 
   \end{enumerate}
 
@@ -167,7 +173,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Growth was lowest in \Sexpr{ayear_df2$year_name[which.min(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.min(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.min(ayear_df2$mean)]}, 
-  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) and that year was the driest (also the only year with a drought that ramped up to "severe" in September) the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons.
+  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) and that year was the driest (also the only year with a drought that ramped up to "severe" in September), the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons.
   \end{enumerate}
 
 \end{enumerate}
