@@ -17,8 +17,8 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
-runzscore <- F
+makeplots <- T
+runzscore <- T
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -1095,7 +1095,7 @@ dev.off()
 custommar <- c(4, 4, 3, 1.2)
 
 jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
-     width = 3200, height = 2600, res = 300)
+     width = 2800, height = 3000, res = 300)
 
 layout(matrix(c(
   1, 5, 9,
@@ -1103,12 +1103,13 @@ layout(matrix(c(
   3, 7, 9,
   4, 8, 9
 ), nrow = 4, byrow = TRUE),
-widths = c(1.1, 1.2, 0.5))
+widths = c(1.1, 1.2, 0.6))
+
 
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
 plot(bspp_df2$mean, y_pos,
-     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -1118,7 +1119,7 @@ segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
@@ -1133,7 +1134,7 @@ segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
@@ -1148,7 +1149,7 @@ segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = custommar)
@@ -1163,7 +1164,7 @@ segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.15, usr[4])
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
@@ -1586,7 +1587,7 @@ ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, he
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 sppvecname <- unique(emp$latbi)
-par(mfrow = c(2,2), mar = c(4, 4, 2, 1))
+par(mfrow = c(2,2), mar = c(4, 4, 4, 4))
 
 for (i in unique(emp$spp_num)) { # i = 4
   sppname <- sppvecname[i]
@@ -1637,7 +1638,7 @@ aspp_df2_z   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                                "spp", "aspp\\[(\\d+)\\]")
 site_df2_z   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                                "site", "asite\\[(\\d+)\\]")
-
+site_df2_z <- subset(site_df2_z, !grepl("z|sigma", site))
 
 treeid_df2_z$treeid_name <- emp$treeid[match(treeid_df2_z$treeid, emp$treeid_num)]
 bspp_df2_z$spp_name <- emp$latbi[match(bspp_df2_z$spp, emp$spp_num)]
@@ -1662,6 +1663,7 @@ aspp_df2_z_gsl   <- extract_params(df_fitgsl, "aspp", "fit_aspp",
                                    "spp", "aspp\\[(\\d+)\\]")
 site_df2_z_gsl   <- extract_params(df_fitgsl, "asite", "fit_a_site", 
                                    "site", "asite\\[(\\d+)\\]")
+site_df2_z_gsl <- subset(site_df2_z_gsl, !grepl("z|sigma", site))
 
 treeid_df2_z_gsl$treeid <- as.numeric(treeid_df2_z_gsl$treeid)
 treeid_df2_z_gsl$treeid_name <- emp$treeid[match(treeid_df2_z_gsl$treeid, emp$treeid_num)]
@@ -1688,6 +1690,7 @@ aspp_df2_z_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp",
                                    "spp", "aspp\\[(\\d+)\\]")
 site_df2_z_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", 
                                    "site", "asite\\[(\\d+)\\]")
+site_df2_z_sos <- subset(site_df2_z_sos, !grepl("z|sigma", site))
 
 treeid_df2_z_sos$treeid <- as.numeric(treeid_df2_z_sos$treeid)
 treeid_df2_z_sos$treeid_name <- emp$treeid[match(treeid_df2_z_sos$treeid, emp$treeid_num)]
@@ -1713,6 +1716,7 @@ aspp_df2_z_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp",
                                    "spp", "aspp\\[(\\d+)\\]")
 site_df2_z_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", 
                                    "site", "asite\\[(\\d+)\\]")
+site_df2_z_eos <- subset(site_df2_z_eos, !grepl("z|sigma", site))
 
 treeid_df2_z_eos$treeid <- as.numeric(treeid_df2_z_eos$treeid)
 treeid_df2_z_eos$treeid_name <- emp$treeid[match(treeid_df2_z_eos$treeid, emp$treeid_num)]
@@ -1744,8 +1748,108 @@ max_ES <- merge(agg_z, bspp_z_binded[, c("mean", "p5", "p95", "pred", "fit_bspp_
 max_ES$fit_bspp_abs <- NULL
 
 max_ES <- max_ES[order(max_ES$pred),]
-}
 
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### bspp Z-scored ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+pdf("figures/growthModelsMain/zscored/muALLbspp.pdf", width = 7.5, height = 6)
+
+img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
+img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+# img_budset <- image_trim(img_budset) 
+
+
+layout(matrix(c(
+  1, 2, 5,
+  3, 4, 5
+), nrow = 2, byrow = TRUE), widths = c(2, 2, 1.2))
+
+mumar <- c(4, 1, 4, 1)
+
+# Panel 1: GDD
+par(mar = mumar)
+plot(bspp_df2_z$mean, y_pos,
+     xlim = c(-0.5, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "GDD standardized effect size", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_z$p5,  y_pos, bspp_df2_z$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_z$p25, y_pos, bspp_df2_z$p75, y_pos, col = wccolslatbi, lwd = 3)
+mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
+arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+
+
+# Panel 3: SOS
+par(mar = mumar)
+plot(bspp_df2_z_sos$mean, y_pos,
+     xlim = c(-0.5, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "SOS standardized effect size", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_z_sos$p5,  y_pos, bspp_df2_z_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_z_sos$p25, y_pos, bspp_df2_z_sos$p75, y_pos, col = wccolslatbi, lwd = 3)
+mtext("(b) Start of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+
+# Panel 2: GSL
+par(mar = mumar)
+plot(bspp_df2_z_gsl$mean, y_pos,
+     xlim = c(-0.5, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "GSL standardized effect size", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_z_gsl$p5,  y_pos, bspp_df2_z_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_z_gsl$p25, y_pos, bspp_df2_z_gsl$p75, y_pos, col = wccolslatbi, lwd = 3)
+mtext("(c) Growing season length", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+# arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(-0.18, n_spp + 0.85, "Smaller/Shorter", pos = 3, xpd = TRUE, cex = 0.9)
+arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(0.18, n_spp + 0.85, "Larger/Longer", pos = 3, xpd = TRUE, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+
+# Panel 4: EOS
+par(mar = mumar)
+plot(bspp_df2_z_eos$mean, y_pos,
+     xlim = c(-0.5, 0.8), ylim = c(0.5, n_spp + 0.5),
+     xlab = "EOS standardized effect size", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(bspp_df2_z_eos$p5,  y_pos, bspp_df2_z_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_z_eos$p25, y_pos, bspp_df2_z_eos$p75, y_pos, col = wccolslatbi, lwd = 3)
+mtext("(d) End of season", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
+arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
+# arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
+# text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
+usr <- par("usr")
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+
+# Panel 5: species legend
+par(mar = c(mumar))
+plot.new()
+legend("center",
+       legend = sapply(unique(bspp_df2$spp_name),
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = unique(wccolslatbi),
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+dev.off()
+
+}
 # # Box plot
 # species <- unique(emp$latbi)
 # years <- sort(unique(emp$year))

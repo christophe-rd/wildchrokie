@@ -1138,7 +1138,7 @@ genericmodel <- stan_model("stan/modelGrowth_z.stan")
 
 # Fit model GDD
 gddz <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
-dgddz <- dgdd[1:8]
+dgddz <- dgdd[1:10]
 dgddz$covariate <- gddz
 
 fitgdd <- sampling(genericmodel, data = dgddz,
@@ -1147,7 +1147,7 @@ saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored")
 
 # Fit model GSL
 gslz <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
-dgslz <- dgdd[1:8]
+dgslz <- dgdd[1:10]
 dgslz$covariate <- gslz
 
 fitgsl <- sampling(genericmodel, data = dgslz,
@@ -1156,7 +1156,7 @@ saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored")
 
 # Fit model SOS
 sosz <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
-dsosz <- dgdd[1:8]
+dsosz <- dgdd[1:10]
 dsosz$covariate <- sosz
 
 fitsos <- sampling(genericmodel, data = dsosz,
@@ -1165,12 +1165,30 @@ saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored")
 
 # Fit model EOS
 eosz <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
-deosz <- dgdd[1:8]
+deosz <- dgdd[1:10]
 deosz$covariate <- eosz
 
 fiteos <- sampling(genericmodel, data = deosz,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Diagnostics #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+diagnostics <- util$extract_hmc_diagnostics(fitgsl) 
+util$check_all_hmc_diagnostics(diagnostics)
+samples <- util$extract_expectand_vals(fitgsl)
+
+# asite
+asite <- names(samples)[grepl("asite", names(samples))]
+asite <- asite[!grepl("sigma|prior", asite)]
+# pdf("figures/troubleShootingGrowthModel/atreeidParameterization_only_atreeid_no_b.pdf", 
+#     width = 6, height = 18)
+jpeg("figures/growthModelsMain/zscored/asiteParameterization.jpeg", 
+     width = 2000, height = 3000,
+     units = "px", res = 300)
+util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = list("sigma_asite" = 1))
+dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
