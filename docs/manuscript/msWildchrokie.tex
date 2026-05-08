@@ -1,0 +1,131 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\usepackage{natbib}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{Wildchrokie ms}
+\author{Christophe Rouleau-Desrochers}
+\date{\today}
+\maketitle
+
+% Set Wildchrokie species shortcut
+\newcommand{\Ainc}{\textit{A. incana}}
+\newcommand{\Ball}{\textit{B. alleghaniensis}}
+\newcommand{\Bpap}{\textit{B. papyrifera}}
+\newcommand{\Bpop}{\textit{B. populifolia}}
+
+% ===========================================================================================================
+\section*{Introduction}
+% ===========================================================================================================
+
+% ===========================================================================================================
+\section*{Methods}
+% ===========================================================================================================
+\subsection*{Common garden setup}
+We collected seeds from four provenances across a 3.5 latitudinal gradient (Figure \ref{fig:mapProv}). We germinated the seeds following standard germination protocols and grew them to seedlings. We then planted them outside in the garden. Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020.
+
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/mapSourcePop.jpeg}
+\caption{}
+\label{fig:mapProv}
+\end{figure}
+
+\subsection*{Phenological monitoring and sample collection}
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December. See (Buonuito) for more details about the phenological monitoring. In the spring of 2023, we collected cross-sections for most trees and 1 tree core on a few individuals. Both the cores and cross-sections were left to dry at ambient temperature for three months. \\
+
+\subsection*{Sample processing, imaging and measuring}
+We mounted the cores on wooden mounts, and sanded the cores and cross-sections using progressively finer sandpaper grits: 150, 300, 400, 600, 800, 1000. We scanned the cores and cross-sections at a resolution of 6250 dpi, with a high-resolution treering scanner (Fong, unpublished). We used the digitized images to measure the tree ring widths with ImageJ \citep{schneider_nih_2012}. We did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths, but we accounted for it in our statistical analyses by including a year intercept. \\
+
+\subsection*{Statistical analyses}
+For both projects, we used Bayesian hierarchical models coded in Stan with the rstan package version 2.32.7 \citep{carpenter_stan_2017} to run the Stan code in R. With these models, we estimated ring width as a function of four different predictors  
+
+\[
+\begin{aligned}
+log(ringwidth)_i &\sim N(\mu, \sigma_y) \\
+\mu &= \alpha + \alpha_{\text{species}} + \alpha_{\text{site}} + \alpha_{\text{treeid}} + \alpha_{\text{year}} + \beta_{species} \times gdd/gdd/sos/eos \\
+\alpha &\sim N(1, 3) \\
+\alpha_{\text{species}} &\sim N(0, 6) \\
+\alpha_{\text{site}} &\sim N(0, \sigma_{\alpha \, \text{site}}) \\
+\alpha_{\text{treeid}} &\sim N(0, \sigma_{\alpha \, \text{treeid}}) \\
+\beta_{\text{species}} &\sim N(0, 0.5) \\
+\sigma_{\alpha \, \text{site}} & \sim N(0, 1) \\
+\sigma_{\alpha \, \text{treeid}} & \sim N(0, 1) \\
+\sigma_y & \sim N(0, 3)
+\end{aligned}
+\]
+\textbf{Where:}
+$i$ is each observation of the dataset, species is each species, site is each provenances
+degree days (thermal season) and , accumulated from the leafout date to the budset date. We had three grouping factors for Wildchrokie (species, site and treeid) and two for coringTreespotters (species and treeid). We ran four chains with each 2000 warmup, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions and $\hat{R}$ was below 1.01.
+
+% ===========================================================================================================
+\section*{Results}
+% ===========================================================================================================
+
+
+% ===========================================================================================================
+\section*{Discussion}
+% ===========================================================================================================
+
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% REFERENCES %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\bibliography{ExportedItems}
+\bibliographystyle{ecolett} 
+
+\end{document}
