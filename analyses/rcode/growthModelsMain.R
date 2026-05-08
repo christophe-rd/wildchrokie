@@ -724,7 +724,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Parameterization for treeid
 if (FALSE) { 
-  samples <- util$extract_expectand_vals(fit)
+  samples <- util$extract_expectand_vals(fitgdd)
   
   # atreeid
   atreeid <- names(samples)[grepl("zatreeid", names(samples))]
@@ -776,7 +776,7 @@ if (FALSE) {
   util$plot_div_pairs(asite, aspp, samples_gsl, diagnostics_gsl)
   util$plot_div_pairs(asite, aspp, samples_sos, diagnostics_sos)
   util$plot_div_pairs(asite, aspp, samples_eos, diagnostics_eos)
-  
+  dev.off()  
   
   # check bspp
   bspp <- paste0("bsp[", 1:4, "]")
@@ -788,7 +788,113 @@ if (FALSE) {
   # check bsppyr
   bsppyr <- paste0("bspyr[", 1:4, "]")
   util$plot_div_pairs(bsppyr, bsppyr, samples, diagnostics)
+
   
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Retrodictive checks ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveCheckHist.jpeg",
+  width = 2400, height = 2400, res = 300)
+util$plot_hist_quantiles(samples_gdd, "y_rep", 
+                         -2, # lower x axis limit
+                         4, # upper x axis limit
+                         0.3, # binning
+                         baseline_values = dgdd$y,
+                         xlab = "Ring width (mm)")
+dev.off()
+
+
+# Hist by species
+# GDD
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDD.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgdd$Nspp/2))
+for (s in unique(dgdd$species)) { # s = 2
+  idxs <- which(dgdd$species == s)
+  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.4,
+                           baseline_values = dgdd$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+# GSL
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGSL.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgsl$Nspp/2))
+for (s in unique(dgsl$species)) { # s = 2
+  idxs <- which(dgsl$species == s)
+  samples_sub <- samples_gsl[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gsl))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = dgsl$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+
+# SOS
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistSOS.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dsos$Nspp/2))
+for (s in unique(dsos$species)) { # s = 2
+  idxs <- which(dsos$species == s)
+  samples_sub <- samples_sos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_sos))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = dsos$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+# EOS
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistEOS.jpeg",
+  width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, deos$Nspp/2))
+for (s in unique(deos$species)) { # s = 2
+  idxs <- which(deos$species == s)
+  samples_sub <- samples_eos[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_eos))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.3,
+                           baseline_values = deos$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$latbi[which(emp$spp_num == s)]))
+}
+dev.off()
+
+# Site GDD
+jpeg(filename = "figures/growthModelsMain/diagnostics/retrodictiveHistGDDSite.jpeg",
+     width = 3600, height = 2000, res = 300)
+par(mfrow = c(2, dgdd$Nsite/2))
+for (s in unique(dgdd$site)) { # s = 2
+  idxs <- which(dgdd$site == s)
+  samples_sub <- samples_gdd[grep(paste0("^y_rep\\[(", paste(idxs, collapse="|"), ")\\]$"), names(samples_gdd))]
+  util$plot_hist_quantiles(samples_sub,
+                           "y_rep",
+                           -2,
+                           4,
+                           0.4,
+                           baseline_values = dgdd$y[idxs],
+                           xlab = "log(ring width)",
+                           main = unique(emp$site[which(emp$site_num == s)]))
+}
+dev.off()
 }
 
 
@@ -1473,6 +1579,9 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 dev.off()
 
 }
+
+
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # asite partial pooling comparison ####
