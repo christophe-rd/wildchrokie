@@ -62,7 +62,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes \Sexpr{length(unique(emp$treeid))} individuals of four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) with \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations, yielding \Sexpr{nrow(emp)} complete growing seasons (GS). 
+  \item Wildchrokie includes \Sexpr{length(unique(emp$treeid))} individuals of four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations, yielding \Sexpr{nrow(emp)} complete growing seasons (GS). 
   
     \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
@@ -98,46 +98,56 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   ($\beta = $ 
   \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. populifolia")]}, $UI_{90}$
   [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. populifolia")]}, 
-  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotbspp}a (Table\ref{tab:wc_slope_table}).
+  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. populifolia")]}]), but {\Ainc} trended in the same direction 
+  ($\beta = $ 
+  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
  
-  \item Calendar season had a weaker effect on growth than the thermal season across all species \ref{fig:bsppZscored}), and only two species grew more with longer calendar seasons
-  (\Ainc: $\beta = $ 
-  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
-  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}], and \Bpap: $\beta = $ 
+  \item Only one out of those three species also grew more with longer calendar season (\Bpap: $\beta = $ 
   \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotbspp}b (Table \ref{tab:wc_slope_table}).
-
-  \item {\Ball} and {\Bpop} grew more with warmer thermal season, but didn't with longer calendar season
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]), but an additional species that didn't grow more with warmer thermal season, did with longer calendar season ({\Ainc}: $\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]).
+  \item {\Ball} ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}]), and {\Bpop} ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item Did an later start and end of season increase growth?
   \begin{enumerate}
-  \item A longer calendar season increased growth for two species, but a later start of season increased growth only for one of those two ({\Ball}: $\beta = $ 
-  \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
-  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}], and decreased for 
-  ({\Ainc}: $\beta = $ 
+  \item A longer calendar season increased growth for two species, but neither grew more with a later start of season. 
+  \item {\Ainc} grew more with longer calendar season, but grew less with a later start of season ($\beta = $ 
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
-  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}] (Figure \ref{fig:wcmuplotbspp}c (Table \ref{tab:wc_slope_table}).
+  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
   
-  \item Three species grew more with later end of season ({\Ball}: $\beta = $ 
+  \item {\Ball} which did not grow more with longer calendar season, did increase growth with a later start of season ($\beta = $ 
+  \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
+  
+  \item Three species grew more with a later end of season ({\Ball}: $\beta = $ 
   \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, 
   \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}], 
-  ({\Bpop}: $\beta = $ 
+  {\Bpop}: $\beta = $ 
   \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}, $UI_{90}$
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}, 
-  \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}], with {\Bpap} 
-  ({\Bpap}: $\beta = $ 
+  \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}]), with {\Bpap} 
+  ($\beta = $ 
   \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, $UI_{90}$
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}]
-  being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d (Table \ref{tab:wc_slope_table}).
+  \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}])
+  being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}).
   
   \end{enumerate}
 
@@ -145,15 +155,17 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
   \begin{enumerate}
   
-  \item {\Bpap} grew the least ($\beta = $ 
+  \item {\Bpap} grew the least ($\alpha = $ 
   \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
   [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. papyrifera")]}]) and {\Bpop} grew the most ($\beta = $  
-  \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "B. populifolia")]}, $UI_{90}$
-  [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "B. populifolia")]}, 
-  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. populifolia")]}]) (Figure \ref{fig:wcmuplotatreeid}).
+  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotatreeid}), but was the most responsive to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
+  
+  \item {\Ainc} grew the most ($\alpha = $  
+  \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "A. incana")]}, 
+  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotatreeid}), but had contrasting responses to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
 
-  \item Growth did not change across any site (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was more variation across sites ($\sigma = $
+  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was slightly more variation across sites ($\sigma = $
   \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
   [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
   \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) than across treeids ($\sigma = $ 
@@ -166,14 +178,17 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
+  \item Annual ring widths across years varied from 
+  \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
+  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcRWboxplot}). 
   \item Growth was highest in \Sexpr{ayear_df2$year_name[which.max(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.max(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.max(ayear_df2$mean)]}, 
-  \Sexpr{ayear_df2$p95[which.max(ayear_df2$mean)]}]), but it was neither the wettest, the driest, the shortest, the latest SOS, the earliest EOS nor the highest thermal sum, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcmuplotbspp} a and b).
+\Sexpr{ayear_df2$p95[which.max(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}), but it was neither the wettest, the driest, the shortest, the latest SOS, the earliest EOS nor the highest thermal sum, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
   \item Growth was lowest in \Sexpr{ayear_df2$year_name[which.min(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.min(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.min(ayear_df2$mean)]}, 
-  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) and that year was the driest (also the only year with a drought that ramped up to "severe" in September), the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons.
+  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}) and that year was the driest (also the only year with a drought that ramped up to "severe" in September), the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
   \end{enumerate}
 
 \end{enumerate}
@@ -182,17 +197,23 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope parameters across the different model predictors for Wildchrokie species. GDD represent the accumulated growing degree days between leafout and budset (a) the models estimates shows log ring width change per 10 average spring days GDD (\Sexpr{wcgddscale}). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew more with earlier leafout, but not with later budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset. 
-}
+\caption{Model slope parameters across the different model predictors for Wildchrokie species. GDD represent the accumulated growing degree days between leafout and budset (a) the models estimates shows log ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew less with later leafout, but had no effect in response to budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset and longer calendar season. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset.}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 
-% Wildchrokie site mu plot
+% Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of sites on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The sites are color-coded from (b), th map showing their locations.}
+\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The sites are color-coded from (b), map showing their locations.}
 \label{fig:wcmuplotasite}
+\end{figure}
+
+% Wildchrokie year mu plot
+\begin{figure}[!ht]
+\includegraphics[width=0.5\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
+\caption{Model estimates for the intercepts on year. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:wcmuplotayear}
 \end{figure}
 
 
@@ -279,31 +300,35 @@ print(tab,
 % XY facetted by species GDD
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
-\caption{atreeid}
+\caption{Ring width trends in response to thermal season (GDD). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
-
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{atreeid}
+\caption{Ring width trends in response to calendar season (GSL). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
 
 % Figure mu atreeid full
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
-\caption{atreeid}
+\caption{Intercept estimates for each group of the GDD model. The different treeid values represent the sum of the treeid, provenance, species and averaged year intercepts. The bigger dots and lines represent aggregated average across these values. the dots are the mean of the posterior distribution and the lines, the 50 and 90\% UI.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.jpeg}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
 \caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscored}
 \end{figure}
 
-
+% Box plot
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/boxplotRingWidth.jpeg}
+\caption{Growth data across years and species. The dots represent the observed ring widths. The boxes are color coded by years.}
+\label{fig:wcRWboxplot}
+\end{figure}
 \end{document}
