@@ -36,9 +36,74 @@
 % \label{fig:chaptersDesign}
 % \end{figure}
 
+% ===========================================================================================================
 \section*{Introduction}
+% ===========================================================================================================
+\begin{enumerate}
 
+% Paragraph 1
+\item The most frequently observed biological impact of climate change is major changes in phenology
+  \begin{enumerate}
+  \item Shifts in spring and autumn phenology modifies when seasons starts and ends
+  \item Understanding the consequences of these shifts requires understanding how much and why growing seasons have changed 
+  \item Spring phenology trends and drivers 
+  \item Autumn phenology trends and drivers; shifts are weaker than springs'
+  \end{enumerate}
+  
+% Paragraph 2
+\item Shifts in spring and autumn phenology supports the assumption that longer growing seasons increase tree growth
+  \begin{enumerate}
+  \item Recent research shows that this may not be the case
+  \item This has possible consequences on forest carbon cycle projections
+  \item The different effects that shifting spring and fall events have on growth could impact these projections
+  \end{enumerate}
+  
+% Paragraph 3
+\item 
+  \begin{enumerate}
+  \item Understanding these finds requires answering why trees do not grow more despite longer growing seasons.
+  \item We don't understand how carbon allocation to above-ground biomass, despite it being one of the largest carbon sink
+  \item Trees may be source or sink limited, which enphasizes the importance of understanding the temperature sensitivity relationship between growth and photosynthesis
+  \item Growth may be more sensitive to varying environmental conditions than photosynthesis, which could mislead models. 
+  \item Hard nature of climate change makes uunderstanding the internal physiological constraints and external constraints to growth critical
+  \end{enumerate}
+
+% Paragraph 4
+\item Growth drivers differences across species need to be considered
+  \begin{enumerate} 
+  \item Phenology and the relationship between growth and growing season length varies heavily accross species
+  \item Polling all species together in carbon sequestrations models is a weakness
+  \item We propose to use ground-based observations to address this issue
+  \item These are useful to for the growth temporality of trees not suitable for experimental trials
+  \item Cambial and leaf phenology are closely synchronized, so we can use them to as a proxy for start and end of season
+  \end{enumerate}
+  
+\item How local adaptation could inform growth responses of species under future climate change
+
+% Paragraph 5
+\item Understanding the constraints to growth requires defining the growing season and growth
+  \begin{enumerate}
+  \item Different definitions of GS: we propose to use calendar (number of days) and thermal season (heat accumulation)
+  \item Xylogenesis throughout the growing season 
+  \item Tree rings as a proxy for growth
+  \end{enumerate}
+  
+% Paragraph 6
+\item Question(s?): Do trees grow more with longer growing seasons?
+  \begin{enumerate}
+  \item
+  \end{enumerate}
+
+\item Objectives
+  \begin{enumerate}
+  \item Determine if trees grow more with longer thermal vs calendar season (ref: conceptual figure)
+  \item Understand the calendar growing season relationship with growth and how it relates to the SOS and EOS
+  \item Determine how growth changes across species and their provenances
+  \end{enumerate}
+\end{enumerate}
+% ===========================================================================================================
 \section*{Methods}
+% ===========================================================================================================
 \begin{enumerate}
 \item Common garden set up and location
   \begin{enumerate}
@@ -57,16 +122,18 @@ College, and St. Hippolyte.
   \item We used BBCH scale
   \end{enumerate}
   
-\item Cookie coillection
+\item Cookie collection
   \begin{enumerate}
   \item 
   \end{enumerate}
 \end{enumerate}
 
-
+% ===========================================================================================================
 \section*{Results}
+% ===========================================================================================================
 Separate document
 
+% ===========================================================================================================
 \section*{Discussion}
-
+% ===========================================================================================================
 \end{document}
