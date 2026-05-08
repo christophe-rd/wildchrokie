@@ -17,8 +17,8 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
-runzscore <- T
+makeplots <- F
+runzscore <- F
 # interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
@@ -832,19 +832,11 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-  
-# Mean plots with atreeid ####
-
-# now do the same, but for species
-treeid_df2$spp <- emp$spp[match(treeid_df2$treeid, emp$treeid_num)]
-
 # same for site
 treeid_df2$site <- emp$site[match(treeid_df2$treeid, emp$treeid_num)]
 
 # quick check that I didn't mess anything up
 un <- emp[!duplicated(emp$treeid),]
-table(un$spp)
-table(treeid_df2$spp)
 
 sub <- subset(emp, select = c("treeid_num", "spp_num", "site_num"))
 sub <- sub[!duplicated(sub$treeid_num),]
@@ -852,37 +844,34 @@ sub <- sub[!duplicated(sub$treeid_num),]
 # get posterior means and quantiles
 treeid_df4 <- data.frame(
   treeid = character(ncol(fullintercept)),
-  fit_atreeid = numeric(ncol(fullintercept)),  
-  fit_atreeid_per5 = NA, 
-  fit_atreeid_per25 = NA,
-  fit_atreeid_per75 = NA,
-  fit_atreeid_per95 = NA
+  mean = numeric(ncol(fullintercept)),  
+  p5 = NA, 
+  p25 = NA,
+  p75 = NA,
+  p95 = NA
 )
 for (i in 1:ncol(fullintercept)) { # i = 1
   treeid_df4$treeid[i] <- colnames(fullintercept)[i]         
-  treeid_df4$fit_atreeid[i] <- round(mean(fullintercept[[i]]),3)  
-  treeid_df4$fit_atreeid_per5[i] <- round(quantile(fullintercept[[i]], probs = 0.05), 3)
-  treeid_df4$fit_atreeid_per25[i] <- round(quantile(fullintercept[[i]], probs = 0.25), 3)
-  treeid_df4$fit_atreeid_per75[i] <- round(quantile(fullintercept[[i]], probs = 0.75), 3)
-  treeid_df4$fit_atreeid_per95[i] <- round(quantile(fullintercept[[i]], probs = 0.95), 3)
+  treeid_df4$mean[i] <- round(mean(fullintercept[[i]]),3)  
+  treeid_df4$p5[i] <- round(quantile(fullintercept[[i]], probs = 0.05), 3)
+  treeid_df4$p25[i] <- round(quantile(fullintercept[[i]], probs = 0.25), 3)
+  treeid_df4$p75[i] <- round(quantile(fullintercept[[i]], probs = 0.75), 3)
+  treeid_df4$p95[i] <- round(quantile(fullintercept[[i]], probs = 0.95), 3)
 }
 treeid_df4
 
 # get the og treeid names, spp and site back:
 treeid_df4$treeid <- as.numeric(treeid_df4$treeid)
-treeid_df4$treeid_name <- emp$treeid[match(treeid_df4$treeid,
-                                                    emp$treeid_num)]
-treeid_df4$spp_name <- emp$latbi[match(treeid_df4$treeid,
-                                              emp$treeid_num)]
-treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid,
-                                       emp$treeid_num)]
-treeid_df4$site_name <- emp$site[match(treeid_df4$treeid,
-                                                emp$treeid_num)]
-treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid,
-                                       emp$treeid_num)]
+treeid_df4$treeid_name <- emp$treeid[match(treeid_df4$treeid, emp$treeid_num)]
+treeid_df4$spp_name <- emp$latbi[match(treeid_df4$treeid, emp$treeid_num)]
+treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid, emp$treeid_num)]
+treeid_df4$site_name <- emp$site[match(treeid_df4$treeid, emp$treeid_num)]
+treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid, emp$treeid_num)]
 
-# Prep for the figure
+# species mean from the full intercept of tree id
+aspp_df4 <- aggregate(. ~ spp_name, treeid_df4[c("spp_name", names(treeid_df4)[2:6])], FUN = mean)
 
+# Prep for the figure --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # define a gap between species clusters
 gap <- 3
 
@@ -916,38 +905,38 @@ for(sp in species_order){ # sp = "Alnus incana"
 
 # Set up empty plot
 plot(NA, NA,
-     xlim = range(c(treeid_df4$fit_atreeid_per5-2, treeid_df4$fit_atreeid_per95 + 4)),
+     xlim = range(c(treeid_df4$p5-2, treeid_df4$p95 + 4)),
      ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
      xlab = "treeid intercept values", ylab = "", yaxt = "n", bty = "l")
 
 #  Add horizontal error bars (5–95%) 
 segments(
-  x0 = treeid_df4$fit_atreeid_per5, x1 = treeid_df4$fit_atreeid_per95,
+  x0 = treeid_df4$p5, x1 = treeid_df4$p95,
   y0 = treeid_df4$y_pos,
   col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7), lwd = 1)
 
 #  Add thicker horizontal error bars (25–75%) 
-segments(x0 = treeid_df4$fit_atreeid_per25, x1 = treeid_df4$fit_atreeid_per75,
+segments(x0 = treeid_df4$p25, x1 = treeid_df4$p75,
          y0 = treeid_df4$y_pos,
          col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7), lwd = 1.5)
 
 #  Add the points 
-points(treeid_df4$fit_atreeid, treeid_df4$y_pos,
+points(treeid_df4$mean, treeid_df4$y_pos,
        cex = 0.8, pch = my_shapes[treeid_df4$site_name],
        col = adjustcolor(wccolslatbi[treeid_df4$spp_name], alpha.f = 0.7))
 
 spp_y_top <- tapply(treeid_df4$y_pos, treeid_df4$spp_name, max)
-aspp_df2$y_pos <- spp_y_top[aspp_df2$spp_name] + 1
+aspp_df4$y_pos <- spp_y_top[aspp_df4$spp_name] + 1
 
-segments(x0 = aspp_df2$p5, x1 = aspp_df2$p95, y0 = aspp_df2$y_pos,
-         col = adjustcolor(wccolslatbi[aspp_df2$spp_name], alpha.f = 0.9), lwd = 2)
+segments(x0 = aspp_df4$p5, x1 = aspp_df4$p95, y0 = aspp_df4$y_pos,
+         col = adjustcolor(wccolslatbi[aspp_df4$spp_name], alpha.f = 0.9), lwd = 2)
 
-segments(x0 = aspp_df2$p25, x1 = aspp_df2$p75, y0 = aspp_df2$y_pos,
-         col = wccolslatbi[aspp_df2$spp_name], lwd = 3)
+segments(x0 = aspp_df4$p25, x1 = aspp_df4$p75, y0 = aspp_df4$y_pos,
+         col = wccolslatbi[aspp_df4$spp_name], lwd = 3)
 
-points(aspp_df2$mean, aspp_df2$y_pos,
-       pch = 16, bg  = wccolslatbi[aspp_df2$spp_name],
-       col = wccolslatbi[aspp_df2$spp_name], cex = 1.5
+points(aspp_df4$mean, aspp_df4$y_pos,
+       pch = 16, bg  = wccolslatbi[aspp_df4$spp_name],
+       col = wccolslatbi[aspp_df4$spp_name], cex = 1.5
 )
 
 #  Add vertical line at 0 
@@ -966,7 +955,7 @@ species_legend_order <- names(sort(spp_y, decreasing = TRUE))
 site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
-legend(x = max(treeid_df4$fit_atreeid_per95), y = max(treeid_df4$y_pos) + 1,
+legend(x = max(treeid_df4$p95), y = max(treeid_df4$y_pos) + 1,
        legend = species_legend_order,
        col = wccolslatbi[species_legend_order],    # index so colors match
        pch = 16, pt.cex = 1, cex = 0.8, title = "Species", bty = "n"
@@ -977,7 +966,7 @@ site_legend_order <- c("St-Hippolyte (Qc)", "Dartmouth College (NH)",
 
 # site_num legen
 locations
-legend(x = max(treeid_df4$fit_atreeid_per95),
+legend(x = max(treeid_df4$p95),
        y = max(treeid_df4$y_pos) - 15,
        legend = site_legend_order,
        pch = my_shapes[site_legend_order],
@@ -1119,7 +1108,7 @@ segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.22, usr[4])
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
@@ -1134,7 +1123,7 @@ segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
@@ -1149,7 +1138,7 @@ segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.22, usr[4])
 
 # Row 4, Col 1, Slot 8 : EOS
 par(mar = custommar)
@@ -1164,7 +1153,7 @@ segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
@@ -1582,10 +1571,40 @@ combined_labeled <- ggdraw(combined) +
 ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 
 
+##### ayear ##### 
+jpeg(file = "figures/growthModelsMain/muayear.jpeg",
+     width = 1600, height = 1600, res = 300)
+
+wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
+            "2019" = wes_palettes$FantasticFox1[4],
+            "2020" = wes_palettes$FantasticFox1[5])
+y_pos_yr <- rev(ayear_df2$year)
+ayear_df2$year_name <- as.character(ayear_df2$year_name)
+
+par(mar = c(4, 4, 4, 4))
+
+plot(ayear_df2$mean, y_pos_yr,
+     xlim = c(-2, 2), ylim = c(0.5, 3 + 0.5),
+     xlab = "Ring width intercept values (mm)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wcyear[ayear_df2$year_name], frame.plot = FALSE, 
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+segments(ayear_df2$p5,  y_pos_yr, ayear_df2$p95, y_pos_yr,
+         col = wcyear[ayear_df2$year_name], lwd = 1.5)
+segments(ayear_df2$p25, y_pos_yr, ayear_df2$p75, y_pos_yr,
+         col = wcyear[ayear_df2$year_name], lwd = 3)
+legend("topright",
+       legend = sapply(unique(ayear_df2$year_name), 
+                       function(x) parse(text = paste0("italic('", x, "')"))),
+       col    = wcyear,
+       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
+       title  = "Species", title.font = 2)
+
+dev.off()
 }
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if(FALSE){
 sppvecname <- unique(emp$latbi)
 par(mfrow = c(2,2), mar = c(4, 4, 4, 4))
 
@@ -1602,6 +1621,7 @@ for (i in unique(emp$spp_num)) { # i = 4
   lines(x_seq, pred, col = "black", lwd = 2)
 }
 
+}
 # lm <- lmer(budset ~ leafout + (1 | year), data = emp)
 # sum <- summary(lm)
 # new_data <- data.frame(leafout = x_seq)
