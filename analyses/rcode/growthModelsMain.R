@@ -2280,14 +2280,15 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 dev.off()
 
 par(mfrow = c(1,1))
-y_pos <- rev(1:8)
-plot(bspp_df2$mean, y_pos,
+y_pos <- rev(1:4)
+n_spp <- 4
+plot(bsppabv_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     xlab = "log(ring width) change per 4 days above 30C", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bsppabv_df2$p5,  y_pos, bsppabv_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bsppabv_df2$p25, y_pos, bsppabv_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
 
 # Plot empirical data
 
