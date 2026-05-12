@@ -54,7 +54,7 @@ c <- do.call(rbind, all_data)
 # read table
 # setwd(directory)
 list.files()
-d <- read.xlsx("input/_notcookies/treecookies.xlsx", sheetName = "Sheet1")
+d <- read.xlsx("_notcookies/treecookies.xlsx", sheetName = "Sheet1")
 # remove _ between siteenance and number
 d$id <- gsub("(_)([A-Z]+)_([0-9]+[A-Z]?)$", "\\1\\2\\3", d$id)
 # paste id and plot
@@ -376,9 +376,78 @@ wildchrokie_rw <- wildchrokie_rw[order(
 
 wildchrokie_rw
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Basal area increment ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+str(d)
+d$lengthMM <- d$lengthCM*10
+d <- d[order(d$name, d$yearCor), ]
 
+# get some unique rep measurements so we calculate BAI BEFORE and then averaging
+d$rid <- ave(seq_len(nrow(d)), paste(d$name, d$yearCor, d$sampleType), FUN = seq_along)
+
+# cumulative radius per tree × radius index
+d$cum_r <- ave(d$lengthMM, paste(d$name, d$rid, d$sampleType), FUN = cumsum)
+
+# BAI per radius
+d$R_outer <- d$cum_r
+d$R_inner <- d$cum_r - d$lengthMM
+d$BAI <- pi * (d$R_outer^2 - d$R_inner^2)  # cm²
+
+# average BAI across the 3 radii per tree-year
+d_bai <- aggregate(BAI ~ name + yearCor + spp + site + siteplot + sampleType, data = d, FUN = mean)
 
 # # write csv!
 # setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 # write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
 
+
+# check how many don't have 3 rows of data per year
+counts <- subset(d, !grepl("cores", d$sampleType))
+counts <- subset(counts, !grepl("Unconfident", counts$sampleType))
+counts <- table(paste(counts$name, counts$year, counts$sampleType))
+counts <- counts[counts != 3]
+print(counts[counts != 3])
+
+# delete duplicated rows
+suby <- d[which(paste(d$name, d$year, d$sampleType) %in% names(counts)),]
+counts4 <- counts[counts >3]
+suby5 <- d[which(paste(d$name, d$year, d$sampleType) %in% names(counts4)),]
+suby5 <- do.call(rbind, lapply(split(d, paste(d$name, d$year, d$sampleType)), head, 3))
+
+# --- Check 2: rid assignment looks right ---
+cat("\nrid distribution:\n")
+print(table(d$rid))
+head(d[order(d$name, d$year, d$rid), c("name","year","rid","lengthCM")], 9)
+
+# --- Check 3: cumulative radius is monotonically increasing per series ---
+bad_series <- do.call(rbind, lapply(split(d, paste(d$name, d$rid)), function(x) {
+  x <- x[order(x$year), ]
+  if(any(diff(x$cum_r) < 0)) x[1, c("name","rid")]
+}))
+cat("\nSeries with non-monotone cum_r:\n")
+print(bad_series)
+
+# visual check for one series
+par(mfrow=c(1,2))
+ex <- d[d$name=="ALNINC_GR11_P1" & d$rid==1, ]
+ex <- ex[order(ex$year), ]
+plot(ex$year, ex$cum_r, type="b", pch=19, main="cum_r over time (rid=1)",
+     xlab="year", ylab="cumulative radius (cm)")
+
+# --- Check 4: BAI distribution ---
+hist(d$BAI, breaks=40, main="BAI distribution", xlab="BAI (cm²)", col="grey80")
+cat("\nBAI summary:\n")
+print(summary(d$BAI))
+cat("Negative BAI values:", sum(d$BAI <= 0), "\n")
+
+# --- Check 5: 3 raw BAIs vs averaged BAI for one tree ---
+par(mfrow=c(1,1))
+ex_d <- d[d$name=="ALNINC_GR11_P1", ]
+ex_avg <- d_bai[d_bai$name=="ALNINC_GR11_P1", ]
+plot(BAI ~ year, data=ex_d, col=ex_d$rid, pch=19,
+     main="Raw BAI (colored by rid) + averaged (black line)",
+     xlab="year", ylab="BAI (cm²)")
+lines(BAI ~ year, data=ex_avg[order(ex_avg$year), ], lwd=2)
+legend("topleft", legend=c("rid 1","rid 2","rid 3","mean"),
+       col=c(1,2,3,1), pch=c(19,19,19,NA), lty=c(NA,NA,NA,1), lwd=c(NA,NA,NA,2))
