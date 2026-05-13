@@ -156,7 +156,8 @@ d$name[which(d$name == "BETPAP_HF16_B2" & d$sourceFolder == "coresWithoutCookies
 d$name[which(d$name == "ALNINC_HF3_P16" & d$sourceFolder == "cookies")] <- "ALNINC_HF1_P16" 
 # BETPOP_GR5_P6: change core without cookies to core with cookies
 d$sourceFolder[which(d$name == "BETPOP_GR5_P6" & d$sourceFolder == "coresWithoutCookies")] <- "coresWithCookies"
-
+# BETALL_GR13_P1: change core without cookies to core with cookies
+d$sourceFolder[which(d$name == "BETALL_GR13_P1" & d$sourceFolder == "coresWithoutCookies")] <- "coresWithCookies"
 ### === === === === === ###
 ##### Verification steps #####
 ### === === === === === ###
@@ -342,6 +343,8 @@ wildchrokie_rw <- merge(d, averagedlengths, by = c("name", "yearCor", "sampleTyp
 wildchrokie_rw$temp <- paste(wildchrokie_rw$name, wildchrokie_rw$year)
 # one row per id and year
 wildchrokie_rw <- subset(wildchrokie_rw, sampleType != "coresWithCookies")
+
+# this removes duplicates rows as now I averaged the length, so it's replicated number of times
 wildchrokie_rw <- wildchrokie_rw[!duplicated(wildchrokie_rw$temp),]
 
 # reorganize and create a new csv
@@ -381,73 +384,92 @@ wildchrokie_rw
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 str(d)
 d$lengthMM <- d$lengthCM*10
-d <- d[order(d$name, d$yearCor), ]
+da <- d[order(d$name, d$yearCor), ]
+
+# this selects the first 3 measurements per individual cookie or core, since sometimes there was >3 measurements for a given year.
+da <- do.call(rbind, lapply(split(da, paste(da$name, da$year, da$sampleType)), head, 3))
+rownames(da) <- NULL
+da <- subset(da, sampleType != "coresWithCookies")
+
+# some extra cleaning steps to remove duplicates
+da[!which(da$name != "ALNINC_GR8B_P5" & da$sampleType != "coresUnconfident")]
+
+da <- subset(da, name != "ALNINC_GR8B_P5" & da$sampleType != "coresUnconfident")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# some checks regarding that:
+counts <- subset(da, !grepl("cores", da$sampleType))
+counts <- subset(counts, !grepl("Unconfident", counts$sampleType))
+counts <- table(paste(da$name, da$year, da$sampleType))
+length(counts[counts >3])
+counts <- counts[counts != 3]
+print(counts[counts != 3])
+
+# delete duplicated rows
+suby <- da[which(paste(da$name, da$year, da$sampleType) %in% names(counts)),]
+counts4 <- counts[counts >3]
+suby5 <- da[which(paste(da$name, da$year, da$sampleType) %in% names(counts4)),]
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 # get some unique rep measurements so we calculate BAI BEFORE and then averaging
-d$rid <- ave(seq_len(nrow(d)), paste(d$name, d$yearCor, d$sampleType), FUN = seq_along)
+da$rep <- ave(seq_len(nrow(da)), paste(da$name, da$yearCor, da$sampleType), 
+              FUN = seq_along)
 
 # cumulative radius per tree × radius index
-d$cum_r <- ave(d$lengthMM, paste(d$name, d$rid, d$sampleType), FUN = cumsum)
+da$cum_r <- ave(da$lengthMM, paste(da$name, da$rep, da$sampleType), FUN = cumsum)
 
-# BAI per radius
-d$R_outer <- d$cum_r
-d$R_inner <- d$cum_r - d$lengthMM
-d$BAI <- pi * (d$R_outer^2 - d$R_inner^2)  # cm²
+# calculate the outer radius of each ring, then the inner one
+da$R_outer <- da$cum_r
+da$R_inner <- da$cum_r - da$lengthMM
+
+# calculate basal area for each ring by substracting the inner from the outer ring
+da$BAI <- pi * (da$R_outer^2 - da$R_inner^2)  # mm²
 
 # average BAI across the 3 radii per tree-year
-d_bai <- aggregate(BAI ~ name + yearCor + spp + site + siteplot + sampleType, data = d, FUN = mean)
+d_bai <- aggregate(BAI ~ name + yearCor + spp + site + siteplot + sampleType, 
+                   data = da, FUN = mean)
 
 # # write csv!
 # setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 # write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
 
 
-# check how many don't have 3 rows of data per year
-counts <- subset(d, !grepl("cores", d$sampleType))
-counts <- subset(counts, !grepl("Unconfident", counts$sampleType))
-counts <- table(paste(counts$name, counts$year, counts$sampleType))
-counts <- counts[counts != 3]
-print(counts[counts != 3])
-
-# delete duplicated rows
-suby <- d[which(paste(d$name, d$year, d$sampleType) %in% names(counts)),]
-counts4 <- counts[counts >3]
-suby5 <- d[which(paste(d$name, d$year, d$sampleType) %in% names(counts4)),]
-suby5 <- do.call(rbind, lapply(split(d, paste(d$name, d$year, d$sampleType)), head, 3))
-
-# --- Check 2: rid assignment looks right ---
-cat("\nrid distribution:\n")
-print(table(d$rid))
-head(d[order(d$name, d$year, d$rid), c("name","year","rid","lengthCM")], 9)
-
-# --- Check 3: cumulative radius is monotonically increasing per series ---
-bad_series <- do.call(rbind, lapply(split(d, paste(d$name, d$rid)), function(x) {
-  x <- x[order(x$year), ]
-  if(any(diff(x$cum_r) < 0)) x[1, c("name","rid")]
-}))
-cat("\nSeries with non-monotone cum_r:\n")
-print(bad_series)
 
 # visual check for one series
-par(mfrow=c(1,2))
-ex <- d[d$name=="ALNINC_GR11_P1" & d$rid==1, ]
-ex <- ex[order(ex$year), ]
-plot(ex$year, ex$cum_r, type="b", pch=19, main="cum_r over time (rid=1)",
-     xlab="year", ylab="cumulative radius (cm)")
+col <- c("#3A9AB2", "#9A8822", "#EC7A05")
+pdf(file = "~/github/wildchrokie/analyses/figures/empiricalData/rwChecks/cumRW.pdf", width = 8, height = 8)
+par(mfrow=c(3,3))
+for(nm in unique(da$name)){
+  ex <- da[da$name==nm, ]
+  ex <- ex[order(ex$yearCor), ]
+  plot(NULL, xlim=range(ex$yearCor), ylim=range(ex$cum_r),
+       main=nm, xlab="year", ylab="cum_r (cm)")
+  for(r in 1:3){
+    sub <- ex[ex$rep==r, ]
+    lines(sub$yearCor, sub$cum_r, col=col[r])
+    points(sub$yearCor, sub$cum_r, col=col[r], pch=19)
+  }
+}
+dev.off()
 
-# --- Check 4: BAI distribution ---
-hist(d$BAI, breaks=40, main="BAI distribution", xlab="BAI (cm²)", col="grey80")
-cat("\nBAI summary:\n")
-print(summary(d$BAI))
-cat("Negative BAI values:", sum(d$BAI <= 0), "\n")
-
-# --- Check 5: 3 raw BAIs vs averaged BAI for one tree ---
-par(mfrow=c(1,1))
-ex_d <- d[d$name=="ALNINC_GR11_P1", ]
-ex_avg <- d_bai[d_bai$name=="ALNINC_GR11_P1", ]
-plot(BAI ~ year, data=ex_d, col=ex_d$rid, pch=19,
-     main="Raw BAI (colored by rid) + averaged (black line)",
-     xlab="year", ylab="BAI (cm²)")
-lines(BAI ~ year, data=ex_avg[order(ex_avg$year), ], lwd=2)
-legend("topleft", legend=c("rid 1","rid 2","rid 3","mean"),
-       col=c(1,2,3,1), pch=c(19,19,19,NA), lty=c(NA,NA,NA,1), lwd=c(NA,NA,NA,2))
+# visual check for one series
+pdf(file = "~/github/wildchrokie/analyses/figures/empiricalData/rwChecks/cumBAI.pdf", width = 8, height = 8)
+par(mfrow=c(3,3))
+for(nm in unique(da$name)){
+  ex <- da[da$name==nm, ]
+  ex <- ex[order(ex$yearCor), ]
+  plot(NULL, xlim=range(ex$yearCor), ylim=range(ex$BAI),
+       main=nm, xlab="year", ylab="BAI per year")
+  
+  # now subset for averaged BAI
+  bsub <- d_bai[d_bai$name==nm, ]
+  points(bsub$yearCor, bsub$BAI, col = "black", pch = 16, cex = 1.5)
+  lines(bsub$yearCor, bsub$BAI, col = "black", lwd = 1.2)
+  
+  for(r in 1:3){
+    sub <- ex[ex$rep==r, ]
+    lines(sub$yearCor, sub$BAI, col=col[r], lwd = 0.5)
+    points(sub$yearCor, sub$BAI, col=col[r], pch=19, cex = 0.8)
+  }
+}
+dev.off()
