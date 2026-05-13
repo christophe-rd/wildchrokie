@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -104,7 +104,7 @@ if(makeplots) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_BAI")
 
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -127,7 +127,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL_BAI")
 
 df_fitgsl <- as.data.frame(fitgsl)
 
@@ -152,7 +152,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
+fitsos <- readRDS("output/stanOutput/fitGrowthSOS_BAI")
 
 df_fitsos <- as.data.frame(fitsos)
 
@@ -176,7 +176,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
+fiteos <- readRDS("output/stanOutput/fitGrowthEOS_BAI")
 
 df_fiteos <- as.data.frame(fiteos)
 
@@ -284,7 +284,7 @@ gddseq <- dgdd$gddseq
 ##### GDD: per treeid, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
-pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
+pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid_BAI.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -331,7 +331,7 @@ spp_post_array <- extract(fitgdd, "spp_post")$spp_post
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -402,7 +402,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSpp.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSpp_BAI.jpeg",
   width = 2400,      
   height = 2400,
   res = 300          # good print-quality resolution
@@ -489,7 +489,7 @@ gslseq <- dgsl$gslseq
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -571,7 +571,7 @@ sosseq <- dsos$sosseq
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -636,7 +636,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -711,7 +711,7 @@ eosseq <- deos$eosseq
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -778,7 +778,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS_BAI.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -876,7 +876,7 @@ aspp_df4 <- aggregate(. ~ spp_name, treeid_df4[c("spp_name", names(treeid_df4)[2
 gap <- 3
 
 # open device
-pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
+pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp_BAI.pdf",
     width = 8.2, height = 8.5)
 par(mar = c(4, 6, 4, 2))
 
@@ -981,7 +981,7 @@ custommar <- c(4, 4, 2, 1.2)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-pdf("figures/growthModelsMain/muALLbspp.pdf", width = 7.5, height = 6)
+pdf("figures/growthModelsMain/muALLbspp_BAI.pdf", width = 7.5, height = 6)
 library(rsvg)
 
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
@@ -1083,7 +1083,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 custommar <- c(4, 4, 3, 1.2)
 
-jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLbsppWlines_BAI.jpeg",
      width = 2800, height = 3000, res = 300)
 
 layout(matrix(c(
@@ -1295,7 +1295,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---  --- 
-jpeg(file = "figures/growthModelsMain/muALLaspp.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLaspp_BAI.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1373,7 +1373,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### asite ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/growthModelsMain/muALLasite.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLasite_BAI.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1568,11 +1568,11 @@ combined_labeled <- ggdraw(combined) +
     size     = 14,
     fontface = "bold"
   )
-ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
+ggsave("figures/growthModelsMain/asiteMap_BAI.pdf", combined_labeled, width = 10, height = 6)
 
 
 ##### ayear ##### 
-jpeg(file = "figures/growthModelsMain/muayear.jpeg",
+jpeg(file = "figures/growthModelsMain/muayear_BAI.jpeg",
      width = 1600, height = 1600, res = 300)
 
 wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
@@ -1773,7 +1773,7 @@ max_ES <- max_ES[order(max_ES$pred),]
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp Z-scored ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-pdf("figures/growthModelsMain/zscored/muALLbspp.pdf", width = 7.5, height = 6)
+pdf("figures/growthModelsMain/zscored/muALLbspp_BAI.pdf", width = 7.5, height = 6)
 
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
 img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")

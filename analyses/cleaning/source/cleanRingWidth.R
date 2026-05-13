@@ -52,7 +52,7 @@ c <- do.call(rbind, all_data)
 # it involves a couple of mistakes when I entered the data that I will fix bellow #
 ### === === === === === ###
 # read table
-# setwd(directory)
+setwd(directory)
 list.files()
 d <- read.xlsx("_notcookies/treecookies.xlsx", sheetName = "Sheet1")
 # remove _ between siteenance and number
@@ -158,6 +158,9 @@ d$name[which(d$name == "ALNINC_HF3_P16" & d$sourceFolder == "cookies")] <- "ALNI
 d$sourceFolder[which(d$name == "BETPOP_GR5_P6" & d$sourceFolder == "coresWithoutCookies")] <- "coresWithCookies"
 # BETALL_GR13_P1: change core without cookies to core with cookies
 d$sourceFolder[which(d$name == "BETALL_GR13_P1" & d$sourceFolder == "coresWithoutCookies")] <- "coresWithCookies"
+# ALNINC_GR8B_P5
+d$sourceFolder[which(d$name == "BETALL_GR13_P1" & d$sourceFolder == "coresUnconfident")] <- "coresWithCookies"
+
 ### === === === === === ###
 ##### Verification steps #####
 ### === === === === === ###
@@ -394,8 +397,6 @@ da <- subset(da, sampleType != "coresWithCookies")
 # some extra cleaning steps to remove duplicates
 da[!which(da$name != "ALNINC_GR8B_P5" & da$sampleType != "coresUnconfident")]
 
-da <- subset(da, name != "ALNINC_GR8B_P5" & da$sampleType != "coresUnconfident")
-
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # some checks regarding that:
 counts <- subset(da, !grepl("cores", da$sampleType))
@@ -425,9 +426,13 @@ da$R_inner <- da$cum_r - da$lengthMM
 # calculate basal area for each ring by substracting the inner from the outer ring
 da$BAI <- pi * (da$R_outer^2 - da$R_inner^2)  # mm²
 
+da2 <- subset(da, is.na(R_inner))
 # average BAI across the 3 radii per tree-year
 d_bai <- aggregate(BAI ~ name + yearCor + spp + site + siteplot + sampleType, 
                    data = da, FUN = mean)
+d_bai[which(is.na(d_bai$BAI)),]
+# check if we have duplicates
+d_bai$name[duplicated(paste(d_bai$name, d_bai$yearCor))]
 
 # # write csv!
 # setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
@@ -473,3 +478,37 @@ for(nm in unique(da$name)){
   }
 }
 dev.off()
+
+# rw X BAI
+d_bai$lengthMM <- ave(da$lengthMM, paste(da$name, da$yearCor, da$sampleType), FUN=mean)[
+  match(paste(d_bai$name, d_bai$yearCor, d_bai$sampleType),
+        paste(da$name, da$yearCor, da$sampleType))]
+
+pdf(file = "~/github/wildchrokie/analyses/figures/empiricalData/rwChecks/cumBAIxRW.pdf", width = 8, height = 8)
+par(mfrow=c(3,3))
+for(nm in unique(da$name)){
+  ex <- da[da$name==nm, ]
+  ex <- ex[order(ex$lengthMM), ]
+  plot(NULL, xlim=range(ex$lengthMM), ylim=range(ex$BAI),
+       main=nm, xlab="ring width", ylab="BAI per year")
+  
+  # now subset for averaged BAI
+  bsub <- d_bai[d_bai$name==nm, ]
+  bsub <- bsub[order(bsub$yearCor), ]
+  points(bsub$lengthMM, bsub$BAI, col = "black", pch = 16, cex = 1.5)
+  # lines(bsub$lengthMM, bsub$BAI, col = "black", lwd = 1.2)
+  
+  for(r in 1:3){
+    sub <- ex[ex$rep==r, ]
+    # lines(sub$lengthMM, sub$BAI, col=col[r], lwd = 0.5)
+    points(sub$lengthMM, sub$BAI, col=col[r], pch=19, cex = 0.8)
+  }
+}
+dev.off()
+
+
+plot(log(d_bai$BAI) ~ log(d_bai$lengthMM))
+
+abline(b = 1, a = 0)
+
+write.csv(d_bai, "~/github/wildchrokie/analyses/output/wildchrokieBAI.csv")

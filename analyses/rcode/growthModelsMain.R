@@ -2478,3 +2478,40 @@ points(treeid_df2_nobspabv$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 dev.off()
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# BAI ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (fitmodels){
+dgdd$y <- log(emp$BAI)
+dgsl$y <- log(emp$BAI)
+dsos$y <- log(emp$BAI)
+deos$y <- log(emp$BAI)
+
+gddmodel <- stan_model("stan/modelGrowthGDD.stan")
+fitgdd <- sampling(gddmodel, data = dgdd,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_BAI")
+
+# check warnings
+diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+# fit gsl
+gslmodel <- stan_model("stan/modelGrowthGSL.stan")
+fitgsl <- sampling(gslmodel, data = dgsl,
+                   warmup = 1000, iter = 2000, chains = 4)
+saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL_BAI")
+
+# Fit model SOS
+sosmodel <- stan_model("stan/modelGrowthSOS.stan")
+fitsos <- sampling(sosmodel, data = dsos,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitsos, "output/stanOutput/fitGrowthSOS_BAI")
+
+# Fit model EOS
+eosmodel <- stan_model("stan/modelGrowthEOS.stan")
+fiteos <- sampling(eosmodel, data = deos,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fiteos, "output/stanOutput/fitGrowthEOS_BAI")
+}

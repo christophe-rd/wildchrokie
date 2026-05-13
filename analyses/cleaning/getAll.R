@@ -16,6 +16,7 @@ setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 source("cleaning/source/cleanRingWidth.R") 
 
 # 2. Get observation data from main repo: obsdata
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 source("cleaning/source/cleanObsData.R")
 
 # 3. Clean climate datasets: weldhillcomp
@@ -28,6 +29,10 @@ source("cleaning/source/calculateGrowingSeasonGDD.R")
 nrow(wildchrokie_rw)
 nrow(obsdata)
 temp <- merge(wildchrokie_rw, obsdata, by = c("treeid", "spp", "year"))
+
+temp$BAI <- d_bai$BAI[match(paste(temp$treeid, temp$year), 
+                            paste(d_bai$name, d_bai$yearCor))]
+temp[which(is.na(temp$BAI)),]
 
 # get only the years we have data for
 temp2 <- subset(temp, year %in% c(2018, 2019, 2020))
