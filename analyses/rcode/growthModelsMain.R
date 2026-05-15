@@ -2488,7 +2488,7 @@ dgsl$y <- log(emp$BAI)
 dsos$y <- log(emp$BAI)
 deos$y <- log(emp$BAI)
 
-gddmodel <- stan_model("stan/modelGrowthGDD.stan")
+gddmodel <- stan_model("stan/modelGrowthGDD_BAI.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_BAI")
@@ -2514,7 +2514,6 @@ eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = deos,
                    warmup = 1000, iter = 2000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS_BAI")
-
 
 
 ##### Recover parameters #####
@@ -3025,4 +3024,102 @@ for (col in colnames(ayear_df)) {
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
+
+##### Compare model output with and without slope on max temp #####
+# Recover fitgdd without partial pooling
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+
+##### Recover parameters #####
+df_fitgdd <- as.data.frame(fitgdd)
+
+sigma_df2_rw  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
+bspp_df2_rw   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
+                                      "spp", "bsp\\[(\\d+)\\]")
+treeid_df2_rw <- extract_params(df_fitgdd, "atreeid", "fit_atreeid", 
+                                      "treeid", "atreeid\\[(\\d+)\\]")
+treeid_df2_rw <- subset(treeid_df2_rw, !grepl("z|sigma", treeid))
+aspp_df2_rw   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
+                                      "spp", "aspp\\[(\\d+)\\]")
+site_df2_rw   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
+                                      "site", "asite\\[(\\d+)\\]")
+
+# Open device
+jpeg("figures/growthModelsMain/RWvsBAI.jpeg", width = 9, height = 6, units = "in", res = 300)
+par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
+
+# sigma
+plot(sigma_df2_rw$mean, sigma_df2$mean,
+     xlab = "ring width", ylab = "BAI", main = "sigmas", type = "n", frame = FALSE,
+     ylim = range(c(sigma_df2$p25, sigma_df2$p75)),
+     xlim = range(c(sigma_df2_rw$p25, sigma_df2_rw$p75+0.2)))
+arrows(x0 = sigma_df2_rw$mean, y0 = sigma_df2$p25,
+       x1 = sigma_df2_rw$mean, y1 = sigma_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = sigma_df2_rw$p25, y0 = sigma_df2$mean,
+       x1 = sigma_df2_rw$p75, y1 = sigma_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(sigma_df2_rw$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+points(sigma_df2_rw$mean, sigma_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+text(sigma_df2_rw$p75, sigma_df2$p25, labels = sigma_df2_rw$sigma, pos = c(3,3), cex = 0.75)
+
+# bspp
+plot(bspp_df2_rw$mean, bspp_df2$mean,
+     xlab = "ring width", ylab = "BAI", main = "bspp", type = "n", frame = FALSE,
+     ylim = range(c(bspp_df2$p25, bspp_df2$p75)),
+     xlim = range(c(bspp_df2_rw$p25, bspp_df2_rw$p75)))
+arrows(x0 = bspp_df2_rw$mean, y0 = bspp_df2$p25,
+       x1 = bspp_df2_rw$mean, y1 = bspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = bspp_df2_rw$p25, y0 = bspp_df2$mean,
+       x1 = bspp_df2_rw$p75, y1 = bspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(bspp_df2_rw$mean, bspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# aspp
+plot(aspp_df2_rw$mean, aspp_df2$mean,
+     xlab = "ring width", ylab = "BAI", main = "aspp", type = "n", frame = FALSE,
+     ylim = range(c(aspp_df2$p25, aspp_df2$p75)),
+     xlim = range(c(aspp_df2_rw$p25, aspp_df2_rw$p75)))
+arrows(x0 = aspp_df2_rw$mean, y0 = aspp_df2$p25,
+       x1 = aspp_df2_rw$mean, y1 = aspp_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = aspp_df2_rw$p25, y0 = aspp_df2$mean,
+       x1 = aspp_df2_rw$p75, y1 = aspp_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(aspp_df2_rw$mean, aspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# asite
+site_df2_rw <- subset(site_df2_rw, site != "sigma_asite")
+plot(site_df2_rw$mean, site_df2$mean,
+     xlab = "ring width", ylab = "BAI", main = "asite", type = "n", frame = FALSE,
+     ylim = range(c(site_df2$p25, site_df2$p75)),
+     xlim = range(c(site_df2_rw$p25, site_df2_rw$p75)))
+arrows(x0 = site_df2_rw$mean, y0 = site_df2$p25,
+       x1 = site_df2_rw$mean, y1 = site_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = site_df2_rw$p25, y0 = site_df2$mean,
+       x1 = site_df2_rw$p75, y1 = site_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(site_df2_rw$mean, site_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+
+# atreeid
+plot(treeid_df2_rw$mean, treeid_df2$mean,
+     xlab = "ring width", ylab = "BAI", main = "atreeid", type = "n", frame = FALSE,
+     ylim = range(c(treeid_df2$p25, treeid_df2$p75)),
+     xlim = range(c(treeid_df2_rw$p25, treeid_df2_rw$p75)))
+arrows(x0 = treeid_df2_rw$mean, y0 = treeid_df2$p25,
+       x1 = treeid_df2_rw$mean, y1 = treeid_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+arrows(x0 = treeid_df2_rw$p25, y0 = treeid_df2$mean,
+       x1 = treeid_df2_rw$p75, y1 = treeid_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1, col = "darkgray")
+points(treeid_df2_rw$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+dev.off()
+
 }

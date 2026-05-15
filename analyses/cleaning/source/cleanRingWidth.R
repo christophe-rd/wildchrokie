@@ -434,6 +434,9 @@ d_bai[which(is.na(d_bai$BAI)),]
 # check if we have duplicates
 d_bai$name[duplicated(paste(d_bai$name, d_bai$yearCor))]
 
+
+write.csv(d_bai, "~/github/wildchrokie/analyses/output/wildchrokieBAI.csv")
+
 # # write csv!
 # setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
 # write.csv2(wildchrokie_rw, "output/wildchrokieRingWidth.csv")
@@ -512,6 +515,7 @@ plot(log(d_bai$BAI) ~ log(d_bai$lengthMM), col = cols[d_bai$spp])
 plot(log(d_bai$BAI) ~ log(d_bai$lengthMM), col = r[d_bai$year])
 ycols <- setNames(seq_along(unique(d_bai$year)), unique(d_bai$year))
 plot(log(BAI) ~ log(lengthMM), data=d_bai, col=ycols[as.character(d_bai$year)], pch=1)
+
 d_bai$cum_r <- ave(da$cum_r, paste(da$name, da$year), FUN=max)[
   match(paste(d_bai$name, d_bai$year), paste(da$name, da$year))]
 cumr_max <- aggregate(cum_r ~ name + year, data=da, FUN=max)
@@ -522,4 +526,4 @@ plot(log(BAI) ~ log(lengthMM), data=d_bai,
      col=cut(cum_r, breaks=5), pch=19, cex=0.5)
 legend("topleft", legend=levels(cut(d_bai$cum_r, breaks=5)),
        col=1:5, pch=19, title="cum_r", cex=0.7)
-write.csv(d_bai, "~/github/wildchrokie/analyses/output/wildchrokieBAI.csv")
+
