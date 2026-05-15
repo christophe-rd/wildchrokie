@@ -353,9 +353,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(log(emp_spp$loglength), y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, log(emp_spp$loglength),
+  plot(emp_spp$pgsGDD5, emp_spp$loglength,
        type = "n",
        ylim = ylimline,
        xlab = "Primary growing season GDD",
@@ -1098,7 +1098,7 @@ widths = c(1.1, 1.2, 0.6))
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
 plot(bspp_df2$mean, y_pos,
-     xlim = c(-0.7, 1), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in averaged GDD of 10 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -1113,7 +1113,7 @@ rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(u
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 10 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
