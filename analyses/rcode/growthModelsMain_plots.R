@@ -104,7 +104,7 @@ if(makeplots) {
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GDD posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_BAI")
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
 df_fitgdd <- as.data.frame(fitgdd)
 
@@ -127,7 +127,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # GSL posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitgsl <- readRDS("output/stanOutput/fitGrowthGSL_BAI")
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
 
 df_fitgsl <- as.data.frame(fitgsl)
 
@@ -152,7 +152,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # SOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fitsos <- readRDS("output/stanOutput/fitGrowthSOS_BAI")
+fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
 
 df_fitsos <- as.data.frame(fitsos)
 
@@ -176,7 +176,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # EOS posterior recovery ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-fiteos <- readRDS("output/stanOutput/fitGrowthEOS_BAI")
+fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
 
 df_fiteos <- as.data.frame(fiteos)
 
@@ -284,7 +284,7 @@ gddseq <- dgdd$gddseq
 ##### GDD: per treeid, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
-pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid_BAI.pdf", width = 10, height = 8)
+pdf(file = "figures/growthModelsMain/growthModelSlopesperTreeid.pdf", width = 10, height = 8)
 
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -304,8 +304,8 @@ for (i in seq_along(treeidvecnum)) { # i = 6
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
   
-  plot(emp_treeid$pgsGDD5, emp_treeid$BAI, type = "n", 
-       ylim = range(c(emp_treeid$BAI, y_low, y_high), na.rm = TRUE),
+  plot(emp_treeid$pgsGDD5, emp_treeid$loglength, type = "n", 
+       ylim = range(c(emp_treeid$loglength, y_low, y_high), na.rm = TRUE),
        xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
        main = tree_col_name)
   
@@ -319,7 +319,7 @@ for (i in seq_along(treeidvecnum)) { # i = 6
   
   lines(gddseq, y_mean, col = line_col, lwd = 2)
   
-  points(emp_treeid$pgsGDD5, emp_treeid$BAI, pch = 16, cex = 2, col = line_col)
+  points(emp_treeid$pgsGDD5, emp_treeid$loglength, pch = 16, cex = 2, col = line_col)
 }
 dev.off()
 
@@ -331,7 +331,7 @@ spp_post_array <- extract(fitgdd, "spp_post")$spp_post
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -353,9 +353,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high <- apply(y_post, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(log(emp_spp$BAI), y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(log(emp_spp$loglength), y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, log(emp_spp$BAI),
+  plot(emp_spp$pgsGDD5, log(emp_spp$loglength),
        type = "n",
        ylim = ylimline,
        xlab = "Primary growing season GDD",
@@ -381,7 +381,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGDD5,
-    emp_spp$BAI,
+    emp_spp$loglength,
     pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
@@ -402,7 +402,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSpp_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSpp.jpeg",
   width = 2400,      
   height = 2400,
   res = 300          # good print-quality resolution
@@ -412,7 +412,7 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 plot(emp$pgsGDD5, dgdd$y, type = "n", 
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Primary growing season GDD", ylab = "Ring width (mm)",
      main = "species growth responses")
 
@@ -444,7 +444,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
   points(
     emp_spp$pgsGDD5,
-    emp_spp$BAI,
+    emp_spp$loglength,
     pch = 16,
     cex = 1,
     col = line_col)
@@ -489,7 +489,7 @@ gslseq <- dgsl$gslseq
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -514,9 +514,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_gsl <- apply(y_post_gsl, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$BAI, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGSL, emp_spp$BAI,
+  plot(emp_spp$pgsGSL, emp_spp$loglength,
        type = "n",
        ylim = ylimline,
        xlab = "Primary growing season GSL",
@@ -539,7 +539,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGSL,
-    emp_spp$BAI,
+    emp_spp$loglength,
     pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
@@ -571,7 +571,7 @@ sosseq <- dsos$sosseq
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -597,9 +597,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_sos <- apply(y_post_sos, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$BAI, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$leafout, emp_spp$BAI,
+  plot(emp_spp$leafout, emp_spp$loglength,
        type = "n",
        ylim = ylimline,
        xlab = "Leafout day of year",
@@ -622,7 +622,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$leafout,
-    emp_spp$BAI,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -636,7 +636,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -646,7 +646,7 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 plot(emp$leafout, dsos$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "Ring width (mm)",
      main = "")
 
@@ -677,7 +677,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$latbi == spp_name, ]
   
   # points(
-  #   x = emp_spp$leafout, y = emp_spp$BAI,
+  #   x = emp_spp$leafout, y = emp_spp$loglength,
   #   pch = 16, cex = 1, col = line_col)
   
   # legend(
@@ -711,7 +711,7 @@ eosseq <- deos$eosseq
 
 # jpeg output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -739,9 +739,9 @@ for (i in seq_along(sppvecnum)) { # i = 1
   y_high_eos <- apply(y_post_eos, 1, quantile, 0.75)
   
   # species-specific ylim
-  # ylim_spp <- range(c(emp_spp$BAI, y_low, y_high), na.rm = TRUE)
+  # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$budset, emp_spp$BAI,
+  plot(emp_spp$budset, emp_spp$loglength,
        type = "n",
        ylim = ylimline,
        xlab = "Budset day of year",
@@ -764,7 +764,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$budset,
-    emp_spp$BAI,
+    emp_spp$loglength,
     pch = my_shapes[emp_spp$site],
     cex = 1,
     col = line_col
@@ -778,7 +778,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # PDF output
 jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS_BAI.jpeg",
+  filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS.jpeg",
   width = 2400,      # wider image (pixels) → more horizontal room
   height = 2400,
   res = 300          # good print-quality resolution
@@ -788,7 +788,7 @@ jpeg(
 par(mar = c(4, 4, 2, 1))
 
 plot(emp$budset, deos$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "Ring width (mm)",
      main = "")
 
@@ -815,7 +815,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$latbi == spp_name, ]
   
   # points(
-  #   x = emp_spp$budset, y = emp_spp$BAI,
+  #   x = emp_spp$budset, y = emp_spp$loglength,
   #   pch = 16, cex = 1, col = line_col)
   
   # legend(
@@ -876,7 +876,7 @@ aspp_df4 <- aggregate(. ~ spp_name, treeid_df4[c("spp_name", names(treeid_df4)[2
 gap <- 3
 
 # open device
-pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp_BAI.pdf",
+pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
     width = 8.2, height = 8.5)
 par(mar = c(4, 6, 4, 2))
 
@@ -981,7 +981,7 @@ custommar <- c(4, 4, 2, 1.2)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-pdf("figures/growthModelsMain/muALLbspp_BAI.pdf", width = 7.5, height = 6)
+pdf("figures/growthModelsMain/muALLbspp.pdf", width = 7.5, height = 6)
 library(rsvg)
 
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
@@ -1083,7 +1083,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 custommar <- c(4, 4, 3, 1.2)
 
-jpeg(file = "figures/growthModelsMain/muALLbsppWlines_BAI.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
      width = 2800, height = 3000, res = 300)
 
 layout(matrix(c(
@@ -1158,7 +1158,7 @@ rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(us
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
 plot(emp$pgsGDD5, dgdd$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
      main = "")
 mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1190,7 +1190,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
 plot(emp$pgsGSL, dgsl$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season length (days)", ylab = "log(ring width)",
      main = "")
 mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1221,7 +1221,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 3, Col 2, Slot 7 : SOS
 par(mar = custommar)
 plot(emp$leafout, dsos$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "log(ring width)",
      main = "")
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1252,7 +1252,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 # Row 4, Col 2, Slot 8 : EOS
 par(mar = custommar)
 plot(emp$budset, deos$y, type = "n", frame = FALSE,
-     ylim = range(min(emp$BAI), max(emp$BAI)), 
+     ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "log(ring width)",
      main = "")
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1295,7 +1295,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---  --- 
-jpeg(file = "figures/growthModelsMain/muALLaspp_BAI.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLaspp.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1373,7 +1373,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### asite ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-jpeg(file = "figures/growthModelsMain/muALLasite_BAI.jpeg",
+jpeg(file = "figures/growthModelsMain/muALLasite.jpeg",
      width = 1800, height = 2200, res = 300)
 
 layout(matrix(c(
@@ -1568,11 +1568,11 @@ combined_labeled <- ggdraw(combined) +
     size     = 14,
     fontface = "bold"
   )
-ggsave("figures/growthModelsMain/asiteMap_BAI.pdf", combined_labeled, width = 10, height = 6)
+ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 
 
 ##### ayear ##### 
-jpeg(file = "figures/growthModelsMain/muayear_BAI.jpeg",
+jpeg(file = "figures/growthModelsMain/muayear.jpeg",
      width = 1600, height = 1600, res = 300)
 
 wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
@@ -1773,7 +1773,7 @@ max_ES <- max_ES[order(max_ES$pred),]
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### bspp Z-scored ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-pdf("figures/growthModelsMain/zscored/muALLbspp_BAI.pdf", width = 7.5, height = 6)
+pdf("figures/growthModelsMain/zscored/muALLbspp.pdf", width = 7.5, height = 6)
 
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
 img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")

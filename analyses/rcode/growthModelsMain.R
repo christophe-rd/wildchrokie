@@ -77,7 +77,7 @@ temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1
 gdd_7day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
 wcgddscale <- mean(gdd_7day$gdddiff)
 
-gddseq <-  seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
+gddseq <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
 
 # data list for gdd
 dgdd <- list(
@@ -2207,7 +2207,10 @@ aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                              "spp", "aspp\\[(\\d+)\\]")
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
-
+ayear_df2 <- extract_params(df_fitgdd, "ayear", "fit_a_year", 
+                            "year", "ayear\\[(\\d+)\\]")
+ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
+site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_abv30.pdf", width = 8, height = 10)
@@ -2404,6 +2407,10 @@ aspp_df2_nobspabv   <- extract_params(df_fitgdd, "aspp", "fit_aspp",
                                    "spp", "aspp\\[(\\d+)\\]")
 site_df2_nobspabv   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                                    "site", "asite\\[(\\d+)\\]")
+site_df2_nobspabv <- subset(site_df2_nobspabv, !grepl("z|sigma", site))
+ayear_df2_nobspabv   <- extract_params(df_fitgdd, "ayear", "fit_a_year", 
+                                      "year", "ayear\\[(\\d+)\\]")
+ayear_df2_nobspabv <- subset(ayear_df2_nobspabv, !grepl("mean", year))
 
 # Open device
 jpeg("figures/growthModelsMain/bsppVSbsppabv.jpeg", width = 9, height = 6, units = "in", res = 300)
@@ -2451,6 +2458,20 @@ arrows(x0 = aspp_df2_nobspabv$p25, y0 = aspp_df2$mean,
        x1 = aspp_df2_nobspabv$p75, y1 = aspp_df2$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(aspp_df2_nobspabv$mean, aspp_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# ayear
+plot(ayear_df2_nobspabv$mean, ayear_df2$mean,
+     xlab = "no bsp on max temp", ylab = "with bspp on max temp", main = "ayear", type = "n", frame = FALSE,
+     ylim = range(c(ayear_df2$p25, ayear_df2$p75)),
+     xlim = range(c(ayear_df2_nobspabv$p25, ayear_df2_nobspabv$p75)))
+arrows(x0 = ayear_df2_nobspabv$mean, y0 = ayear_df2$p25,
+       x1 = ayear_df2_nobspabv$mean, y1 = ayear_df2$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = ayear_df2_nobspabv$p25, y0 = ayear_df2$mean,
+       x1 = ayear_df2_nobspabv$p75, y1 = ayear_df2$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(ayear_df2_nobspabv$mean, ayear_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # asite
