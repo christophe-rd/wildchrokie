@@ -12,6 +12,8 @@ library(rstan)
 library(future)
 library(wesanderson)
 library(patchwork) 
+library(rsvg)
+library(shape)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -95,12 +97,7 @@ for (i in seq_along(years)) { # i = 1
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Conceptual figure ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
-pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
-# pdf("figures/climate/gsconceptualfig.pdf", width = 8, height = 8)
-layout(matrix(c(1, 2, 3), nrow = 3), heights = c(2, 1, 3))
-
-# cols
+# Set curves and stuff
 # pre cc
 colpre <- "#04a3bd"
 colcc <- "#a00e00"
@@ -108,62 +105,138 @@ colcc <- "#a00e00"
 colspring <- "#247d3f"
 colfall <- "#da7901"
 
+axissize <- 1.2
+labsize <- 1.5
 # assign sos and eos values
 ccsos <- 110
-cceos <- 250
+cceos <- 260
 presos <- 130
-preeos <- 240
+preeos <- 250
 peak <- 185
 
-par(mar = c(0, 4, 2, 2))
 
-# simulate logistic curves
+# Logistic curves
 doy <- 1:330
-gdd_pre <- 2500 / (1 + exp(-0.03 * (doy - 172)))
-gdd_cc  <- 3000 / (1 + exp(-0.04 * (doy - 140)))
+gdd_pre <- 2500 / (1 + exp(-0.025 * (doy - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.025 * (doy - 140)))
 
+# Normal curves
+x <- as.integer(seq(0, 330, length.out = 330))
+xs <- seq(0, peak, length.out = 330)
+xf <- seq(peak, 330 , length.out = 330)
+
+y1 <- dnorm(x, mean = peak, sd = 45)
+ys <- dnorm(xs, mean = peak, sd = 55)
+yf <- dnorm(xf, mean = peak, sd = 50)
+
+# Scale y2 so both curves peak at the same height
+scale_to <- 30
+scale_to2 <- 31
+
+y1_scaled <- y1  * (scale_to / max(y1))
+ys_scaled2 <- ys  * (scale_to2 / max(ys))
+yf_scaled2 <- yf  * (scale_to2 / max(yf))
+y2_scaled <- c(ys_scaled2, yf_scaled2)
+length(ys_scaled2) + length(yf_scaled2)
+
+# calendar days
+ticks <- seq(0, 330, by = 30)  # wherever you want ticks
+dates <- format(as.Date(ticks, origin = "2023-01-01"), "%d %b")
+
+myxlimp3 <- c(min(doy), max(doy))
+
+mylwd <- 3
+
+# shaded areas under the curves
+threshold <- 5
+x_poly <- c(x, rev(x))
+y_poly <- c(pmin(y1_scaled, threshold), rev(rep(0, length(x))))
+
+# Panel margins
+p1 <- c(0, 5, 2, 2)
+p2 <- c(0, 5, 0, 2)
+p3 <- c(0, 5, 0, 2)
+
+# matrix heights 
+matheights <- c(2.4, 2.8, 1)
+
+# ylim logistic
+ylimlogis <- c(0, 3400)
+
+
+# Plot! --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# pdf("figures/climate/gsconceptualfig.pdf", width = 10, height = 8)
+jpeg("figures/climate/gsconceptualfig.jpeg", width = 10, height = 8, units = "in", res = 400)
+layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
+
+# Panel 1 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p1)
 # Pre CC
-plot(doy, gdd_cc, ylim = c(0, 3000),
+plot(doy, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE, col = adjustcolor(colpre), main = "")
+     xaxt = "n", frame = FALSE, col = adjustcolor(colpre, alpha.f = 0.4), 
+     main = "", cex.axis = axissize, cex.lab = labsize)
 
 # draw logistic curves pre CC
-lines(doy, gdd_pre, type = "l", lwd = 1.2, col = adjustcolor(colpre))
+lines(doy, gdd_pre, type = "l", lwd = mylwd, 
+      col = adjustcolor(colpre, alpha.f = 0.4))
 
-# Post CC
-# draw logistic curves pre CC
-lines(doy, gdd_cc, type = "l", lwd = 1.2, col = adjustcolor(colcc))
+# draw logistic curves CC
+lines(doy, gdd_cc, type = "l", lwd = mylwd, 
+      col = adjustcolor(colcc))
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-# Slot 2: Season length arrows
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(0, 4, 0, 2))
+text(x = 280, y = max(gdd_cc) + 150, "Warmer thermal season", col = "black", cex = 1.9)
+
+Arrows(x0 = 250, y0 = gdd_pre[250] + 50, x1 = 250, y1 = gdd_cc[250] - 200, 
+       arr.type = "triangle", arr.width = 0.3, lwd	= 2, col = colcc)
+
+# GS delimitations
+# abline(v = ccsos + 0.3, lwd = 1, lty = 2)
+# abline(v = cceos + 0.3, lwd = 1, lty = 2)
+segments(x0 = ccsos+0.8, x1 = ccsos+0.8, y0 = -100, y1 = 900, lwd = 1.5, lty = 2)
+segments(x0 = cceos, x1 = cceos, y0 = -100, y1 = 2850, lwd = 1.5, lty = 2)
+
+# Panel 2 : with just pre industrial --- --- --- --- --- --- --- --- --- --- ---
+par(mar = p2)
+plot(x, y1_scaled, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4), 
+     xaxt = "n", ylim = c(0, scale_to * 1.1),
+     xlab = "Day of year", ylab = expression(paste("Temperature (", degree, "C)")), frame = FALSE, 
+     cex.axis = axissize, cex.lab = labsize)
+axis(1, at = ticks, labels = dates, cex.axis = axissize)
+
+# shade area under curve below 5
+polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
+
+lines(xs, ys_scaled2, lwd = mylwd, col = colcc)
+lines(xf, yf_scaled2, lwd = mylwd, col = colcc)
+
+# GS delimitations
+abline(v = ccsos, lwd = 1.5, lty = 2)
+abline(v = cceos, lwd = 1.5, lty = 2)
+
+# gs boundaries pre climate change
+segments(x0 = preeos, x1 = preeos, y0 = -2, y1 = y1_scaled[presos] - 3, lwd = 0.3, lty = 2)
+segments(x0 = presos, x1 = presos, y0 = -2, y1 = y1_scaled[preeos] + 2.6, lwd = 0.3, lty = 2)
+
+# Pheno trends arrows
+Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos +5, y1 = 5, 
+       arr.type = "triangle", arr.width = 0.3, lwd	= 2, col = colspring)
+
+Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 4, y1 = 5, 
+       arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd	= 2, col = colfall)
+
+text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = 1.9)
+text(x = cceos - 20, y = 7, "Later fall", col = colfall, cex = 1.4)
+# Panel 3 --- --- --- --- --- --- --- --- --- --- ------ --- --- --- --- --- --- 
+par(mar = p3)
 plot.new()
-plot.window(xlim = c(0, 365), ylim = c(0, 1))
+plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 # gsl arrow line pre CC
 arrow_y <- 0.5
-shaft_h <- 0.08
-head_h  <- 0.08
-x_start <- presos
-x_end <- preeos
-x_neck_l <- x_start + 10  
-x_neck_r <- x_end - 10    
-
-polygon(
-  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colpre, alpha.f = 0.7),
-  border = NA
-)
-#0a6a3c
-text(x = presos + (preeos - presos)/2, y = arrow_y, "GSL pre CC", col = "black", cex = 1)
-
-# gsl arrow line CC
-arrow_y <- 0.3
-shaft_h <- 0.08
-head_h  <- 0.08
+shaft_h <- 0.15
+head_h  <- 0.15
 x_start <- ccsos
 x_end <- cceos
 x_neck_l <- x_start + 10  
@@ -173,89 +246,41 @@ polygon(
   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
   col = adjustcolor(colcc, alpha.f = 0.7),
-  border = NA
-)
-#0a6a3c
-text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, "GSL post CC", col = "black", cex = 1)
+  border = NA)
 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-# Slot 3: Daily GDD 
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-par(mar = c(4, 4, 0, 2))
+# 0a6a3c
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+usr <- par("usr")
 
-x <- as.integer(seq(0, 330, length.out = 330))
-xs <- seq(0, peak, length.out = 365)
-xf <- seq(peak, 365 , length.out = 365)
+img_w <- 23  # width in plot units, tune as needed
+img_h <- 0.6  # height in plot units, tune as needed
 
-y1 <- dnorm(x, mean = peak, sd = 45)
-ys <- dnorm(xs, mean = peak, sd = 55)
-yf <- dnorm(xf, mean = peak, sd = 50)
+rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start -12 + img_w/2, arrow_y + img_h/2)
+rasterImage(img_budset,  x_end + 7 - img_w/2,   arrow_y - img_h/2, x_end + 7 + img_w/2,   arrow_y + img_h/2)
 
-# Scale y2 so both curves peak at the same height
-scale_to <- 30
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y, 
+     "Longer calendar season", col = "black", cex = 1.9)
 
-y1_scaled <- y1  * (scale_to / max(y1))
-ys_scaled2 <- ys  * (scale_to / max(ys))
-yf_scaled2 <- yf  * (scale_to / max(yf))
-
-plot(x, y1_scaled, type = "l", lwd = 2, col = colpre,
-     ylim = c(0, scale_to * 1.1),
-     xlab = "Day of year", ylab = "Daily GDD", frame = FALSE)
-lines(xs, ys_scaled2, lwd = 2, col = colcc)
-lines(xf, yf_scaled2, lwd = 2, col = colcc)
-
-# abline for 5C
-abline(a = 5, b = 0, lty = 2)
-text(x = 37, y = 5 + 2, labels = "GDD base temperature", 
-     cex = 1.5, col = "black") 
-
-# # Draw the shaded polygon under the curve
-# polygon(
-#   x = c(x_sub[1], x_sub, x_sub[length(x_sub)]),
-#   y = c(0, y_sub, 0),
-#   col = adjustcolor("black", alpha.f = 0.3),
-#   border = NA,
-#   # density = 20,      
-#   angle = 45         
-# )
-
-# Spring arrow
-arrow_y <- 30
-shaft_h <- 1.2
-head_h  <- 2
-x_start <- ccsos
-x_neck  <- ccsos + 12
+# gsl arrow line pre CC
+arrow_y <- 0.2
+shaft_h <- 0.06
+head_h  <- 0.06
+x_start <- presos
+x_end <- preeos
+x_neck_l <- x_start + 10  
+x_neck_r <- x_end - 10    
 
 polygon(
-  x = c(x_start, x_neck, x_neck, x_start + 35, x_start + 35, x_neck, x_neck),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colspring, alpha.f = 0.7),
-  border = NA
-)
+  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+  col = adjustcolor(colpre, alpha.f = 0.4),
+  border = NA)
 
-text(x = x_start - 24, y = arrow_y + 3, labels = "Earlier spring",
-     adj = c(0, 0.5), cex = 1.5, col = "black") 
-
-# # Autumn arrow
-# arrow_y <- 30
-# shaft_h <- 0.5
-# head_h  <- 0.9
-# x_start <- cceos
-# x_neck  <- cceos - 12
-# 
-# polygon(
-#   x = c(x_start, x_neck, x_neck, x_start - 20, x_start - 20, x_neck, x_neck),
-#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-#   col = adjustcolor("#d39822", alpha.f = 0.7), border = F)
-# 
-# text(x = x_start - 12, y = arrow_y + 2, labels = "Later autumn",
-#      adj = c(0, 0.5), cex = 0.8, col = "black")
-# dev.off()
 dev.off()
 
 
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+ # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # kind of a heat map ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 

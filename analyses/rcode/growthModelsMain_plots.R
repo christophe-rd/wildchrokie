@@ -869,7 +869,21 @@ treeid_df4$site_name <- emp$site[match(treeid_df4$treeid, emp$treeid_num)]
 treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid, emp$treeid_num)]
 
 # species mean from the full intercept of tree id
-aspp_df4 <- aggregate(. ~ spp_name, treeid_df4[c("spp_name", names(treeid_df4)[2:6])], FUN = mean)
+fullinterceptspp <-fullintercept 
+colnames(fullinterceptspp) <- treeid_spp_site_ordered$spp_num[match(names(fullintercept), treeid_spp_site_ordered$treeid_num)]
+
+# group by spp name and apply my loops to the lists
+draws_spp <- split.default(fullinterceptspp, colnames(fullinterceptspp))
+
+aspp_df4 <- data.frame(
+  species = names(draws_spp),
+  mean = sapply(draws_spp, function(x) round(mean(unlist(x)), 3)),
+  p5   = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.05), 3)),
+  p25  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.25), 3)),
+  p75  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.75), 3)),
+  p95  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.95), 3))
+)
+aspp_df4$spp_name <- emp$latbi[match(aspp_df4$species, emp$spp_num)]
 
 # Prep for the figure --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # define a gap between species clusters
@@ -1597,7 +1611,7 @@ legend("topright",
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = wcyear,
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Species", title.font = 2)
+       title  = "Year", title.font = 2)
 
 dev.off()
 }
