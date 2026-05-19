@@ -123,6 +123,8 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
   \item Accounting for the number of days with maximum temperature above 30$^\circ$C, decreased species responses to longer thermal seasons (\textit{results tbd}), and all species grew more with more days with high temperatures (Figure:\ref{fig:muTempAbv30}).
+  
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Figure \ref{fig:RWvsBAI})
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -342,10 +344,16 @@ print(tab,
 
 % Mu plot with max temp above 30
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
 \caption{}
 \label{fig:muTempAbv30}
 \end{figure}
 
+% RW vs BAI 1 1 plot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/RWvsBAI.jpeg}
+\caption{}
+\label{fig:RWvsBAI}
+\end{figure}
 
 \end{document}
