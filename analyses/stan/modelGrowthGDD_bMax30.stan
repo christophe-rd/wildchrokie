@@ -58,9 +58,9 @@ for (i in 1:N){ // don't change this for reparameterization
 }
 
 model{	
-  a ~ normal(1, 4);
+  a ~ normal(0, 5);
   aspp ~ normal(0, 6);
-  ayear ~ normal(0, 1);
+  ayear ~ normal(0, 3);
   
   bsp ~ normal(0, 0.8);
   bspabv ~ normal(0, 1);
@@ -83,15 +83,16 @@ generated quantities {
         asite[site[i]] +
         atreeid[treeid[i]] + 
         ayear[year[i]] +
-        bspabv[species[i]]*gddabv[i], sigma_y);
+        bsp[species[i]] * gdd[i] +
+        bspabv[species[i]] * gddabv[i], sigma_y);
   }
 
   // prior predictive samples
-  real a_prior = normal_rng(1, 4);
+  real a_prior = normal_rng(0, 5);
   real aspp_prior = normal_rng(0, 6);
   real sigma_asite_prior = abs(normal_rng(0, 1));  
   // real asite_prior = normal_rng(0, sigma_asite_prior);
-  real ayear_prior = normal_rng(0, 1);
+  real ayear_prior = normal_rng(0, 3);
   
   real bsp_prior = normal_rng(0, 0.8);
   real bspabv_prior = normal_rng(0, 0.8);
