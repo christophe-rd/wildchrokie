@@ -2180,17 +2180,20 @@ df_fitgdd <- as.data.frame(fitgdd)
 # full posterior
 columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
 sigma_df <- df_fitgdd[, columns[grepl("sigma", columns)]]
-bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
+bspp_df <- df_fitgdd[, columns[grepl("bsp", columns) & !grepl("abv", columns)]]
 bsppabv_df <- df_fitgdd[, columns[grepl("bspabv", columns)]]
 treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma", columns)]
 aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
-site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
+ayear_df <- df_fitgdd[, columns[grepl("ayear", columns)]]
+site_df <- df_fitgdd[, columns[grepl("asite", columns) & !grepl("z|sigma", columns)]]
+
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
 colnames(bsppabv_df) <- 1:ncol(bsppabv_df)
 colnames(treeid_df) <- 1:ncol(treeid_df)
 colnames(aspp_df) <- 1:ncol(aspp_df)
+colnames(ayear_df) <- 1:ncol(ayear_df)
 colnames(site_df) <- 1:ncol(site_df)
 
 # posterior summaries
@@ -2205,10 +2208,10 @@ treeid_df2 <- extract_params(df_fitgdd, "atreeid", "fit_atreeid",
 treeid_df2 <- subset(treeid_df2, !grepl("z|sigma", treeid))
 aspp_df2   <- extract_params(df_fitgdd, "aspp", "fit_aspp", 
                              "spp", "aspp\\[(\\d+)\\]")
+ayear_df2   <- extract_params(df_fitgdd, "ayear", "fit_ayear", 
+                             "year", "ayear\\[(\\d+)\\]")
 site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site", 
                              "site", "asite\\[(\\d+)\\]")
-ayear_df2 <- extract_params(df_fitgdd, "ayear", "fit_a_year", 
-                            "year", "ayear\\[(\\d+)\\]")
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 
@@ -2255,6 +2258,19 @@ for (col in colnames(aspp_df)) {
 } 
 legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
+# aspp
+plot(density(df_fitgdd[, "ayear_prior"]), 
+     col = pal[1], lwd = 2, 
+     main = "priorVSposterior_ayear", 
+     xlab = "ayear", 
+     # xlim = c(-5, 5), 
+     ylim = c(0, 1))
+for (col in colnames(ayear_df)) {
+  lines(density(ayear_df[, col]), col = pal[2], lwd = 1)
+} 
+legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
+
+
 # asite
 plot(density(df_fitgdd[, "asite_prior"]), 
      col = pal[1], lwd = 2, 
@@ -2287,6 +2303,10 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
+
+# Mu plot bspav 
+jpeg(file = "figures/growthModelsMain/muMax30with_ayear.jpeg",
+     width = 2400, height = 2000, res = 300)
 par(mfrow = c(1,1))
 y_pos <- rev(1:4)
 n_spp <- 4
@@ -2297,7 +2317,7 @@ plot(bsppabv_df2$mean, y_pos,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bsppabv_df2$p5,  y_pos, bsppabv_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bsppabv_df2$p25, y_pos, bsppabv_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
-
+dev.off()
 # Plot empirical data
 
 jpeg(file = "figures/empiricalData/nMax30VariationSppYr.jpeg",
@@ -3119,6 +3139,7 @@ abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # asite
 site_df2_rw <- subset(site_df2_rw, site != "sigma_asite")
+site_df2_rw <- subset(site_df2_rw, !grepl("z", site))
 plot(site_df2_rw$mean, site_df2$mean,
      xlab = "ring width", ylab = "BAI", main = "asite", type = "n", frame = FALSE,
      ylim = range(c(site_df2$p25, site_df2$p75)),
