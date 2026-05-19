@@ -110,9 +110,12 @@
   
   \item The earliest leafout day of year was 112 (2019) and the latest, 157 (2019). The earliest budset day of year was 225 (2018) and the latest, 297 (2018) 
   
-  
-  % \item No drought for the three years except in 2020, where a moderate summer drought ramped up to a severe drought in September.
-  
+  \item 2018 had a mean summer temperature of 22.85$^\circ$C and had a mean summer PDSI value of 
+  1.92. 2019 was cooler 
+  (22.38$^\circ$C) and wetter 
+  (PDSI $=$ 1.92), and 2020 was warmer 
+  (23.07$^\circ$C) and drier
+  (PDSI $=$ -2.35) than 2018.
 
 \end{enumerate}
 
@@ -155,6 +158,7 @@
   [-0.02, 
   0.13]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
+  \item Accounting for the number of days with maximum temperature above 30$^\circ$C, decreased species responses to longer thermal seasons (\textit{results tbd}), and all species grew more with more days with high temperatures (Figure:\ref{fig:muTempAbv30}).
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -211,24 +215,27 @@
 
   \end{enumerate}
 
+
 % Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
+  
   \item Annual ring widths across years varied from 
   0.39 mm ({\Ball} in 2020) to 
   13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcRWboxplot}). 
+ 
   \item Growth was highest in 2018 
   (0.19, $UI_{90}$
   [-0.76, 
-1.1]) (Figure \ref{fig:wcmuplotayear}), but it was neither the wettest, the driest, the shortest, the latest SOS, the earliest EOS nor the highest thermal sum, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+1.1]) (Figure \ref{fig:wcmuplotayear}), but that year had not the warmest nor the longest calendar season, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+  
   \item Growth was lowest in 2020 
   (-0.43, $UI_{90}$
   [-1.38, 
-  0.48]) (Figure \ref{fig:wcmuplotayear}) and that year was the driest (also the only year with a drought that ramped up to "severe" in September), the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+  0.48]) (Figure \ref{fig:wcmuplotayear}) that year had the warmest thermal, but the shortest calendar season, also unlike our findings that growth increases with warmer seasons, and to a lesser extent, with longer calendar season (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
   \end{enumerate}
 
 \end{enumerate}
-
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -266,7 +273,7 @@
 
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri May 15 12:20:10 2026
+% Tue May 19 15:31:12 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -286,7 +293,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 % Table site intercept for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri May 15 12:20:10 2026
+% Tue May 19 15:31:12 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
@@ -338,4 +345,14 @@ Site & Intercept.estimate & Latitude & Longitude \\
 \caption{Growth data across years and species. The dots represent the observed ring widths. The boxes are color coded by years.}
 \label{fig:wcRWboxplot}
 \end{figure}
+
+
+% Mu plot with max temp above 30
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
+\caption{}
+\label{fig:muTempAbv30}
+\end{figure}
+
+
 \end{document}

@@ -74,9 +74,12 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item The earliest leafout day of year was \Sexpr{min(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}) and the latest, \Sexpr{max(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}). The earliest budset day of year was \Sexpr{min(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]}) and the latest, \Sexpr{max(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]}) 
   
-  
-  % \item No drought for the three years except in 2020, where a moderate summer drought ramped up to a severe drought in September.
-  
+  \item 2018 had a mean summer temperature of \Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C and had a mean summer PDSI value of 
+  \Sexpr{wcjja$pdsi[which(wcjja$year == 2018)]}. 2019 was cooler 
+  (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C) and wetter 
+  (PDSI $=$ \Sexpr{wcjja$pdsi[which(wcjja$year == 2018)]}), and 2020 was warmer 
+  (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C) and drier
+  (PDSI $=$ \Sexpr{wcjja$pdsi[which(wcjja$year == 2020)]}) than 2018.
 
 \end{enumerate}
 
@@ -119,6 +122,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
+  \item Accounting for the number of days with maximum temperature above 30$^\circ$C, decreased species responses to longer thermal seasons (\textit{results tbd}), and all species grew more with more days with high temperatures (Figure:\ref{fig:muTempAbv30}).
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -175,24 +179,27 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
   \end{enumerate}
 
+
 % Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
+  
   \item Annual ring widths across years varied from 
   \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
   \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcRWboxplot}). 
+ 
   \item Growth was highest in \Sexpr{ayear_df2$year_name[which.max(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.max(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.max(ayear_df2$mean)]}, 
-\Sexpr{ayear_df2$p95[which.max(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}), but it was neither the wettest, the driest, the shortest, the latest SOS, the earliest EOS nor the highest thermal sum, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+\Sexpr{ayear_df2$p95[which.max(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}), but that year had not the warmest nor the longest calendar season, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+  
   \item Growth was lowest in \Sexpr{ayear_df2$year_name[which.min(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.min(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.min(ayear_df2$mean)]}, 
-  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}) and that year was the driest (also the only year with a drought that ramped up to "severe" in September), the shortest, the latest SOS and EOS and had the highest thermal sum, also unlike our findings that growth increases with warmer seasons (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
+  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}) that year had the warmest thermal, but the shortest calendar season, also unlike our findings that growth increases with warmer seasons, and to a lesser extent, with longer calendar season (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
   \end{enumerate}
 
 \end{enumerate}
-
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -331,4 +338,14 @@ print(tab,
 \caption{Growth data across years and species. The dots represent the observed ring widths. The boxes are color coded by years.}
 \label{fig:wcRWboxplot}
 \end{figure}
+
+
+% Mu plot with max temp above 30
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
+\caption{}
+\label{fig:muTempAbv30}
+\end{figure}
+
+
 \end{document}
