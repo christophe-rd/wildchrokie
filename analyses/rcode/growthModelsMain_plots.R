@@ -207,7 +207,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 locations <- data.frame(
   name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
   shortnames = c("HF", "WM", "GR", "SH"),   
-  Longitude  = c(-72.2,  -71.0, -70.66, -74.01),
+  Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
 )
 

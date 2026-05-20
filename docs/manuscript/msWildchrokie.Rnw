@@ -6,6 +6,8 @@
 \usepackage{gensymb}
 \usepackage{natbib}
 
+\setlength{\parindent}{0pt}
+
 \begin{document}
 % \SweaveOpts{concordance=TRUE}
 
@@ -20,6 +22,38 @@
 \newcommand{\Bpap}{\textit{B. papyrifera}}
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
+
+<<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(xtable)
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/growthModelsMain_plots.R")
+
+locations <- data.frame(
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", 
+                 "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
+  Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
+  Latitude   = c( 42.55,  44.11,  44.92,  45.98)
+)
+
+count <- aggregate(treeid ~ latbi + site, emp, 
+                   FUN = function(x) length(unique(x)))
+
+species <- unique(count$latbi)
+
+count_wide <- reshape(count, idvar = "site", timevar = "latbi", direction = "wide")
+locations <- merge(locations, count_wide, by.x = "name", by.y = "site", all.x = TRUE)
+colnames(locations) <- c("Provenance name", "Longitude", "Latitude", 
+                         "A. incana",
+                         "B. alleghaniensis",
+                         "B. papyrifera",
+                         "B. populifolia")
+# change NAs to 0
+for (i in 4: ncol(locations)) {
+  locations[[i]][is.na(locations[[i]])] <- 0
+}
+
+@
+
+
 % ===========================================================================================================
 \section*{Introduction}
 % ===========================================================================================================
@@ -28,28 +62,28 @@
 \section*{Methods}
 % ===========================================================================================================
 \subsection*{Common garden setup}
-We collected seeds from four provenances across a 3.5 latitudinal gradient (Figure \ref{fig:mapProv}). We germinated the seeds following standard germination protocols and grew them to seedlings. We then planted them outside in the garden. Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020.
+We collected seeds from four provenances across a 3.5 latitudinal gradient (Figure \ref{fig:mapProv} and \ref{tab:provs}), germinated them following standard germination protocols and grew them to seedlings. We then planted them outside in the garden 42.30\degree N, 71.13\degree W in 2017. Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020.
 
 
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/mapSourcePop.jpeg}
-\caption{}
+\caption{Provenance of the seeds accross a latitudinal gradient. The common garden location is where the study took place at the Weld Research Building (Boston, MA).}
 \label{fig:mapProv}
 \end{figure}
 
 \subsection*{Phenological monitoring and sample collection}
-For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December \ref{fig:phenoTimeSeries}. See (Buonuito) for more details about the phenological monitoring. In the spring of 2023, we collected cross-sections by cutting the trunk just above the root colar of most trees. We also collected tree cores on few individuals using standard dendrochonological methods and stored them in plastic straws poked with holes for breathability. Both the cross-sections and cores were left to dry at ambient temperature for three months. \\
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December \ref{fig:phenoTimeSeries}. See (Buonuito, unpublished) for more details about the phenological monitoring. In the spring of 2023, we collected cross-sections by cutting the trunk just above the root colar of most trees. We also collected tree cores on few individuals using standard dendrochonological methods and stored them in plastic straws poked with holes for aeration. Both the cross-sections and cores were left to dry at ambient temperature for three months. \\
 
 \subsection*{Sample processing, imaging and measuring}
-We mounted the cores on wooden mounts, and sanded the cores and cross-sections using progressively finer sandpaper grits: 150, 300, 400, 600, 800, 1000. We scanned the cores and cross-sections at a resolution of 6250 dpi, with a high-resolution treering scanner (Fong, unpublished). We used the digitized images to measure the tree ring widths with ImageJ \citep{schneider_nih_2012}. We did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths, but we accounted for it in our statistical analyses by including a year intercept. \\
+We mounted the cores on wooden mounts, and sanded the cores and cross-sections using progressively finer sandpaper grits: 150, 300, 400, 600, 800, 1000. We scanned the cores and cross-sections at a resolution of 6250 dpi, with a high-resolution treering scanner (Fong, unpublished). We used the digitized images to measure the tree ring widths with ImageJ \citep{schneider_nih_2012} at three standard locations on the cross-section, at {120\degree} from each other. We averaged the three measurements, to yield one ring width per year, per individual and discarded the measurement from the cores when we had a cross-section for a given individual. We performed visual cross dating, but did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths, but we accounted for it in our statistical analyses by including a year intercept. \\
 
 \subsection*{Data analyses}
-To understand how growth shifted with season lengths we used Bayesian hierarchical models coded in Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. With these models, we estimated ring width as a function of four different predictors. First, the thermal season represents the number of GDD (mean daily temperature above 5C) accumulated between leafout and budset date, for each tree and year. Second, the calendar season is the budset date subtracted by the leafout date. Then, to better understand trees responses to the calendar season, we used leafout (SOS) and budset (EOS) as separate predictors that represent the boundaries of the growing season. We had three grouping factors (species, site, treeid and year).
+To understand how growth shifted with season lengths we used Bayesian hierarchical models coded in Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. With these models, we estimated ring width as a function of four different predictors. First, the thermal season (GDD) represents the number of growing degree days (GDD) calculated as the mean daily temperature above 5\degree C) accumulated between leafout and budset, for each tree and year. Second, the calendar season (GSL) is the budset date subtracted by the leafout date. Then, to better understand trees responses to the calendar season, we used leafout (SOS) and budset (EOS) as separate predictors that represent the boundaries of the growing season. We had three grouping factors (species, site, treeid and year).
 
 \[
 \begin{aligned}
 log(ringwidth)_i &\sim N(\mu, \sigma_y) \\
-\mu &= \alpha + \alpha_{\text{species}} + \alpha_{\text{site}} + \alpha_{\text{treeid}} + \alpha_{\text{year}} + \beta_{species} \times gdd/gdd/sos/eos \\
+\mu &= \alpha + \alpha_{\text{species}} + \alpha_{\text{site}} + \alpha_{\text{treeid}} + \alpha_{\text{year}} + \beta_{species} \times GDD/GSL/SOS/EOS \\
 \alpha &\sim N(1, 3) \\
 \alpha_{\text{species}} &\sim N(0, 6) \\
 \alpha_{\text{site}} &\sim N(0, \sigma_{\alpha \, \text{site}}) \\
@@ -60,10 +94,59 @@ log(ringwidth)_i &\sim N(\mu, \sigma_y) \\
 \sigma_y & \sim N(0, 3)
 \end{aligned}
 \]
-where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{species}$) and year ($\alpha_{year}$) and slope on species ($\beta_{species}$) were not pooled (fixed effects), and we partially pooled (random effects) site ($\alpha_{site}$) and treeid ($\alpha_{treeid}$) to account for the similarity of the measurements within these groups. We ran four chains with each 2000 warmup, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions and had a $\hat{R}$ was below 1.01.
+where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{species}$) and year ($\alpha_{year}$) and slope on species ($\beta_{species}$) were not pooled (fixed effects), and we partially pooled (random effects) site ($\alpha_{site}$) and treeid ($\alpha_{treeid}$) to account for the similarity of the measurements within these groups. We ran four chains with each 2000 warmup, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions and had a $\hat{R}$ below 1.01.
 
-We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019: https://arboretum.harvard.edu/research/data-resources/weather/. Because the data stopped being monitored at Weldhill station in August 2020, we used the daily climate data from the weather station: “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for 2020: https://newa.cornell.edu/all-weather-data-query/. We calculated daily growing degree days (GDD) by subtracting a 5C threshold from the mean daily temperature. 
+\par 
+We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data stopped being monitored at Weldhill station in August 2020, we used the daily climate data from the weather station: “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). We calculated daily growing degree days (GDD) by subtracting a 5\degree C threshold from the mean daily temperature. 
 
+
+% Table count per spp per prov 
+<<results='asis', echo = FALSE>>=
+loctable <- data.frame(
+  Provenance = locations$`Provenance name`,
+  Longitude  = locations$Longitude,
+  Latitude   = locations$Latitude,
+  Ainc       = locations$`A. incana`,
+  Ball       = locations$`B. alleghaniensis`,
+  Bpap       = locations$`B. papyrifera`,
+  Bpop       = locations$`B. populifolia`
+)
+
+# compute totals for header
+n_ainc <- sum(loctable$Ainc)
+n_ball <- sum(loctable$Ball)
+n_bpap <- sum(loctable$Bpap)
+n_bpop <- sum(loctable$Bpop)
+
+header <- list(
+  pos = list(-1),
+  command = paste0(
+    "Provenance & Longitude & Latitude & ",
+    "\\textit{A. incana} & ",
+    "\\textit{B. alleghaniensis} & ",
+    "\\textit{B. papyrifera} & ",
+    "\\textit{B. populifolia} \\\\\n",
+    " & & & ",
+    "$(n = ", n_ainc, ")$ & ",
+    "$(n = ", n_ball, ")$ & ",
+    "$(n = ", n_bpap, ")$ & ",
+    "$(n = ", n_bpop, ")$ \\\\\n"
+  )
+)
+
+tab <- xtable(loctable,
+              # keep the 2 decimals for lat long
+              digits = c(0, 0, 1, 1, 0, 0, 0, 0),
+              caption = "Provenance coordinates and count per species and provenances.",
+              label = "tab:provs"
+)
+print(tab,
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      add.to.row = header,
+      sanitize.text.function = identity,
+      caption.placement = "top")
+@
 
 % ===========================================================================================================
 \section*{Results}
