@@ -33,6 +33,7 @@ source('rcode/tools.R')
 fitmodels <- F
 fitmodelfull <- F
 fitmodelsZscored <- F
+fitmodelsBAI <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -2528,7 +2529,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # BAI ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if (fitmodels){
+if (fitmodelsBAI){
 dgdd$y <- log(emp$BAI)
 dgsl$y <- log(emp$BAI)
 dsos$y <- log(emp$BAI)
