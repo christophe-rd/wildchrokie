@@ -275,7 +275,7 @@
 
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue May 19 15:50:18 2026
+% Thu May 21 10:00:26 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters ($\beta$ and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -295,7 +295,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 % Table site intercept for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue May 19 15:50:18 2026
+% Thu May 21 10:00:26 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters ($\alpha$ and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
@@ -362,5 +362,40 @@ Site & Intercept.estimate & Latitude & Longitude \\
 \caption{}
 \label{fig:RWvsBAI}
 \end{figure}
+
+[1] "$\\sigma = $0.519 [0.41, 0.636]"  "$\\sigma = $0.272 [0.028, 0.727]"
+[3] "$\\sigma = $0.633 [0.574, 0.696]"
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu May 21 10:00:26 2026
+\begin{table}[ht]
+\centering
+\caption{Posterior means and 90\% uncertainty intervals for all model parameters.} 
+\label{tab:wc_all_params}
+\begin{tabular}{ll}
+  \hline
+Parameter & Estimate \\ 
+  \hline
+$\sigma_{\alpha_{tree}}$ & 0.519 [0.41, 0.636] \\ 
+  $\sigma_{\alpha_{site}}$ & 0.272 [0.028, 0.727] \\ 
+  $\sigma_{y}$ & 0.633 [0.574, 0.696] \\ 
+  $\beta_{spp_{A. incana}}$ & 0.109 [-0.034, 0.252] \\ 
+  $\beta_{spp_{B. alleghaniensis}}$ & 0.196 [0.023, 0.363] \\ 
+  $\beta_{spp_{B. papyrifera}}$ & 0.921 [0.491, 1.344] \\ 
+  $\beta_{spp_{B. populifolia}}$ & 0.406 [0.201, 0.61] \\ 
+  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 [-0.467, 0.168] \\ 
+  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.093 [-0.454, 0.191] \\ 
+  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.057 [-0.232, 0.419] \\ 
+  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 [-0.112, 0.516] \\ 
+  $\alpha_{year_{2018}}$ & -0.365 [-1.317, 0.61] \\ 
+  $\alpha_{year_{2019}}$ & 0.332 [-0.648, 1.318] \\ 
+  $\alpha_{year_{2020}}$ & -0.042 [-1.012, 0.944] \\ 
+  $\alpha_{spp_{A. incana}}$ & 3.228 [-2.249, 8.554] \\ 
+  $\alpha_{spp_{B. alleghaniensis}}$ & 2.091 [-3.403, 7.539] \\ 
+  $\alpha_{spp_{B. papyrifera}}$ & -7.59 [-14.837, -0.286] \\ 
+  $\alpha_{spp_{B. populifolia}}$ & -0.069 [-5.979, 5.57] \\ 
+   \hline
+\end{tabular}
+\end{table}
+
 
 \end{document}

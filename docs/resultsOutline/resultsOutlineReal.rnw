@@ -356,4 +356,51 @@ print(tab,
 \label{fig:RWvsBAI}
 \end{figure}
 
+<<results='asis', echo = FALSE>>=
+sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma_BAI.csv")
+bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp_BAI.csv")
+treeid_df2_BAI <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_treeid_BAI.csv")
+aspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp_BAI.csv")
+site_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site_BAI.csv")
+ayear_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear_BAI.csv")
+
+bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
+site_df2_BAI$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
+aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
+ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_gsl$year, emp$year_num)]
+
+sigma <- data.frame(
+  "Parameter" = c("$\\sigma_{\\alpha_{tree}}$", "$\\sigma_{\\alpha_{site}}$", "$\\sigma_{y}$"),
+  "Estimate" = paste(sigma_df2_BAI$mean, " [", sigma_df2_BAI$p5, ", ", sigma_df2_BAI$p95, "]", sep = "")
+)
+
+bspp <- data.frame(
+  "Parameter" = paste0("$\\beta_{spp_{", bspp_df2_BAI$spp_name, "}}$"),
+  "Estimate" = paste(bspp_df2_BAI$mean, " [", bspp_df2_BAI$p5, ", ", bspp_df2_BAI$p95, "]", sep = "")
+)
+
+aspp <- data.frame(
+  "Parameter" = paste0("$\\alpha_{spp_{", aspp_df2_BAI$spp_name, "}}$"),
+  "Estimate" = paste(aspp_df2_BAI$mean, " [", aspp_df2_BAI$p5, ", ", aspp_df2_BAI$p95, "]", sep = "")
+)
+site <- data.frame(
+  "Parameter" = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
+  "Estimate" = paste(site_df2_BAI$mean, " [", site_df2_BAI$p5, ", ", site_df2_BAI$p95, "]", sep = "")
+)
+
+ayear <- data.frame(
+  "Parameter" = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
+  "Estimate" = paste(ayear_df2_BAI$mean, " [", ayear_df2_BAI$p5, ", ", ayear_df2_BAI$p95, "]", sep = "")
+)
+
+binded <- rbind(sigma, bspp, site, ayear, aspp)
+
+
+
+print(xtable(binded,
+             caption = "Posterior means and 90\\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable",
+             label = "tab:wc_all_params"),
+      include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
+@
+
 \end{document}
