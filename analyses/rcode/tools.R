@@ -64,15 +64,15 @@ tscolscommon <- c(
 )
 
 tscolslatbi <- c(
-  "Acer rubrum"           = renoir[1],
-  "Acer saccharum"        = renoir[2],
-  "Aesculus flava"        = renoir[3],
-  "Betula alleghaniensis" = renoir[4],
-  "Betula nigra"          = renoir[5],
-  "Carya glabra"          = renoir[6],
-  "Carya ovata"           = renoir[7],
-  "Populus deltoides"     = renoir[8],
-  "Quercus alba"          = renoir[9],
-  "Quercus rubra"         = renoir[10],
-  "Tilia americana"       = renoir[11]
+  "A. rubrum" = renoir[1],
+  "A. saccharum"= renoir[2],
+  "Ae. flava"= renoir[3],
+  "B. alleghaniensis"= renoir[4],
+  "B. nigra"= renoir[5],
+  "C. glabra"= renoir[6],
+  "C. ovata"= renoir[7],
+  "P. deltoides"= renoir[8],
+  "Q. alba"= renoir[9],
+  "Q. rubra"= renoir[10],
+  "T. americana"= renoir[11]
 )
