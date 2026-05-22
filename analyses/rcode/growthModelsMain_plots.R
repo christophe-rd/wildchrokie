@@ -115,7 +115,7 @@ bspp_df <- df_fitgdd[, columns[grepl("bsp", columns)]]
 treeid_df <- df_fitgdd[, grepl("treeid", columns) & !grepl("z|sigma|slope|full", columns)]
 aspp_df <- df_fitgdd[, columns[grepl("aspp", columns)]]
 site_df <- df_fitgdd[, columns[grepl("asite", columns)]]
-ayear_df <- df_fitgdd[, columns[grepl("ayear", columns)]]
+ayear_df <- df_fitgdd[, columns[grepl("ayear", columns) & !grepl("mean", columns)]]
 
 # change colnames
 colnames(bspp_df) <- 1:ncol(bspp_df)
@@ -1113,7 +1113,7 @@ widths = c(1.1, 1.2, 0.6))
 par(mar = custommar)
 plot(bspp_df2$mean, y_pos,
      xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in averaged GDD of 10 spring days", ylab = "",
+     xlab = "log(ring width) change in averaged GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos,
@@ -1128,7 +1128,7 @@ rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(u
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.4, 0.7), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of GSL", ylab = "",
+     xlab = "log(ring width) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
@@ -1143,7 +1143,7 @@ rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(u
 par(mar = custommar)
 plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 5 days of leafout", ylab = "",
+     xlab = "log(ring width) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
@@ -1158,7 +1158,7 @@ rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(u
 par(mar = custommar)
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 10 days of budset", ylab = "",
+     xlab = "log(ring width) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
