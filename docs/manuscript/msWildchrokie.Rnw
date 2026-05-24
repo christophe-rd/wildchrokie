@@ -101,7 +101,7 @@ log(ringwidth)_i &\sim N(\mu, \sigma_y) \\
 \end{aligned}
 \]
 where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{species}$) and year ($\alpha_{year}$) and slope on species ($\beta_{species}$) were not pooled (fixed effects), and we partially pooled (random effects) site ($\alpha_{site}$) and treeid ($\alpha_{treeid}$) to account for the similarity of the measurements within these groups. We ran four chains with 2000 warmup iterations each, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions and had a $\hat{R}$ below 1.01. %DL22May:I usually mention that n_eff are greater than 10% of the model iterations. Also can you run the same number of warmup and sampling iterations, I thought the sampling always needed to be more?
-
+%DL22May: you never explain why you log ring width
 \par 
 %DL22May:I would set this up for the reader a bit, "To account for differences in temperature across years..." or something. And maybe don't call them out for stopping collecting data, you could phrase it as "...until the end of its availability in August 2020, after which we used... until XXX date"
 We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data stopped being monitored at Weldhill station in August 2020, we used the daily climate data from the weather station: “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). We calculated daily growing degree days (GDD) by subtracting a 5\degree C threshold from the mean daily temperature. 
@@ -154,7 +154,8 @@ print(tab,
       sanitize.text.function = identity,
       caption.placement = "top")
 @
-%DL22May: One key thing missing from your methods is the species---you never mention in the text that you have four species. I would explain this, maybe even that X were planted but at the time of sampling only these four survived in sufficient numbers. Also I would invlude the total number of individuals in the Table caption.
+%DL22May: One key thing missing from your methods is the species---you never mention in the text that you have four species. I would explain this, maybe even that X were planted but at the time of sampling only these four survived in sufficient numbers. Also I would include the total number of individuals in the Table caption.
+% Don't forget to add methods for the new analyses too! Calculating BAI and the additional models you ran to test the effects of hot temperatures.
 % ===========================================================================================================
 \section*{Results}
 % ===========================================================================================================
