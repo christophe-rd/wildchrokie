@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1587,8 +1587,9 @@ combined_labeled <- ggdraw(combined) +
   )
 ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 
-
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg(file = "figures/growthModelsMain/muayear.jpeg",
      width = 1600, height = 1600, res = 300)
 
@@ -1616,6 +1617,63 @@ legend("topright",
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
        title  = "Year", title.font = 2)
 
+dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### a year with box plot per species and year #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+species <- unique(emp$latbi)
+years <- sort(unique(emp$year))
+n_sp <- length(species)
+
+
+jpeg("figures/growthModelsMain/muayear_boxplot.jpeg",
+     width = 3200, height = 1600, res = 300)
+par(oma = c(0, 0, 2, 0))
+layout(matrix(c(1,1,2,3,4,5), nrow = 2, ncol = 3), widths = c(1.2, 1, 1))
+
+# Left: mu plot
+par(mar = c(4, 4, 5, 1))
+wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
+            "2019" = wes_palettes$FantasticFox1[4],
+            "2020" = wes_palettes$FantasticFox1[5])
+y_pos_yr <- rev(ayear_df2$year)
+ayear_df2$year_name <- as.character(ayear_df2$year_name)
+plot(ayear_df2$mean, y_pos_yr,
+     xlim = c(-2, 2), ylim = c(0.5, 3.5),
+     xlab = "Ring width intercept values (mm)", ylab = "",
+     yaxt = "n", pch = 16, cex = 3, col = wcyear[ayear_df2$year_name],
+     frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+axis(2, at = y_pos_yr, 
+     labels = unique(ayear_df2$year_name)[order(ayear_df2$year, decreasing = TRUE)],
+     las = 1, tick = TRUE)
+segments(ayear_df2$p5,  y_pos_yr, ayear_df2$p95, y_pos_yr,
+         col = wcyear[ayear_df2$year_name], lwd = 2)
+segments(ayear_df2$p25, y_pos_yr, ayear_df2$p75, y_pos_yr,
+         col = wcyear[ayear_df2$year_name], lwd = 4)
+mtext("(a) Basal ring width (mm) for each year", 
+      side = 3, outer = TRUE, adj = 0.05, font = 2, cex = 0.9, line = -2)
+
+# Right: boxplots
+for(sp in species) {
+  par(mar = c(4, 5, 5, 1))
+  dat <- emp[emp$latbi == sp,]
+  boxplot(lengthMM ~ year, data = dat,
+          # main = bquote(italic(.(sp))),
+          xlab = "Year", ylab = "Ring width (mm)",
+          col = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.5),
+          border = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.8),
+          medcol = "black",
+          whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black")
+  mtext(bquote(italic(.(sp))), side = 3, line = 0.5, cex = 0.8)
+  stripchart(lengthMM ~ year, data = dat,
+             method = "jitter", jitter = 0.08,
+             pch = 16, cex = 0.7, col = "black",
+             vertical = TRUE, add = TRUE)
+}
+mtext("(b) Ring width (mm) observations per year and species",
+      side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = -2)
 dev.off()
 }
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
