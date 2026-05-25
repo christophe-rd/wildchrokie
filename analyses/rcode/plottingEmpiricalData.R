@@ -194,12 +194,12 @@ points_sf <- st_as_sf(locations2, coords = c("lon", "lat"), crs = 4326)
 main_map <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
-  geom_sf(data = special_sf, color = "#E54E21", shape = 8, size = 6, stroke = 1.2) +
+  geom_sf(data = special_sf, color = "black", shape = 23, size = 6, fill = "black") +
   geom_text(data = locations2, aes(x = lon, y = lat, label = name),
             nudge_y = 0.35, nudge_x = 0, size = 4.5, fontface = "bold") +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
-            nudge_y = 0.1, nudge_x = 2.5, color = "#E54E21", size = 5, fontface = "bold") +
+            nudge_y = 0.02, nudge_x = 3, color = "black", size = 6, fontface = "bold") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
   theme_minimal() +
   theme(

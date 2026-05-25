@@ -194,7 +194,7 @@ if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 1500, iter = 3000, chains=4)
+                warmup = 2000, iter = 4000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -204,19 +204,19 @@ util$check_all_hmc_diagnostics(diagnostics)
 # fit gsl
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 fitgsl <- sampling(gslmodel, data = dgsl,
-                warmup = 1000, iter = 2000, chains = 4)
+                warmup = 2000, iter = 4000, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
 
 # Fit model SOS
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsos <- sampling(sosmodel, data = dsos,
-                warmup = 1000, iter = 2000, chains=4)
+                warmup = 2000, iter = 4000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 
 # Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = deos,
-                warmup = 1500, iter = 3000, chains=4)
+                warmup = 2000, iter = 4000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
