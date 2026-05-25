@@ -37,6 +37,18 @@ fitmodelsBAI <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
+# add calendar days
+emp$loCal <- format(
+  as.Date(emp$leafout - 1,
+          origin = paste0(emp$year, "-01-01")),
+  "%d-%b"
+)
+emp$bsCal <- format(
+  as.Date(emp$budset - 1,
+          origin = paste0(emp$year, "-01-01")),
+  "%d-%b"
+)
+
 # change ring width
 emp$lengthMM <- emp$lengthCM*10
 emp$loglength <- log(emp$lengthMM)
