@@ -62,8 +62,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes \Sexpr{length(unique(emp$treeid))} individuals of four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations, yielding \Sexpr{nrow(emp)} complete growing seasons (GS). 
-  %DL22May: I am a little unsure what you mean by complete growing seasons, as in "complete growing seasons for X individuals"?
+  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations, yielding \Sexpr{nrow(emp)} complete growing seasons (GS) for \Sexpr{length(unique(emp$treeid))} individuals. 
     \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
   \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
@@ -71,8 +70,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item GS thermal sum ranged from 
   \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
   \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
-  %DL22May: I would report this earliest day in Calendar days not Julain
-  \item The earliest leafout day of year was \Sexpr{min(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}) and the latest, \Sexpr{max(emp$leafout)} (\Sexpr{emp$year[which.min(emp$leafout)]}). The earliest budset day of year was \Sexpr{min(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]}) and the latest, \Sexpr{max(emp$budset)} (\Sexpr{emp$year[which.min(emp$budset)]}) 
+  \item The earliest leafout day of year was \Sexpr{emp$loCal[which.min(emp$leafout)]} (\Sexpr{emp$year[which.min(emp$leafout)]}) and the latest, \Sexpr{emp$loCal[which.max(emp$leafout)]} (\Sexpr{emp$year[which.min(emp$leafout)]}). The earliest budset day of year was \Sexpr{emp$bsCal[which.min(emp$budset)]} (\Sexpr{emp$year[which.min(emp$budset)]}) and the latest, \Sexpr{emp$bsCal[which.max(emp$budset)]} (\Sexpr{emp$year[which.min(emp$budset)]}) 
   
   \item 2018 had a mean summer temperature of \Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C and had a mean summer PDSI value of 
   \Sexpr{wcjja$pdsi[which(wcjja$year == 2018)]}. 2019 was cooler 
@@ -89,32 +87,32 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
   \item Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it.
   %DL22May: you could order them from strongest to weakest, I would also be more explict about A. incana---had a weak effect on how it increased growth. This is the same for further down, just be sure to make it clear what results are stong and which are negligible
-  \item Longer thermal season increased growth for {\Ball} 
+  \item Longer thermal season increased growth for {\Bpap} 
   ($\beta = $ 
-  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
-  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. alleghaniensis")]}, 
-  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. alleghaniensis")]}]), {\Bpap} 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]),
+  {\Bpop} 
   ($\beta = $ 
-  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
-  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. papyrifera")]}]), and {\Bpop} 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and {\Ball} 
   ($\beta = $ 
-  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "B. populifolia")]}, $UI_{90}$
-  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "B. populifolia")]}, 
-  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "B. populifolia")]}]), but {\Ainc} trended in the same direction 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), but {\Ainc} had a weak effect, but trended in the same direction 
   ($\beta = $ 
-  \Sexpr{bspp_df2$mean[which(bspp_df2$spp_name %in% "A. incana")]}, $UI_{90}$
-  [\Sexpr{bspp_df2$p5[which(bspp_df2$spp_name %in% "A. incana")]}, 
-  \Sexpr{bspp_df2$p95[which(bspp_df2$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
  
- %DL22May: I find this phrasing a bit confusing, I would flip it and start by saying A. incana grew more with calendar season, but of the three species that responded to thermal season, only....
-  \item Only one out of those three species also grew more with longer calendar season (\Bpap: $\beta = $ 
-  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
-  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]), but an additional species that didn't grow more with warmer thermal season, did with longer calendar season ({\Ainc}: $\beta = $ 
+  \item {\Ainc} grew more with longer calendar seasons ($\beta = $ 
   \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
-  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]).
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]), but of the three species that responded to thermal season, only {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]).
   \item {\Ball} ($\beta = $ 
   \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
@@ -131,7 +129,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item Did an later start and end of season increase growth?
   \begin{enumerate}
-  \item A longer calendar season increased growth for two species, but neither grew more with a later start of season. %DL22May: what does "later start of the season"? 
+  \item A longer calendar season increased growth for two species, but neither grew more with a later start of season.
   \item {\Ainc} grew more with longer calendar season, but grew less with a later start of season ($\beta = $ 
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
@@ -207,18 +205,16 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope parameters across the different model predictors for Wildchrokie species. GDD represent the accumulated growing degree days between leafout and budset (a) the models estimates shows log ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew less with later leafout, but had no effect in response to budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset and longer calendar season. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset.}
+\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew less with later leafout and had no effect in response to budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset and longer calendar season. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset.}
 \label{fig:wcmuplotbspp}
 \end{figure}
-%DL22May: I would make the first sentence more about the interpretation, what does the model slope represent. Also a is per 10 days right? You can also be a little less explicit, for example I would just say the "dots represent the mean for each species"
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI. The sites are color-coded from (b), map showing their locations.}
+\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
-%DL22May:This result is missing from the results section, maybe you could sneak it into the first paragraph?
 
 % Wildchrokie year mu plot
 \begin{figure}[!ht]
@@ -243,19 +239,17 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Table slope for Wildchrokie
 <<results='asis', echo = FALSE>>=
 # Bspp parameter estimates table
-fmt <- function(df) {
-  sprintf("$\\beta = $%.2f, [%.2f, %.2f]",
-          df$mean,
-          df$p5,
-          df$p95)
-}
+options(digits = 2)
 
-bspp_df2$GDD <- fmt(bspp_df2)
-bspp_df2_gsl$GSL <- fmt(bspp_df2_gsl)
-bspp_df2_sos$SOS <- fmt(bspp_df2_sos)
-bspp_df2_eos$EOS <- fmt(bspp_df2_eos)
+bspp_df2_gdd$GDD <- sprintf("%.2f [%.2f, %.2f]", bspp_df2_gdd$mean, bspp_df2_gdd$p5, bspp_df2_gdd$p95)
+
+bspp_df2_gsl$GSL <- sprintf("%.2f [%.2f, %.2f]", bspp_df2_gsl$mean, bspp_df2_gsl$p5, bspp_df2_gsl$p95)
+
+bspp_df2_sos$SOS <- sprintf("%.2f [%.2f, %.2f]", bspp_df2_sos$mean, bspp_df2_sos$p5, bspp_df2_sos$p95)
+
+bspp_df2_eos$EOS <- sprintf("%.2f [%.2f, %.2f]", bspp_df2_eos$mean, bspp_df2_eos$p5, bspp_df2_eos$p95)
       
-gdd <- bspp_df2[, c("spp_name", "GDD")]
+gdd <- bspp_df2_gdd[, c("spp_name", "GDD")]
 gsl <- bspp_df2_gsl[, c("spp_name", "GSL")]
 sos <- bspp_df2_sos[, c("spp_name", "SOS")]
 eos <- bspp_df2_eos[, c("spp_name", "EOS")]
@@ -285,22 +279,17 @@ site_df2$p5 <- round(site_df2$p5, 2)
 site_df2$p95 <- round(site_df2$p95, 2)
 
 sitefortable <- data.frame(
-  Site = site_df2$site_name,
-  "Intercept estimate" = paste("$\\alpha = $", site_df2$mean, ", ", "[", site_df2$p5, ", ", site_df2$p95, "]", sep = ""),
+  Provenance = site_df2$site_name,
+  "Intercept estimate" = paste0(site_df2$mean, " [", site_df2$p5, ", ", site_df2$p95, "]", sep = ""),
   Latitude = emp$provenance.lat[match(site_df2$site_name, emp$site)],
   Longitude = emp$provenance.long[match(site_df2$site_name, emp$site)]
 )
-sitefull <- c(
-  "GR" = "Dartmouth College (NH)",
-  "HF" = "Harvard Forest (MA)",
-  "SH" = "St-Hyppolyte (Qc)",
-  "WM" = "White Mountains (NH)"
-)
-sitefortable$Site <- sitefull[sitefortable$Site]
+
+sitefortable <- sitefortable[order(sitefortable$Latitude),]
 
 # Print table
 tab <- xtable(sitefortable,
-              caption = "Site level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) for the GDD model.",
+              caption = "Provenance level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) for the GDD model.",
               label = "tab:wc_asite_table"
 )
 
@@ -349,18 +338,19 @@ print(tab,
 % Mu plot with max temp above 30
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
-\caption{}
+\caption{Model estimates of the slope on the number of days above 30C.}
 \label{fig:muTempAbv30}
 \end{figure}
 
 % RW vs BAI 1 1 plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/RWvsBAI.jpeg}
-\caption{}
+\caption{Model parameter estimates comparison when using basal area increment (BAI) vs ring width ) RW. }
 \label{fig:RWvsBAI}
 \end{figure}
 
 <<results='asis', echo = FALSE>>=
+options(digits = 2)
 sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma_BAI.csv")
 bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp_BAI.csv")
 treeid_df2_BAI <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_treeid_BAI.csv")
@@ -368,43 +358,59 @@ aspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchro
 site_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site_BAI.csv")
 ayear_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear_BAI.csv")
 
-bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_gsl$spp, emp$spp_num)]
-site_df2_BAI$site_name <- emp$site[match(site_df2_gsl$site, emp$site_num)]
-aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_gsl$spp, emp$spp_num)]
-ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_gsl$year, emp$year_num)]
+bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_BAI$spp, emp$spp_num)]
+site_df2_BAI$site_name <- emp$site[match(site_df2_BAI$site, emp$site_num)]
+aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_BAI$spp, emp$spp_num)]
+ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
 
 sigma <- data.frame(
-  "Parameter" = c("$\\sigma_{\\alpha_{tree}}$", "$\\sigma_{\\alpha_{site}}$", "$\\sigma_{y}$"),
-  "Estimate" = paste(sigma_df2_BAI$mean, " [", sigma_df2_BAI$p5, ", ", sigma_df2_BAI$p95, "]", sep = "")
+  "Parameter" = c("$\\sigma_{\\alpha_{tree}}$",
+                  "$\\sigma_{\\alpha_{site}}$",
+                  "$\\sigma_{y}$"),
+  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
+                       sigma_df2_BAI$mean,
+                       sigma_df2_BAI$p5,
+                       sigma_df2_BAI$p95)
 )
 
 bspp <- data.frame(
   "Parameter" = paste0("$\\beta_{spp_{", bspp_df2_BAI$spp_name, "}}$"),
-  "Estimate" = paste(bspp_df2_BAI$mean, " [", bspp_df2_BAI$p5, ", ", bspp_df2_BAI$p95, "]", sep = "")
+  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
+                       bspp_df2_BAI$mean,
+                       bspp_df2_BAI$p5,
+                       bspp_df2_BAI$p95)
 )
 
 aspp <- data.frame(
   "Parameter" = paste0("$\\alpha_{spp_{", aspp_df2_BAI$spp_name, "}}$"),
-  "Estimate" = paste(aspp_df2_BAI$mean, " [", aspp_df2_BAI$p5, ", ", aspp_df2_BAI$p95, "]", sep = "")
+  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
+                       aspp_df2_BAI$mean,
+                       aspp_df2_BAI$p5,
+                       aspp_df2_BAI$p95)
 )
+
 site <- data.frame(
   "Parameter" = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
-  "Estimate" = paste(site_df2_BAI$mean, " [", site_df2_BAI$p5, ", ", site_df2_BAI$p95, "]", sep = "")
+  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
+                       site_df2_BAI$mean,
+                       site_df2_BAI$p5,
+                       site_df2_BAI$p95)
 )
 
 ayear <- data.frame(
   "Parameter" = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
-  "Estimate" = paste(ayear_df2_BAI$mean, " [", ayear_df2_BAI$p5, ", ", ayear_df2_BAI$p95, "]", sep = "")
+  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
+                       ayear_df2_BAI$mean,
+                       ayear_df2_BAI$p5,
+                       ayear_df2_BAI$p95)
 )
 
 binded <- rbind(sigma, bspp, site, ayear, aspp)
-
-
 
 print(xtable(binded,
              caption = "Posterior means and 90\\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable",
              label = "tab:wc_all_params"),
       include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
 @
-%DL22May: don't forget to round these values
+
 \end{document}
