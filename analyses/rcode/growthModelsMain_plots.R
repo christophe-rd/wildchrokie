@@ -42,7 +42,7 @@ emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH)"
   
 # Load parameter summaries generated in growthModelsMain.R ####
 sigma_df2  <- read.csv("output/GM_GDDparam_sigma.csv")
-bspp_df2   <- read.csv("output/GM_GDDparam_bspp.csv")
+bspp_df2_gdd   <- read.csv("output/GM_GDDparam_bspp.csv")
 treeid_df2 <- read.csv("output/GM_GDDparam_treeid.csv")
 aspp_df2   <- read.csv("output/GM_GDDparam_aspp.csv")
 site_df2   <- read.csv("output/GM_GDDparam_site.csv")
@@ -50,7 +50,7 @@ ayear_df2   <- read.csv("output/GM_GDDparam_ayear.csv")
 
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)  
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
-bspp_df2$spp_name <- emp$latbi[match(bspp_df2$spp, emp$spp_num)]
+bspp_df2_gdd$spp_name <- emp$latbi[match(bspp_df2_gdd$spp, emp$spp_num)]
 site_df2$site_name <- emp$site[match(site_df2$site, emp$site_num)]
 aspp_df2$spp_name <- emp$latbi[match(aspp_df2$spp, emp$spp_num)]
 ayear_df2$year_name <- emp$year[match(ayear_df2$year, emp$year_num)]
@@ -249,7 +249,7 @@ treeidvecname <- treeid_spp_site$treeid
 sppvecnum <- 1:4
 sppvecname <- unique(treeid_spp_site$latbi)
 
-n_spp <- nrow(bspp_df2)
+n_spp <- nrow(bspp_df2_gdd)
 n_site <- nrow(site_df2)
 y_pos <- rev(1:n_spp)
 
@@ -969,11 +969,14 @@ species_legend_order <- names(sort(spp_y, decreasing = TRUE))
 site_legend_order <- names(sort(site_y, decreasing = FALSE))
 
 ## species legend (colors matched by name)
-legend(x = max(treeid_df4$p95), y = max(treeid_df4$y_pos) + 1,
-       legend = species_legend_order,
-       col = wccolslatbi[species_legend_order],    # index so colors match
-       pch = 16, pt.cex = 1, cex = 0.8, title = "Species", bty = "n"
-)
+legend(x = max(treeid_df4$p95),
+       y = max(treeid_df4$y_pos) + 1,
+       legend = as.expression(lapply(species_legend_order, function(x)
+         substitute(italic(s), list(s = x))
+       )),
+       col = wccolslatbi[species_legend_order],
+       pch = 16, pt.cex = 1, cex = 0.8,
+       title = "Species", bty = "n")
 
 site_legend_order <- c("St-Hippolyte (Qc)", "Dartmouth College (NH)", 
                        "White Mountains (NH)", "Harvard Forest (MA)")
@@ -1013,13 +1016,13 @@ mumar <- c(4, 1, 4, 1)
 
 # Panel 1: GDD
 par(mar = mumar)
-plot(bspp_df2$mean, y_pos,
+plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.5, 1.2), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 spring days GDD", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
+segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos, col = wccolslatbi, lwd = 1.5)
+segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos, col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 0.9)
 # arrows(x0 = -0.05, y0 = n_spp + 0.85, x1 = -0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 # text(-0.18, n_spp + 0.85, "Smaller/Cooler", pos = 3, xpd = TRUE, cex = 0.9)
@@ -1084,7 +1087,7 @@ rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(us
 par(mar = c(mumar))
 plot.new()
 legend("center",
-       legend = sapply(unique(bspp_df2$spp_name),
+       legend = sapply(unique(bspp_df2_gdd$spp_name),
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(wccolslatbi),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
@@ -1111,14 +1114,14 @@ widths = c(1.1, 1.2, 0.6))
 
 # Row 1, Col 1, Slot 5 : GDD
 par(mar = custommar)
-plot(bspp_df2$mean, y_pos,
+plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in averaged GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
-segments(bspp_df2$p5,  y_pos, bspp_df2$p95, y_pos,
+segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
-segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos,
+segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
 usr <- par("usr")
@@ -1298,7 +1301,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
 par(mar = c(1, 1, 1, 1))
 plot.new()
 legend("center",
-       legend = sapply(unique(bspp_df2$spp_name), 
+       legend = sapply(unique(bspp_df2_gdd$spp_name), 
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = wccolslatbi,
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.5,
@@ -1876,7 +1879,7 @@ rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(us
 par(mar = c(mumar))
 plot.new()
 legend("center",
-       legend = sapply(unique(bspp_df2$spp_name),
+       legend = sapply(unique(bspp_df2_gdd$spp_name),
                        function(x) parse(text = paste0("italic('", x, "')"))),
        col    = unique(wccolslatbi),
        pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
