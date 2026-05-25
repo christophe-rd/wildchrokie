@@ -137,3 +137,14 @@ Separate document
 \section*{Discussion}
 % ===========================================================================================================
 \end{document}
+
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplement %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
+\section*{Supplemental results}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
