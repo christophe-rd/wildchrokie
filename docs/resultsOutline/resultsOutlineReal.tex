@@ -111,7 +111,7 @@
   \item 2018 had a mean summer temperature of 22.85$^\circ$C and had a mean summer PDSI value of 
   1.92. 2019 was cooler 
   (22.38$^\circ$C) and wetter 
-  (PDSI $=$ 4.02), and 2020 was warmer 
+  (PDSI $=$ 4.02), whereas 2020 was warmer 
   (23.07$^\circ$C) and drier
   (PDSI $=$ -2.35) than 2018.
 
@@ -122,7 +122,7 @@
   \begin{enumerate}
 
   \item Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it.
-  %DL22May: you could order them from strongest to weakest, I would also be more explict about A. incana---had a weak effect on how it increased growth. This is the same for further down, just be sure to make it clear what results are stong and which are negligible
+
   \item Longer thermal season increased growth for {\Bpap} 
   ($\beta = $ 
   0.44, $UI_{90}$
@@ -157,9 +157,7 @@
   [-0.02, 
   0.13]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
-  \item Accounting for the number of days with maximum temperatures above 30$^\circ$C, decreased species responses to longer thermal seasons (\textit{results tbd}), and all species grew more with more days with high temperatures (Figure:\ref{fig:muTempAbv30}).
-  
-  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Figure \ref{fig:RWvsBAI})
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Figure \ref{fig:RWvsBAI} and Table \ref{tab:BAItab})
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -223,7 +221,7 @@
   
   \item Annual ring widths across years varied from 
   0.39 mm ({\Ball} in 2020) to 
-  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcRWboxplot}). 
+  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcmuplotayear}). 
  
   \item Growth was highest in 2018 
   (0.19, $UI_{90}$
@@ -247,15 +245,15 @@
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
 \caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor. The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
 % Wildchrokie year mu plot
 \begin{figure}[!ht]
-\includegraphics[width=0.5\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
-\caption{Model estimates for the intercepts on year. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear_boxplot.jpeg}
+\caption{We show tree ring widths (mm) across years and species in two ways: (a) as model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
 \label{fig:wcmuplotayear}
 \end{figure}
 
@@ -274,7 +272,7 @@
 %DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon May 25 11:04:20 2026
+% Mon May 25 16:40:50 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -295,7 +293,7 @@ Species & GDD & GSL & SOS & EOS \\
 % Table site intercept for Wildchrokie
 %DL22May: Could you add the site names as a column too
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon May 25 11:04:20 2026
+% Mon May 25 16:40:50 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
@@ -341,34 +339,19 @@ Harvard Forest (MA) & -0.1 [-0.33, 0.08] & 42.53 & -72.19 \\
 \label{fig:bsppZscored}
 \end{figure}
 
-% Box plot
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/empiricalData/boxplotRingWidth.jpeg}
-\caption{Growth data across years and species. The dots represent the observed ring widths. The boxes are color coded by years.}
-\label{fig:wcRWboxplot}
-\end{figure}
-
-
-% Mu plot with max temp above 30
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muMax30with_ayear.jpeg}
-\caption{Model estimates of the slope on the number of days above 30C.}
-\label{fig:muTempAbv30}
-\end{figure}
-
 % RW vs BAI 1 1 plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/RWvsBAI.jpeg}
-\caption{Model parameter estimates comparison when using basal area increment (BAI) vs ring width ) RW. }
+\caption{Model parameter estimates comparison when using basal area increment (BAI) vs ring width (RW). }
 \label{fig:RWvsBAI}
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon May 25 11:04:20 2026
+% Mon May 25 16:40:50 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
-\label{tab:wc_all_params}
+\label{tab:BAItab}
 \begin{tabular}{ll}
   \hline
 Parameter & Estimate \\ 
