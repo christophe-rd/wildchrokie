@@ -86,6 +86,9 @@ dsub$cookie.[which(dsub$idfull == "BETPOP_GR5_P6")] <- "1"
 dsub$cookie.[which(dsub$idfull == "ALNINC_HF9_P6")] <- "0"
 dsub$core[which(dsub$idfull == "ALNINC_HF9_P6")] <- "1"
 
+# Save number of cookies and cores, so we can report them
+write.csv(dsub, "/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
+
 cookiesOG <- subset(dsub, cookie. == "1")
 
 coresOG <- subset(dsub, core %in% c("1","2"))
