@@ -52,6 +52,9 @@
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\usepackage{natbib}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 % \SweaveOpts{concordance=TRUE}
@@ -86,104 +89,206 @@
 % \label{fig:chaptersDesign}
 % \end{figure}
 
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Introduction}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
 
 % Paragraph 1
-\item The most frequently observed biological impact of climate change is major changes in phenology
+\item The most frequently observed biological impact of climate change is major changes in phenology \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}
   \begin{enumerate}
+  
   \item Shifts in spring and autumn phenology modifies when seasons starts and ends
-  \item Understanding the consequences of these shifts requires understanding how much and why growing seasons have changed 
-  \item Spring phenology trends and drivers 
-  \item Autumn phenology trends and drivers; shifts are weaker than springs'
+  
+  \item Understanding the consequences of these shifts requires understanding how much and why growing seasons have changed \citep{duputie_phenological_2015}.
+  
+  \item Spring phenology advances, \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014} driven by temperature \citep{chuine_why_2010,cleland_shifting_2007,penuelas_responses_2001}
+  
+  \item Autumn phenology delays, but much less than spring \citep{gallinat_autumn_2015,jeong_macroscale_2014} and driven by temperature and photoperiod \citep{cooke_dynamic_2012,flynn_temperature_2018,korner_phenology_2010,delpierre_temperate_2016}; shifts are weaker than springs \citep{gallinat_autumn_2015,jeong_macroscale_2014}
+  
+  
   \end{enumerate}
   
 % Paragraph 2
-\item Shifts in spring and autumn phenology supports the assumption that longer growing seasons increase tree growth
+\item Shifts in spring and autumn phenology supports the assumption that longer growing seasons increase tree growth \citep{keenan_net_2014, stridbeck_partly_2022}
   \begin{enumerate}
-  \item Recent research shows that this may not be the case
-  \item This has possible consequences on forest carbon cycle projections
+  
+  \item Recent research shows that this may not be the case \citep{dow_warm_2022,green_limits_2022,silvestro_longer_2023}
+  
+  \item Cabon showed at this decoupling at the global scale and Dow showed it locally.
+  
+  \item Dow showed earlier growth onset did not increase growth rate nor over all yearly growth increment.
+  \item This has possible consequences on forest carbon cycle projections \citep{richardson_climate_2013,swidrak_comparing_2013}.
+  
   \item The different effects that shifting spring and fall events have on growth could impact these projections
+  
   \end{enumerate}
   
 % Paragraph 3
-\item 
+\item Understanding these finds requires answering why trees do not grow more despite longer growing seasons.
   \begin{enumerate}
-  \item Understanding these finds requires answering why trees do not grow more despite longer growing seasons.
-  \item We don't understand how carbon allocation to above-ground biomass, despite it being one of the largest carbon sink
+  \item Yes
+  
+  \item We don't understand how carbon is alocated to above-ground biomass, despite it being one of the largest carbon sink
+  
   \item Trees may be source or sink limited, which enphasizes the importance of understanding the temperature sensitivity relationship between growth and photosynthesis
+  
   \item Growth may be more sensitive to varying environmental conditions than photosynthesis, which could mislead models. 
-  \item Hard nature of climate change makes uunderstanding the internal physiological constraints and external constraints to growth critical
+  
+  \item Linear representation of growth as a function of carbon assimilation is wrong 
+  
+  \item Hard nature of climate change makes understanding the internal physiological constraints and external constraints to growth critical
   \end{enumerate}
 
-% Paragraph 4
-\item Growth drivers differences across species need to be considered
-  \begin{enumerate} 
-  \item Phenology and the relationship between growth and growing season length varies heavily accross species
-  \item Polling all species together in carbon sequestrations models is a weakness
-  \item We propose to use ground-based observations to address this issue
-  \item These are useful to for the growth temporality of trees not suitable for experimental trials
-  \item Cambial and leaf phenology are closely synchronized, so we can use them to as a proxy for start and end of season
+\item How trees internal programming and their susceptibility to environmental conditions could constrain their growth
+  \begin{enumerate}
+  \item Growth as any other biological mechanism is genetically controlled.
+  
+  \item Tree's growth plasticity is strongly internally regulated, so trees can potentially just not increase growth by that much.
+  
+  \item While CO2 concentrations increased, other factors can be limiting.
+  
+  \item Droughts during longer seasons can offset benefits of an extended period to grow.
+  
+  \item Competition for nutrients, water and light can also offset a tree's capacity to take advantage of extra days in the season
+
   \end{enumerate}
   
-\item How local adaptation could inform growth responses of species under future climate change
-
 % Paragraph 5
 \item Understanding the constraints to growth requires defining the growing season and growth
   \begin{enumerate}
+  
   \item Different definitions of GS: we propose to use calendar (number of days) and thermal season (heat accumulation)
+  
+  \item The calendar season explicitly assumes that the number of days in the season is what matters in trees responses to growth, underlying that the growth rate remains relatively stable throughout the season. Accounting for just the days, may reveal the role of some neglected cooler days in the season that are of low importance for the thermal season.
+  
   \item Xylogenesis throughout the growing season 
+  
   \item Tree rings as a proxy for growth
+  
   \end{enumerate}
   
-% Paragraph 6
-\item Question(s?): Do trees grow more with longer growing seasons?
-  \begin{enumerate}
-  \item
+% Paragraph 4
+\item Growth drivers differences across species need to be considered
+  \begin{enumerate} 
+  
+  \item Phenology and the relationship between growth and growing season length varies heavily accross species
+  
+  \item Pooling all species together in carbon sequestrations models is a weakness
+  
+  \item We propose to use ground-based observations to address this issue
+  
+  \item These are useful to for the growth temporality of trees not suitable for experimental trials
+  
+  \item Cambial and leaf phenology are closely synchronized, so we can use them to as a proxy for start and end of season
+  
   \end{enumerate}
+  
+\item Local adaptation could inform growth responses of species under future climate change.
+  \begin{enumerate} 
+  \item Provenance refers to the geographic and climatic origin of a population.
+  
+  \item Trees from northern provenances sometimes have later spring phenology (Zeng2024Weak) and often earlier autumn phenology, thus a shorter growing season than southern provenance (*Vitasse2014TheInteraction and many other papers)
+  
+  \item This is especially true for budset, with the phenotypic variance in budset---which marks the end of primary growth---being strongly related to provenance with photoperiod acting as the primary cue (*Way2015Photoperiod)
+  
+  \item Thus, common gardens with provenances across a latitudinal gradient can inform tree's growth responses to future climatic conditions.
+  
+  \end{enumerate} 
 
-\item Objectives
+% Paragraph 6
+\item We will answer if trees grow more with longer growing seasons in a common garden using juvenile deciduous trees.
   \begin{enumerate}
   \item Determine if trees grow more with longer thermal vs calendar season (ref: conceptual figure)
   \item Understand the calendar growing season relationship with growth and how it relates to the SOS and EOS
   \item Determine how growth changes across species and their provenances
+  \item We will look at this using four species from four provenances across three years using both leaf phenology and tree rings.
   \end{enumerate}
 \end{enumerate}
-% ===========================================================================================================
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Methods}
-% ===========================================================================================================
-\begin{enumerate}
-\item Common garden set up and location
-  \begin{enumerate}
-  \item Seed collection of 17 woody species across a latitudinal gradient
-  \item Four sites Harvard Forest, the White mountains, Second College Grant of Dartmouth,
-College, and St. Hippolyte.
-  \item Seeds germinated following standard germination protocols in 2016
-  \item Seedlings planted at Weld Hill
-  \item Design was a randomized 16 plot blocks, with shade cloth
-  \item Plots weeded and watered throughout the study, pruned in the fall of 2020
-  \end{enumerate}
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-\item Leaf phenology observations
-  \begin{enumerate}
-  \item We observed leaf phenology twice per week (2018-2019) or once per week (2020)
-  \item We used BBCH scale
-  \end{enumerate}
-  
-\item Cookie collection
-  \begin{enumerate}
-  \item 
-  \end{enumerate}
-\end{enumerate}
-
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Results}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 Separate document
 
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Discussion}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\begin{enumerate}
+\item What we did, how we did it and what we found
+  \begin{enumerate}
+  
+  \item We used 81 juvenile trees of four species across four provenances to understand if longer growing seasons using leaf phenology increased growth using tree rings
+  
+  \item We found that longer growing seasons increased growth for all species, but varied depending on the metric 
+  
+  \item Thermal season was a better predictor for growth than the calendar season
+  \end{enumerate}
+
+\item Thermal season being a better predictor than the calendar season may be caused by it weighting the relative importance of the days on growth better than the calendar season
+  \begin{enumerate}
+  
+  \item Growth rate follows a temperature response curve, thus trees don't grow at the same speed all year round
+  
+  \item Cool and short spring days count for less in the thermal season compared to the calendar season where each day counts the same
+  
+  \end{enumerate}
+  
+\item Disentangling the calendar season with the start and end of season may reveal something...
+  \begin{enumerate}
+  \item 123
+  \end{enumerate}
+
+\item Our trees grew more with longer seasons in absence of external constraints
+  \begin{enumerate}
+  \item Droughts can strongly impact tree growth, thus when seasons are longer, but not drier, trees just may be able to fully take advantage of these extra days
+  \item Earlier spring means trees start water uptake earlier, which may increase the severity of droughts later in the season
+  \item Dow showed that growth and growing season length are decoupled in a natural system where trees compete for water, but also for light and nutrients
+  \item Though we did not control for nutrients, our study design allowed us to control for light availability where taller trees did not shade the others at the life stage we looked at
+  \item The timing of phenological phases are shifting and this will affect inter-specific competition for resources, this higlights the importance of accounting for competition when adressing this question
+  \end{enumerate}
+
+\item Our species have different life history strategies and this may inform how they respond to growing season length
+  \begin{enumerate}
+  \item 123
+  \end{enumerate}
+
+\item We found little effect of provenance, suggesting local adaption on growth may be weak under current conditions
+  \begin{enumerate}
+  \item 123
+  \end{enumerate}
+
+\item Our study has limitations
+  \begin{enumerate}
+  \item We had low sample size and not individuals for each provenance for all species 
+  \item We didn't account for extreme temperatures in our models, though there was no extended heat wave periods throughout the study
+  \end{enumerate}
+  
+\item Our results highlights the importance of accounting for 
+  \begin{enumerate}
+  \item 123
+  \end{enumerate}
+  
+\end{enumerate}
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% REFERENCES %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\bibliography{ExportedItems}
+\bibliographystyle{nature} 
+
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplement %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
+\section*{Supplemental results}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
 \end{document}
