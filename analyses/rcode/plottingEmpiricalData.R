@@ -267,7 +267,7 @@ par(mfrow = c(length(unique(comb2$year)), 1))
 for (yr in sort(unique(comb2$year))) { # i =1
   hist(comb2$doy[comb2$year == yr], breaks = seq(0, 366, by = 14),
        main = yr, xlab = "Day of year", xlim = c(0, 366), ylim = c(0,4),
-       ylab = "Number of observations per 14 days")
+       ylab = "Number of observations per 14 days", col = "blue")
   bbx <- bb[bb$year == yr,]
   segments(x0 = bbx$min, y0 = 0, y1 = 4, lwd = 2, lty = 2, col = "darkgreen")
   segments(x0 = bbx$mean, y0 = 0, y1 = 4, lwd = 2, lty = 2, col = "black")

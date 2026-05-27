@@ -1624,15 +1624,13 @@ layout(matrix(c(1,1,2,3,4,5), nrow = 2, ncol = 3), widths = c(1.2, 1, 1))
 
 # Left: mu plot
 par(mar = c(4, 4, 5, 1))
-wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
-            "2019" = wes_palettes$FantasticFox1[4],
-            "2020" = wes_palettes$FantasticFox1[5])
+
 y_pos_yr <- rev(ayear_df2$year)
 ayear_df2$year_name <- as.character(ayear_df2$year_name)
 plot(ayear_df2$mean, y_pos_yr,
      xlim = c(-2, 2), ylim = c(0.5, 3.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 3, col = wcyear[ayear_df2$year_name],
+     yaxt = "n", pch = 16, cex = 3, col = adjustcolor(colsyr[as.character(yr)], alpha.f = 1),
      frame.plot = TRUE, cex.lab = mysizelab, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = y_pos_yr, 
@@ -1652,8 +1650,8 @@ for(sp in species) {
   boxplot(lengthMM ~ year, data = dat,
           # main = bquote(italic(.(sp))),
           xlab = "Year", ylab = "Ring width (mm)",
-          col = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.5),
-          border = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.8),
+          col = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2),
+          border = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2),
           medcol = "black",
           whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black",
           cex.axis = mysizeaxis, cex.lab = mysizelab)
