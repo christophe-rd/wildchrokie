@@ -76,3 +76,16 @@ tscolslatbi <- c(
   "Q. rubra"= renoir[10],
   "T. americana"= renoir[11]
 )
+
+colsyr <- c(
+  "2015" = "#381a61",  # Archambault deep purple
+  "2016" = "#43b284",  # Egypt green
+  "2017" = "#7c4b73",  # Archambault mauve
+  "2018" = "#46ACC8",  # FIXED — blue
+  "2019" = "#E58601",  # FIXED — orange
+  "2020" = "#B40F20",  # FIXED — red
+  "2021" = "#0a3351",  # Hokusai2 dark navy
+  "2022" = "#f9d14a",  # Archambault yellow
+  "2023" = "#43429b",  # Manet blue-purple
+  "2024" = "#466c4b"   # Cassatt2 forest green
+)

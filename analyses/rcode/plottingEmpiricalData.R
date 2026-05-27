@@ -35,6 +35,8 @@ colnames(countfrost) <- c("year", "countFrostFree")
 
 emp <- merge(emp, countfrost, by = "year")
 
+aggregate(budset ~ site, emp, FUN = mean)
+emp
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Variation by year vs by species
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

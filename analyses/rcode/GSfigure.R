@@ -158,8 +158,12 @@ for (y in years) {
                                 type = "B")
 }
 
-prewarm <- subset(logan, year > 1959 & year < 1981)
-poswarm <- subset(logan, year > 1999 & year < 2021)
+baselineperiod <- subset(logan, year >1940 & year < 1981)
+baselinemean <- mean(baselineperiod$meanTempC)
+prewarm <- subset(logan, year > 1954 & year < 1976)
+# prewarm$meanTempC <- prewarm$meanTempC - baselinemean
+poswarm <- subset(logan, year > 2004 & year < 2026)
+# poswarm$meanTempC <- poswarm$meanTempC - baselinemean
 
 mean_pre <- aggregate(meanTempC ~ doy, data = prewarm, FUN = mean, na.rm = TRUE)
 mean_pos  <- aggregate(meanTempC ~ doy, data = poswarm,  FUN = mean, na.rm = TRUE)
@@ -180,9 +184,9 @@ mean_pos_gdd  <- aggregate(GDD_5 ~ doy, data = poswarm,  FUN = mean, na.rm = TRU
 threshold <- 5
 x_poly <- c(doy_seq, rev(doy_seq))
 y_poly <- c(pmin(smooth_pre, threshold), rev(rep(0, length(doy_seq))))
-
+"#FFF2FF"
 # y-axis limit based on real data
-ylim_temp <- c(0, max(c(smooth_pre, smooth_cc), na.rm = TRUE) * 1.1)
+ylim_temp <- c(0,max(smooth_cc))
 
 # Plot! --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 jpeg("figures/climate/gsconceptualfig.jpeg", width = 10, height = 8, units = "in", res = 400)
@@ -287,7 +291,7 @@ Arrows(x0 = 250, y0 = gdd_pre[250] + 50, x1 = 250, y1 = gdd_cc[250] - 200,
        arr.type = "triangle", arr.width = 0.3, lwd = 2, col = colcc)
 
 segments(x0 = ccsos + 0.8, x1 = ccsos + 0.8, y0 = -100, y1 = 900,  lwd = 1.5, lty = 2)
-segments(x0 = cceos,       x1 = cceos,        y0 = -100, y1 = 2850, lwd = 1.5, lty = 2)
+segments(x0 = cceos, x1 = cceos, y0 = -100, y1 = 2850, lwd = 1.5, lty = 2)
 
 dev.off()
 

@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -261,6 +261,10 @@ species_order <- c(
   "B. alleghaniensis", 
   "B. papyrifera", 
   "B. populifolia")
+
+# size labels and stuff
+mysizeaxis <- 1.1
+mysizelab <- 1.2
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GDD: Prep posterior reconstruction #####
@@ -544,6 +548,14 @@ for (i in seq_along(sppvecnum)) { # i = 1
     cex = 1,
     col = line_col
   )
+  
+  legend("topleft",
+         legend = names(yrshapes),
+         pch    = yrshapes,
+         col    = line_col,
+         pt.cex = 1.5, bty = "n", cex = 1.2,
+         title  = "Year", title.font = 2)
+
 }
 
 dev.off()
@@ -1116,9 +1128,10 @@ widths = c(1.1, 1.2, 0.6))
 par(mar = custommar)
 plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in averaged GDD of 7 spring days", ylab = "",
+     xlab = "log(ring width) change in mean GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
-     panel.first = abline(v = 0, lty = 2, col = "black"))
+     panel.first = abline(v = 0, lty = 2, col = "black"),
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos,
@@ -1133,7 +1146,8 @@ plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.4, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
-     panel.first = abline(v = 0, lty = 2, col = "black"))
+     panel.first = abline(v = 0, lty = 2, col = "black"),
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
@@ -1148,7 +1162,8 @@ plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
-     panel.first = abline(v = 0, lty = 2, col = "black"))
+     panel.first = abline(v = 0, lty = 2, col = "black"),
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
@@ -1163,7 +1178,8 @@ plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
-     panel.first = abline(v = 0, lty = 2, col = "black"))
+     panel.first = abline(v = 0, lty = 2, col = "black"),
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
@@ -1177,7 +1193,8 @@ par(mar = custommar)
 plot(emp$pgsGDD5, dgdd$y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
-     main = "")
+     main = "",
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
@@ -1209,7 +1226,8 @@ par(mar = custommar)
 plot(emp$pgsGSL, dgsl$y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season length (days)", ylab = "log(ring width)",
-     main = "")
+     main = "",
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
@@ -1240,7 +1258,8 @@ par(mar = custommar)
 plot(emp$leafout, dsos$y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "log(ring width)",
-     main = "")
+     main = "",
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
@@ -1271,7 +1290,8 @@ par(mar = custommar)
 plot(emp$budset, deos$y, type = "n", frame = FALSE,
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "log(ring width)",
-     main = "")
+     main = "",
+     cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
 
 # Loop over trees again to plot each tree individually
@@ -1510,7 +1530,6 @@ special_point <- data.frame(
 special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
 points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
 
-
 map_plot <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
@@ -1522,70 +1541,42 @@ map_plot <- ggplot(data = world) +
   theme(
     strip.text        = element_blank(),
     legend.key.height = unit(1.5, "lines"),
-    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
+    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    axis.title        = element_text(size = 14),
+    plot.margin       = margin(t = 5, b = 5, l = 2, r = 2)
   )
 
-# Inset: North America overview
-bbox_poly <- st_as_sfc(st_bbox(c(
-  xmin = lon_min, xmax = lon_max,
-  ymin = lat_min, ymax = lat_max
-), crs = 4326))
-
-north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
-
-inset_map <- ggplot(data = north_america) +
-  geom_sf(fill = "white", color = "gray60", linewidth = 0.1) +
-  geom_sf(data = bbox_poly, 
-          # fill = NULL, 
-          color = "black", alpha = 0, linewidth = 0.7) +
-  coord_sf(xlim = c(-170, -50), ylim = c(15, 75), expand = FALSE) +
-  theme_void() +
-  theme(
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    panel.background = element_rect(fill = "aliceblue")
-  )
-
-# Combine using cowplot
 final_map <- ggdraw(map_plot) +
-  draw_plot(
-    inset_map,
-    x = 0.67,
-    y = 0.62,
-    width = 0.31,
-    height = 0.35
-  )
+  draw_plot(inset_map, x = 0.67, y = 0.62, width = 0.31, height = 0.35)
 
-
-# mu plot for asite
 forest_grob <- as_grob(function() {
-  par(mar = c(7, 5, 5, 0.5))
-  
+  par(mar = c(5, 5, 2.5, 0.5))
   plot(site_df2$mean, y_pos_site,
        xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
        xlab = "log(ring width) intercept values", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
-       panel.first = abline(v = 0, lty = 2, col = "black"))
+       panel.first = abline(v = 0, lty = 2, col = "black"),
+       cex.axis = mysizeaxis, cex.lab = mysizelab)
   axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-  segments(site_df2$p5,  y_pos_site,
-           site_df2$p95, y_pos_site,
-           col = sitecolors, lwd = 1.5)
-  segments(site_df2$p25, y_pos_site,
-           site_df2$p75, y_pos_site,
-           col = sitecolors, lwd = 3)
+  segments(site_df2$p5,  y_pos_site, site_df2$p95, y_pos_site, col = sitecolors, lwd = 1.5)
+  segments(site_df2$p25, y_pos_site, site_df2$p75, y_pos_site, col = sitecolors, lwd = 3)
+  mtext("(a) log(ring width) intercept values", side = 3, adj = 0, font = 2, cex = 1.2, line = 0.5)
 })
 
-combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.7))
+combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.6),
+                      align = "h", axis = "tb")
 
-combined_labeled <- ggdraw(combined) +
+combined <- ggdraw(combined) +
   draw_plot_label(
-    label    = c("(a)", "(b)"),
-    x        = c(0.098, 0.418),   # x position: left edge of each panel
-    y        = c(0.84, 0.84),     # y position: top of figure
+    label    = "(b) Provenance map",
+    x        = 0.38,
+    y        = 0.97,
     size     = 14,
     fontface = "bold"
   )
-ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
+
+ggsave("figures/growthModelsMain/asiteMap.pdf", combined, width = 10, height = 5)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
@@ -1626,7 +1617,6 @@ species <- unique(emp$latbi)
 years <- sort(unique(emp$year))
 n_sp <- length(species)
 
-
 jpeg("figures/growthModelsMain/muayear_boxplot.jpeg",
      width = 3200, height = 1600, res = 300)
 par(oma = c(0, 0, 2, 0))
@@ -1643,16 +1633,16 @@ plot(ayear_df2$mean, y_pos_yr,
      xlim = c(-2, 2), ylim = c(0.5, 3.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
      yaxt = "n", pch = 16, cex = 3, col = wcyear[ayear_df2$year_name],
-     frame.plot = TRUE,
+     frame.plot = TRUE, cex.lab = mysizelab, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = y_pos_yr, 
      labels = unique(ayear_df2$year_name)[order(ayear_df2$year, decreasing = TRUE)],
-     las = 1, tick = TRUE)
+     las = 1, tick = TRUE, cex.axis = mysizeaxis)
 segments(ayear_df2$p5,  y_pos_yr, ayear_df2$p95, y_pos_yr,
          col = wcyear[ayear_df2$year_name], lwd = 2)
 segments(ayear_df2$p25, y_pos_yr, ayear_df2$p75, y_pos_yr,
          col = wcyear[ayear_df2$year_name], lwd = 4)
-mtext("(a) Basal ring width (mm) for each year", 
+mtext("(a) log(ring width) intercept estimates for each year", 
       side = 3, outer = TRUE, adj = 0.05, font = 2, cex = 0.9, line = -2)
 
 # Right: boxplots
@@ -1665,7 +1655,8 @@ for(sp in species) {
           col = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.5),
           border = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.8),
           medcol = "black",
-          whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black")
+          whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black",
+          cex.axis = mysizeaxis, cex.lab = mysizelab)
   mtext(bquote(italic(.(sp))), side = 3, line = 0.5, cex = 0.8)
   stripchart(lengthMM ~ year, data = dat,
              method = "jitter", jitter = 0.08,
