@@ -76,13 +76,13 @@
 
 
 
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Introduction}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Methods}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \subsection*{Common garden setup}
 We collected seeds from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings. In the spring of 2017, we planted them outside in the garden located at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020. We initially collected seeds of 18 species of northeastern North American trees and shrubs. We exclude the shrubs, and the five species with low survivorship in the analyses. Thus, we have four species in the \textit{Betulaceae} family (Table \ref{tab:provs}).
 
@@ -103,7 +103,6 @@ We mounted the cores on wooden mounts, and sanded both the cores and cross-secti
 We performed visual cross dating, but did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths, but we accounted for it in our statistical analyses by including a year intercept. \\
 
 \subsection*{Data analyses}
-%DL22May: personal preference, but I usually put these package details closer to the end. It is more exciting to open with the model!
 To understand how growth shifted with season lengths we used linear Bayesian hierarchical models. With these models, we estimated ring width as a function of four different season predictors. First, the thermal season represents the number of growing degree days (GDD) calculated as the mean daily temperature above 5\degree C accumulated between leafout and budset, calculated for each tree per year. Second, the calendar season or growing season length (GSL) is the budset date subtracted by the leafout date. Finally, to better understand trees responses to the calendar season, we used leafout at the start of the season (SOS) and budset or end of season (EOS) as separate predictors that represent the boundaries of the growing season.
 
 \[
@@ -126,17 +125,18 @@ where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{sp
 To account for differences in temperature across years, we used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). We calculated daily growing degree days (GDD) by subtracting a 5\degree C threshold from the mean daily temperature. \\
 
 \par
-As a supplementary analyses, we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections which gave us three radii from pit to bark. We then calculated the area of each ring by substracting the radius from the inner ring from the outer ring as shown below
+As a supplementary analyses, we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring:
 
 \[
 \begin{aligned} 
-\pi \times (\text{Inner radius}^2 - \text{Outer radius}
+\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)
 \end{aligned}
 \]
+We then averaged across the three BAI for each ring and fit the models with the four different predictors.
 
 % Table count per spp per prov 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon May 25 14:37:25 2026
+% Wed May 27 16:35:24 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances. We had a total of 81 individual trees} 
@@ -154,16 +154,15 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 \end{tabular}
 \end{table}
 
-%DL22May: One key thing missing from your methods is the species---you never mention in the text that you have four species. I would explain this, maybe even that X were planted but at the time of sampling only these four survived in sufficient numbers. Also I would include the total number of individuals in the Table caption.
-% Don't forget to add methods for the new analyses too! Calculating BAI and the additional models you ran to test the effects of hot temperatures.
-% ===========================================================================================================
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Results}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
-
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Discussion}
-% ===========================================================================================================
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
@@ -174,6 +173,15 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % Supplement %
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
+\section*{Supplemental results}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
 \caption{Phenology observatons bi-weekly.}

@@ -44,6 +44,8 @@
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
 
+
+% plug this somewhere: while warmer spring temperatures trigger the onset of cell production, it alone doesnt increase wood prod with water playing. amore decisive role on wood prod (Wang2025Seasonal)
 % Paragraph 1
 \item The most frequently observed biological impact of climate change is major changes in phenology \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}
   \begin{enumerate}
