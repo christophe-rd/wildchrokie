@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1112,6 +1112,10 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 custommar <- c(4, 4, 3, 1.2)
 
+# pictogram parameters
+# icon
+
+
 jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
      width = 2800, height = 3000, res = 300)
 
@@ -1136,14 +1140,33 @@ segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("(a) Growing degree days", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(a) Growing degree days", 
+      side = 3, adj = 0.40, line = 1, font = 2, cex = 1)
+
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.40, usr[1] + diff(usr[1:2]) * 0.22, usr[4])
+# plot dimensions
+xrange <- diff(usr[1:2])
+yrange <- diff(usr[3:4])
+# image size
+w <- xrange * 0.20
+h <- yrange * 0.35
+
+# center position
+cx <- usr[1]
+cy <- usr[4] + yrange * 0.05
+rasterImage(
+  img_thermom,
+  cx - w/2,   # left
+  cy - h/2,   # bottom
+  cx + w/2,   # right
+  cy + h/2,   # top
+  xpd = NA
+)
 
 # Row 2, Col 1, Slot 6 : GSL
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.4, 0.7), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1152,9 +1175,29 @@ segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("(b) Growing season length", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(b) Growing season length", 
+      side = 3, adj = 0.47, line = 1, font = 2, cex = 1)
+
 usr <- par("usr")
-rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+# plot dimensions
+xrange <- diff(usr[1:2])
+yrange <- diff(usr[3:4])
+# image size
+w <- xrange * 0.20
+h <- yrange * 0.35
+
+# center position
+cx <- usr[1]
+cy <- usr[4] + yrange * 0.05
+
+rasterImage(
+  img_calenda,
+  cx - w/2, 
+  cy - h/2, 
+  cx + w/2, 
+  cy + h/2, 
+  xpd = NA
+)
 
 # Row 3, Col 1, Slot 7 : SOS
 par(mar = custommar)
@@ -1168,12 +1211,31 @@ segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("(c) Start of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(c) Start of season",
+      side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
+
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.22, usr[4])
+# plot dimensions
+xrange <- diff(usr[1:2])
+yrange <- diff(usr[3:4])
+# image size
+w <- xrange * 0.20
+h <- yrange * 0.35
+
+# center position
+cx <- usr[1]
+cy <- usr[4] + yrange * 0.05
+rasterImage(
+  img_leafout,
+  cx - w/2,   
+  cy - h/2,   
+  cx + w/2,   
+  cy + h/2,   
+  xpd = NA
+)
 
 # Row 4, Col 1, Slot 8 : EOS
-par(mar = custommar)
+par(mar = custommar) 
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of budset", ylab = "",
@@ -1184,9 +1246,28 @@ segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
-mtext("(d) End of season", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(d) End of season", 
+      side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
+
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.45, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+# plot dimensions
+xrange <- diff(usr[1:2])
+yrange <- diff(usr[3:4])
+# image size
+w <- xrange * 0.20
+h <- yrange * 0.35
+
+# center position
+cx <- usr[1]
+cy <- usr[4] + yrange * 0.05
+rasterImage(
+  img_budset,
+  cx - w/2,   
+  cy - h/2,   
+  cx + w/2,   
+  cy + h/2,   
+  xpd = NA
+)
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
@@ -1328,6 +1409,7 @@ legend("center",
        title  = "Species", title.font = 2)
 
 dev.off()
+
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### aspp ##### 
