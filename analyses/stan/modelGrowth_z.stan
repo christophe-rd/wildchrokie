@@ -32,8 +32,8 @@ transformed parameters{
 vector[Ntreeid] atreeid;
 atreeid = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
 
-vector[Ntreeid] asite;
-asite = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
+vector[Nsite] asite;
+asite = 0 + sigma_asite*zasite; // non-centered parameterization on atreeid
 
 
 array[N] real ypred;
