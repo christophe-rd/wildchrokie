@@ -1696,9 +1696,8 @@ dev.off()
 ##### a year with box plot per species and year #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 species <- unique(emp$latbi)
-years <- sort(unique(emp$year))
+years <- sort(unique(as.character(emp$year)))
 n_sp <- length(species)
-
 jpeg("figures/growthModelsMain/muayear_boxplot.jpeg",
      width = 3200, height = 1600, res = 300)
 par(oma = c(0, 0, 2, 0))
@@ -1707,33 +1706,38 @@ layout(matrix(c(1,1,2,3,4,5), nrow = 2, ncol = 3), widths = c(1.2, 1, 1))
 # Left: mu plot
 par(mar = c(4, 4, 5, 1))
 
-y_pos_yr <- rev(ayear_df2$year)
-ayear_df2$year_name <- as.character(ayear_df2$year_name)
+ayear_df2 <- ayear_df2[rev(ayear_df2$year),]
+y_pos_yr <- ayear_df2$year
+# yr <- ayear_df2$year_name
+
 plot(ayear_df2$mean, y_pos_yr,
      xlim = c(-2, 2), ylim = c(0.5, 3.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 3, col = adjustcolor(colsyr[as.character(yr)], alpha.f = 1),
+     yaxt = "n", pch = 16, cex = 3, 
+     col = adjustcolor(colsyr[as.character(ayear_df2$year_name)], alpha.f = 1),
      frame.plot = TRUE, cex.lab = mysizelab, 
      panel.first = abline(v = 0, lty = 2, col = "black"))
 axis(2, at = y_pos_yr, 
-     labels = unique(ayear_df2$year_name)[order(ayear_df2$year, decreasing = TRUE)],
+     labels = ayear_df2$year_name,
      las = 1, tick = TRUE, cex.axis = mysizeaxis)
 segments(ayear_df2$p5,  y_pos_yr, ayear_df2$p95, y_pos_yr,
-         col = wcyear[ayear_df2$year_name], lwd = 2)
+         col = colsyr[as.character(ayear_df2$year_name)], lwd = 2)
 segments(ayear_df2$p25, y_pos_yr, ayear_df2$p75, y_pos_yr,
-         col = wcyear[ayear_df2$year_name], lwd = 4)
-mtext("(a) log(ring width) intercept estimates for each year", 
-      side = 3, outer = TRUE, adj = 0.05, font = 2, cex = 0.9, line = -2)
+         col = colsyr[as.character(ayear_df2$year_name)], lwd = 4)
+mtext("(a) Year intercepts", 
+      side = 3, outer = TRUE, adj = 0.05, font = 2, cex = 0.9, line = 0)
 
 # Right: boxplots
-for(sp in species) {
-  par(mar = c(4, 5, 5, 1))
+
+for(sp in species) { # sp = "A. incana" 
+  par(mar = c(4, 5, 3, 1))
   dat <- emp[emp$latbi == sp,]
+  dat$year <- factor(dat$year, levels = sort(as.character(ayear_df2$year_name)))
   boxplot(lengthMM ~ year, data = dat,
           # main = bquote(italic(.(sp))),
           xlab = "Year", ylab = "Ring width (mm)",
-          col = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2),
-          border = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2),
+          col = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
+          border = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
           medcol = "black",
           whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black",
           cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1744,8 +1748,10 @@ for(sp in species) {
              vertical = TRUE, add = TRUE)
 }
 mtext("(b) Ring width (mm) observations per year and species",
-      side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = -2)
+      side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = 0)
 dev.off()
+
+
 }
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
