@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1588,7 +1588,6 @@ library(rnaturalearthdata)
 library(sf)
 library(cowplot)
 
-
 site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
 
 # order same as figure
@@ -1612,6 +1611,7 @@ special_point <- data.frame(
 special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
 points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
 
+
 map_plot <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
@@ -1623,42 +1623,45 @@ map_plot <- ggplot(data = world) +
   theme(
     strip.text        = element_blank(),
     legend.key.height = unit(1.5, "lines"),
-    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    axis.title        = element_text(size = 14),
-    plot.margin       = margin(t = 5, b = 5, l = 2, r = 2)
+    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
   )
 
-final_map <- ggdraw(map_plot) +
-  draw_plot(inset_map, x = 0.67, y = 0.62, width = 0.31, height = 0.35)
+north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
 
+# Combine using cowplot
+final_map <- ggdraw(map_plot)
+
+
+# mu plot for asite
 forest_grob <- as_grob(function() {
-  par(mar = c(5, 5, 2.5, 0.5))
+  par(mar = c(7, 5, 5, 0.5))
+  
   plot(site_df2$mean, y_pos_site,
        xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
-       xlab = "log(ring width) intercept values", ylab = "Latitude",
+       xlab = "Provenance intercept values (log(mm))", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
-       panel.first = abline(v = 0, lty = 2, col = "black"),
-       cex.axis = mysizeaxis, cex.lab = mysizelab)
+       panel.first = abline(v = 0, lty = 2, col = "black"))
   axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-  segments(site_df2$p5,  y_pos_site, site_df2$p95, y_pos_site, col = sitecolors, lwd = 1.5)
-  segments(site_df2$p25, y_pos_site, site_df2$p75, y_pos_site, col = sitecolors, lwd = 3)
-  mtext("(a) log(ring width) intercept values", side = 3, adj = 0, font = 2, cex = 1.2, line = 0.5)
+  segments(site_df2$p5,  y_pos_site,
+           site_df2$p95, y_pos_site,
+           col = sitecolors, lwd = 1.5)
+  segments(site_df2$p25, y_pos_site,
+           site_df2$p75, y_pos_site,
+           col = sitecolors, lwd = 3)
 })
 
-combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.6),
-                      align = "h", axis = "tb")
+combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.7))
 
-combined <- ggdraw(combined) +
+combined_labeled <- ggdraw(combined) +
   draw_plot_label(
-    label    = "(b) Provenance map",
-    x        = 0.38,
-    y        = 0.97,
+    label    = c("(a) Provenance intercepts", "(b) Provenance map"),
+    x        = c(-0.05, 0.3),   # x position: left edge of each panel
+    y        = c(0.92, 0.92),     # y position: top of figure
     size     = 14,
     fontface = "bold"
   )
-
-ggsave("figures/growthModelsMain/asiteMap.pdf", combined, width = 10, height = 5)
+ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
@@ -1704,7 +1707,7 @@ par(oma = c(0, 0, 2, 0))
 layout(matrix(c(1,1,2,3,4,5), nrow = 2, ncol = 3), widths = c(1.2, 1, 1))
 
 # Left: mu plot
-par(mar = c(4, 4, 5, 1))
+par(mar = c(4, 4, 3.2, 1))
 
 ayear_df2 <- ayear_df2[rev(ayear_df2$year),]
 y_pos_yr <- ayear_df2$year
@@ -1712,7 +1715,7 @@ y_pos_yr <- ayear_df2$year
 
 plot(ayear_df2$mean, y_pos_yr,
      xlim = c(-2, 2), ylim = c(0.5, 3.5),
-     xlab = "Ring width intercept values (mm)", ylab = "",
+     xlab = "Year intercept values (log(mm))", ylab = "",
      yaxt = "n", pch = 16, cex = 3, 
      col = adjustcolor(colsyr[as.character(ayear_df2$year_name)], alpha.f = 1),
      frame.plot = TRUE, cex.lab = mysizelab, 
