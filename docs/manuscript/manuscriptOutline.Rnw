@@ -65,7 +65,7 @@
 \item Shifts in spring and autumn phenology supports the assumption that longer growing seasons increase tree growth \citep{keenan_net_2014, stridbeck_partly_2022}
   \begin{enumerate}
   
-  \item Recent research shows that this may not be the case \citep{dow_warm_2022,green_limits_2022,silvestro_longer_2023}
+  \item Recent research shows that this may not be the case \citep{dow_warm_2022,green_limits_2022,silvestro_longer_2023,*wang2025Seasonal}
   
   \item Cabon showed at this decoupling at the global scale and Dow showed it locally.
   
@@ -79,28 +79,29 @@
 % Paragraph 3
 \item Understanding these finds requires answering why trees do not grow more despite longer growing seasons.
   \begin{enumerate}
-  \item Yes
   
-  \item We don't understand how carbon is alocated to above-ground biomass, despite it being one of the largest carbon sink
+  \item We don't understand how carbon is alocated to above-ground biomass, despite it being one of the largest carbon sink \citep{cabon_cross-biome_2022}.
   
-  \item Trees may be source or sink limited, which enphasizes the importance of understanding the temperature sensitivity relationship between growth and photosynthesis
+  \item Linear representation of growth as a function of carbon assimilation is wrong \citep{cabon_cross-biome_2022}
   
-  \item Growth may be more sensitive to varying environmental conditions than photosynthesis, which could mislead models. 
+  \item Trees may be source or sink limited, which enphasizes the importance of understanding the temperature sensitivity relationship between growth and photosynthesis \cite{gessler_beyond_2024}.
   
-  \item Linear representation of growth as a function of carbon assimilation is wrong 
+  \item Growth may be more sensitive to varying environmental conditions than photosynthesis, which could mislead models \citep{cabon_cross-biome_2022,cabon_water_2020,muller_water_2011,peters_turgor_2021}
   
-  \item Hard nature of climate change makes understanding the internal physiological constraints and external constraints to growth critical
+  \item Hard nature of climate change makes understanding the internal physiological constraints and external constraints to growth critical \citep{almagro_longterm_2025,cabon_cross-biome_2022,wolkovich_why_2025}
   \end{enumerate}
 
 \item How trees internal programming and their susceptibility to environmental conditions could constrain their growth
   \begin{enumerate}
-  \item Growth as any other biological mechanism is genetically controlled.
+  \item Growth as any other biological mechanism is genetically controlled \citep{*howe2003From,wolkovich_why_2025}
   
   \item Tree's growth plasticity is strongly internally regulated, so trees can potentially just not increase growth by that much.
   
-  \item While CO2 concentrations increased, other factors can be limiting.
+  \item Tree plasticity is another highly variable trait that changes with their life history strategies (*Cuny2012Life, *Michelot2012Comparing)
   
-  \item Droughts during longer seasons can offset benefits of an extended period to grow.
+  \item While CO2 concentrations increased, drought, heat waves, competition, insect outbreaks and spring frosts can be constraining factors offsetting those potential benefits \citep{tyree_xylem_2002, choat_triggers_2018, li_widespread_2023,trenberth_global_2014,intergovernmental_panel_on_climate_change_detection_2014,chiang_evidence_2021,polgar_leafout_2011,reinmann_compensatory_2023}.
+  
+  \item Droughts during longer seasons can offset benefits of an extended period to grow (*Kang2023AnEarlier)
   
   \item Competition for nutrients, water and light can also offset a tree's capacity to take advantage of extra days in the season
 
@@ -124,7 +125,7 @@
 \item Growth drivers differences across species need to be considered
   \begin{enumerate} 
   
-  \item Phenology and the relationship between growth and growing season length varies heavily accross species
+  \item Phenology and the relationship between growth and growing season length varies heavily across species (*Etzold2021Number)
   
   \item Pooling all species together in carbon sequestrations models is a weakness
   
@@ -142,7 +143,7 @@
   
   \item Trees from northern provenances sometimes have later spring phenology (Zeng2024Weak) and often earlier autumn phenology, thus a shorter growing season than southern provenance (*Vitasse2014TheInteraction and many other papers)
   
-  \item This is especially true for budset, with the phenotypic variance in budset---which marks the end of primary growth---being strongly related to provenance with photoperiod acting as the primary cue (*Way2015Photoperiod)
+  \item This is especially true for budset, with the phenotypic variance in budset---which marks the end of primary growth---being strongly related to provenance with photoperiod acting as the primary cue (*Way2015Photoperiod, *Soolanayakanahally2013Timing, *Aitken2016Time)
   
   \item Thus, common gardens with provenances across a latitudinal gradient can inform tree's growth responses to future climatic conditions.
   

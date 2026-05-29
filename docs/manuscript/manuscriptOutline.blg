@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: manuscriptOutline.aux
+The style file: nature.bst
+Database file #1: ExportedItems.bib
+Warning--I didn't find a database entry for "*wang2025Seasonal"
+Warning--I didn't find a database entry for "*howe2003From"
+`volume' is a missing field, not a string, for entry wolkovich_why_2025
+while executing---line 1016 of file nature.bst
+You've used 39 entries,
+            1865 wiz_defined-function locations,
+            696 strings with 14208 characters,
+and the built_in function-call counts, 12135 in all, are:
+= -- 982
+> -- 872
+< -- 2
++ -- 304
+- -- 265
+* -- 1357
+:= -- 2070
+add.period$ -- 119
+call.type$ -- 39
+change.case$ -- 38
+chr.to.int$ -- 0
+cite$ -- 39
+duplicate$ -- 367
+empty$ -- 928
+format.name$ -- 265
+if$ -- 2471
+int.to.chr$ -- 0
+int.to.str$ -- 39
+missing$ -- 40
+newline$ -- 198
+num.names$ -- 40
+pop$ -- 49
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 136
+stack$ -- 0
+substring$ -- 880
+swap$ -- 50
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 106
+width$ -- 41
+write$ -- 435
+(There was 1 error message)
