@@ -50,13 +50,13 @@
 \item The most frequently observed biological impact of climate change is major changes in phenology \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}
   \begin{enumerate}
   
-  \item Shifts in spring and autumn phenology modifies when seasons starts and ends \citep{duputie_phenological_2015}.
+  \item Shifts in spring and autumn phenology modifies when seasons start and end \citep{duputie_phenological_2015}.
   
   \item Understanding the consequences of these shifts requires understanding how much and why growing seasons have changed \citep{duputie_phenological_2015}.
   
   \item Spring phenology advances, \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014} driven by temperature \citep{chuine_why_2010,cleland_shifting_2007,penuelas_responses_2001}
   
-  \item Autumn phenology delays, but much less than spring \citep{gallinat_autumn_2015,jeong_macroscale_2014} and driven by temperature and photoperiod \citep{cooke_dynamic_2012,flynn_temperature_2018,korner_phenology_2010,delpierre_temperate_2016}; shifts are weaker than springs \citep{gallinat_autumn_2015,jeong_macroscale_2014}
+  \item Autumn phenology delays, but much less than spring \citep{gallinat_autumn_2015,jeong_macroscale_2014} and driven by temperature and photoperiod \citep{cooke_dynamic_2012,flynn_temperature_2018,korner_phenology_2010,delpierre_temperate_2016}
   
   
   \end{enumerate}
@@ -93,27 +93,27 @@
 % Paragraph 
 \item How trees internal programming and their susceptibility to environmental conditions could constrain their growth?
   \begin{enumerate}
-  \item Growth as any other biological mechanism is genetically controlled, and will thus vary by species \citep{*howe_genotype_2003,wolkovich_why_2025, silvestro2025From}
+  \item Growth as any other biological mechanism is genetically controlled, and will thus vary by species \citep{howe_genotype_2003,wolkovich_why_2025, silvestro2025From}
   
-  \item Tree plasticity is another highly variable trait that changes with their life history strategies \citep{cuny_couplings_2019,michelot_comparing_2012}, affecting how flexible their growth is in response to varying environmental conditions.
+  \item Tree plasticity is a highly variable trait that changes with species' life history strategies \citep{cuny_couplings_2019,michelot_comparing_2012}, affecting how flexible their growth is in response to varying environmental conditions.
   
-  \item While CO2 concentrations increased, drought, heat waves, competition, insect outbreaks and spring frosts---realities that are projected to change in frequency and severity with climate---can be constraining factors offsetting those potential benefits \citep{tyree_xylem_2002, choat_triggers_2018, li_widespread_2023,trenberth_global_2014,intergovernmental_panel_on_climate_change_detection_2014,chiang_evidence_2021,polgar_leafout_2011,reinmann_compensatory_2023}.
+  \item While CO2 concentrations increased, drought, heat waves, competition, insect outbreaks and spring frosts---factors projected to change in frequency and severity with a warming climate---can offset the benefits of longer seasons \citep{tyree_xylem_2002, choat_triggers_2018, li_widespread_2023,trenberth_global_2014,intergovernmental_panel_on_climate_change_detection_2014,chiang_evidence_2021,polgar_leafout_2011,reinmann_compensatory_2023}.
   
-  \item Droughts can offset benefits of an extended period to grow \citep{kang_earlier_2023} by stopping growth early \citep{dox_severe_2022} or inducing tissue mortality \citep{li_widespread_2023}.
+  \item Droughts can act as a severe growth constraint \citep{kang_earlier_2023} by stopping growth early \citep{dox_severe_2022} or inducing tissue mortality \citep{li_widespread_2023}.
   
-  \item Competition for nutrients, water and light can also offset a tree's capacity to take advantage of extra days in the season (*Cleland2024Effects)
+  \item Intra- and inter-specific competition for nutrients, water and light can also offset a tree's capacity to take advantage of extra days in the season \citep{cleland_effects_2024}.
 
   \end{enumerate}
   
 % Paragraph 
-\item Understanding the constraints to growth requires defining the growing season and growth
+\item Understanding the constraints to growth requires defining the growing season and growth.
   \begin{enumerate}
   
   \item Different definitions of GS: we propose to use calendar (number of days) and thermal season (window of opportunity of thermally favorable meteorological conditions for plant growth) \citep{korner_four_2023}
   
   \item The calendar season only accounts for the number of days in the season as the the predictors for growth, implying a stable growth rate throughout the season. 
   
-  \item Accounting just for the days, may reveal a role of some neglected cooler and shorter days in the season that are accounting little for the thermal season.
+  \item This may reveal a role of some neglected cooler and shorter days in the season that have a weak influence on the thermal season.
   
   \item Growth rate changes with temperature, which the thermal season accounts for and should therefore better predict growth responses.
   
@@ -126,14 +126,14 @@
   \end{enumerate}
   
 % Paragraph 
-\item Growth drivers differences across species need to be considered
+\item Growth drivers differences across species need to be considered.
   \begin{enumerate} 
   
   \item Phenology and the relationship between growth and growing season length varies heavily across species \citep{etzold_number_2022}
   
   \item Pooling all species together in carbon sequestrations models is a weakness \citep{green_limits_2022,cabon_cross-biome_2022,wolkovich_why_2025}
   
-  \item We propose to use ground-based leaf phenology  observations across several species to address this issue \citep{piao_plant_2019}
+  \item We propose to use ground-based leaf phenology observations across several species to address this issue \citep{piao_plant_2019}
   
   \item These observations provide valuable insights of the growth temporality of trees not suitable for experimental trials \citep{wolkovich_why_2025}
   
@@ -143,11 +143,11 @@
   
 \item Local adaptation could inform growth responses of species under future climate change \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}.
   \begin{enumerate} 
-  \item Provenance refers to the geographic and climatic origin of a population \citep{aitken_time_2016} (*Housset2018Tree, Aitken2015Time)
+  \item Provenance refers to the geographic and climatic origin of a population \citep{aitken_time_2016,housset_tree_2018}
   
-  \item Trees from northern provenances sometimes have later spring phenology (*Zeng2024Weak) and often end of season autumn phenology, thus a shorter growing season than southern provenance \citep{vitasse_interaction_2014}.
+  \item Trees from northern provenances sometimes have later spring phenology \citep{zeng_weak_2024} and often end of season autumn phenology=shorter growing season \citep{vitasse_interaction_2014}.
   
-  \item This is especially true for budset, with the phenotypic variance in budset---which marks the end of primary growth---being strongly related to provenance with photoperiod acting as the primary cue \citep{aitken_time_2016,soolanayakanahally_timing_2013,way_photoperiod_2015}.
+  \item This is especially true for budset---which marks the end of primary growth---, with its phenotypic variance being strongly related to provenance and photoperiod acting as the primary cue \citep{aitken_time_2016,soolanayakanahally_timing_2013,way_photoperiod_2015}.
   
   \item Thus, common gardens with provenances across a latitudinal gradient can inform tree's growth responses to future climatic conditions.
   
@@ -162,6 +162,12 @@
   \end{enumerate}
 \end{enumerate}
 
+% Conceptual figure
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
+\caption{We show tree ring widths (mm) across years and species in two ways: (a) as model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Methods}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
