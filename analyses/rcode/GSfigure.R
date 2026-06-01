@@ -8,13 +8,12 @@ options(max.print = 150)
 options(digits = 3)
 
 # Load library 
-library(rstan)
 library(future)
-library(wesanderson)
 library(patchwork) 
 library(rsvg)
 library(shape)
 library(pollen)
+
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
 } else if (length(grep("lizzie", getwd())) > 0) {
@@ -66,36 +65,6 @@ bs <- aggregate(budset ~ latbi, emp, FUN = mean)
 gslength <- merge(lo, bs, by = "latbi")
 
 
-years <- unique(gddyr$year)
-
-lines(dgddagg$doy, dgddagg$dgdd, col = "black", cex = 0.2)
-
-for (i in seq_along(years)) { # i = 1
-  
-  year_dat <- gddyr[gddyr$year == years[i], ]
-  
-  # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)?>
-  # x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
-  #               max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
-  # pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
-  # 
- # cumulated gdd 
-    # lines(year_dat$do, year_dat$GDD_5, 
-    #     col = "black",
-    #     # col = yearcolors[i],
-    #     lwd = 2)
-  spp <- unique(gslength$latbi)
-  y_base <- 100
-  y_step <- 50
-  for (s in seq_along(spp)) { # i = 1
-    gs <- gslength[gslength$latbi == spp[s],]
-    y_pos <- y_base + (s-1) * y_step
-    segments(x0 = gs$leafout, x1 = gs$budset, y0 = y_pos, y1 = y_pos)
-  }
-}
-
-
-
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Conceptual figure ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -117,15 +86,15 @@ presos <- 130
 preeos <- 250
 
 # Logistic curves (Panel 2 still uses these)
-doy <- 1:330
-gdd_pre <- 2500 / (1 + exp(-0.025 * (doy - 172)))
-gdd_cc  <- 3000 / (1 + exp(-0.025 * (doy - 140)))
+doy_seq <- 60:300
+gdd_pre <- 2500 / (1 + exp(-0.025 * (doy_seq - 172)))
+gdd_cc  <- 3000 / (1 + exp(-0.025 * (doy_seq - 140)))
 
 # calendar days
-ticks <- seq(0, 330, by = 30)
+ticks <- seq(min(doy_seq), max(doy_seq), by = 30)
 dates <- format(as.Date(ticks, origin = "2023-01-01"), "%d %b")
 
-myxlimp3 <- c(min(doy), max(doy))
+myxlimp3 <- c(min(doy_seq), max(doy_seq))
 mylwd <- 3
 
 # Panel margins
@@ -141,6 +110,7 @@ ylimlogis <- c(0, 3400)
 
 # Real data from logan airport
 # GDD for logistic curves
+logan <- subset(logan, doy >= min(doy_seq) & doy <= max(doy_seq))
 logan$GDD_5 <- NA
 
 # Get unique years
@@ -160,6 +130,7 @@ for (y in years) {
 
 baselineperiod <- subset(logan, year >1940 & year < 1981)
 baselinemean <- mean(baselineperiod$meanTempC)
+
 prewarm <- subset(logan, year > 1954 & year < 1976)
 # prewarm$meanTempC <- prewarm$meanTempC - baselinemean
 poswarm <- subset(logan, year > 2004 & year < 2026)
@@ -172,7 +143,6 @@ mean_pos  <- aggregate(meanTempC ~ doy, data = poswarm,  FUN = mean, na.rm = TRU
 loess_pre <- loess(meanTempC ~ doy, data = mean_pre, span = 0.4)
 loess_pos  <- loess(meanTempC ~ doy, data = mean_pos,  span = 0.4)
 
-doy_seq <- 1:330
 smooth_pre <- predict(loess_pre, newdata = data.frame(doy = doy_seq))
 smooth_cc  <- predict(loess_pos,  newdata = data.frame(doy = doy_seq))
 
@@ -192,7 +162,7 @@ ylim_temp <- c(0,max(smooth_cc))
 jpeg("figures/climate/gsconceptualfig.jpeg", width = 10, height = 8, units = "in", res = 400)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
-# Panel 3 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Panel 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p3)
 plot.new()
 plot.window(xlim = myxlimp3, ylim = c(0, 1))
@@ -237,7 +207,7 @@ polygon(
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
   col = adjustcolor(colpre, alpha.f = 0.4), border = NA)
 
-# Panel 1: Temperature curves --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Panel 2: Temperature curves --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p1)
 plot(doy_seq, smooth_pre, type = "n",
      xaxt = "n", ylim = ylim_temp,
@@ -252,54 +222,105 @@ lines(doy_seq, smooth_pre, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4)
 lines(doy_seq, smooth_cc,  lwd = mylwd, col = colcc)
 
 # GS delimitations
-abline(v = ccsos, lwd = 1.5, lty = 2)
-abline(v = cceos, lwd = 1.5, lty = 2)
+segments(x0 = ccsos, y0 = -4, y1 = smooth_cc[which.min(abs(doy_seq - ccsos))],  lwd = 1.5, lty = 2)
+segments(x0 = cceos, y0 = -4, y1 = smooth_cc[which.min(abs(doy_seq - cceos))],  lwd = 1.5, lty = 2)
 
 # Pre-CC boundaries (lighter)
-segments(x0 = presos, x1 = presos, y0 = -2, y1 = smooth_pre[presos] + 2.6, lwd = 0.3, lty = 2)
-segments(x0 = preeos, x1 = preeos, y0 = -2, y1 = smooth_pre[preeos] - 3,   lwd = 0.3, lty = 2)
+segments(x0 = presos, y0 = -4, y1 = smooth_pre[which.min(abs(doy_seq - presos))], lwd = 0.3, lty = 2)
+segments(x0 = preeos, y0 = -4, y1 = smooth_pre[which.min(abs(doy_seq - preeos))], lwd = 0.3, lty = 2)
 
 # Phenology trend arrows
 Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
        arr.type = "triangle", arr.width = 0.3, lwd = 2, col = colspring)
-Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 4, y1 = 5,
+Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
        arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd = 2, col = colfall)
 
 text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = 1.9)
 text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = 1.4)
 
-# Panel 2: GDD curves --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# Segments that shows cooler temperature early in the season
+Arrows(x0 = ccsos + 30, x1 = ccsos + 30,
+       y0 = smooth_pre[which.min(abs(doy_seq - presos))], 
+       y1 = smooth_pre[which.min(abs(doy_seq - ccsos))], 
+         lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+text(x = ccsos + 64, 
+     y = mean(c(smooth_pre[which.min(abs(doy_seq - presos))], 
+                smooth_pre[which.min(abs(doy_seq - ccsos))])) , 
+     "Cooler first days of growth", col = "black",   cex = 1.4)
+
+# a horizontal line with whiskers
+# arrows(x0 = x - err, y0 = y,
+#        x1 = x + err, y1 = y,
+#        code = 3,        # arrowheads on both ends
+#        angle = 90,      # flat = whisker caps
+#        length = 0.05)   # cap width in inches
+
+# Panel 3: GDD curves --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
-plot(doy, gdd_cc, ylim = ylimlogis,
+plot(doy_seq, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", frame = FALSE,
+     # xaxt = "n", 
+     frame = FALSE,
      col = adjustcolor(colpre, alpha.f = 0.4),
      main = "", cex.axis = axissize, cex.lab = labsize)
-axis(1, at = ticks, labels = dates, cex.axis = axissize)
+# axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 
-mean_pre_gdd <- subset(mean_pre_gdd, doy < 331)
-mean_pos_gdd <- subset(mean_pos_gdd, doy < 331)
+mean_pre_gdd <- subset(mean_pre_gdd, doy <= max(doy_seq))
+mean_pos_gdd <- subset(mean_pos_gdd, doy <= max(doy_seq))
 
-lines(doy, mean_pre_gdd$GDD_5, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
-lines(doy, mean_pos_gdd$GDD_5,  type = "l", lwd = mylwd, col = adjustcolor(colcc))
+lines(doy_seq, mean_pre_gdd$GDD_5, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
+lines(doy_seq, mean_pos_gdd$GDD_5,  type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-text(x = 280, y = max(gdd_cc) + 150, "Warmer thermal season", col = "black", cex = 1.9)
+text(x = 200, y = max(gdd_cc) + 150, "Warmer thermal season", col = "black", cex = 1.9)
 
-Arrows(x0 = 250, y0 = gdd_pre[250] + 50, x1 = 250, y1 = gdd_cc[250] - 200,
+Arrows(x0 = cceos, y0 = gdd_pre[200] + 200, x1 = 240, y1 = gdd_cc[200]-50,
        arr.type = "triangle", arr.width = 0.3, lwd = 2, col = colcc)
 
-segments(x0 = ccsos + 0.8, x1 = ccsos + 0.8, y0 = -100, y1 = 900,  lwd = 1.5, lty = 2)
-segments(x0 = cceos, x1 = cceos, y0 = -100, y1 = 2850, lwd = 1.5, lty = 2)
+# Pre-CC boundaries (lighter)
+segments(x0 = presos, y0 = -2, y1 = 4000, lwd = 0.3, lty = 2)
+segments(x0 = preeos, y0 = -2, y1 = 4000, lwd = 0.3, lty = 2)
+
+segments(x0 = ccsos + 0, x1 = ccsos + 0, y0 = -100, y1 = 4000, lwd = 1.5, lty = 2)
+segments(x0 = cceos, x1 = cceos, y0 = -100, y1 = 4000, lwd = 1.5, lty = 2)
 
 dev.off()
 
 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+years <- unique(gddyr$year)
+
+lines(dgddagg$doy, dgddagg$dgdd, col = "black", cex = 0.2)
+
+# for (i in seq_along(years)) { # i = 1
+#   
+#   year_dat <- gddyr[gddyr$year == years[i], ]
+#   
+#   # lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)?>
+#   # x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
+#   #               max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
+#   # pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
+#   # 
+#  # cumulated gdd 
+#     # lines(year_dat$do, year_dat$GDD_5, 
+#     #     col = "black",
+#     #     # col = yearcolors[i],
+#     #     lwd = 2)
+#   spp <- unique(gslength$latbi)
+#   y_base <- 100
+#   y_step <- 50
+#   for (s in seq_along(spp)) { # i = 1
+#     gs <- gslength[gslength$latbi == spp[s],]
+#     y_pos <- y_base + (s-1) * y_step
+#     segments(x0 = gs$leafout, x1 = gs$budset, y0 = y_pos, y1 = y_pos)
+#   }
+# }
+
  # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # kind of a heat map ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
+if(makeplots){
 years   <- unique(emp$year)
 wcclimatesum <- subset(climatesum, year %in% years)
 
@@ -606,3 +627,4 @@ for (i in 1:ny) {
   
 }
 dev.off()
+}
