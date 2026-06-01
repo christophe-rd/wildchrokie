@@ -212,10 +212,11 @@ Almagro, D., Martin‐Benito, D., Rossi, S., Conde, M., Fernández‐de‐Uña,
 \newblock {\em Global Change Biology}{ \bf 31}(9), e70503, September  (2025).
 
 \bibitem{wolkovich_why_2025}
-Wolkovich, E.~M., Ettinger, A.~K., Chin, A., Chamberlain, C.~J., Baumgarten,
-  F., Pradhan, K., Manzanedo, R.~D., and Lambers, J. H.~R.
+Wolkovich, E.~M., Ettinger, A.~K., Chin, A.~R., Chamberlain, C.~J., Baumgarten,
+  F., Pradhan, K., Manzanedo, R.~D., and Hille Ris~Lambers, J.
 \newblock Why longer seasons with climate change may not increase tree growth.
-\newblock {\em In review}{ \bf  (2025).
+\newblock {\em Nature Climate Change}{ \bf 15}(12), 1283--1292, December
+  (2025).
 
 \bibitem{tyree_xylem_2002}
 Tyree, M.~T. and Zimmermann, M.~H.
@@ -268,5 +269,59 @@ Reinmann, A.~B., Bowers, J.~T., Kaur, P., and Kohler, C.
   frost defoliation on temperate forest tree carbon uptake.
 \newblock {\em Frontiers in Forests and Global Change}{ \bf 6}, 988233,
   February  (2023).
+
+\bibitem{etzold_number_2022}
+Etzold, S., Sterck, F., Bose, A.~K., Braun, S., Buchmann, N., Eugster, W.,
+  Gessler, A., Kahmen, A., Peters, R.~L., Vitasse, Y., Walthert, L.,
+  Ziemińska, K., and Zweifel, R.
+\newblock Number of growth days and not length of the growth period determines
+  radial stem growth of temperate trees.
+\newblock {\em Ecology Letters}{ \bf 25}(2), 427--439, February  (2022).
+
+\bibitem{silvestro_roots_2025}
+Silvestro, R., Deslauriers, A., Prislan, P., Rademacher, T., Rezaie, N.,
+  Richardson, A.~D., Vitasse, Y., and Rossi, S.
+\newblock From {Roots} to {Leaves}: {Tree} {Growth} {Phenology} in {Forest}
+  {Ecosystems}.
+\newblock {\em Current Forestry Reports}{ \bf 11}(1), 12, January  (2025).
+
+\bibitem{plomion_wood_2001}
+Plomion, C., Leprovost, G., and Stokes, A.
+\newblock Wood {Formation} in {Trees}.
+\newblock {\em Plant Physiology}{ \bf 127}(4), 1513--1523, December  (2001).
+
+\bibitem{meyer_mathematical_1940}
+Meyer, H.~A.
+\newblock A {Mathematical} {Expression} for {Height} {Curves}.
+\newblock {\em Journal of Forestry}{ \bf 38}(5), 415--420, May  (1940).
+
+\bibitem{saunders_height-diameter_2008}
+Saunders, M.~R. and Wagner, R.~G.
+\newblock Height-diameter models with random coefficients and site variables
+  for tree species of {Central} {Maine}.
+\newblock {\em Annals of Forest Science}{ \bf 65}(2), 203--203, January
+  (2008).
+
+\bibitem{gazol_forest_2018}
+Gazol, A., Camarero, J.~J., Vicente‐Serrano, S.~M., Sánchez‐Salguero, R.,
+  Gutiérrez, E., De~Luis, M., Sangüesa‐Barreda, G., Novak, K., Rozas, V.,
+  Tíscar, P.~A., Linares, J.~C., Martín‐Hernández, N., Martínez
+  Del~Castillo, E., Ribas, M., García‐González, I., Silla, F., Camisón,
+  A., Génova, M., Olano, J.~M., Longares, L.~A., Hevia, A., Tomás‐Burguera,
+  M., and Galván, J.~D.
+\newblock Forest resilience to drought varies across biomes.
+\newblock {\em Global Change Biology}{ \bf 24}(5), 2143--2158, May  (2018).
+
+\bibitem{manzanedo_towards_2019}
+Manzanedo, R.~D. and Pederson, N.
+\newblock Towards a {More} {Ecological} {Dendroecology}.
+\newblock {\em Tree-Ring Research}{ \bf 75}(2), 152, August  (2019).
+
+\bibitem{piao_plant_2019}
+Piao, S., Liu, Q., Chen, A., Janssens, I.~A., Fu, Y., Dai, J., Liu, L., Lian,
+  X., Shen, M., and Zhu, X.
+\newblock Plant phenology and global climate change: {Current} progresses and
+  challenges.
+\newblock {\em Global Change Biology}{ \bf 25}(6), 1922--1940 (2019).
 
 \end{thebibliography}

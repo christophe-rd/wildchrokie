@@ -79,7 +79,7 @@ We also collected tree cores for \Sexpr{nrow(samples[which(samples$core == 1),])
 \subsection*{Sample processing, imaging and measuring}
 We mounted the cores on wooden mounts, and sanded both the cores and cross-sections using progressively finer sandpaper grits: 150, 300, 400, 600, 800, 1000. We scanned the cores and cross-sections at a resolution of 6250 dpi, with a high-resolution treering scanner (Fong, unpublished), we then used the digitized images to measure the tree ring widths with ImageJ \citep{schneider_nih_2012}. For individuals for which we had cross-sections, we measured ring widths at three standard locations on the cross-section, at {120\degree} from each other. We averaged the three measurements, to yield one ring width per year, per individual. For the \Sexpr{length(setdiff(samples$idfull[which(samples$core == 1)], samples$idfull[which(samples$cookie. == 1)]))} individuals for which we only had cores, we measured only one ring width for that sample. When we had cross-sections and cores for an invidividual, we discarded the measurement from the core. \\
 \par
-We performed visual cross dating, but did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths, but we accounted for it in our statistical analyses by including a year intercept. \\
+We performed visual cross dating, but did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths. However, we included a year intercept that accounts for other factors that could affect growth, such as age allometry. \\
 
 \subsection*{Data analyses}
 To understand how growth shifted with season lengths we used linear Bayesian hierarchical models. With these models, we estimated ring width as a function of four different season predictors. First, the thermal season represents the number of growing degree days (GDD) calculated as the mean daily temperature above 5\degree C accumulated between leafout and budset, calculated for each tree per year. Second, the calendar season or growing season length (GSL) is the budset date subtracted by the leafout date. Finally, to better understand trees responses to the calendar season, we used leafout as the start of the season (SOS) and budset for the end of season (EOS) as separate predictors that represent the boundaries of the growing season.
@@ -191,7 +191,7 @@ print(tab,
 
 
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
+\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
 \caption{Phenology observatons bi-weekly.}
 \label{fig:phenoTimeSeries}
 \end{figure}
