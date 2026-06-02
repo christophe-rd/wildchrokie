@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1638,7 +1638,7 @@ forest_grob <- as_grob(function() {
   
   plot(site_df2$mean, y_pos_site,
        xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
-       xlab = "Provenance intercept values (log(mm))", ylab = "Latitude",
+       xlab = "Provenance effect", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
        panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -1669,10 +1669,9 @@ ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, he
 jpeg(file = "figures/growthModelsMain/muayear.jpeg",
      width = 1600, height = 1600, res = 300)
 
-wcyear <- c("2018" = wes_palettes$FantasticFox1[3],
-            "2019" = wes_palettes$FantasticFox1[4],
-            "2020" = wes_palettes$FantasticFox1[5])
-y_pos_yr <- rev(ayear_df2$year)
+
+ayear_df2 <- ayear_df2[rev(ayear_df2$year),]
+y_pos_yr <- ayear_df2$year
 ayear_df2$year_name <- as.character(ayear_df2$year_name)
 
 par(mar = c(4, 4, 4, 4))
@@ -1680,18 +1679,17 @@ par(mar = c(4, 4, 4, 4))
 plot(ayear_df2$mean, y_pos_yr,
      xlim = c(-2, 2), ylim = c(0.5, 3 + 0.5),
      xlab = "Ring width intercept values (mm)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wcyear[ayear_df2$year_name], frame.plot = FALSE, 
+     yaxt = "n", pch = 16, cex = 2, 
+     col = adjustcolor(colsyr[as.character(ayear_df2$year_name)], alpha.f = 1),
      panel.first = abline(v = 0, lty = 2, col = "black"))
+axis(2, at = y_pos_yr, 
+     labels = ayear_df2$year_name,
+     las = 1, tick = TRUE, cex.axis = mysizeaxis)
 segments(ayear_df2$p5,  y_pos_yr, ayear_df2$p95, y_pos_yr,
-         col = wcyear[ayear_df2$year_name], lwd = 1.5)
+         col = colsyr[ayear_df2$year_name], lwd = 1.5)
 segments(ayear_df2$p25, y_pos_yr, ayear_df2$p75, y_pos_yr,
-         col = wcyear[ayear_df2$year_name], lwd = 3)
-legend("topright",
-       legend = sapply(unique(ayear_df2$year_name), 
-                       function(x) parse(text = paste0("italic('", x, "')"))),
-       col    = wcyear,
-       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.2,
-       title  = "Year", title.font = 2)
+         col = colsyr[ayear_df2$year_name], lwd = 3)
+
 
 dev.off()
 
@@ -1759,15 +1757,15 @@ dev.off()
 
 ##### Box plot alone #####
 jpeg("figures/growthModelsMain/boxplotRingWidth.jpeg",
-     width = 3200, height = 1600, res = 300)
+     width = 2000, height = 2000, res = 300)
 
+par(mfrow = c(2,2), mar = c(2, 5, 3, 1))
 for(sp in species) { # sp = "A. incana" 
-  par(mar = c(4, 5, 3, 1))
   dat <- emp[emp$latbi == sp,]
   dat$year <- factor(dat$year, levels = sort(as.character(ayear_df2$year_name)))
   boxplot(lengthMM ~ year, data = dat,
           # main = bquote(italic(.(sp))),
-          xlab = "Year", ylab = "Ring width (mm)",
+          xlab = "", ylab = "Ring width (mm)",
           col = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
           border = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
           medcol = "black",
@@ -1779,8 +1777,7 @@ for(sp in species) { # sp = "A. incana"
              pch = 16, cex = 0.7, col = "black",
              vertical = TRUE, add = TRUE)
 }
-mtext("(b) Ring width (mm) observations per year and species",
-      side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = 0)
+
 dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
