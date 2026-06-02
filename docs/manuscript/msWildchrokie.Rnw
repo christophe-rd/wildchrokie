@@ -26,6 +26,7 @@
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 library(xtable)
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/growthModelsMain_plots.R")
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 samples <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
 
 locations <- data.frame(
@@ -47,6 +48,14 @@ colnames(locations) <- c("Provenance name", "Longitude", "Latitude",
                          "B. alleghaniensis",
                          "B. papyrifera",
                          "B. populifolia")
+
+# Species in italics
+wctablespp <- c("A. incana" = "\\textit{A. incana}", 
+              "B. alleghaniensis" = "\\textit{B. alleghaniensis}",
+              "B. papyrifera" = "\\textit{B. papyrifera}",
+              "B. populifolia" = "\\textit{B. populifolia}")
+
+
 # change NAs to 0
 for (i in 4: ncol(locations)) {
   locations[[i]][is.na(locations[[i]])] <- 0
@@ -166,7 +175,74 @@ print(tab,
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Results}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\subsection*{Summary basic information}
+Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and 
+  \Sexpr{nrow(empfulleos)} budset observations, yielding 
+  \Sexpr{nrow(emp)} complete growing seasons (GS) for 
+  \Sexpr{length(unique(emp$treeid))} individuals. 
+  % GSL ranged from 
+  % \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
+  % \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
+  % GS thermal sum ranged from 
+  % \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
+  % \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
+  
+The earliest leafout day of year was 
+  \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
+  \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
+  \Sexpr{emp$loCal[which.max(emp$leafout)]} (also {\Ainc}, but in
+  \Sexpr{emp$year[which.max(emp$leafout)]}). The earliest budset day of year was 
+  \Sexpr{emp$bsCal[which.min(emp$budset)]} ({\Ball} in
+  \Sexpr{emp$year[which.min(emp$budset)]}) and the latest, 
+  \Sexpr{emp$bsCal[which.max(emp$budset)]} ({\Ainc} in
+  \Sexpr{emp$year[which.max(emp$budset)]}) 
+  
+Mean summer temperature were similar across years with 2019 being the coolest 
+(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest 
+(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between 
+(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C). There was no drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September. 
+Annual ring widths across years varied from 
+  \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
+  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcmuplotayear}). 
+
+
+\subsection{Does tree growth increase with longer growing seasons?}
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it.
+Longer thermal season increased growth for {\Bpap} 
+  ($\beta = $ 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]),
+  {\Bpop} 
+  ($\beta = $ 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and {\Ball} 
+  ($\beta = $ 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), but {\Ainc} had a weak effect, but trended in the same direction 
+  ($\beta = $ 
+  \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
+ 
+ {\Ainc} grew more with longer calendar seasons ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]), but of the three species that responded to thermal season, only {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]).
+  \item {\Ball} ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}]), and {\Bpop} ($\beta = $ 
+  \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, $UI_{90}$
+  [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
+  \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
+  
+Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab})
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Discussion}
