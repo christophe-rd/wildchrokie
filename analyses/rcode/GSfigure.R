@@ -260,11 +260,11 @@ par(mar = p2)
 plot(doy_seq, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     # xaxt = "n", 
+     xaxt = "n", 
      frame = FALSE,
      col = adjustcolor(colpre, alpha.f = 0.4),
      main = "", cex.axis = axissize, cex.lab = labsize)
-# axis(1, at = ticks, labels = dates, cex.axis = axissize)
+axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 
 mean_pre_gdd <- subset(mean_pre_gdd, doy <= max(doy_seq))

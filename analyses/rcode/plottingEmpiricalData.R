@@ -282,28 +282,3 @@ for (yr in sort(unique(comb2$year))) { # i =1
 dev.off()
 
 
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Box plot ring width ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-species <- unique(emp$latbi)
-years <- sort(unique(emp$year))
-n_sp <- length(species)
-
-jpeg("figures/empiricalData/boxplotRingWidth.jpeg", width = 2400, height = 2000, res = 300)
-par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
-for(sp in species) {
-  dat <- emp[emp$latbi == sp,]
-  boxplot(lengthMM ~ year, data = dat,
-          main = bquote(italic(.(sp))),
-          xlab = "Year", ylab = "Ring width (mm)",
-          col = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.5),
-          border = adjustcolor(wes_palettes$FantasticFox1[c(3,4,5)], alpha.f = 0.8), 
-          medcol = "black",
-          whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black")
-  # https://www.sthda.com/english/wiki/strip-charts-1-d-scatter-plots-r-base-graphs
-  stripchart(lengthMM ~ year, data = dat,
-             method = "jitter", jitter = 0.08,
-             pch = 16, cex = 0.7, col = "black",
-             vertical = TRUE, add = TRUE)
-}
-dev.off()

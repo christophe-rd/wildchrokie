@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1756,6 +1756,32 @@ dev.off()
 
 
 }
+
+##### Box plot alone #####
+jpeg("figures/growthModelsMain/boxplotRingWidth.jpeg",
+     width = 3200, height = 1600, res = 300)
+
+for(sp in species) { # sp = "A. incana" 
+  par(mar = c(4, 5, 3, 1))
+  dat <- emp[emp$latbi == sp,]
+  dat$year <- factor(dat$year, levels = sort(as.character(ayear_df2$year_name)))
+  boxplot(lengthMM ~ year, data = dat,
+          # main = bquote(italic(.(sp))),
+          xlab = "Year", ylab = "Ring width (mm)",
+          col = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
+          border = adjustcolor(colsyr[levels(dat$year)], alpha.f = 0.5),
+          medcol = "black",
+          whisklty = 1, staplewex = 0, medlty = 1, outpch = 16, outcex = 0.7, outcol = "black",
+          cex.axis = mysizeaxis, cex.lab = mysizelab)
+  mtext(bquote(italic(.(sp))), side = 3, line = 0.5, cex = 0.8)
+  stripchart(lengthMM ~ year, data = dat,
+             method = "jitter", jitter = 0.08,
+             pch = 16, cex = 0.7, col = "black",
+             vertical = TRUE, add = TRUE)
+}
+mtext("(b) Ring width (mm) observations per year and species",
+      side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = 0)
+dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
