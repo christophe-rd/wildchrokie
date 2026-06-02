@@ -65,7 +65,7 @@
 \item Shifts in spring and autumn phenology supports the assumption that longer growing seasons increase tree growth \citep{keenan_net_2014, stridbeck_partly_2022}
   \begin{enumerate}
   
-  \item Recent research shows that this may not be the case \citep{dow_warm_2022,green_limits_2022,silvestro_longer_2023,wang_seasonal_2025} \cite{cabon_cross-biome_2022,matula_shifts_2023,wang_seasonal_2025}
+  \item Recent research shows that this may not be the case \citep{dow_warm_2022,green_limits_2022,silvestro_longer_2023,wang_seasonal_2025,matula_shifts_2023,wang_seasonal_2025}
   
   \item \cite{dow_warm_2022} showed that trees did not grow more or faster despite warmer and earlier springs at the regional scale
   
@@ -168,6 +168,7 @@
 \caption{We show how shifting growing season length with climate change affects both the temperature experienced during the growing season. (a) The Boston airport Climate station smoothed curve mean daily average 1945-1965 (blue) and 2005-2025 (red) to represent the changes in temperature before and after significant climate warming that increased in the 1980s. With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season }
 \label{fig:wcmuplotayear}
 \end{figure}
+
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Methods}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

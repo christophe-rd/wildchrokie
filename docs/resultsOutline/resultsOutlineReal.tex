@@ -67,7 +67,12 @@
 \newcommand{\Bpap}{\textit{B. papyrifera}}
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'species' not found}}\end{kframe}
+\end{knitrout}
 
 
 % % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -98,7 +103,12 @@
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of 239 leafout and 230 budset observations, yielding 227 complete growing seasons (GS) for 81 individuals. 
+  
+  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of 239 leafout and 
+  230 budset observations, yielding 
+  227 complete growing seasons (GS) for 
+  81 individuals. 
+    
     \item GSL ranged from 
   90 days ({\Ball} in 2018) to 
   173 days ({\Ainc} in 2018)
@@ -106,15 +116,26 @@
   \item GS thermal sum ranged from 
   1465.1 GDD ({\Ball} in 2018) to 
   2513.6 GDD, ({\Ainc} in 2018)
-  \item The earliest leafout day of year was 22-Apr (2019) and the latest, 05-Jun (2019). The earliest budset day of year was 13-Aug (2018) and the latest, 24-Oct (2018) 
   
-  \item 2018 had a mean summer temperature of 22.85$^\circ$C and had a mean summer PDSI value of 
-  1.92. 2019 was cooler 
-  (22.38$^\circ$C) and wetter 
-  (PDSI $=$ 4.02), whereas 2020 was warmer 
-  (23.07$^\circ$C) and drier
-  (PDSI $=$ -2.35) than 2018.
-
+  \item The earliest leafout day of year was 
+  22-Apr ({\Ainc} in
+  2019) and the latest,
+  05-Jun (also {\Ainc}, but in
+  2020). 
+  The earliest budset day of year was 
+  13-Aug ({\Ball} in
+  2018) and the latest, 
+  24-Oct ({\Ainc} in
+  2018) 
+  
+  \item Mean summer temperature were similar across years with 2019 being the coolest (22.38$^\circ$C), 2020 the hottest (23.07$^\circ$C), and 2018 in between (22.85$^\circ$C)
+  
+  \item No drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.
+  
+  \item Annual ring widths across years varied from 
+  0.39 mm ({\Ball} in 2020) to 
+  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcmuplotayear}). 
+ 
 \end{enumerate}
 
 % Question 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -157,7 +178,7 @@
   [-0.02, 
   0.13]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
-  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Figure \ref{fig:RWvsBAI} and Table \ref{tab:BAItab})
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab})
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -204,13 +225,13 @@
   [-3.14, 
   5.18]) (Figure \ref{fig:wcmuplotatreeid}), but had contrasting responses to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
 
-  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was slightly more variation across sites ($\sigma = $
+  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), and the variation across sites ($\sigma = $
   0.18, $UI_{90}$
   [0.02, 
-  0.5) than across tree ids ($\sigma = $ 
+  0.5) tree ids ($\sigma = $ 
   0.17, $UI_{90}$
   [0.05, 
-  0.27]
+  0.27]) was similar
 
   \end{enumerate}
 
@@ -219,10 +240,6 @@
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
   
-  \item Annual ring widths across years varied from 
-  0.39 mm ({\Ball} in 2020) to 
-  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcmuplotayear}). 
- 
   \item Growth was highest in 2018 
   (0.19, $UI_{90}$
   [-0.76, 
@@ -250,12 +267,6 @@
 \label{fig:wcmuplotasite}
 \end{figure}
 
-% Wildchrokie year mu plot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear_boxplot.jpeg}
-\caption{We show tree ring widths (mm) across years and species in two ways: (a) as model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
-\label{fig:wcmuplotayear}
-\end{figure}
 
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -272,7 +283,7 @@
 %DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri May 29 15:49:16 2026
+% Tue Jun  2 16:45:07 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -290,10 +301,29 @@ Species & GDD & GSL & SOS & EOS \\
 \end{table}
 
 
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Tue Jun  2 16:45:07 2026
+\begin{table}[ht]
+\centering
+\caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_asite_table}
+\begin{tabular}{lllllrr}
+  \hline
+Site & GDD & GSL & SOS & EOS & Lat. & Lon. \\ 
+  \hline
+Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] & 42.53 & -72.19 \\ 
+  White Mountains (NH) & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] & 44.11 & -71.23 \\ 
+  Dartmouth College (NH) & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] & 44.79 & -71.15 \\ 
+  St-Hippolyte (Qc) & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] & 45.93 & -74.03 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
 % Table site intercept for Wildchrokie
 %DL22May: Could you add the site names as a column too
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri May 29 15:49:16 2026
+% Tue Jun  2 16:45:07 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) for the GDD model.} 
@@ -332,6 +362,20 @@ Harvard Forest (MA) & -0.1 [-0.33, 0.08] & 42.53 & -72.19 \\
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
+% Wildchrokie year mu plot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
+\caption{Model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
+
+% Wildchrokie boxplot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
+\caption{Empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
+
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
@@ -339,15 +383,8 @@ Harvard Forest (MA) & -0.1 [-0.33, 0.08] & 42.53 & -72.19 \\
 \label{fig:bsppZscored}
 \end{figure}
 
-% RW vs BAI 1 1 plot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/RWvsBAI.jpeg}
-\caption{Model parameter estimates comparison when using basal area increment (BAI) vs ring width (RW). }
-\label{fig:RWvsBAI}
-\end{figure}
-
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Fri May 29 15:49:16 2026
+% Tue Jun  2 16:45:07 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 

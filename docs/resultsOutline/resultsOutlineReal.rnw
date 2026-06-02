@@ -62,7 +62,12 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \begin{enumerate}
 \item Summary basic information
   \begin{enumerate}
-  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations, yielding \Sexpr{nrow(emp)} complete growing seasons (GS) for \Sexpr{length(unique(emp$treeid))} individuals. 
+  
+  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and 
+  \Sexpr{nrow(empfulleos)} budset observations, yielding 
+  \Sexpr{nrow(emp)} complete growing seasons (GS) for 
+  \Sexpr{length(unique(emp$treeid))} individuals. 
+    
     \item GSL ranged from 
   \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
   \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
@@ -70,15 +75,26 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item GS thermal sum ranged from 
   \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
   \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
-  \item The earliest leafout day of year was \Sexpr{emp$loCal[which.min(emp$leafout)]} (\Sexpr{emp$year[which.min(emp$leafout)]}) and the latest, \Sexpr{emp$loCal[which.max(emp$leafout)]} (\Sexpr{emp$year[which.min(emp$leafout)]}). The earliest budset day of year was \Sexpr{emp$bsCal[which.min(emp$budset)]} (\Sexpr{emp$year[which.min(emp$budset)]}) and the latest, \Sexpr{emp$bsCal[which.max(emp$budset)]} (\Sexpr{emp$year[which.min(emp$budset)]}) 
   
-  \item 2018 had a mean summer temperature of \Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C and had a mean summer PDSI value of 
-  \Sexpr{wcjja$pdsi[which(wcjja$year == 2018)]}. 2019 was cooler 
-  (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C) and wetter 
-  (PDSI $=$ \Sexpr{wcjja$pdsi[which(wcjja$year == 2019)]}), whereas 2020 was warmer 
-  (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C) and drier
-  (PDSI $=$ \Sexpr{wcjja$pdsi[which(wcjja$year == 2020)]}) than 2018.
-
+  \item The earliest leafout day of year was 
+  \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
+  \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
+  \Sexpr{emp$loCal[which.max(emp$leafout)]} (also {\Ainc}, but in
+  \Sexpr{emp$year[which.max(emp$leafout)]}). 
+  The earliest budset day of year was 
+  \Sexpr{emp$bsCal[which.min(emp$budset)]} ({\Ball} in
+  \Sexpr{emp$year[which.min(emp$budset)]}) and the latest, 
+  \Sexpr{emp$bsCal[which.max(emp$budset)]} ({\Ainc} in
+  \Sexpr{emp$year[which.max(emp$budset)]}) 
+  
+  \item Mean summer temperature were similar across years with 2019 being the coolest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C)
+  
+  \item No drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.
+  
+  \item Annual ring widths across years varied from 
+  \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
+  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcmuplotayear}). 
+ 
 \end{enumerate}
 
 % Question 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -121,7 +137,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
-  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Figure \ref{fig:RWvsBAI} and Table \ref{tab:BAItab})
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab})
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -168,13 +184,13 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "A. incana")]}, 
   \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotatreeid}), but had contrasting responses to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
 
-  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), but there was slightly more variation across sites ($\sigma = $
+  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), and the variation across sites ($\sigma = $
   \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
   [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
-  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) than across tree ids ($\sigma = $ 
+  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) tree ids ($\sigma = $ 
   \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$
   [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
-  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]
+  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]) was similar
 
   \end{enumerate}
 
@@ -183,10 +199,6 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item How did growth change across years, and how did it relate to climate?
   \begin{enumerate}
   
-  \item Annual ring widths across years varied from 
-  \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
-  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcmuplotayear}). 
- 
   \item Growth was highest in \Sexpr{ayear_df2$year_name[which.max(ayear_df2$mean)]} 
   (\Sexpr{ayear_df2$mean[which.max(ayear_df2$mean)]}, $UI_{90}$
   [\Sexpr{ayear_df2$p5[which.max(ayear_df2$mean)]}, 
@@ -214,12 +226,6 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \label{fig:wcmuplotasite}
 \end{figure}
 
-% Wildchrokie year mu plot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear_boxplot.jpeg}
-\caption{We show tree ring widths (mm) across years and species in two ways: (a) as model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
-\label{fig:wcmuplotayear}
-\end{figure}
 
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -237,6 +243,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Table slope for Wildchrokie
 <<results='asis', echo = FALSE>>=
 # Bspp parameter estimates table
+library(xtable)
 options(digits = 2)
 
 bspp_df2_gdd$GDD <- sprintf("%.2f [%.2f, %.2f]", bspp_df2_gdd$mean, bspp_df2_gdd$p5, bspp_df2_gdd$p95)
@@ -269,33 +276,37 @@ print(tab,
       caption.placement = "top")
 @
 
-% Table site intercept for Wildchrokie
-%DL22May: Could you add the site names as a column too
 <<results='asis', echo = FALSE>>=
-site_df2$mean <- round(site_df2$mean, 2)
-site_df2$p5 <- round(site_df2$p5, 2)
-site_df2$p95 <- round(site_df2$p95, 2)
+site_df2$GDD <- sprintf("%.2f [%.2f, %.2f]", site_df2$mean, site_df2$p5, site_df2$p95)
+site_df2_gsl$GSL <- sprintf("%.2f [%.2f, %.2f]", site_df2_gsl$mean, site_df2_gsl$p5, site_df2_gsl$p95)
+site_df2_sos$SOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_sos$mean, site_df2_sos$p5, site_df2_sos$p95)
+site_df2_eos$EOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_eos$mean, site_df2_eos$p5, site_df2_eos$p95)
 
-sitefortable <- data.frame(
-  Provenance = site_df2$site_name,
-  "Intercept estimate" = paste0(site_df2$mean, " [", site_df2$p5, ", ", site_df2$p95, "]", sep = ""),
-  Latitude = emp$provenance.lat[match(site_df2$site_name, emp$site)],
-  Longitude = emp$provenance.long[match(site_df2$site_name, emp$site)]
-)
+gdd <- site_df2[, c("site_name", "GDD")]
+gsl <- site_df2_gsl[, c("site_name", "GSL")]
+sos <- site_df2_sos[, c("site_name", "SOS")]
+eos <- site_df2_eos[, c("site_name", "EOS")]
 
-sitefortable <- sitefortable[order(sitefortable$Latitude),]
+df_all_site <- Reduce(function(x, y) merge(x, y, by = "site_name", all = TRUE),
+                      list(gdd, gsl, sos, eos))
 
-# Print table
-tab <- xtable(sitefortable,
-              caption = "Provenance level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) for the GDD model.",
+df_all_site$Lat.  <- emp$provenance.lat[match(df_all_site$site_name,  emp$site)]
+df_all_site$Lon. <- emp$provenance.long[match(df_all_site$site_name, emp$site)]
+
+df_all_site <- df_all_site[order(df_all_site$Lat.), ]
+
+colnames(df_all_site)[1] <- "Site"
+
+tab <- xtable(df_all_site,
+              caption = "Site level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.",
               label = "tab:wc_asite_table"
 )
-
 print(tab,
       include.rownames = FALSE,
       sanitize.text.function = identity,
       caption.placement = "top")
 @
+
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
@@ -318,18 +329,25 @@ print(tab,
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
+% Wildchrokie year mu plot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
+\caption{Model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
+
+% Wildchrokie boxplot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
+\caption{Empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
+
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
 \caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscored}
-\end{figure}
-
-% RW vs BAI 1 1 plot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/RWvsBAI.jpeg}
-\caption{Model parameter estimates comparison when using basal area increment (BAI) vs ring width (RW). }
-\label{fig:RWvsBAI}
 \end{figure}
 
 <<results='asis', echo = FALSE>>=
