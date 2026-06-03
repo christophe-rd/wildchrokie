@@ -925,6 +925,7 @@ if (fitmodelfull) {
 empfullsos$site_num <- match(empfullsos$site, unique(empfullsos$site))
 empfullsos$spp_num <- match(empfullsos$spp, unique(empfullsos$spp))
 empfullsos$treeid_num <- match(empfullsos$treeid, unique(empfullsos$treeid))
+empfullsos$year_num <- match(empfullsos$year, unique(empfullsos$year))
 
 # order by tree id
 treeid_spp_site_sos <- unique(empfullsos[, c("treeid_num", "spp_num", "site_num",
@@ -938,6 +939,8 @@ dsosfull <- list(
   N = nrow(empfullsos),
   Nspp = length(unique(empfullsos$spp_num)),
   Nsite = length(unique(empfullsos$site_num)),
+  year = as.numeric(empfullsos$year_num),
+  Nyear = length(unique(empfullsos$year_num)),
   site = as.numeric(as.character(empfullsos$site_num)),
   species = as.numeric(as.character(empfullsos$spp_num)),
   treeid = as.numeric(empfullsos$treeid_num),
@@ -961,6 +964,7 @@ saveRDS(fitsosfull, "output/stanOutput/fitGrowthSOSFull")
 empfulleos$site_num <- match(empfulleos$site, unique(empfulleos$site))
 empfulleos$spp_num <- match(empfulleos$spp, unique(empfulleos$spp))
 empfulleos$treeid_num <- match(empfulleos$treeid, unique(empfulleos$treeid))
+empfulleos$year_num <- match(empfulleos$year, unique(empfulleos$year))
 
 # order by tree id
 treeid_spp_site_eos <- unique(empfulleos[, c("treeid_num", "spp_num", "site_num",
@@ -975,6 +979,8 @@ deosfull <- list(
   N = nrow(empfulleos),
   Nspp = length(unique(empfulleos$spp_num)),
   Nsite = length(unique(empfulleos$site_num)),
+  year = as.numeric(empfulleos$year_num),
+  Nyear = length(unique(empfulleos$year_num)),
   site = as.numeric(as.character(empfulleos$site_num)),
   species = as.numeric(as.character(empfulleos$spp_num)),
   treeid = as.numeric(empfulleos$treeid_num),
@@ -1000,10 +1006,12 @@ df_fitsos <- as.data.frame(fitsos)
 sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
 bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
 treeid_df2_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("z|sigma", treeid))
+treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior|z|sigma", treeid))
 aspp_df2_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_sos <- subset(site_df2_sos, !grepl("sigma", site))
+ayear_df2_sos   <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_sos <- subset(ayear_df2_sos, !grepl("mean", year))
 
 # SOS full
 df_fitsos <- as.data.frame(fitsosfull)
@@ -1011,10 +1019,12 @@ df_fitsos <- as.data.frame(fitsosfull)
 sigma_df2_full_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
 bspp_df2_full_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
 treeid_df2_full_sos <- extract_params(df_fitsos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("z|sigma", treeid))
+treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("prior|z|sigma", treeid))
 aspp_df2_full_sos   <- extract_params(df_fitsos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full_sos <- subset(treeid_df2_full_sos, !grepl("prior", treeid))
 site_df2_full_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_full_sos <- subset(site_df2_full_sos, !grepl("sigma", site))
+ayear_df2_full_sos   <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_full_sos <- subset(ayear_df2_full_sos, !grepl("mean", year))
 
 # Recover and plot parameters EOS restricted vs full 
 df_fiteos <- as.data.frame(fiteos)
@@ -1022,10 +1032,12 @@ df_fiteos <- as.data.frame(fiteos)
 sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
 bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
 treeid_df2_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("z|sigma", treeid))
+treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior|z|sigma", treeid))
 aspp_df2_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_eos <- subset(site_df2_eos, !grepl("sigma", site))
+ayear_df2_eos   <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_eos <- subset(ayear_df2_eos, !grepl("mean", year))
 
 # EOS full
 df_fiteos <- as.data.frame(fiteosfull)
@@ -1033,60 +1045,78 @@ df_fiteos <- as.data.frame(fiteosfull)
 sigma_df2_full_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
 bspp_df2_full_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
 treeid_df2_full_eos <- extract_params(df_fiteos, "atreeid", "fit_atreeid", "treeid", "atreeid\\[(\\d+)\\]")
-treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("z|sigma", treeid))
+treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("prior|z|sigma", treeid))
 aspp_df2_full_eos   <- extract_params(df_fiteos, "aspp", "fit_aspp", "spp", "aspp\\[(\\d+)\\]")
-treeid_df2_full_eos <- subset(treeid_df2_full_eos, !grepl("prior", treeid))
 site_df2_full_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
+site_df2_full_eos <- subset(site_df2_full_eos, !grepl("sigma", site))
+ayear_df2_full_eos   <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
+ayear_df2_full_eos <- subset(ayear_df2_full_eos, !grepl("mean", year))
 
 # Open device
 jpeg("figures/growthModelsMain/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
-par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
+par(mfrow = c(2,4), oma = c(0, 2, 0, 0))
  
 plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
      xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full_sos$mean_per25, sigma_df2_full_sos$mean_per75)),
-     xlim = range(c(sigma_df2_sos$mean_per25, sigma_df2_sos$mean_per75)))
-arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$mean_per25,
-       x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$mean_per75,
+     ylim = range(c(sigma_df2_full_sos$p25, sigma_df2_full_sos$p75)),
+     xlim = range(c(sigma_df2_sos$p25, sigma_df2_sos$p75)))
+arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$p25,
+       x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2_sos$mean_per25, y0 = sigma_df2_full_sos$mean,
-       x1 = sigma_df2_sos$mean_per75, y1 = sigma_df2_full_sos$mean,
+arrows(x0 = sigma_df2_sos$p25, y0 = sigma_df2_full_sos$mean,
+       x1 = sigma_df2_sos$p75, y1 = sigma_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
-text(sigma_df2_sos$mean_per75, sigma_df2_full_sos$mean_per25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
+text(sigma_df2_sos$p75, sigma_df2_full_sos$p25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
-plot(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
+plot(bspp_df2_sos$mean, bspp_df2_full_sos$mean,
      xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full_sos$fit_bspp_per25, bspp_df2_full_sos$fit_bspp_per75)),
-     xlim = range(c(bspp_df2_sos$fit_bspp_per25, bspp_df2_sos$fit_bspp_per75)))
-arrows(x0 = bspp_df2_sos$fit_bspp, y0 = bspp_df2_full_sos$fit_bspp_per25,
-       x1 = bspp_df2_sos$fit_bspp, y1 = bspp_df2_full_sos$fit_bspp_per75,
+     ylim = range(c(bspp_df2_full_sos$p25, bspp_df2_full_sos$p75)),
+     xlim = range(c(bspp_df2_sos$p25, bspp_df2_sos$p75)))
+arrows(x0 = bspp_df2_sos$mean, y0 = bspp_df2_full_sos$p25,
+       x1 = bspp_df2_sos$mean, y1 = bspp_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2_sos$fit_bspp_per25, y0 = bspp_df2_full_sos$fit_bspp,
-       x1 = bspp_df2_sos$fit_bspp_per75, y1 = bspp_df2_full_sos$fit_bspp,
+arrows(x0 = bspp_df2_sos$p25, y0 = bspp_df2_full_sos$mean,
+       x1 = bspp_df2_sos$p75, y1 = bspp_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2_sos$fit_bspp, bspp_df2_full_sos$fit_bspp,
+points(bspp_df2_sos$mean, bspp_df2_full_sos$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
-plot(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
+plot(aspp_df2_sos$mean, aspp_df2_full_sos$mean,
      xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full_sos$fit_aspp_per25, aspp_df2_full_sos$fit_aspp_per75)),
-     xlim = range(c(aspp_df2_sos$fit_aspp_per25, aspp_df2_sos$fit_aspp_per75)))
-arrows(x0 = aspp_df2_sos$fit_aspp, y0 = aspp_df2_full_sos$fit_aspp_per25,
-       x1 = aspp_df2_sos$fit_aspp, y1 = aspp_df2_full_sos$fit_aspp_per75,
+     ylim = range(c(aspp_df2_full_sos$p25, aspp_df2_full_sos$p75)),
+     xlim = range(c(aspp_df2_sos$p25, aspp_df2_sos$p75)))
+arrows(x0 = aspp_df2_sos$mean, y0 = aspp_df2_full_sos$p25,
+       x1 = aspp_df2_sos$mean, y1 = aspp_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2_sos$fit_aspp_per25, y0 = aspp_df2_full_sos$fit_aspp,
-       x1 = aspp_df2_sos$fit_aspp_per75, y1 = aspp_df2_full_sos$fit_aspp,
+arrows(x0 = aspp_df2_sos$p25, y0 = aspp_df2_full_sos$mean,
+       x1 = aspp_df2_sos$p75, y1 = aspp_df2_full_sos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2_sos$fit_aspp, aspp_df2_full_sos$fit_aspp,
+points(aspp_df2_sos$mean, aspp_df2_full_sos$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# ayear
+plot(ayear_df2_sos$mean, ayear_df2_full_sos$mean,
+     xlab = "restricted", ylab = "full", main = "ayear", type = "n", frame = FALSE,
+     ylim = range(c(ayear_df2_full_sos$p25, ayear_df2_full_sos$p75)),
+     xlim = range(c(ayear_df2_sos$p25, ayear_df2_sos$p75)))
+arrows(x0 = ayear_df2_sos$mean, y0 = ayear_df2_full_sos$p25,
+       x1 = ayear_df2_sos$mean, y1 = ayear_df2_full_sos$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = ayear_df2_sos$p25, y0 = ayear_df2_full_sos$mean,
+       x1 = ayear_df2_sos$p75, y1 = ayear_df2_full_sos$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(ayear_df2_sos$mean, ayear_df2_full_sos$mean,
+       pch = 16, col = "#0a6a3c", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
 
 
 # add label
@@ -1095,47 +1125,62 @@ mtext("a)", side = 2, outer = TRUE, at = 0.95, font = 2, las = 1, line = 0.5)
 # EOS
 plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
      xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
-     ylim = range(c(sigma_df2_full_eos$mean_per25, sigma_df2_full_eos$mean_per75)),
-     xlim = range(c(sigma_df2_eos$mean_per25, sigma_df2_eos$mean_per75)))
-arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$mean_per25,
-       x1 = sigma_df2_eos$mean, y1 = sigma_df2_full_eos$mean_per75,
+     ylim = range(c(sigma_df2_full_eos$p25, sigma_df2_full_eos$p75)),
+     xlim = range(c(sigma_df2_eos$p25, sigma_df2_eos$p75)))
+arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$p25,
+       x1 = sigma_df2_eos$mean, y1 = sigma_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = sigma_df2_eos$mean_per25, y0 = sigma_df2_full_eos$mean,
-       x1 = sigma_df2_eos$mean_per75, y1 = sigma_df2_full_eos$mean,
+arrows(x0 = sigma_df2_eos$p25, y0 = sigma_df2_full_eos$mean,
+       x1 = sigma_df2_eos$p75, y1 = sigma_df2_full_eos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#d39822", cex = 1.5)
-text(sigma_df2_eos$mean_per75, sigma_df2_full_eos$mean_per25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
+text(sigma_df2_eos$p75, sigma_df2_full_eos$p25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
 
 # bspp
-plot(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
+plot(bspp_df2_eos$mean, bspp_df2_full_eos$mean,
      xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
-     ylim = range(c(bspp_df2_full_eos$fit_bspp_per25, bspp_df2_full_eos$fit_bspp_per75)),
-     xlim = range(c(bspp_df2_eos$fit_bspp_per25, bspp_df2_eos$fit_bspp_per75)))
-arrows(x0 = bspp_df2_eos$fit_bspp, y0 = bspp_df2_full_eos$fit_bspp_per25,
-       x1 = bspp_df2_eos$fit_bspp, y1 = bspp_df2_full_eos$fit_bspp_per75,
+     ylim = range(c(bspp_df2_full_eos$p25, bspp_df2_full_eos$p75)),
+     xlim = range(c(bspp_df2_eos$p25, bspp_df2_eos$p75)))
+arrows(x0 = bspp_df2_eos$mean, y0 = bspp_df2_full_eos$p25,
+       x1 = bspp_df2_eos$mean, y1 = bspp_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = bspp_df2_eos$fit_bspp_per25, y0 = bspp_df2_full_eos$fit_bspp,
-       x1 = bspp_df2_eos$fit_bspp_per75, y1 = bspp_df2_full_eos$fit_bspp,
+arrows(x0 = bspp_df2_eos$p25, y0 = bspp_df2_full_eos$mean,
+       x1 = bspp_df2_eos$p75, y1 = bspp_df2_full_eos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(bspp_df2_eos$fit_bspp, bspp_df2_full_eos$fit_bspp,
+points(bspp_df2_eos$mean, bspp_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
-plot(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
+plot(aspp_df2_eos$mean, aspp_df2_full_eos$mean,
      xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
-     ylim = range(c(aspp_df2_full_eos$fit_aspp_per25, aspp_df2_full_eos$fit_aspp_per75)),
-     xlim = range(c(aspp_df2_eos$fit_aspp_per25, aspp_df2_eos$fit_aspp_per75)))
-arrows(x0 = aspp_df2_eos$fit_aspp, y0 = aspp_df2_full_eos$fit_aspp_per25,
-       x1 = aspp_df2_eos$fit_aspp, y1 = aspp_df2_full_eos$fit_aspp_per75,
+     ylim = range(c(aspp_df2_full_eos$p25, aspp_df2_full_eos$p75)),
+     xlim = range(c(aspp_df2_eos$p25, aspp_df2_eos$p75)))
+arrows(x0 = aspp_df2_eos$mean, y0 = aspp_df2_full_eos$p25,
+       x1 = aspp_df2_eos$mean, y1 = aspp_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-arrows(x0 = aspp_df2_eos$fit_aspp_per25, y0 = aspp_df2_full_eos$fit_aspp,
-       x1 = aspp_df2_eos$fit_aspp_per75, y1 = aspp_df2_full_eos$fit_aspp,
+arrows(x0 = aspp_df2_eos$p25, y0 = aspp_df2_full_eos$mean,
+       x1 = aspp_df2_eos$p75, y1 = aspp_df2_full_eos$mean,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
-points(aspp_df2_eos$fit_aspp, aspp_df2_full_eos$fit_aspp,
+points(aspp_df2_eos$mean, aspp_df2_full_eos$mean,
+       pch = 16, col = "#d39822", cex = 1.5)
+abline(0, 1, lty = 2, col = "black", lwd = 2)
+
+# ayear
+plot(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
+     xlab = "restricted", ylab = "full", main = "ayear", type = "n", frame = FALSE,
+     ylim = range(c(ayear_df2_full_eos$p25, ayear_df2_full_eos$p75)),
+     xlim = range(c(ayear_df2_eos$p25, ayear_df2_eos$p75)))
+arrows(x0 = ayear_df2_eos$mean, y0 = ayear_df2_full_eos$p25,
+       x1 = ayear_df2_eos$mean, y1 = ayear_df2_full_eos$p75,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+arrows(x0 = ayear_df2_eos$p25, y0 = ayear_df2_full_eos$mean,
+       x1 = ayear_df2_eos$p75, y1 = ayear_df2_full_eos$mean,
+       angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
+points(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 

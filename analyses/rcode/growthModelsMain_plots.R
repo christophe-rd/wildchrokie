@@ -844,6 +844,11 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### full treeid mu plots #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+f <- as.data.frame(fitgdd)
+columns <- colnames(f)
+a <- f[,"a"]
+fullintercept2 <- fullintercept - a
+
 # same for site
 treeid_df2$site <- emp$site[match(treeid_df2$treeid, emp$treeid_num)]
 
@@ -880,21 +885,30 @@ treeid_df4$spp_num <- emp$spp_num[match(treeid_df4$treeid, emp$treeid_num)]
 treeid_df4$site_name <- emp$site[match(treeid_df4$treeid, emp$treeid_num)]
 treeid_df4$site_num <- emp$site_num[match(treeid_df4$treeid, emp$treeid_num)]
 
-# species mean from the full intercept of tree id
-fullinterceptspp <-fullintercept 
-colnames(fullinterceptspp) <- treeid_spp_site_ordered$spp_num[match(names(fullintercept), treeid_spp_site_ordered$treeid_num)]
-
-# group by spp name and apply my loops to the lists
-draws_spp <- split.default(fullinterceptspp, colnames(fullinterceptspp))
+# species intercepts
+# species mean from full intercepts pooled across treeids
+aspp_df <- f[, columns[grepl("aspp", columns) & !grepl("prior", columns)]]
+site_df <- f[, columns[grepl("asite", columns) & !grepl("sigma|z|prior", columns)]]
+ayearmean <- f[, grepl("mean_ayear", columns)]
+aspp_df <- aspp_df + ayearmean + rowMeans(site_df)
+colnames(aspp_df) <- 1:ncol(aspp_df)
 
 aspp_df4 <- data.frame(
-  species = names(draws_spp),
-  mean = sapply(draws_spp, function(x) round(mean(unlist(x)), 3)),
-  p5   = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.05), 3)),
-  p25  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.25), 3)),
-  p75  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.75), 3)),
-  p95  = sapply(draws_spp, function(x) round(quantile(unlist(x), 0.95), 3))
+  species = character(ncol(aspp_df)),
+  mean = numeric(ncol(aspp_df)),  
+  p5 = NA, 
+  p25 = NA,
+  p75 = NA,
+  p95 = NA
 )
+for (i in 1:ncol(aspp_df)) { # i = 1
+  aspp_df4$species[i] <- colnames(aspp_df)[i]         
+  aspp_df4$mean[i] <- round(mean(aspp_df[[i]]),3)  
+  aspp_df4$p5[i] <- round(quantile(aspp_df[[i]], probs = 0.05), 3)
+  aspp_df4$p25[i] <- round(quantile(aspp_df[[i]], probs = 0.25), 3)
+  aspp_df4$p75[i] <- round(quantile(aspp_df[[i]], probs = 0.75), 3)
+  aspp_df4$p95[i] <- round(quantile(aspp_df[[i]], probs = 0.95), 3)
+}
 aspp_df4$spp_name <- emp$latbi[match(aspp_df4$species, emp$spp_num)]
 
 # Prep for the figure --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -1753,8 +1767,6 @@ mtext("(b) Ring width (mm) observations per year and species",
 dev.off()
 
 
-}
-
 ##### Box plot alone #####
 jpeg("figures/growthModelsMain/boxplotRingWidth.jpeg",
      width = 2000, height = 2000, res = 300)
@@ -1779,6 +1791,7 @@ for(sp in species) { # sp = "A. incana"
 }
 
 dev.off()
+}
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
