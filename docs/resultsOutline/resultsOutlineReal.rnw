@@ -68,14 +68,11 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{nrow(emp)} complete growing seasons (GS) for 
   \Sexpr{length(unique(emp$treeid))} individuals. 
     
-    \item GSL ranged from 
-  \Sexpr{min(emp$pgsGSL)} days ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
-  \Sexpr{max(emp$pgsGSL)} days ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
+    \item The calendar and thermal seasons ranged from 
+  \Sexpr{min(emp$pgsGSL)} days and 
+  \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
+  \Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
 
-  \item GS thermal sum ranged from 
-  \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGDD5)]}) to 
-  \Sexpr{round(max(emp$pgsGDD5),1)} GDD, ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGDD5)]})
-  
   \item The earliest leafout day of year was 
   \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
   \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
@@ -141,7 +138,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-\item Did an later start and end of season increase growth?
+\item Did a later start and end of season increase growth?
   \begin{enumerate}
   \item A longer calendar season increased growth for two species, but neither grew more with a later start of season.
   \item {\Ainc} grew more with longer calendar season, but grew less with a later start of season ($\beta = $ 

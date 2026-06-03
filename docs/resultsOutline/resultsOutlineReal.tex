@@ -67,12 +67,7 @@
 \newcommand{\Bpap}{\textit{B. papyrifera}}
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! object 'species' not found}}\end{kframe}
-\end{knitrout}
 
 
 % % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -109,9 +104,10 @@
   227 complete growing seasons (GS) for 
   81 individuals. 
     
-    \item GSL ranged from 
-  90 days ({\Ball} in 2018) to 
-  173 days ({\Ainc} in 2018)
+    \item The calendar and thermal seasons ranged from 
+  90 days and 
+  1465.1 GDD ({\Ball} in 2018) to 
+  173 days and 2513.6 GDD ({\Ainc} in 2018)
 
   \item GS thermal sum ranged from 
   1465.1 GDD ({\Ball} in 2018) to 
@@ -182,7 +178,7 @@
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-\item Did an later start and end of season increase growth?
+\item Did a later start and end of season increase growth?
   \begin{enumerate}
   \item A longer calendar season increased growth for two species, but neither grew more with a later start of season.
   \item {\Ainc} grew more with longer calendar season, but grew less with a later start of season ($\beta = $ 
@@ -283,7 +279,7 @@
 %DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue Jun  2 16:47:32 2026
+% Wed Jun  3 09:26:41 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -302,19 +298,19 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue Jun  2 16:47:32 2026
+% Wed Jun  3 09:26:41 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
 \label{tab:wc_asite_table}
-\begin{tabular}{lllllrr}
+\begin{tabular}{lllllr}
   \hline
-Site & GDD & GSL & SOS & EOS & Lat. & Lon. \\ 
+Site & GDD & GSL & SOS & EOS & Lon. \\ 
   \hline
-Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] & 42.53 & -72.19 \\ 
-  White Mountains (NH) & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] & 44.11 & -71.23 \\ 
-  Dartmouth College (NH) & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] & 44.79 & -71.15 \\ 
-  St-Hippolyte (Qc) & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] & 45.93 & -74.03 \\ 
+Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] & -72.19 \\ 
+  White Mountains (NH) & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] & -71.23 \\ 
+  Dartmouth College (NH) & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] & -71.15 \\ 
+  St-Hippolyte (Qc) & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] & -74.03 \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -364,7 +360,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Tue Jun  2 16:47:32 2026
+% Wed Jun  3 09:26:41 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
