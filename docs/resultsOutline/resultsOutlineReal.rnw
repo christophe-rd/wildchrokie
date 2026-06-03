@@ -168,44 +168,21 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
 
 % Question 3 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
+\item How did tree growth change across years, provenances and tree ids?
   \begin{enumerate}
   
-  \item {\Bpap} grew the least ($\alpha = $ 
-  \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "B. papyrifera")]}, $UI_{90}$
-  [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "B. papyrifera")]}, 
-  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "B. papyrifera")]}]) (Figure \ref{fig:wcmuplotatreeid}), but was the most responsive to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
+  \item We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayear}) and there is no clear differences of growth looking across species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL})
   
-  \item {\Ainc} grew the most ($\alpha = $  
-  \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name %in% "A. incana")]}, $UI_{90}$
-  [\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name %in% "A. incana")]}, 
-  \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotatreeid}), but had contrasting responses to longer growing seasons (Figure \ref{fig:wcmuplotbspp}a and b).
-
   \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), and the variation across sites ($\sigma = $
   \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
   [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
-  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) tree ids ($\sigma = $ 
+  \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) and tree ids ($\sigma = $ 
   \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$
   [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
   \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]) was similar
 
   \end{enumerate}
 
-
-% Question 4 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-\item How did growth change across years, and how did it relate to climate?
-  \begin{enumerate}
-  
-  \item Growth was highest in \Sexpr{ayear_df2$year_name[which.max(ayear_df2$mean)]} 
-  (\Sexpr{ayear_df2$mean[which.max(ayear_df2$mean)]}, $UI_{90}$
-  [\Sexpr{ayear_df2$p5[which.max(ayear_df2$mean)]}, 
-\Sexpr{ayear_df2$p95[which.max(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}), but that year was not the warmest nor the longest calendar season, unlike our finding that warmer and longer seasons increase growth for most of our species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
-  
-  \item Growth was lowest in \Sexpr{ayear_df2$year_name[which.min(ayear_df2$mean)]} 
-  (\Sexpr{ayear_df2$mean[which.min(ayear_df2$mean)]}, $UI_{90}$
-  [\Sexpr{ayear_df2$p5[which.min(ayear_df2$mean)]}, 
-  \Sexpr{ayear_df2$p95[which.min(ayear_df2$mean)]}]) (Figure \ref{fig:wcmuplotayear}) that year had the warmest thermal, but the shortest calendar season, also unlike our findings that growth increases with warmer seasons, and to a lesser extent, with longer calendar season (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL}).
-  \end{enumerate}
 
 \end{enumerate}
 
