@@ -134,14 +134,15 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
   
-  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab})
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab}) 
+  
+  \item On a scaled axis, both predictors were similarly predictive (Figure\ref{fig:bsppZscored}). 
   \end{enumerate}
   
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item Did a later start and end of season increase growth?
   \begin{enumerate}
-  \item A longer calendar season increased growth for two species, but neither grew more with a later start of season.
-  \item {\Ainc} grew more with longer calendar season, but grew less with a later start of season ($\beta = $ 
+  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}:$\beta = $ 
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
   \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
@@ -164,6 +165,8 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, 
   \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}])
   being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}).
+  
+  \item The estimates were unchanged when using the full ($n =$\Sexpr{nrow(empfullsos)}) or restricted datasets ($n=$\Sexpr{nrow(emp)}) (Figure \ref{fig:wcSOSEOScomparison}a). 
   
   \end{enumerate}
 
@@ -285,6 +288,12 @@ print(tab,
       caption.placement = "top")
 @
 
+% Full vs restricted data comparison for Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
+\caption{Full vs most restricted rows of data for the model with SOS (a) EOS (b) as the predictor for Wildchrokie. Each pannel represent the different parameters used to fit the models.}
+\label{fig:wcSOSEOScomparison}
+\end{figure}
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
