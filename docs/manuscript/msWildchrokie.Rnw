@@ -234,7 +234,7 @@ Longer thermal season increased growth for {\Bpap}
   \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]).
-  \item {\Ball} ($\beta = $ 
+   {\Ball} ($\beta = $ 
   \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
   \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}]), and {\Bpop} ($\beta = $ 

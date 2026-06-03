@@ -136,7 +136,7 @@ We then averaged across the three BAI for each ring and fit the models with the 
 
 % Table count per spp per prov 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jun  1 09:36:30 2026
+% Wed Jun  3 09:22:26 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances. We had a total of 81 individual trees} 
@@ -158,7 +158,74 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Results}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\subsection*{Summary basic information}
+Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of 239 leafout and 
+  230 budset observations, yielding 
+  227 complete growing seasons (GS) for 
+  81 individuals. 
+  % GSL ranged from 
+  % min(emp$pgsGSL) days ({\Ball} in emp$year[which.min(emp$pgsGSL)]) to 
+  % max(emp$pgsGSL) days ({\Ainc} in emp$year[which.max(emp$pgsGSL)])
+  % GS thermal sum ranged from 
+  % round(min(emp$pgsGDD5),1) GDD ({\Ball} in emp$year[which.min(emp$pgsGDD5)]) to 
+  % round(max(emp$pgsGDD5),1) GDD, ({\Ainc} in emp$year[which.max(emp$pgsGDD5)])
+  
+The earliest leafout day of year was 
+  22-Apr ({\Ainc} in
+  2019) and the latest,
+  05-Jun (also {\Ainc}, but in
+  2020). The earliest budset day of year was 
+  13-Aug ({\Ball} in
+  2018) and the latest, 
+  24-Oct ({\Ainc} in
+  2018) 
+  
+Mean summer temperature were similar across years with 2019 being the coolest 
+(22.383$^\circ$C), 2020 the hottest 
+(23.067$^\circ$C), and 2018 in between 
+(22.85$^\circ$C). There was no drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September. 
+Annual ring widths across years varied from 
+  0.389 mm ({\Ball} in 2020) to 
+  13.547 mm ({\Bpop} in 2018) (Figure \ref{fig:wcmuplotayear}). 
+
+
+\subsection{Does tree growth increase with longer growing seasons?}
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it.
+Longer thermal season increased growth for {\Bpap} 
+  ($\beta = $ 
+  0.443, $UI_{90}$
+  [0.179, 
+  0.703]),
+  {\Bpop} 
+  ($\beta = $ 
+  0.215, $UI_{90}$
+  [0.072, 
+  0.357]), and {\Ball} 
+  ($\beta = $ 
+  0.129, $UI_{90}$
+  [0.013, 
+  0.243]), but {\Ainc} had a weak effect, but trended in the same direction 
+  ($\beta = $ 
+  0.067, $UI_{90}$
+  [-0.037, 
+  0.169]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
+ 
+ {\Ainc} grew more with longer calendar seasons ($\beta = $ 
+  0.05, $UI_{90}$
+  [0.004, 
+  0.097]), but of the three species that responded to thermal season, only {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
+  0.184, $UI_{90}$
+  [0.051, 
+  0.317]).
+  \item {\Ball} ($\beta = $ 
+  0.033, $UI_{90}$
+  [-0.023, 
+  0.089]), and {\Bpop} ($\beta = $ 
+  0.054, $UI_{90}$
+  [-0.019, 
+  0.127]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
+  
+Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab})
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Discussion}
