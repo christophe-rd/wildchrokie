@@ -104,7 +104,9 @@
   227 complete growing seasons (GS) for 
   81 individuals. 
     
-    \item The calendar and thermal seasons ranged from 
+  \item Mean summer temperature were similar across years with 2019 being the coolest (22.38$^\circ$C), 2020 the hottest (23.07$^\circ$C), and 2018 in between (22.85$^\circ$C)
+    
+  \item The calendar and thermal seasons ranged from 
   90 days and 
   1465.1 GDD ({\Ball} in 2018) to 
   173 days and 2513.6 GDD ({\Ainc} in 2018)
@@ -120,13 +122,11 @@
   24-Oct ({\Ainc} in
   2018) 
   
-  \item Mean summer temperature were similar across years with 2019 being the coolest (22.38$^\circ$C), 2020 the hottest (23.07$^\circ$C), and 2018 in between (22.85$^\circ$C)
-  
   \item No drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.
   
   \item Annual ring widths across years varied from 
   0.39 mm ({\Ball} in 2020) to 
-  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcmuplotayear}). 
+  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcboxplot}). 
  
 \end{enumerate}
 
@@ -178,12 +178,12 @@
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item Did a later start and end of season increase growth?
   \begin{enumerate}
-  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}:$\beta = $ 
+  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}: $\beta = $ 
   -0.07, $UI_{90}$
   [-0.14, 
   -0.01]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
   
-  \item {\Ball} which did not grow more with longer calendar season, did increase growth with a later start of season ($\beta = $ 
+  \item {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season, unlike our prediction ($\beta = $ 
   0.1, $UI_{90}$
   [0, 
   0.2]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
@@ -202,7 +202,7 @@
   0.33])
   being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}).
   
-  \item The estimates were unchanged when using the full ($n =$239) or restricted datasets ($n=$227) (Figure \ref{fig:wcSOSEOScomparison}a). 
+  \item The estimates were unchanged when using the full (SOS $n =$ 239 and $n =$ 230) or restricted datasets ($n=$227) (Figure \ref{fig:wcSOSEOScomparison}a). 
   
   \end{enumerate}
 
@@ -228,7 +228,7 @@
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (174.05) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew less with later leafout and had no effect in response to budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset and longer calendar season. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset.}
+\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (174.05) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -255,7 +255,7 @@
 %DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
 % Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun  3 13:22:23 2026
+% Wed Jun  3 14:15:23 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -274,7 +274,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun  3 13:22:23 2026
+% Wed Jun  3 14:15:23 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -316,7 +316,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 % Figure mu atreeid full
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
-\caption{Intercept estimates for each group of the GDD model. The different tree id values represent the sum of the tree id, provenance, species and averaged year intercepts. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
+\caption{Intercept estimates for each group of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The bigger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
@@ -330,8 +330,8 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 % Wildchrokie boxplot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
-\caption{Empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
-\label{fig:wcmuplotayear}
+\caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
+\label{fig:wcboxplot}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
@@ -342,7 +342,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun  3 13:22:23 2026
+% Wed Jun  3 14:15:23 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 

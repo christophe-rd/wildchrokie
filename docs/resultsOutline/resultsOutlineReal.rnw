@@ -68,7 +68,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{nrow(emp)} complete growing seasons (GS) for 
   \Sexpr{length(unique(emp$treeid))} individuals. 
     
-    \item The calendar and thermal seasons ranged from 
+  \item Mean summer temperature were similar across years with 2019 being the coolest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C)
+    
+  \item The calendar and thermal seasons ranged from 
   \Sexpr{min(emp$pgsGSL)} days and 
   \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
   \Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]})
@@ -84,13 +86,11 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{emp$bsCal[which.max(emp$budset)]} ({\Ainc} in
   \Sexpr{emp$year[which.max(emp$budset)]}) 
   
-  \item Mean summer temperature were similar across years with 2019 being the coolest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C)
-  
   \item No drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.
   
   \item Annual ring widths across years varied from 
   \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
-  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcmuplotayear}). 
+  \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}) (Figure \ref{fig:wcboxplot}). 
  
 \end{enumerate}
 
@@ -142,12 +142,12 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 \item Did a later start and end of season increase growth?
   \begin{enumerate}
-  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}:$\beta = $ 
+  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}: $\beta = $ 
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
   \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
   
-  \item {\Ball} which did not grow more with longer calendar season, did increase growth with a later start of season ($\beta = $ 
+  \item {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season, unlike our prediction ($\beta = $ 
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
   \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
@@ -166,7 +166,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}])
   being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}).
   
-  \item The estimates were unchanged when using the full ($n =$\Sexpr{nrow(empfullsos)}) or restricted datasets ($n=$\Sexpr{nrow(emp)}) (Figure \ref{fig:wcSOSEOScomparison}a). 
+  \item The estimates were unchanged when using the full (SOS $n =$ \Sexpr{nrow(empfullsos)} and $n =$ \Sexpr{nrow(empfulleos)}) or restricted datasets ($n=$\Sexpr{nrow(emp)}) (Figure \ref{fig:wcSOSEOScomparison}a). 
   
   \end{enumerate}
 
@@ -192,7 +192,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). All predictors were fit using the same model and number of observations, with only the independent variable changing. The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). {\Ainc} and {\Bpap} grew more with longer calendar seasons, but only {\Ainc} grew less with later leafout and had no effect in response to budset. Interestingly, {\Bpap} did not grow more with earlier leafout, but did with a later budset and longer calendar season. {\Ball} and {\Bpop} did not grow more with longer calendar seasons, but {\Ball} grew more with a later leafout and budset whereas {\Bpop} only grew more with a later budset.}
+\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -312,7 +312,7 @@ print(tab,
 % Figure mu atreeid full
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
-\caption{Intercept estimates for each group of the GDD model. The different tree id values represent the sum of the tree id, provenance, species and averaged year intercepts. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
+\caption{Intercept estimates for each group of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The bigger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
@@ -326,8 +326,8 @@ print(tab,
 % Wildchrokie boxplot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
-\caption{Empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
-\label{fig:wcmuplotayear}
+\caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
+\label{fig:wcboxplot}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
