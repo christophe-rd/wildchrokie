@@ -23,6 +23,7 @@ source('rcode/tools.R')
 sim <- read.csv("output/simdata.csv")
 emp <- read.csv("output/empiricalDataMAIN.csv")
 gdd <- read.csv("output/gddByYear.csv")
+rw <- read.csv("output/wildchrokieRingWidth.csv")
 
 emp$lengthMM <- emp$lengthCM*10
 
@@ -281,4 +282,70 @@ for (yr in sort(unique(comb2$year))) { # i =1
 }
 dev.off()
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Year allometry ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+emp
+plot(rw$lengthCM ~ rw$year)
+pdf("figures/empiricalData/rwXyearAll.pdf",
+    width = 8, height = 20)
+ids <- unique(rw$treeid)
+par(mfrow = c(ceiling(length(ids)/5), 5), 
+    mar = c(2, 2, 1.5, 0.5),
+    mgp = c(1.5, 0.5, 0))
+rw$year <- as.integer(rw$year)
+for(i in ids) { # i = "White oak 21815*E"
+  sub <- rw[rw$treeid == i, ]
+  
+  plot(sub$year, sub$lengthCM,
+       # col = col_vals,
+       pch = 16,
+       cex = 1,
+       main = i,
+       xlab = "",
+       xaxt = "n",
+       ylab = "",
+       tck = -0.1,
+       bty = 'l')
+  
+  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
+  # regression line per species
+  for(sp in unique(sub$spp)) { # sp = "River birch"
+    ssp <- sub[sub$spp == sp, ]
+    fit <- lm(lengthCM ~ year, data = ssp)
+    abline(fit, col = "black", lwd =0.5) 
+  }
+}
+dev.off()
 
+pdf("figures/empiricalData/rwXyearRestricted.pdf",
+    width = 8, height = 20)
+par(mfrow = c(ceiling(length(ids)/5), 5), 
+    mar = c(2, 2, 1.5, 0.5),
+    mgp = c(1.5, 0.5, 0))
+rw2 <- subset(rw, year > 2017 & year < 2021)
+ids <- unique(rw$treeid)
+year <- as.integer(rw2$year)
+for(i in ids) { # i = "BETPOP_HF4_P9"
+  sub <- rw2[rw2$treeid == i, ]
+  if(nrow(sub) == 0) next  
+  plot(sub$year, sub$lengthCM,
+       # col = col_vals,
+       pch = 16,
+       cex = 1,
+       main = i,
+       xlab = "",
+       xaxt = "n",
+       ylab = "",
+       tck = -0.1,
+       bty = 'l')
+  
+  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
+  # regression line per species
+  for(sp in unique(sub$spp)) { # sp = "River birch"
+    ssp <- sub[sub$spp == sp, ]
+    fit <- lm(lengthCM ~ year, data = ssp)
+    abline(fit, col = "black", lwd =0.5) 
+  }
+}
+dev.off()
