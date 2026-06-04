@@ -50,7 +50,7 @@
 
 \usepackage{alltt}
 \usepackage{hyperref}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.8in]{geometry}
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{gensymb}
@@ -70,32 +70,15 @@
 \newcommand{\Bpap}{\textit{B. papyrifera}}
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
-% Set CoringTreespotters species shortcut
-\newcommand{\Arub}{\textit{A. rubrum}}
-\newcommand{\Asac}{\textit{A. saccharum}}
-\newcommand{\Afla}{\textit{A. flava}}
-\newcommand{\Bnig}{\textit{B. nigra}}
-\newcommand{\Cgla}{\textit{C. glabra}}
-\newcommand{\Cova}{\textit{C. ovata}}
-\newcommand{\Pdel}{\textit{P. deltoides}}
-\newcommand{\Qalb}{\textit{Q. alba}}
-\newcommand{\Qrub}{\textit{Q. rubra}}
-\newcommand{\Tame}{\textit{T. americana}}   
 
-% 
-% \begin{figure}[h!]
-% \includegraphics[width=0.85\textwidth]{../../notes/chaptersDesign/chaptersDesign.pdf}
-% \caption{Overview of the age class, species, provenance of the trees used in each study along with the type of study each project consists of. The colored lines represent the period of the growth data and the shaded areas are the phenological data. Both are colour-coded by project. Each phylogram illustrates the species used in each project. The map illustrates the four different provenances used in Wildchrokie, and the star represents the location of Wildchrokie and CoringTreespotters.}
-% \label{fig:chaptersDesign}
-% \end{figure}
+
+
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Introduction}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \begin{enumerate}
 
-
-% plug this somewhere: while warmer spring temperatures trigger the onset of cell production, it alone doesnt increase wood prod with water playing. amore decisive role on wood prod (Wang2025Seasonal)
 % Paragraph 1
 \item The most frequently observed biological impact of climate change is major changes in phenology \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}
   \begin{enumerate}
@@ -119,7 +102,7 @@
   
   \item \cite{dow_warm_2022} showed that trees did not grow more or faster despite warmer and earlier springs at the regional scale
   
-  \item \cite{Cabon2022Cross} showed a decoupling between GPP and carbon storage at the global scale.
+  \item \cite{cabon_cross-biome_2022} showed a decoupling between GPP and carbon storage at the global scale.
   
   \item If trees don't grow as we expect, it could affect forest carbon cycle projections \citep{richardson_climate_2013,swidrak_comparing_2013} and subsequent climate solutions \citep{green_limits_2022}
   
@@ -137,17 +120,19 @@
   
   \item Growth may be more sensitive to varying environmental conditions than photosynthesis, which could mislead models \citep{cabon_cross-biome_2022,cabon_water_2020,muller_water_2011,peters_turgor_2021}
   
-  \item Hard nature of climate change makes understanding the internal physiological and external constraints to growth critical \citep{almagro_longterm_2025,cabon_cross-biome_2022,wolkovich_why_2025}
+  \item While warmer spring temperatures advance the onset of cell production, that alone does not increase wood production with water playing a more decisive role on wood prod \citep{wang_seasonal_2025}.
+  
+  \item Complex nature of climate change makes understanding the internal physiological and external constraints to growth critical \citep{almagro_longterm_2025,cabon_cross-biome_2022,wolkovich_why_2025}
   \end{enumerate}
 
 % Paragraph 
 \item How trees internal programming and their susceptibility to environmental conditions could constrain their growth?
   \begin{enumerate}
-  \item Growth as any other biological mechanism is genetically controlled, and will thus vary by species \citep{howe_genotype_2003,wolkovich_why_2025, silvestro2025From}
+  \item Growth as any other biological mechanism is genetically controlled, and will thus vary by species \citep{howe_genotype_2003,wolkovich_why_2025,silvestro_roots_2025}
   
   \item Tree plasticity is a highly variable trait that changes with species' life history strategies \citep{cuny_couplings_2019,michelot_comparing_2012}, affecting how flexible their growth is in response to varying environmental conditions.
   
-  \item While CO2 concentrations increased, drought, heat waves, competition, insect outbreaks and spring frosts---factors projected to change in frequency and severity with a warming climate---can offset the benefits of longer seasons \citep{tyree_xylem_2002, choat_triggers_2018, li_widespread_2023,trenberth_global_2014,intergovernmental_panel_on_climate_change_detection_2014,chiang_evidence_2021,polgar_leafout_2011,reinmann_compensatory_2023}.
+  \item While $\text{CO}_2$ concentrations increased, drought, heat waves, competition, insect outbreaks and spring frosts---factors projected to change in frequency and severity with a warming climate---can offset the benefits of longer seasons \citep{tyree_xylem_2002, choat_triggers_2018, li_widespread_2023,trenberth_global_2014,intergovernmental_panel_on_climate_change_detection_2014,chiang_evidence_2021,polgar_leafout_2011,reinmann_compensatory_2023}.
   
   \item Droughts can act as a severe growth constraint \citep{kang_earlier_2023} by stopping growth early \citep{dox_severe_2022} or inducing tissue mortality \citep{li_widespread_2023}.
   
@@ -159,11 +144,11 @@
 \item Understanding the constraints to growth requires defining the growing season and growth.
   \begin{enumerate}
   
-  \item Different definitions of GS: we propose to use calendar (number of days) and thermal season (window of opportunity of thermally favorable meteorological conditions for plant growth) \citep{korner_four_2023}
+  \item Different definitions of GS: we will use calendar (number of days) and thermal season (window of opportunity of thermally favorable meteorological conditions for plant growth) \citep{korner_four_2023} (Figure \ref{fig:GSfig})
   
-  \item The calendar season only accounts for the number of days in the season as the predictor for growth, implying a stable growth rate throughout the season. 
+    \item Calendar season only accounts for the number of days in the season, implying a stable growth rate throughout the season. 
   
-  \item This may reveal a role of some neglected cooler and shorter days in the season that have a weak influence on the thermal season.
+  \item This may reveal a role of some neglected cooler and shorter days in the season that have a weak influence on the thermal season (Figure \ref{fig:GSfig}a).
   
   \item Growth rate changes with temperature, which the thermal season accounts for and should therefore better predict growth responses.
   
@@ -191,15 +176,15 @@
   
   \end{enumerate}
   
-\item Local adaptation could inform growth responses of species under future climate change \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}.
+\item Local adaptation could inform growth responses of trees under future climate change \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}.
   \begin{enumerate} 
   \item Provenance refers to the geographic and climatic origin of a population \citep{aitken_time_2016,housset_tree_2018}
   
-  \item Trees from northern provenances sometimes have later start of season phenology \citep{zeng_weak_2024} and often earlier end of season phenology=shorter growing season \citep{way_photoperiod_2015,vitasse_interaction_2014}.
+  \item Trees from northern provenances sometimes have later start of season \citep{zeng_weak_2024} and often earlier end of season phenology $=$ shorter growing season \citep{way_photoperiod_2015,vitasse_interaction_2014}.
   
-  \item This is especially true for budset---which marks the end of primary growth---, with its phenotypic variance being strongly related to provenance and photoperiod acting as the primary cue \citep{aitken_time_2016,soolanayakanahally_timing_2013,way_photoperiod_2015}.
+  \item This is especially true for budset---marks the end of primary growth---, with its phenotypic variance being strongly related to provenance and photoperiod acting as the primary cue \citep{aitken_time_2016,soolanayakanahally_timing_2013,way_photoperiod_2015}.
   
-  \item Thus, common gardens with provenances across a latitudinal gradient can inform tree's growth responses to future climatic conditions.
+  \item Thus, common gardens with provenances across a latitudinal gradient can inform tree growth responses to future climatic conditions.
   
   \end{enumerate} 
 
@@ -214,19 +199,173 @@
 
 % Conceptual figure
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
-\caption{We show how shifting growing season length with climate change affects both the temperature experienced during the growing season. (a) The Boston airport Climate station smoothed curve mean daily average 1945-1965 (blue) and 2005-2025 (red) to represent the changes in temperature before and after significant climate warming that increased in the 1980s. With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season }
-\label{fig:wcmuplotayear}
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
+\caption{We show how shifting growing season length with climate change affects both the temperature experienced during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. As a results of increased temperature during the growing season, trees also accumulate more GDD, warming their thermal seasons.}
+\label{fig:GSfig}
 \end{figure}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Results}
+% RESULTS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Separate document
+\clearpage
+\section*{Results}
+\begin{enumerate}
+\item Does tree growth increase with longer growing seasons?
+\item Did an earlier start and later end of season increase growth? 
+\item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
+\item How did growth change across years, and how did it relate to climate?
+\end{enumerate}
+
+\begin{enumerate}
+\item Summary basic information
+  \begin{enumerate}
+  
+  \item Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spaning three years (2018 to 2020) for a total of 239 leafout and 
+  230 budset observations, yielding 
+  227 complete growing seasons (GS) for 
+  81 individuals. 
+    
+  \item Mean summer temperature were similar across years with 2019 being the coolest (22.38$^\circ$C), 2020 the hottest (23.07$^\circ$C), and 2018 in between (22.85$^\circ$C)
+    
+  \item The calendar and thermal seasons ranged from 
+  90 days and 
+  1465.1 GDD ({\Ball} in 2018) to 
+  173 days and 2513.6 GDD ({\Ainc} in 2018)
+
+  \item The earliest leafout day of year was 
+  22-Apr ({\Ainc} in
+  2019) and the latest,
+  05-Jun (also {\Ainc}, but in
+  2020). 
+  The earliest budset day of year was 
+  13-Aug ({\Ball} in
+  2018) and the latest, 
+  24-Oct ({\Ainc} in
+  2018) 
+  
+  \item No drought for the three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.
+  
+  \item Annual ring widths across years varied from 
+  0.39 mm ({\Ball} in 2020) to 
+  13.55 mm ({\Bpop} in 2018) (Figure \ref{fig:wcboxplot}). 
+ 
+\end{enumerate}
+
+% Question 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Does tree growth increase with longer growing seasons?
+  \begin{enumerate}
+
+  \item Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it.
+
+  \item Longer thermal season increased growth for {\Bpap} 
+  ($\beta = $ 
+  0.44, $UI_{90}$
+  [0.18, 
+  0.7]),
+  {\Bpop} 
+  ($\beta = $ 
+  0.22, $UI_{90}$
+  [0.07, 
+  0.36]), and {\Ball} 
+  ($\beta = $ 
+  0.13, $UI_{90}$
+  [0.01, 
+  0.24]), but {\Ainc} had a weak effect, but trended in the same direction 
+  ($\beta = $ 
+  0.07, $UI_{90}$
+  [-0.04, 
+  0.17]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}).
+ 
+  \item {\Ainc} grew more with longer calendar seasons ($\beta = $ 
+  0.05, $UI_{90}$
+  [0, 
+  0.1]), but of the three species that responded to thermal season, only {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
+  0.18, $UI_{90}$
+  [0.05, 
+  0.32]).
+  \item {\Ball} ($\beta = $ 
+  0.03, $UI_{90}$
+  [-0.02, 
+  0.09]), and {\Bpop} ($\beta = $ 
+  0.05, $UI_{90}$
+  [-0.02, 
+  0.13]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}).
+  
+  \item Results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab}) 
+  
+  \item On a scaled axis, both predictors were similarly predictive (Figure\ref{fig:bsppZscored}). 
+  \end{enumerate}
+  
+% Question 2 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item Did a later start and end of season increase growth?
+  \begin{enumerate}
+  \item A longer calendar season increased growth for two species, but only one grew more with an earlier start of season ({\Ainc}: $\beta = $ 
+  -0.07, $UI_{90}$
+  [-0.14, 
+  -0.01]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
+  
+  \item {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season, unlike our prediction ($\beta = $ 
+  0.1, $UI_{90}$
+  [0, 
+  0.2]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
+  
+  \item Three species grew more with a later end of season ({\Ball}: $\beta = $ 
+  0.12, $UI_{90}$
+  [0.05, 
+  0.18], 
+  {\Bpop}: $\beta = $ 
+  0.1, $UI_{90}$
+  [0.02, 
+  0.17]), with {\Bpap} 
+  ($\beta = $ 
+  0.21, $UI_{90}$
+  [0.09, 
+  0.33])
+  being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}).
+  
+  \item The estimates were unchanged when using the full (SOS $n =$ 239 and $n =$ 230) or restricted datasets ($n=$227) (Figure \ref{fig:wcSOSEOScomparison}a). 
+  
+  \end{enumerate}
+
+% Question 3 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+\item How did tree growth change across years, provenances and tree ids?
+  \begin{enumerate}
+  
+  \item We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayear}) and there is no clear differences of growth looking across species (Figure \ref{fig:wcxyGDD} and Figure \ref{fig:wcxyGSL})
+  
+  \item Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), and the variation across sites ($\sigma = $
+  0.18, $UI_{90}$
+  [0.02, 
+  0.5) and tree ids ($\sigma = $ 
+  0.17, $UI_{90}$
+  [0.05, 
+  0.27]) was similar
+
+  \end{enumerate}
+
+
+\end{enumerate}
+
+% Figure mu across all species and climate predictors
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
+\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (174.05) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
+\label{fig:wcmuplotbspp}
+\end{figure}
+
+% Wildchrokie provenances mu plot
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
+\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
+\label{fig:wcmuplotasite}
+\end{figure}
+
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Discussion}
+% DISCUSSION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
+\section*{Discussion}
 \begin{enumerate}
 \item What we did, how we did it and what we found
   \begin{enumerate}
@@ -283,15 +422,10 @@ Separate document
   \end{enumerate}
   
 \end{enumerate}
-%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% REFERENCES %
-%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\bibliography{ExportedItems}
-\bibliographystyle{nature} 
 
-%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% Supplement %
-%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% Supplemental results
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 \section*{Supplemental results}
 
@@ -299,5 +433,133 @@ Separate document
 \renewcommand{\thetable}{S\arabic{table}}
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
+
+%DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
+% Table slope for Wildchrokie
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu Jun  4 15:05:11 2026
+\begin{table}[ht]
+\centering
+\caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_slope_table}
+\begin{tabular}{lllll}
+  \hline
+Species & GDD & GSL & SOS & EOS \\ 
+  \hline
+\textit{A. incana} & 0.07 [-0.04, 0.17] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
+  \textit{B. alleghaniensis} & 0.13 [0.01, 0.24] & 0.03 [-0.02, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
+  \textit{B. papyrifera} & 0.44 [0.18, 0.70] & 0.18 [0.05, 0.32] & 0.05 [-0.10, 0.21] & 0.21 [0.09, 0.33] \\ 
+  \textit{B. populifolia} & 0.21 [0.07, 0.36] & 0.05 [-0.02, 0.13] & 0.05 [-0.07, 0.17] & 0.10 [0.02, 0.17] \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu Jun  4 15:05:11 2026
+\begin{table}[ht]
+\centering
+\caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
+\label{tab:wc_asite_table}
+\begin{tabular}{lllllr}
+  \hline
+Site & GDD & GSL & SOS & EOS & Lon. \\ 
+  \hline
+Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] & -72.19 \\ 
+  White Mountains (NH) & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] & -71.23 \\ 
+  Dartmouth College (NH) & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] & -71.15 \\ 
+  St-Hippolyte (Qc) & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] & -74.03 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% Full vs restricted data comparison for Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
+\caption{Full vs most restricted rows of data for the model with SOS (a) EOS (b) as the predictor for Wildchrokie. Each pannel represent the different parameters used to fit the models.}
+\label{fig:wcSOSEOScomparison}
+\end{figure}
+
+% XY facetted by species GDD
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
+\caption{Ring width trends in response to thermal season (GDD). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
+\label{fig:wcxyGDD}
+\end{figure}
+
+% XY facetted by species GSL
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
+\caption{Ring width trends in response to calendar season (GSL). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
+\label{fig:wcxyGSL}
+\end{figure}
+
+% Figure mu atreeid full
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
+\caption{Intercept estimates for each group of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The bigger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
+\label{fig:wcmuplotatreeid}
+\end{figure}
+
+% Wildchrokie year mu plot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
+\caption{Model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
+\label{fig:wcmuplotayear}
+\end{figure}
+
+% Wildchrokie boxplot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
+\caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
+\label{fig:wcboxplot}
+\end{figure}
+
+% Z-scored slope results Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
+\caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
+\label{fig:bsppZscored}
+\end{figure}
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu Jun  4 15:05:11 2026
+\begin{table}[ht]
+\centering
+\caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
+\label{tab:BAItab}
+\begin{tabular}{ll}
+  \hline
+Parameter & Estimate \\ 
+  \hline
+$\sigma_{\alpha_{tree}}$ & 0.52 [0.41, 0.64] \\ 
+  $\sigma_{\alpha_{site}}$ & 0.27 [0.03, 0.73] \\ 
+  $\sigma_{y}$ & 0.63 [0.57, 0.70] \\ 
+  $\beta_{spp_{A. incana}}$ & 0.11 [-0.03, 0.25] \\ 
+  $\beta_{spp_{B. alleghaniensis}}$ & 0.20 [0.02, 0.36] \\ 
+  $\beta_{spp_{B. papyrifera}}$ & 0.92 [0.49, 1.34] \\ 
+  $\beta_{spp_{B. populifolia}}$ & 0.41 [0.20, 0.61] \\ 
+  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 [-0.47, 0.17] \\ 
+  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.09 [-0.45, 0.19] \\ 
+  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.06 [-0.23, 0.42] \\ 
+  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 [-0.11, 0.52] \\ 
+  $\alpha_{year_{2018}}$ & -0.36 [-1.32, 0.61] \\ 
+  $\alpha_{year_{2019}}$ & 0.33 [-0.65, 1.32] \\ 
+  $\alpha_{year_{2020}}$ & -0.04 [-1.01, 0.94] \\ 
+  $\alpha_{spp_{A. incana}}$ & 3.23 [-2.25, 8.55] \\ 
+  $\alpha_{spp_{B. alleghaniensis}}$ & 2.09 [-3.40, 7.54] \\ 
+  $\alpha_{spp_{B. papyrifera}}$ & -7.59 [-14.84, -0.29] \\ 
+  $\alpha_{spp_{B. populifolia}}$ & -0.07 [-5.98, 5.57] \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% REFERENCES %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\bibliography{ExportedItems}
+\bibliographystyle{besjournals} 
 
 \end{document}
