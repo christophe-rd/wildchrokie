@@ -53,11 +53,11 @@ emp$yeardoybudset <- paste(emp$year, emp$budset, sep = "_")
 gddyr$dgdd <- pmax(gddyr$meanTempC - 5, 0)
 dgddagg <- aggregate(dgdd ~ doy, gddyr, FUN = mean)
 
-plot(x = dgddagg$doy, y = dgddagg$dgdd,
-     xlab = "", ylab = "gdd",
-     pch = 16, frame = FALSE, cex = 0,
-     # col = yearcolors[match(emp$year, years)],
-     main = "")
+# plot(x = dgddagg$doy, y = dgddagg$dgdd,
+#      xlab = "", ylab = "gdd",
+#      pch = 16, frame = FALSE, cex = 0,
+#      # col = yearcolors[match(emp$year, years)],
+#      main = "")
 
 # start of season average
 lo <- aggregate(leafout ~ latbi, emp, FUN = mean)
@@ -86,7 +86,7 @@ presos <- 130
 preeos <- 250
 
 # Logistic curves (Panel 2 still uses these)
-doy_seq <- 60:300
+doy_seq <- 30:330
 gdd_pre <- 2500 / (1 + exp(-0.025 * (doy_seq - 172)))
 gdd_cc  <- 3000 / (1 + exp(-0.025 * (doy_seq - 140)))
 
@@ -158,8 +158,14 @@ y_poly <- c(pmin(smooth_pre, threshold), rev(rep(0, length(doy_seq))))
 # y-axis limit based on real data
 ylim_temp <- c(0,max(smooth_cc))
 
+# rasterized pictograms
+img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
+img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")
+img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
+img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
+
 # Plot! --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg("figures/climate/gsconceptualfig.jpeg", width = 10, height = 8, units = "in", res = 400)
+jpeg("figures/climate/gsconceptualfig.jpeg", width = 11, height = 8, units = "in", res = 400)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -181,14 +187,29 @@ polygon(
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
   col = adjustcolor(colcc, alpha.f = 0.7), border = NA)
 
-img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
-img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
-
+# pictograms width and height
 img_w <- 23
 img_h <- 0.6
 
-rasterImage(img_leafout, x_start - 12 - img_w/2, arrow_y - img_h/2, x_start - 12 + img_w/2, arrow_y + img_h/2)
-rasterImage(img_budset,  x_end + 7 - img_w/2,    arrow_y - img_h/2, x_end + 7 + img_w/2,    arrow_y + img_h/2)
+# pictograms scaler
+smll <- 4.3
+norm <- 2
+
+rasterImage(img_calenda, 
+            x_start + 125 - img_w/smll, 
+            arrow_y - img_h/smll, 
+            x_start + 125 + img_w/smll, 
+            arrow_y + img_h/smll)
+rasterImage(img_leafout, 
+            x_start - 12 - img_w/norm, 
+            arrow_y - img_h/norm, 
+            x_start - 12 + img_w/norm, 
+            arrow_y + img_h/norm)
+rasterImage(img_budset,  
+            x_end + 12 - img_w/norm,    
+            arrow_y - img_h/norm, 
+            x_end + 12 + img_w/norm,    
+            arrow_y + img_h/norm)
 
 text(x = ccsos + (cceos - ccsos)/2, y = arrow_y,
      "Longer calendar season", col = "black", cex = 1.9)
@@ -207,6 +228,9 @@ polygon(
   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
   col = adjustcolor(colpre, alpha.f = 0.4), border = NA)
 
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y,
+     "Pre climate change calendar season", col = "black", cex = 1)
+
 # Panel 2: Temperature curves --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p1)
 plot(doy_seq, smooth_pre, type = "n",
@@ -221,13 +245,23 @@ polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
 lines(doy_seq, smooth_pre, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
 lines(doy_seq, smooth_cc,  lwd = mylwd, col = colcc)
 
+# # GS delimitations
+# segments(x0 = ccsos, y0 = 0, y1 = smooth_cc[which.min(abs(doy_seq - ccsos))],  lwd = 1.5, lty = 2)
+# segments(x0 = cceos, y0 = 0, y1 = smooth_cc[which.min(abs(doy_seq - cceos))],  lwd = 1.5, lty = 2)
+# 
+# # Pre-CC boundaries (lighter)
+# segments(x0 = presos, y0 = 0, y1 = smooth_pre[which.min(abs(doy_seq - presos))], lwd = 0.3, lty = 2)
+# segments(x0 = preeos, y0 = 0, y1 = smooth_pre[which.min(abs(doy_seq - preeos))], lwd = 0.3, lty = 2)
+
 # GS delimitations
-segments(x0 = ccsos, y0 = -4, y1 = smooth_cc[which.min(abs(doy_seq - ccsos))],  lwd = 1.5, lty = 2)
-segments(x0 = cceos, y0 = -4, y1 = smooth_cc[which.min(abs(doy_seq - cceos))],  lwd = 1.5, lty = 2)
+segments(x0 = ccsos, y0 = 0, y1 = 30,  lwd = 1.5, lty = 2)
+segments(x0 = cceos, y0 = 0, y1 = 30,  lwd = 1.5, lty = 2)
 
 # Pre-CC boundaries (lighter)
-segments(x0 = presos, y0 = -4, y1 = smooth_pre[which.min(abs(doy_seq - presos))], lwd = 0.3, lty = 2)
-segments(x0 = preeos, y0 = -4, y1 = smooth_pre[which.min(abs(doy_seq - preeos))], lwd = 0.3, lty = 2)
+segments(x0 = presos, y0 = 0, y1 = 30, lwd = 0.3, lty = 2)
+segments(x0 = preeos, y0 = 0, y1 = 30, lwd = 0.3, lty = 2)
+
+
 
 # Phenology trend arrows
 Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
@@ -242,7 +276,7 @@ text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = 1.4)
 Arrows(x0 = ccsos + 30, x1 = ccsos + 30,
        y0 = smooth_pre[which.min(abs(doy_seq - presos))], 
        y1 = smooth_pre[which.min(abs(doy_seq - ccsos))], 
-         lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
 text(x = ccsos + 64, 
      y = mean(c(smooth_pre[which.min(abs(doy_seq - presos))], 
                 smooth_pre[which.min(abs(doy_seq - ccsos))])) , 
@@ -273,17 +307,26 @@ mean_pos_gdd <- subset(mean_pos_gdd, doy <= max(doy_seq))
 lines(doy_seq, mean_pre_gdd$GDD_5, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
 lines(doy_seq, mean_pos_gdd$GDD_5,  type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-text(x = 200, y = max(gdd_cc) + 150, "Warmer thermal season", col = "black", cex = 1.9)
+text(x = 188, y = 2750, "Warmer thermal season", col = "black", cex = 1.9)
+img_w <- 23
+img_h <- 3400 * 0.3
+smll <- 4.3
+norm <- 2
+rasterImage(img_thermom, 
+            x_start + 105 - img_w/smll, 
+            2700 - img_h/smll, 
+            x_start + 105 + img_w/smll, 
+            2700 + img_h/smll)
 
-Arrows(x0 = cceos, y0 = gdd_pre[200] + 200, x1 = 240, y1 = gdd_cc[200]-50,
+Arrows(x0 = cceos, y0 = gdd_pre[200] + 200, x1 = 245, y1 = gdd_cc[200]-150,
        arr.type = "triangle", arr.width = 0.3, lwd = 2, col = colcc)
 
 # Pre-CC boundaries (lighter)
-segments(x0 = presos, y0 = -2, y1 = 4000, lwd = 0.3, lty = 2)
-segments(x0 = preeos, y0 = -2, y1 = 4000, lwd = 0.3, lty = 2)
+segments(x0 = presos, y0 = -2, y1 = 3000, lwd = 0.3, lty = 2)
+segments(x0 = preeos, y0 = -2, y1 = 3000, lwd = 0.3, lty = 2)
 
-segments(x0 = ccsos + 0, x1 = ccsos + 0, y0 = -100, y1 = 4000, lwd = 1.5, lty = 2)
-segments(x0 = cceos, x1 = cceos, y0 = -100, y1 = 4000, lwd = 1.5, lty = 2)
+segments(x0 = ccsos, y0 = -100, y1 = 3000, lwd = 1.5, lty = 2)
+segments(x0 = cceos, y0 = -100, y1 = 3000, lwd = 1.5, lty = 2)
 
 dev.off()
 
@@ -291,7 +334,7 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 years <- unique(gddyr$year)
 
-lines(dgddagg$doy, dgddagg$dgdd, col = "black", cex = 0.2)
+# lines(dgddagg$doy, dgddagg$dgdd, col = "black", cex = 0.2)
 
 # for (i in seq_along(years)) { # i = 1
 #   

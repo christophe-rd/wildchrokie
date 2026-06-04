@@ -122,9 +122,6 @@ legend("right",
        title  = "Species", title.font = 2)
 dev.off()                 
 
-
-plot(emp$pgsGSL ~ emp$pgsGDD5)
-
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Frost free days ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -160,21 +157,16 @@ library(ggplot2)
 library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
-
-library(ggplot2)
-library(sf)
-library(rnaturalearth)
-library(rnaturalearthdata)
 library(cowplot)
 
 # Get the map data
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
 # Define bounding box for northeastern North America
-lat_min <- 41
-lat_max <- 48
-lon_min <- -78
-lon_max <- -63
+lat_min <- 41.5
+lat_max <- 47
+lon_min <- -76
+lon_max <- -65
 
 # Create example points
 locations <- data.frame(
@@ -182,8 +174,10 @@ locations <- data.frame(
   lon = c(-72.2, -71, -70.66, -74.01),
   lat = c(42.55, 44.11, 44.92, 45.98)
 )
-locations2 <- locations[order(-locations$lat), ]
-locations2$col <- wes_palettes$Darjeeling1[1:4]
+
+# order same as figure
+locations2 <- locations[order(locations$lat), ]              
+locations2$col <- wes_palette("Darjeeling1")[1:4]     
 
 special_point <- data.frame(
   name = "Common garden location",
@@ -199,10 +193,10 @@ main_map <- ggplot(data = world) +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
   geom_sf(data = special_sf, color = "black", shape = 23, size = 6, fill = "black") +
   geom_text(data = locations2, aes(x = lon, y = lat, label = name),
-            nudge_y = 0.35, nudge_x = 0, size = 4.5, fontface = "bold") +
+            nudge_y = 0.3, nudge_x = 0, size = 4.5, fontface = "bold") +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
-            nudge_y = 0.02, nudge_x = 3, color = "black", size = 6, fontface = "bold") +
+            nudge_y = 0.08, nudge_x = 2.3, color = "black", size = 6, fontface = "bold") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
   theme_minimal() +
   theme(
@@ -285,8 +279,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Year allometry ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-emp
-plot(rw$lengthCM ~ rw$year)
 pdf("figures/empiricalData/rwXyearAll.pdf",
     width = 8, height = 20)
 ids <- unique(rw$treeid)

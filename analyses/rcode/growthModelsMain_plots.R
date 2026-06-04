@@ -1613,8 +1613,8 @@ sitecolors <- site_color_map[site_df2$site_name]
 lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
-lat_min <- 41; lat_max <- 48
-lon_min <- -78; lon_max <- -63 
+lat_min <- 41.5; lat_max <- 47
+lon_min <- -76; lon_max <- -65 
 
 special_point <- data.frame(
   name = "Arnold Arboretum of\nHarvard University (MA)",
