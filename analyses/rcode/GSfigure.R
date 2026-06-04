@@ -99,7 +99,7 @@ mylwd <- 3
 
 # Panel margins
 p1 <- c(0, 5, 0, 2)
-p2 <- c(3, 5, 0, 2)
+p2 <- c(3, 5, 2, 2)
 p3 <- c(0, 5, 0, 2)
 
 # matrix heights
@@ -235,9 +235,11 @@ text(x = ccsos + (cceos - ccsos)/2, y = arrow_y,
 par(mar = p1)
 plot(doy_seq, smooth_pre, type = "n",
      xaxt = "n", ylim = ylim_temp,
-     xlab = "",
-     ylab = expression(paste("Temperature (", degree, "C)")), frame = FALSE,
+     xlab = "", bty = "l",
+     ylab = expression(paste("Temperature (", degree, "C)")), 
+     # frame = FALSE,
      cex.axis = axissize, cex.lab = labsize)
+mtext("(a)", side = 3, adj = 0, line = 0.2, font = 2, cex = 1.3)
 
 # Shade area below threshold under pre curve
 polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
@@ -294,10 +296,11 @@ par(mar = p2)
 plot(doy_seq, gdd_cc, ylim = ylimlogis,
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
-     xaxt = "n", 
-     frame = FALSE,
+     xaxt = "n", bty = "l",
+     # frame = FALSE,
      col = adjustcolor(colpre, alpha.f = 0.4),
      main = "", cex.axis = axissize, cex.lab = labsize)
+mtext("(b)", side = 3, adj = 0, line = 0.2, font = 2, cex = 1.3)
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 
