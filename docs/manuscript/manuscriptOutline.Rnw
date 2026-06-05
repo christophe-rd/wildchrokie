@@ -518,7 +518,7 @@ print(tab,
 \end{figure}
 
 
-<<Table combined, results='asis', echo = FALSE>>=
+<<Table combined all parameters and predictors, results='asis', echo = FALSE>>=
 options(digits = 2)
 
 sigma_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
