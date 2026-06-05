@@ -80,8 +80,7 @@ for (i in 4: ncol(locations)) {
 % Common garden setup
 %-------------------------------------------------------------------------------
 \subsection*{Common garden setup}
-We collected seeds from 18 species of deciduous trees and shrubs of four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings. In the spring of 2017, we planted them outside in the garden located at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020. We initially collected seeds of 18 species of northeastern North American trees and shrubs. We exclude the shrubs, and the five species with low survivorship in the analyses. Thus, we have four species in the \textit{Betulaceae} family (Table \ref{tab:provs}).
-
+We collected seeds from 18 species of deciduous trees and shrubs of four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted them outside in the garden located at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020. 
 
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/mapSourcePop.jpeg}
@@ -93,19 +92,24 @@ We collected seeds from 18 species of deciduous trees and shrubs of four provena
 % Phenological monitoring and sample collection
 %-------------------------------------------------------------------------------
 \subsection*{Phenological monitoring and sample collection}
-For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December (Figure \ref{fig:phenoTimeSeries}). See (Buonuito, unpublished) for more details about the phenological monitoring. In the spring of 2023, we collected cross-sections for \Sexpr{nrow(samples[which(samples$cookie. == 1),])} individual trees, cutting the trunk just above the root collar of most trees.
-We also collected tree cores for \Sexpr{nrow(samples[which(samples$core == 1),])} individuals using standard dendrochonological methods and stored them in modified plastic straws to allow aeration. Both the cross-sections and cores were left to dry at ambient temperature for three months.
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December (Figure \ref{fig:phenoTimeSeries}). See (Buonuito, unpublished) for more details about the phenological monitoring. 
+
+In the spring of 2023, we collected tree ring samples only for the tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family. We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individuals (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and were left to dry with the cross-sections at ambient temperature for three months. 
 
 %-------------------------------------------------------------------------------
 % Sample processing, imaging and measuring
 %-------------------------------------------------------------------------------
 \subsection*{Sample processing, imaging and measuring}
-We mounted the cores on wooden mounts, and sanded both the cores and cross-sections using progressively finer sandpaper grits: 150, 300, 400, 600, 800, 1000. We scanned the cores and cross-sections at a resolution of 6250 dpi, with a high-resolution treering scanner (Fong, unpublished), we then used the digitized images to measure the tree ring widths with ImageJ \citep{schneider_nih_2012}. For individuals for which we had cross-sections, we measured ring widths at three standard locations on the cross-section, at {120\degree} from each other. We averaged the three measurements, to yield one ring width per year, per individual. For the \Sexpr{length(setdiff(samples$idfull[which(samples$core == 1)], samples$idfull[which(samples$cookie. == 1)]))} individuals for which we only had cores, we measured only one ring width for that sample. When we had cross-sections and cores for an invidividual, we discarded the measurement from the core. \\
+We mounted the cores on wooden mounts, and sanded both the cores and cross-sections using progressively finer sandpaper grits (150, 300, 400, 600, 800, 1000), then scanned the cores and cross-sections at a resolution of 6250 dpi with a high-resolution treering scanner (Fong, unpublished). Using the digitized images, we measured  ring widths with ImageJ \citep{schneider_nih_2012} at three standard locations for each cross-section (at {120\degree} from each other, averaging the three measurements to yield one ring width per year, per individual), and one ring width for each core. When we had cross-sections and cores for an invidividual, we used only the measurement from the cross sections. \\
 \par
-We performed visual cross dating, but did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}. Given the short lifespan of the trees in our dataset, we did not detrend the ring widths. However, we included a year intercept that accounts for other factors that could affect growth, such as age allometry. \\
+We performed visual cross dating. We did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}, and for similar reasons, we did not detrend the ring widths. Visual analyses of trends showed no consistent allometric patterns (FIGURE); thus we included only a year intercept to correct for potential effects of different years, not otherwise included in our model. \\
 
 \subsection*{Data analyses}
-To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating ring width with differing season lengths using four different season predictors First, the thermal season represents the number of growing degree days (GDD) calculated as the mean daily temperature above 5\degree C accumulated between leafout and budset, calculated for each tree per year. Second, the calendar season or growing season length (GSL) is the budset date subtracted by the leafout date. Finally, to better understand trees responses to the calendar season, we used leafout as the start of the season (SOS) and budset for the end of season (EOS) as separate predictors that represent the boundaries of the growing season.
+To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating ring width as a function of four different season predictors (GDD, GSL, SOS and EOS). We calculated the thermal season using growing degree days (GDD) (mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length (GSL)) as the number of days between leafout and budset. Finally, we used leafout as the start of the season (SOS) and budset for the end of season (EOS) as separate predictors that represent the boundaries of the growing season. \\
+
+We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). \\
+
+For each predictor, we estimated its effect on ring width as: 
 
 \[
 \begin{aligned} 
@@ -121,20 +125,12 @@ ln(ringwidth)_i &\sim N(\mu, \sigma_y) \\
 \sigma_y & \sim N(0, 3)
 \end{aligned}
 \]
-where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{species}$) and year ($\alpha_{year}$) and slope on species ($\beta_{species}$) were not pooled (fixed effects), and we partially pooled (random effects) site ($\alpha_{site}$) and treeid ($\alpha_{treeid}$) to account for the similarity of the measurements within these groups. We ran four chains with 2000 warmup iterations each, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions, had a $\hat{R}$ below 1.01, and values of effective sample size ($n_{\text{eff}}$) greater than 10\% of the model iterations. We fit $\ln(\text{ring width})$ so the data distribution was normally distributed. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. \\
-
-\par 
-To account for differences in temperature across years, we used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). We calculated daily growing degree days (GDD) by subtracting a 5\degree C threshold from the mean daily temperature. \\
+where $i$ is each observation of the dataset. Intercepts on species ($\alpha_{species}$) and year ($\alpha_{year}$) and slope on species ($\beta_{species}$) were not pooled (fixed effects), and we partially pooled (random effects) site ($\alpha_{site}$) and treeid ($\alpha_{treeid}$) to account for the similarity of the measurements within these groups. We ran four chains with 2000 warmup iterations each, which we discarded, and 2000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions, had a $\hat{R}$ below 1.01, and values of effective sample size ($n_{\text{eff}}$) greater than 10\% of the model iterations. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. \\
 
 \par
-As a supplementary analyses, we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring:
+As a supplementary analyses, we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring: $\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)$
 
-\[
-\begin{aligned} 
-\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)
-\end{aligned}
-\]
-We then averaged across the three BAI for each ring and fit the models with the four different predictors.
+We then averaged across the three BAI for each ring and fit the models with the four different predictors. We also fit the models for SOS and EOS using the full vs restricted datasets
 
 % Table count per spp per prov 
 <<results='asis', echo = FALSE>>=
