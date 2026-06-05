@@ -200,7 +200,7 @@
 % Conceptual figure
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
-\caption{We show how shifting growing season length with climate change affects both the temperature experienced during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. As a results of increased temperature during the growing season, trees also accumulate more GDD, warming their thermal seasons.}
+\caption{We show how shifting growing season length with climate change affects both the temperature trees experience during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. As a results of increased temperature during the growing season, trees also accumulate more GDD, warming their thermal seasons.}
 \label{fig:GSfig}
 \end{figure}
 
@@ -434,10 +434,8 @@
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-%DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
-% Table slope for Wildchrokie
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun  4 15:05:11 2026
+% Fri Jun  5 10:01:51 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -456,7 +454,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun  4 15:05:11 2026
+% Fri Jun  5 10:01:51 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -523,8 +521,42 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \label{fig:bsppZscored}
 \end{figure}
 
+
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun  4 15:05:11 2026
+% Fri Jun  5 10:01:51 2026
+\begin{table}[ht]
+\centering
+\caption{Posterior means and 90\% uncertainty intervals for all model parameters across predictors} 
+\label{tab:BAItab_all}
+\begin{tabular}{lllll}
+  \hline
+Parameter & GDD & GSL & SOS & EOS \\ 
+  \hline
+$\sigma_{\alpha_{tree}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.27] & 0.21 [0.11, 0.30] & 0.18 [0.06, 0.28] \\ 
+  $\sigma_{\alpha_{site}}$ & 0.18 [0.02, 0.50] & 0.18 [0.02, 0.49] & 0.16 [0.01, 0.45] & 0.18 [0.03, 0.50] \\ 
+  $\sigma_{y}$ & 0.48 [0.43, 0.52] & 0.48 [0.44, 0.53] & 0.47 [0.43, 0.52] & 0.47 [0.42, 0.52] \\ 
+  $\beta_{spp_{A. incana}}$ & 0.07 [-0.04, 0.17] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
+  $\beta_{spp_{B. alleghaniensis}}$ & 0.13 [0.01, 0.24] & 0.03 [-0.02, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
+  $\beta_{spp_{B. papyrifera}}$ & 0.44 [0.18, 0.70] & 0.18 [0.05, 0.32] & 0.05 [-0.10, 0.21] & 0.21 [0.09, 0.33] \\ 
+  $\beta_{spp_{B. populifolia}}$ & 0.21 [0.07, 0.36] & 0.05 [-0.02, 0.13] & 0.05 [-0.07, 0.17] & 0.10 [0.02, 0.17] \\ 
+  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] \\ 
+  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] \\ 
+  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] \\ 
+  $\alpha_{site_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] \\ 
+  $\alpha_{year_{2018}}$ & 0.19 [-0.76, 1.10] & 0.20 [-0.77, 1.17] & 0.20 [-0.72, 1.14] & 0.23 [-0.71, 1.19] \\ 
+  $\alpha_{year_{2019}}$ & 0.17 [-0.76, 1.09] & 0.07 [-0.89, 1.05] & 0.10 [-0.83, 1.05] & 0.12 [-0.83, 1.09] \\ 
+  $\alpha_{year_{2020}}$ & -0.43 [-1.38, 0.48] & -0.38 [-1.35, 0.60] & -0.39 [-1.31, 0.56] & -0.47 [-1.42, 0.50] \\ 
+  $\alpha_{spp_{A. incana}}$ & 1.01 [-3.14, 5.18] & 0.12 [-4.04, 4.32] & 1.58 [-1.98, 5.48] & 3.08 [-1.29, 7.36] \\ 
+  $\alpha_{spp_{B. alleghaniensis}}$ & 0.15 [-3.95, 4.36] & 0.34 [-3.82, 4.49] & -1.82 [-5.51, 2.13] & -1.82 [-6.29, 2.64] \\ 
+  $\alpha_{spp_{B. papyrifera}}$ & -3.82 [-8.73, 1.09] & -2.67 [-7.34, 1.89] & -0.76 [-4.84, 3.59] & -5.58 [-11.03, -0.04] \\ 
+  $\alpha_{spp_{B. populifolia}}$ & -0.69 [-4.89, 3.51] & 0.22 [-4.00, 4.45] & -0.42 [-4.24, 3.59] & -0.85 [-5.47, 3.82] \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Fri Jun  5 10:01:51 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
@@ -559,6 +591,7 @@ $\sigma_{\alpha_{tree}}$ & 0.52 [0.41, 0.64] \\
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
 \bibliography{ExportedItems}
 \bibliographystyle{besjournals} 
 

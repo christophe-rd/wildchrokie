@@ -398,9 +398,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-%DL22May: You already say in the caption that the values are the slopes, so you can remove the beta and the equal signs from the table, same with the alpha in the next table
-% Table slope for Wildchrokie
-<<results='asis', echo = FALSE>>=
+<<Table slope WC, results='asis', echo = FALSE>>=
 # Bspp parameter estimates table
 library(xtable)
 options(digits = 2)
@@ -435,7 +433,7 @@ print(tab,
       caption.placement = "top")
 @
 
-<<results='asis', echo = FALSE>>=
+<<Table site intercepts, results='asis', echo = FALSE>>=
 site_df2$GDD <- sprintf("%.2f [%.2f, %.2f]", site_df2$mean, site_df2$p5, site_df2$p95)
 site_df2_gsl$GSL <- sprintf("%.2f [%.2f, %.2f]", site_df2_gsl$mean, site_df2_gsl$p5, site_df2_gsl$p95)
 site_df2_sos$SOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_sos$mean, site_df2_sos$p5, site_df2_sos$p95)
@@ -519,7 +517,65 @@ print(tab,
 \label{fig:bsppZscored}
 \end{figure}
 
-<<results='asis', echo = FALSE>>=
+
+<<Table combined, results='asis', echo = FALSE>>=
+options(digits = 2)
+
+sigma_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
+bspp_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp.csv")
+aspp_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp.csv")
+site_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site.csv")
+ayear_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear.csv")
+
+sigma_df2_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma.csv")
+bspp_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp.csv")
+aspp_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp.csv")
+site_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site.csv")
+ayear_df2_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear.csv")
+
+sigma_df2_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_sigma.csv")
+bspp_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_bspp.csv")
+aspp_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_aspp.csv")
+site_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_site.csv")
+ayear_df2_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_ayear.csv")
+
+sigma_df2_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_sigma.csv")
+bspp_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_bspp.csv")
+aspp_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_aspp.csv")
+site_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_site.csv")
+ayear_df2_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_ayear.csv")
+
+bspp_df2_GDD$spp_name  <- emp$latbi[match(bspp_df2_GDD$spp, emp$spp_num)]
+site_df2_GDD$site_name <- emp$site[match(site_df2_GDD$site, emp$site_num)]
+aspp_df2_GDD$spp_name  <- emp$latbi[match(aspp_df2_GDD$spp, emp$spp_num)]
+ayear_df2_GDD$year_name <- emp$year[match(ayear_df2_GDD$year, emp$year_num)]
+
+fmt <- function(df) sprintf("%.2f [%.2f, %.2f]", df$mean, df$p5, df$p95)
+
+param_labels <- c(
+  "$\\sigma_{\\alpha_{tree}}$", "$\\sigma_{\\alpha_{site}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{spp_{",   bspp_df2_GDD$spp_name,  "}}$"),
+  paste0("$\\alpha_{site_{", site_df2_GDD$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df2_GDD$year_name, "}}$"),
+  paste0("$\\alpha_{spp_{",  aspp_df2_GDD$spp_name,  "}}$")
+)
+
+combined <- data.frame(
+  "Parameter" = param_labels,
+  "GDD" = c(fmt(sigma_df2_GDD), fmt(bspp_df2_GDD), fmt(site_df2_GDD), fmt(ayear_df2_GDD), fmt(aspp_df2_GDD)),
+  "GSL" = c(fmt(sigma_df2_GSL), fmt(bspp_df2_GSL), fmt(site_df2_GSL), fmt(ayear_df2_GSL), fmt(aspp_df2_GSL)),
+  "SOS" = c(fmt(sigma_df2_SOS), fmt(bspp_df2_SOS), fmt(site_df2_SOS), fmt(ayear_df2_SOS), fmt(aspp_df2_SOS)),
+  "EOS" = c(fmt(sigma_df2_EOS), fmt(bspp_df2_EOS), fmt(site_df2_EOS), fmt(ayear_df2_EOS), fmt(aspp_df2_EOS)),
+  check.names = FALSE
+)
+
+print(xtable(combined,
+             caption = "Posterior means and 90\\% uncertainty intervals for all model parameters across predictors",
+             label = "tab:BAItab_all"),
+      include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
+@
+
+<<Table BAI, results='asis', echo = FALSE>>=
 options(digits = 2)
 sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma_BAI.csv")
 bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp_BAI.csv")
@@ -586,6 +642,7 @@ print(xtable(binded,
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage
 \bibliography{ExportedItems}
 \bibliographystyle{besjournals} 
 
