@@ -34,6 +34,7 @@ fitmodels <- F
 fitmodelfull <- F
 fitmodelsZscored <- F
 fitmodelsBAI <- F
+fit3xpriors <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -3225,4 +3226,48 @@ points(treeid_df2_rw$mean, treeid_df2$mean, pch = 16, col = "#0a6a3c", cex = 1.5
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 dev.off()
 
+}
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# 3X PRIORS ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+if (fit3xpriors){
+# Ill do this with 3x the priors so I don't have to change 3 scripts
+genericmodel <- stan_model("stan/modelGrowth_z_largerPriors.stan")
+
+# Fit model GDD
+gddz <- (emp$pgsGDD5 - mean(emp$pgsGDD5)) / sd(emp$pgsGDD5)
+dgddz <- dgdd[1:10]
+dgddz$covariate <- gddz
+
+fitgdd <- sampling(genericmodel, data = dgddz,
+                   warmup = 1000, iter=2000, chains=4)
+saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored_largerPriors")
+
+# Fit model GSL
+gslz <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
+dgslz <- dgdd[1:10]
+dgslz$covariate <- gslz
+
+fitgsl <- sampling(genericmodel, data = dgslz,
+                   warmup = 1000, iter = 2000, chains = 4)
+saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored_largerPriors")
+
+# Fit model SOS
+sosz <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
+dsosz <- dgdd[1:10]
+dsosz$covariate <- sosz
+
+fitsos <- sampling(genericmodel, data = dsosz,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored_largerPriors")
+
+# Fit model EOS
+eosz <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
+deosz <- dgdd[1:10]
+deosz$covariate <- eosz
+
+fiteos <- sampling(genericmodel, data = deosz,
+                   warmup = 1000, iter = 2000, chains=4)
+saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored_largerPriors")
 }

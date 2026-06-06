@@ -310,34 +310,49 @@ for(i in ids) { # i = "White oak 21815*E"
 }
 dev.off()
 
+# restricted years (2019-2020)
+emp$latbi[which(emp$latbi %in% "Alnus incana")] <- "A. incana"
+emp$latbi[which(emp$latbi %in% "Betula alleghaniensis")] <- "B. alleghaniensis"
+emp$latbi[which(emp$latbi %in% "Betula papyrifera")] <- "B. papyrifera"
+emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
+
+rw$latbi <- emp$latbi[match(rw$spp, emp$spp)]
+
+vec <- unique(emp$treeid)
+set.seed(124)
+
+suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
+# suby <- subset(rw, treeid %in% sample(vec, 20))
 pdf("figures/empiricalData/rwXyearRestricted.pdf",
-    width = 8, height = 20)
-par(mfrow = c(ceiling(length(ids)/5), 5), 
-    mar = c(2, 2, 1.5, 0.5),
+    width = 8, height = 10)
+ids <- unique(suby$treeid)
+par(mfrow = c(5,ceiling(length(ids)/5)),
+    mar = c(3, 2, 1.5, 0.5),
     mgp = c(1.5, 0.5, 0))
-rw2 <- subset(rw, year > 2017 & year < 2021)
-ids <- unique(rw$treeid)
-year <- as.integer(rw2$year)
+
+year <- as.integer(suby$year)
 for(i in ids) { # i = "BETPOP_HF4_P9"
-  sub <- rw2[rw2$treeid == i, ]
-  if(nrow(sub) == 0) next  
+  sub <- suby[suby$treeid == i, ]
+  if(nrow(sub) == 0) next
   plot(sub$year, sub$lengthCM,
        # col = col_vals,
        pch = 16,
-       cex = 1,
+       cex = 1.5,
        main = i,
        xlab = "",
        xaxt = "n",
        ylab = "",
-       tck = -0.1,
-       bty = 'l')
+       # tck = -0.1,
+       bty = 'l',
+       col = wccolslatbi[sub$latbi])
   
   axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
   # regression line per species
   for(sp in unique(sub$spp)) { # sp = "River birch"
     ssp <- sub[sub$spp == sp, ]
     fit <- lm(lengthCM ~ year, data = ssp)
-    abline(fit, col = "black", lwd =0.5) 
+    abline(fit, col = wccolslatbi[ssp$latbi], lwd = 1.8)
   }
 }
 dev.off()
+
