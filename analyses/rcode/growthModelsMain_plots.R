@@ -34,7 +34,6 @@ emp$latbi[which(emp$latbi %in% "Betula papyrifera")] <- "B. papyrifera"
 emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
 
 # Full site names
-
 emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH)"
 emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA)"
 emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc)"
@@ -940,7 +939,7 @@ for(sp in species_order){ # sp = "Alnus incana"
 plot(NA, NA,
      xlim = range(c(treeid_df4$p5-2, treeid_df4$p95 + 4)),
      ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
-     xlab = "treeid intercept values", ylab = "", yaxt = "n", bty = "l")
+     xlab = "Tree id, provenance and species intercepts", ylab = "", yaxt = "n", bty = "l")
 
 #  Add horizontal error bars (5–95%) 
 segments(
@@ -1006,7 +1005,7 @@ legend(x = max(treeid_df4$p95),
        y = max(treeid_df4$y_pos) - 15,
        legend = site_legend_order,
        pch = my_shapes[site_legend_order],
-       pt.cex = 1, cex = 0.8, title = "Sites", bty = "n")
+       pt.cex = 1, cex = 0.8, title = "Provenances", bty = "n")
 
 dev.off()
 
@@ -1645,7 +1644,7 @@ forest_grob <- as_grob(function() {
   
   plot(site_df2$mean, y_pos_site,
        xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
-       xlab = "Provenance effect", ylab = "Latitude",
+       xlab = "Provenance intercepts", ylab = "Latitude",
        yaxt = "n", pch = 16, cex = 2, col = sitecolors,
        frame.plot = TRUE,
        panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -1662,7 +1661,7 @@ combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.7)
 
 combined_labeled <- ggdraw(combined) +
   draw_plot_label(
-    label    = c("(a) Provenance intercepts", "(b) Provenance map"),
+    label    = c("(a) Provenance effect", "(b) Provenance map"),
     x        = c(-0.05, 0.3),   # x position: left edge of each panel
     y        = c(0.92, 0.92),     # y position: top of figure
     size     = 14,
