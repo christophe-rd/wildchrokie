@@ -279,37 +279,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Year allometry ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-pdf("figures/empiricalData/rwXyearAll.pdf",
-    width = 8, height = 20)
-ids <- unique(rw$treeid)
-par(mfrow = c(ceiling(length(ids)/5), 5), 
-    mar = c(2, 2, 1.5, 0.5),
-    mgp = c(1.5, 0.5, 0))
-rw$year <- as.integer(rw$year)
-for(i in ids) { # i = "White oak 21815*E"
-  sub <- rw[rw$treeid == i, ]
-  
-  plot(sub$year, sub$lengthCM,
-       # col = col_vals,
-       pch = 16,
-       cex = 1,
-       main = i,
-       xlab = "",
-       xaxt = "n",
-       ylab = "",
-       tck = -0.1,
-       bty = 'l')
-  
-  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
-  # regression line per species
-  for(sp in unique(sub$spp)) { # sp = "River birch"
-    ssp <- sub[sub$spp == sp, ]
-    fit <- lm(lengthCM ~ year, data = ssp)
-    abline(fit, col = "black", lwd =0.5) 
-  }
-}
-dev.off()
-
 # restricted years (2019-2020)
 emp$latbi[which(emp$latbi %in% "Alnus incana")] <- "A. incana"
 emp$latbi[which(emp$latbi %in% "Betula alleghaniensis")] <- "B. alleghaniensis"
@@ -319,7 +288,41 @@ emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
 rw$latbi <- emp$latbi[match(rw$spp, emp$spp)]
 
 vec <- unique(emp$treeid)
-set.seed(124)
+
+set.seed(7)
+suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2015 & year < 2024)
+ids <- unique(suby$treeid)
+
+pdf("figures/empiricalData/rwXyearAll.pdf", width = 8, height = 10)
+par(mfrow = c(5,ceiling(length(ids)/5)),
+    mar = c(3, 2, 1.5, 0.5),
+    mgp = c(1.5, 0.5, 0))
+
+year <- as.integer(suby$year)
+for(i in ids) { # i = "BETPOP_HF4_P9"
+  sub <- suby[suby$treeid == i, ]
+  if(nrow(sub) == 0) next
+  plot(sub$year, sub$lengthCM,
+       # col = col_vals,
+       pch = 16,
+       cex = 1.5,
+       main = i,
+       xlab = "",
+       xaxt = "n",
+       ylab = "",
+       # tck = -0.1,
+       bty = 'l',
+       col = wccolslatbi[sub$latbi])
+  
+  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
+  # regression line per species
+  for(sp in unique(sub$spp)) { # sp = "River birch"
+    ssp <- sub[sub$spp == sp, ]
+    fit <- lm(lengthCM ~ year, data = ssp)
+    abline(fit, col = wccolslatbi[ssp$latbi], lwd = 1.8)
+  }
+}
+dev.off()
 
 suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
 # suby <- subset(rw, treeid %in% sample(vec, 20))
