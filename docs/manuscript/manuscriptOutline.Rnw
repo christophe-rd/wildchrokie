@@ -341,26 +341,33 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Thermal season was a better predictor for growth than the calendar season
   \end{enumerate}
 
-\item Thermal season being a better predictor than the calendar season may be caused by it weighting the relative importance of the days on growth better than the calendar season
+\item Why thermal season better predicts growth than the calendar season 
   \begin{enumerate}
   
-  \item Growth rate follows a temperature response curve, thus trees don't grow at the same speed all year round
+  \item Thermal be weights growth days better than calendar season
   
-  \item Cool and short spring days count for less in the thermal season compared to the calendar season where each day counts the same
+  \item Trees don't grow at the same speed all year round
+  
+  \item Cool and short spring days count for less in the thermal season compared to the calendar season
+  
+  \item {\Ainc} responding to GSL>GDD may be able to take advantage of cool and short days in spring more than other species
   
   \end{enumerate}
   
-\item Disentangling the calendar season with the start and end of season may reveal something...
+\item SOS and EOS to disentangle the calendar season effect on growth
   \begin{enumerate}
-  \item 123
+  \item {\Ainc} increase in growth with longer GSL, caused by earlier SOS increase in growth --> most growth in spring?
+  \item {\Bpap} on the contrary, driven by EOS rather than SOS
+  \item {\Ball} Decrease in growth with earlier SOS and increase with later EOS--> counterinteraction 
   \end{enumerate}
 
 \item Our trees grew more with longer seasons in absence of external constraints
   \begin{enumerate}
-  \item Droughts can strongly impact tree growth, thus when seasons are longer, but not drier, trees just may be able to fully take advantage of these extra days
-  \item Earlier spring means trees start water uptake earlier, which may increase the severity of droughts later in the season
-  \item Dow showed that growth and growing season length are decoupled in a natural system where trees compete for water, but also for light and nutrients
-  \item Though we did not control for nutrients, our study design allowed us to control for light availability where taller trees did not shade the others at the life stage we looked at
+
+  \item When seasons are longer, but not drier, trees can fully take advantage of these extra days
+  
+  \item Competition can Though we did not control for nutrients, our study design allowed us to control for light availability where taller trees did not shade the others at the life stage we looked at
+  
   \item The timing of phenological phases are shifting and this will affect inter-specific competition for resources, this higlights the importance of accounting for competition when adressing this question
   \end{enumerate}
 
