@@ -341,24 +341,25 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Thermal season was a better predictor for growth than the calendar season
   \end{enumerate}
 
-\item Why thermal season better predicts growth than the calendar season 
+\item Why thermal season better predicts growth than the calendar season?
   \begin{enumerate}
   
-  \item Thermal be weights growth days better than calendar season
-  
-  \item Trees don't grow at the same speed all year round
+  \item Thermal weights growth days better than calendar season---trees don't grow at the same speed all year round
   
   \item Cool and short spring days count for less in the thermal season compared to the calendar season
   
-  \item {\Ainc} responding to GSL>GDD may be able to take advantage of cool and short days in spring more than other species
+  \item {\Ainc} responding to GSL$>$GDD may be able to take advantage of cool and short days in spring more than other species
   
   \end{enumerate}
   
 \item SOS and EOS to disentangle the calendar season effect on growth
   \begin{enumerate}
-  \item {\Ainc} increase in growth with longer GSL, caused by earlier SOS increase in growth --> most growth in spring?
-  \item {\Bpap} on the contrary, driven by EOS rather than SOS
-  \item {\Ball} Decrease in growth with earlier SOS and increase with later EOS--> counterinteraction 
+  
+  \item {\Ainc} grow more with GSL and earlier SOS, meaning that most growth happens in spring.
+  
+  \item On the contrary, {\Bpap} driven by EOS rather than SOS
+  
+  \item {\Ball} Decrease in growth with earlier SOS and increase with later EOS counterinteract and lead to no response to GSL
   \end{enumerate}
 
 \item Our trees grew more with longer seasons in absence of external constraints
@@ -366,30 +367,23 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
   \item When seasons are longer, but not drier, trees can fully take advantage of these extra days
   
-  \item Competition can Though we did not control for nutrients, our study design allowed us to control for light availability where taller trees did not shade the others at the life stage we looked at
+  \item Our study design controlled light competition---alleviating competition for light as a growth constraint
   
-  \item The timing of phenological phases are shifting and this will affect inter-specific competition for resources, this higlights the importance of accounting for competition when adressing this question
   \end{enumerate}
 
-\item Our species have different life history strategies and this may inform how they respond to growing season length
-  \begin{enumerate}
-  \item 123
-  \end{enumerate}
 
-\item We found little effect of provenance, suggesting local adaption on growth may be weak under current conditions
+\item No effect of provenance
   \begin{enumerate}
-  \item 123
-  \end{enumerate}
-
-\item Our study has limitations
-  \begin{enumerate}
-  \item We had low sample size and not individuals for each provenance for all species 
-  \item We didn't account for extreme temperatures in our models, though there was no extended heat wave periods throughout the study
-  \end{enumerate}
+  \item Our results suggest that local adaption on growth is weak under current conditions
   
-\item Our results highlights the importance of accounting for 
+  \item Though our latitudinal gradient is narrow
+  \end{enumerate}
+
+\item Limitations
   \begin{enumerate}
-  \item 123
+  \item Low sample size and not a fully crossed study design
+  
+  \item Didn't account for extreme temperatures (though no extended heat wave periods in our study)
   \end{enumerate}
   
 \end{enumerate}

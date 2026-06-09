@@ -23,7 +23,7 @@
 \newcommand{\Bpop}{\textit{B. populifolia}}
 
 
-<<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+<<Setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 library(xtable)
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/growthModelsMain_plots.R")
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
