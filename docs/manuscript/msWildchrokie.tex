@@ -250,7 +250,7 @@ We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayea
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
+\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -298,7 +298,7 @@ We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayea
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 10 11:57:28 2026
+% Wed Jun 10 15:46:20 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances. We had a total of 81 individual trees} 
@@ -326,7 +326,7 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 10 11:57:28 2026
+% Wed Jun 10 15:46:20 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -345,7 +345,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 10 11:57:28 2026
+% Wed Jun 10 15:46:20 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -402,8 +402,16 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
 \caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
-\label{fig:wcboxplot}
+\label{fig:wcboxplotRW}
 \end{figure}
+
+% Wildchrokie boxplot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotPredictorsAll.pdf}
+\caption{Boxplot representing the empirical data of all out predictors clustered by species, and for each year. The dots represent the raw data, the line the mean and the box the IQR. The year colors match the other year plots (e.g. Figure \ref{fig:wcmuplotayear})}
+\label{fig:wcboxplotPred}
+\end{figure}
+
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
@@ -413,7 +421,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 10 11:57:28 2026
+% Wed Jun 10 15:46:20 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters across predictors} 
@@ -423,16 +431,16 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 Parameter & GDD & GSL & SOS & EOS \\ 
   \hline
 $\sigma_{\alpha_{tree}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.27] & 0.21 [0.11, 0.30] & 0.18 [0.06, 0.28] \\ 
-  $\sigma_{\alpha_{site}}$ & 0.18 [0.02, 0.50] & 0.18 [0.02, 0.49] & 0.16 [0.01, 0.45] & 0.18 [0.03, 0.50] \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.18 [0.02, 0.50] & 0.18 [0.02, 0.49] & 0.16 [0.01, 0.45] & 0.18 [0.03, 0.50] \\ 
   $\sigma_{y}$ & 0.48 [0.43, 0.52] & 0.48 [0.44, 0.53] & 0.47 [0.43, 0.52] & 0.47 [0.42, 0.52] \\ 
   $\beta_{spp_{A. incana}}$ & 0.07 [-0.04, 0.17] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
   $\beta_{spp_{B. alleghaniensis}}$ & 0.13 [0.01, 0.24] & 0.03 [-0.02, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
   $\beta_{spp_{B. papyrifera}}$ & 0.44 [0.18, 0.70] & 0.18 [0.05, 0.32] & 0.05 [-0.10, 0.21] & 0.21 [0.09, 0.33] \\ 
   $\beta_{spp_{B. populifolia}}$ & 0.21 [0.07, 0.36] & 0.05 [-0.02, 0.13] & 0.05 [-0.07, 0.17] & 0.10 [0.02, 0.17] \\ 
-  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] \\ 
-  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] \\ 
-  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] \\ 
-  $\alpha_{site_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] \\ 
+  $\alpha_{prov_{Dartmouth College (NH)}}$ & -0.03 [-0.22, 0.15] & -0.05 [-0.26, 0.13] & -0.07 [-0.27, 0.09] & -0.04 [-0.24, 0.15] \\ 
+  $\alpha_{prov_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 0.11] & -0.09 [-0.33, 0.08] \\ 
+  $\alpha_{prov_{St-Hippolyte (Qc)}}$ & 0.04 [-0.14, 0.25] & 0.03 [-0.16, 0.24] & 0.02 [-0.15, 0.21] & 0.05 [-0.14, 0.27] \\ 
+  $\alpha_{prov_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.31] & 0.07 [-0.10, 0.29] & 0.08 [-0.07, 0.29] & 0.08 [-0.10, 0.30] \\ 
   $\alpha_{year_{2018}}$ & 0.19 [-0.76, 1.10] & 0.20 [-0.77, 1.17] & 0.20 [-0.72, 1.14] & 0.23 [-0.71, 1.19] \\ 
   $\alpha_{year_{2019}}$ & 0.17 [-0.76, 1.09] & 0.07 [-0.89, 1.05] & 0.10 [-0.83, 1.05] & 0.12 [-0.83, 1.09] \\ 
   $\alpha_{year_{2020}}$ & -0.43 [-1.38, 0.48] & -0.38 [-1.35, 0.60] & -0.39 [-1.31, 0.56] & -0.47 [-1.42, 0.50] \\ 
@@ -446,7 +454,7 @@ $\sigma_{\alpha_{tree}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.27] & 0.21 [0.11, 0
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 10 11:57:28 2026
+% Wed Jun 10 15:46:20 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
@@ -456,7 +464,7 @@ $\sigma_{\alpha_{tree}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.27] & 0.21 [0.11, 0
 Parameter & Estimate \\ 
   \hline
 $\sigma_{\alpha_{tree}}$ & 0.52 [0.41, 0.64] \\ 
-  $\sigma_{\alpha_{site}}$ & 0.27 [0.03, 0.73] \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.27 [0.03, 0.73] \\ 
   $\sigma_{y}$ & 0.63 [0.57, 0.70] \\ 
   $\beta_{spp_{A. incana}}$ & 0.11 [-0.03, 0.25] \\ 
   $\beta_{spp_{B. alleghaniensis}}$ & 0.20 [0.02, 0.36] \\ 

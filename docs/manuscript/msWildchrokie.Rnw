@@ -53,9 +53,9 @@ colnames(locations) <- c("Provenance name", "Longitude", "Latitude",
 
 # Species in italics
 wctablespp <- c("A. incana" = "\\textit{A. incana}", 
-              "B. alleghaniensis" = "\\textit{B. alleghaniensis}",
-              "B. papyrifera" = "\\textit{B. papyrifera}",
-              "B. populifolia" = "\\textit{B. populifolia}")
+                "B. alleghaniensis" = "\\textit{B. alleghaniensis}",
+                "B. papyrifera" = "\\textit{B. papyrifera}",
+                "B. populifolia" = "\\textit{B. populifolia}")
 
 
 # change NAs to 0
@@ -240,7 +240,7 @@ We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayea
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
+\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -453,8 +453,16 @@ print(tab,
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
 \caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
-\label{fig:wcboxplot}
+\label{fig:wcboxplotRW}
 \end{figure}
+
+% Wildchrokie boxplot
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotPredictorsAll.pdf}
+\caption{Boxplot representing the empirical data of all out predictors clustered by species, and for each year. The dots represent the raw data, the line the mean and the box the IQR. The year colors match the other year plots (e.g. Figure \ref{fig:wcmuplotayear})}
+\label{fig:wcboxplotPred}
+\end{figure}
+
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
@@ -498,9 +506,9 @@ ayear_df2_GDD$year_name <- emp$year[match(ayear_df2_GDD$year, emp$year_num)]
 fmt <- function(df) sprintf("%.2f [%.2f, %.2f]", df$mean, df$p5, df$p95)
 
 param_labels <- c(
-  "$\\sigma_{\\alpha_{tree}}$", "$\\sigma_{\\alpha_{site}}$", "$\\sigma_{y}$",
+  "$\\sigma_{\\alpha_{tree}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
   paste0("$\\beta_{spp_{",   bspp_df2_GDD$spp_name,  "}}$"),
-  paste0("$\\alpha_{site_{", site_df2_GDD$site_name, "}}$"),
+  paste0("$\\alpha_{prov_{", site_df2_GDD$site_name, "}}$"),
   paste0("$\\alpha_{year_{", ayear_df2_GDD$year_name, "}}$"),
   paste0("$\\alpha_{spp_{",  aspp_df2_GDD$spp_name,  "}}$")
 )
@@ -536,7 +544,7 @@ ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
 
 sigma <- data.frame(
   "Parameter" = c("$\\sigma_{\\alpha_{tree}}$",
-                  "$\\sigma_{\\alpha_{site}}$",
+                  "$\\sigma_{\\alpha_{prov}}$",
                   "$\\sigma_{y}$"),
   "Estimate" = sprintf("%.2f [%.2f, %.2f]",
                        sigma_df2_BAI$mean,
