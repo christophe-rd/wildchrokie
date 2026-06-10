@@ -41,6 +41,79 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Introduction}
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\begin{enumerate}
+
+% Paragraph 1
+\item Phenological shifts with climate change
+  \begin{enumerate}
+  
+  \item Shifts in spring/autumn modify start and end of season
+  
+  \item Early spring + delayed autumn should increase growth
+  
+  \item This is important because carbon cycle models rely on this positive relationship
+  
+  \end{enumerate}
+
+% Paragraph 2
+\item Maybe longer GS don't increase growth
+  \begin{enumerate}
+  
+  \item Dow showed longer GS didn't increase growth locally
+  
+  \item Cabon showed decoupling between GPP/Growth
+  
+  \end{enumerate}
+
+% Paragraph 3
+\item Longer GS does not necessarily mean better conditions throughout the season
+  \begin{enumerate}
+  
+  \item Longer seasons are not necessarily warmer
+  
+  \item Early SOS does not increase GDD by much
+  
+  \item Water availability may constrain growth
+  
+  \item Competition may offset extra days to grow
+  
+  \end{enumerate}
+
+% Paragraph 4
+\item Even with good conditions, trees may be internally constrained
+  \begin{enumerate}
+  
+  \item How plastic growth is depends on species
+  
+  \item Leaf phenology may be more plastic than growth
+  
+  \end{enumerate}
+
+% Paragraph 5
+\item Local adaptation to inform growth with climate change
+  \begin{enumerate}
+  
+  \item Trees from northern provenance may grow less with longer seasons
+  
+  \item Budset is strongly locally adapted
+  
+  \item Common gardens are important for climate change and tree growth
+  
+  \end{enumerate}
+
+% Paragraph 6
+\item Answer how GS and growth relate using juvenile trees in a common garden
+  \begin{enumerate}
+  
+  \item Disentangle length vs the conditions of the GS
+  
+  \item Growth with tree rings and SOS and EOS with leaf phenology
+  
+  \item Calendar season: days between SOS and EOS and thermal season GDD between these days
+  
+  \item Will look at different species from different provenances
+  \end{enumerate}
+\end{enumerate}
 
 % Conceptual figure
 \begin{figure}[!ht]
@@ -211,62 +284,87 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 \section*{Discussion}
+
 \begin{enumerate}
-\item What we did, how we did it and what we found
+\item Used 81 juvenile trees of 4 species from 4 provenances to understand if longer GS increased growth 
   \begin{enumerate}
   
-  \item We used 81 juvenile trees of four species across four provenances to understand if longer growing seasons using leaf phenology increased growth using tree rings
+  \item We used annual growth with tree rings for growth and leaf phenology for SOS and EOS
   
-  \item We found that longer growing seasons increased growth for all species, but varied depending on the metric 
+  \item Longer GS increased growth for all species, but varied depending on the metric 
   
   \item Thermal season was a better predictor for growth than the calendar season
+  
+  \item SOS and EOS trend direction changed across species
   \end{enumerate}
 
+% Section-----------------------------------------------------------------------
+\subsection*{A. Overall patterns}
+% Paragraph
 \item Why thermal season better predicts growth than the calendar season?
   \begin{enumerate}
   
-  \item Thermal weights growth days better than calendar season---trees don't grow at the same speed all year round
+  \item Thermal weights growth days better than calendar season
   
-  \item Cool and short spring days count for less in the thermal season compared to the calendar season
+  \item Cool spring days count for less for thermal season vs calendar season
   
-  \item {\Ainc} responding to GSL$>$GDD may be able to take advantage of cool and short days in spring more than other species
+  \item Stronger response to EOS than SOS, because temperature is warmer = more GDD
   
   \end{enumerate}
   
+% Paragraph
 \item SOS and EOS to disentangle the calendar season effect on growth
   \begin{enumerate}
   
-  \item {\Ainc} grow more with GSL and earlier SOS, meaning that most growth happens in spring.
+  \item Early SOS didn't increase growth for most species (like Dow 2022)
   
-  \item On the contrary, {\Bpap} driven by EOS rather than SOS
+  \item Late EOS increased growth for most species; relates to GDD, less to GSL
   
-  \item {\Ball} Decrease in growth with earlier SOS and increase with later EOS counterinteract and lead to no response to GSL
   \end{enumerate}
 
-\item Our trees grew more with longer seasons in absence of external constraints
+% Section-----------------------------------------------------------------------
+\subsection*{B. Species specific patterns}
+\item Certain species
   \begin{enumerate}
-
-  \item When seasons are longer, but not drier, trees can fully take advantage of these extra days
   
-  \item Our study design controlled light competition---alleviating competition for light as a growth constraint
+  \item {\Ainc} grow more with GSL and earlier SOS: most growth happens in spring
+  
+  \item {\Ainc} is ruderal and may be able to take advantage of cool and short days in spring
+  
+  \item Contrary, {\Bpap} and {\Bpop} driven by EOS rather than SOS. More reactive to warmer late season temperature
+  
+  \item {\Ball} SOS and EOS trends counterinteract = no response to GSL
   
   \end{enumerate}
-
 
 \item No effect of provenance
   \begin{enumerate}
-  \item Our results suggest that local adaption on growth is weak under current conditions
+  \item Local adaption effect on growth is weak under current conditions
   
-  \item Though our latitudinal gradient is narrow
+  \item Little effect on budset too (Buonaiuto, unpublished)
   \end{enumerate}
 
+% Section-----------------------------------------------------------------------
+\subsection*{C. Future directions, limitation and conclusion}
+% Paragraph
 \item Limitations
   \begin{enumerate}
+  \item No extreme temperatures in models
+  
   \item Low sample size and not a fully crossed study design
   
-  \item Didn't account for extreme temperatures (though no extended heat wave periods in our study)
+  \item Our trees would be below canopy in nature = light competition
   \end{enumerate}
+
+% Paragraph
+\item What we did is important
+  \begin{enumerate}
+
+  \item Species trends differ, even if closely related
   
+  \item Carbon models that pool across species is a weakness.
+  \end{enumerate}
+
 \end{enumerate}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
