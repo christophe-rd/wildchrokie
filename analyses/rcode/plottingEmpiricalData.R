@@ -310,11 +310,11 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
        xlab = "",
        xaxt = "n",
        ylab = "",
-       # tck = -0.1,
+       tck = -0.02,
        bty = 'l',
        col = wccolslatbi[sub$latbi])
   
-  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 2), tck = -0.1)
+  axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 1), tck = -0.02)
   # regression line per species
   for(sp in unique(sub$spp)) { # sp = "River birch"
     ssp <- sub[sub$spp == sp, ]

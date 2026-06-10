@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1758,8 +1758,9 @@ mtext("(b) Ring width (mm) observations per year and species",
       side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = 0)
 dev.off()
 
-
-##### Box plot alone #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Box plot alone Ring width X Year #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 jpeg("figures/growthModelsMain/boxplotRingWidth.jpeg",
      width = 2000, height = 2000, res = 300)
 
@@ -1783,6 +1784,82 @@ for(sp in species) { # sp = "A. incana"
 }
 
 dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### Box plot all predictors #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+pdf("figures/growthModelsMain/boxplotRingWidth.pdf", width = 12, height = 8)
+vars <- c("pgsGSL", "pgsGDD5", "budset", "leafout")
+
+var_labs <- c("Thermal season (GDD)", "Calendar season (GSL)", "Start of season (SOS)", "End of season (EOS)")
+ylab <- c("Thermal season (GDD)"  = "Growing degree days (GDD)", 
+          "Calendar season (GSL)" = "Growing season length (days)", 
+          "Start of season (SOS)" = "Leafout day of year (doy)", 
+          "End of season (EOS)"   = "budset day of year (doy)")
+
+alphabet <- c("(a)", "(b)", "(c)", "(d)")
+
+species <- sort(unique(emp$latbi))
+years <- sort(unique(emp$year))
+n_sp <- length(species)
+n_yr <- length(years)
+gap <- 2  # boxes of space between species groups
+
+# box positions and species-group centres
+at_pos <- as.vector(sapply(seq_len(n_sp), function(i) (i-1)*(n_yr + gap) + seq_len(n_yr)))
+sp_pos <- sapply(seq_len(n_sp), function(i) mean((i-1)*(n_yr + gap) + seq_len(n_yr)))
+col_vec <- rep(colsyr[as.character(years)], n_sp)
+
+par(mfrow = c(2, 2), mar = c(5, 5, 2, 1))
+
+for(vi in seq_along(vars)) {
+  v <- vars[vi]
+  
+  # build list: species 1 yr1/yr2/yr3, species 2 yr1/yr2/yr3, ...
+  bdat <- vector("list", n_sp * n_yr)
+  k <- 1
+  for(i in seq_len(n_sp)) {
+    for(j in seq_len(n_yr)) {
+      bdat[[k]] <- emp[[v]][emp$latbi == species[i] & emp$year == years[j]]
+      k <- k + 1
+    }
+  }
+  
+  col_alpha <- adjustcolor(col_vec, alpha.f = 0.5)
+  
+  boxplot(bdat,
+          at = at_pos,
+          xaxt = "n",
+          xlab = "", ylab = ylab[vi],
+          col = col_alpha, border = col_alpha,
+          medcol = "black",
+          whisklty = 1, staplewex = 0, medlty = 1,
+          outpch = 16, outcex = 0.7, outcol = "black",
+          # cex.axis = mysizeaxis, 
+          # cex.lab = mysizelab,
+          xlim = c(0.5, max(at_pos) + 0.5))
+  
+  mtext(paste(alphabet[vi],var_labs[vi]), 
+        side = 3, adj = -0.1, line = 0.5, cex = 1.1)
+  
+  for(k in seq_along(bdat)) {
+    stripchart(bdat[[k]], at = at_pos[k], method = "jitter", jitter = 0.08,
+               pch = 16, cex = 0.7, col = "black", vertical = TRUE, add = TRUE)
+  }
+  
+  # year labels (row 1)
+  axis(1, at = at_pos, labels = rep(years, n_sp),
+       tick = -0.8, cex.axis = mysizeaxis * 0.75, line = 0)
+  
+  # italic species labels (row 2), centred on each group
+  for(i in seq_len(n_sp)) {
+    mtext(bquote(italic(.(species[i]))), side = 1, at = sp_pos[i],
+          line = 2.5, cex = 0.8)
+  }
+}
+dev.off()
+
+
 }
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology carry-over ####
