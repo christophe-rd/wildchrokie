@@ -1791,14 +1791,14 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Box plot all predictors #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-pdf("figures/growthModelsMain/boxplotRingWidth.pdf", width = 12, height = 8)
-vars <- c("pgsGSL", "pgsGDD5", "budset", "leafout")
+pdf("figures/growthModelsMain/boxplotPredictorsAll.pdf", width = 12, height = 8)
+vars <- c("pgsGDD5", "pgsGSL", "leafout", "budset")
 
 var_labs <- c("Thermal season (GDD)", "Calendar season (GSL)", "Start of season (SOS)", "End of season (EOS)")
 ylab <- c("Thermal season (GDD)"  = "Growing degree days (GDD)", 
           "Calendar season (GSL)" = "Growing season length (days)", 
           "Start of season (SOS)" = "Leafout day of year (doy)", 
-          "End of season (EOS)"   = "budset day of year (doy)")
+          "End of season (EOS)"   = "Budset day of year (doy)")
 
 alphabet <- c("(a)", "(b)", "(c)", "(d)")
 
