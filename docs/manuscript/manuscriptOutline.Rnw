@@ -71,11 +71,11 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Longer seasons are not necessarily warmer
   
-  \item Early SOS does not increase GDD by much
+  \item Early SOS does not increase GDD by much (Figure \ref{fig:GSfig})
   
   \item Water availability may constrain growth
   
-  \item Competition may offset extra days to grow
+  \item Competition may offset extra days to grow especially for below canopy trees
   
   \end{enumerate}
 
@@ -83,9 +83,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Even with good conditions, trees may be internally constrained
   \begin{enumerate}
   
-  \item How plastic growth is depends on species
-  
   \item Leaf phenology may be more plastic than growth
+  
+  \item How plastic growth is depends on species and provenance
   
   \end{enumerate}
 
@@ -105,11 +105,11 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Answer how GS and growth relate using juvenile trees in a common garden
   \begin{enumerate}
   
-  \item Disentangle length vs the conditions of the GS
+  \item Disentangle GS length vs GS thermal conditions
   
-  \item Growth with tree rings and SOS and EOS with leaf phenology
+  \item Growth with tree rings, SOS and EOS with leaf phenology
   
-  \item Calendar season: days between SOS and EOS and thermal season GDD between these days
+  \item Calendar season: days between SOS and EOS and thermal season: GDD between these days
   
   \item Will look at different species from different provenances
   \end{enumerate}
@@ -118,7 +118,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % Conceptual figure
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
-\caption{We show how shifting growing season length with climate change affects both the temperature trees experience during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events have advanced and fall phenology has delayed, but to much lesser extent (represented through the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. As a results of increased temperature during the growing season, trees also accumulate more GDD, warming their thermal seasons.}
+\caption{We show how shifting growing season length with climate change affects both the temperature trees experience during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events (green arrow) have advanced and fall phenology (orange arrow) has delayed, but to much lesser extent (day advancements are fake and represented by the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. Growth onset earlier in the season means the first days of growth are cooler (a) resulting in little accumulation of GDD (b). Though shifts in EOS are weaker and the temperature experienced changed little (a), the GDD accumulation rate late in the season is higher than early in the season. Alongside warmer summer temperature, this results in higher GDD accumulation, warming their thermal seasons.}
 \label{fig:GSfig}
 \end{figure}
 
@@ -131,7 +131,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Does tree growth increase with longer growing seasons?
 \item Did an earlier start and later end of season increase growth? 
 \item Does tree growth increase with longer growing seasons and is it consistent across species and provenances?
-\item How did growth change across years, and how did it relate to climate?
+\item How did growth change across years, and how did it relate to climate? \\
 \end{enumerate}
 
 \begin{enumerate}
@@ -288,17 +288,18 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \begin{enumerate}
 \item Used 81 juvenile trees of 4 species from 4 provenances to understand if longer GS increased growth 
   \begin{enumerate}
-  
-  \item We used annual growth with tree rings for growth and leaf phenology for SOS and EOS
+  \item We used annual growth with tree rings and leaf phenology for SOS and EOS
   
   \item Longer GS increased growth for all species, but varied depending on the metric 
   
   \item Thermal season was a better predictor for growth than the calendar season
   
   \item SOS and EOS trend direction changed across species
+  
+  \item Little effect of provenance
   \end{enumerate}
 
-% Section-----------------------------------------------------------------------
+% Section A --------------------------------------------------------------------
 \subsection*{A. Overall patterns}
 % Paragraph
 \item Why thermal season better predicts growth than the calendar season?
@@ -306,9 +307,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Thermal weights growth days better than calendar season
   
-  \item Cool spring days count for less for thermal season vs calendar season
+  \item Cool spring days count for less for thermal season vs calendar season (Figure \ref{fig:GSfig})
   
-  \item Stronger response to EOS than SOS, because temperature is warmer = more GDD
+  \item Stronger response to EOS than SOS, because temperature is warmer = more GDD (Figure \ref{fig:GSfig})
   
   \end{enumerate}
   
@@ -322,16 +323,16 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Section-----------------------------------------------------------------------
+% Section B --------------------------------------------------------------------
 \subsection*{B. Species specific patterns}
 \item Certain species
   \begin{enumerate}
   
   \item {\Ainc} grow more with GSL and earlier SOS: most growth happens in spring
   
-  \item {\Ainc} is ruderal and may be able to take advantage of cool and short days in spring
+  \item {\Ainc} is ruderal, takes advantage of cool and short days in spring
   
-  \item Contrary, {\Bpap} and {\Bpop} driven by EOS rather than SOS. More reactive to warmer late season temperature
+  \item Contrary, {\Bpap} and {\Bpop} driven by EOS: more reactive to warmer, late season temperature
   
   \item {\Ball} SOS and EOS trends counterinteract = no response to GSL
   
@@ -344,7 +345,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Little effect on budset too (Buonaiuto, unpublished)
   \end{enumerate}
 
-% Section-----------------------------------------------------------------------
+% Section C --------------------------------------------------------------------
 \subsection*{C. Future directions, limitation and conclusion}
 % Paragraph
 \item Limitations
@@ -360,9 +361,9 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item What we did is important
   \begin{enumerate}
 
-  \item Species trends differ, even if closely related
+  \item Species trends differed, even if closely related
   
-  \item Carbon models that pool across species is a weakness.
+  \item Carbon models that pool across species is a weakness
   \end{enumerate}
 
 \end{enumerate}
