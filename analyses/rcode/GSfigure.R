@@ -85,6 +85,10 @@ cceos <- 260
 presos <- 130
 preeos <- 250
 
+# years for pre climate change and post climate change
+preyr <- 1955:1975
+ccyr <- 2005:2025
+
 # Logistic curves (Panel 2 still uses these)
 doy_seq <- 30:330
 gdd_pre <- 2500 / (1 + exp(-0.025 * (doy_seq - 172)))
@@ -96,6 +100,7 @@ dates <- format(as.Date(ticks, origin = "2023-01-01"), "%d %b")
 
 myxlimp3 <- c(min(doy_seq), max(doy_seq))
 mylwd <- 3
+mysmalltxt <- 1.2
 
 # Panel margins
 p1 <- c(0, 5, 0, 2)
@@ -109,24 +114,44 @@ matheights <- c(1, 2.8, 2.4)
 ylimlogis <- c(0, 3400)
 
 # Real data from logan airport
-# GDD for logistic curves
-logan <- subset(logan, doy >= min(doy_seq) & doy <= max(doy_seq))
-logan$GDD_5 <- NA
+prelogan <- subset(logan, year %in% preyr & doy >= presos & doy <= preeos)
+cclogan <- subset(logan, year %in% ccyr & doy >= ccsos & doy <= cceos)
 
-# Get unique years
-years <- unique(logan$year)
+# GDD for logistic curves for both periods
+prelogan$GDD_5 <- NA
+cclogan$GDD_5 <- NA
+
+# Start with pre climate change
+years <- unique(prelogan$year)
 
 # Loop through each year
 for (y in years) {
   # Find rows for this year
-  year_rows <- which(logan$year == y)
+  year_rows <- which(prelogan$year == y)
   
   # Calculate GDD for this year only
-  logan$GDD_5[year_rows] <- gdd(tmax = logan$maxTempC[year_rows], 
-                                tmin = logan$minTempC[year_rows], 
+  prelogan$GDD_5[year_rows] <- gdd(tmax = prelogan$maxTempC[year_rows], 
+                                tmin = prelogan$minTempC[year_rows], 
                                 tbase = 5, 
                                 type = "B")
 }
+mean_pre_gdd <- aggregate(GDD_5 ~ doy, data = prelogan, FUN = mean, na.rm = TRUE)
+
+# Then post climate change
+years <- unique(cclogan$year)
+
+# Loop through each year
+for (y in years) {
+  # Find rows for this year
+  year_rows <- which(cclogan$year == y)
+  
+  # Calculate GDD for this year only
+  cclogan$GDD_5[year_rows] <- gdd(tmax = cclogan$maxTempC[year_rows], 
+                                tmin = cclogan$minTempC[year_rows], 
+                                tbase = 5, 
+                                type = "B")
+}
+mean_cc_gdd  <- aggregate(GDD_5 ~ doy, data = cclogan,  FUN = mean, na.rm = TRUE)
 
 baselineperiod <- subset(logan, year >1940 & year < 1981)
 baselinemean <- mean(baselineperiod$meanTempC)
@@ -146,9 +171,6 @@ loess_pos  <- loess(meanTempC ~ doy, data = mean_pos,  span = 0.4)
 smooth_pre <- predict(loess_pre, newdata = data.frame(doy = doy_seq))
 smooth_cc  <- predict(loess_pos,  newdata = data.frame(doy = doy_seq))
 
-# aggregate for GDD logistic curve
-mean_pre_gdd <- aggregate(GDD_5 ~ doy, data = prewarm, FUN = mean, na.rm = TRUE)
-mean_pos_gdd  <- aggregate(GDD_5 ~ doy, data = poswarm,  FUN = mean, na.rm = TRUE)
 
 # Shaded area: below threshold on the PRE curve
 threshold <- 5
@@ -244,16 +266,71 @@ mtext("(a)", side = 3, adj = 0, line = 0.2, font = 2, cex = 1.3)
 # Shade area below threshold under pre curve
 polygon(x_poly, y_poly, col = adjustcolor("grey", alpha.f = 0.6), border = NA)
 
-lines(doy_seq, smooth_pre, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
-lines(doy_seq, smooth_cc,  lwd = mylwd, col = colcc)
+lines(doy_seq, smooth_pre, lwd = 1, col = adjustcolor(colpre, alpha.f = 0.7))
+lines(doy_seq, smooth_cc,  lwd = 1, col = colcc)
 
-# # GS delimitations
-# segments(x0 = ccsos, y0 = 0, y1 = smooth_cc[which.min(abs(doy_seq - ccsos))],  lwd = 1.5, lty = 2)
-# segments(x0 = cceos, y0 = 0, y1 = smooth_cc[which.min(abs(doy_seq - cceos))],  lwd = 1.5, lty = 2)
-# 
-# # Pre-CC boundaries (lighter)
-# segments(x0 = presos, y0 = 0, y1 = smooth_pre[which.min(abs(doy_seq - presos))], lwd = 0.3, lty = 2)
-# segments(x0 = preeos, y0 = 0, y1 = smooth_pre[which.min(abs(doy_seq - preeos))], lwd = 0.3, lty = 2)
+# thicker lines within their respective leafout and budset timings
+doypre <- presos : preeos
+idx_pre <- which(doy_seq %in% doypre)
+lines(doy_seq[idx_pre], smooth_pre[idx_pre], 
+      lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+
+doycc <- ccsos:cceos
+idx_cc <- which(doy_seq %in% doycc)
+lines(doy_seq[idx_cc], smooth_cc[idx_cc], lwd = mylwd, col = colcc)
+
+# Cooler first days of growth delimitations
+segments(x0 = presos, x1 = presos - 30, y0 = smooth_pre[doy_seq %in% presos],  
+         lwd = 0.8, lty = 3, col = colpre)
+
+segments(x0 = ccsos, x1 = presos - 30, y0 = smooth_cc[doy_seq %in% ccsos],  
+         lwd = 0.8, lty = 3, col = colcc)
+
+# Segments that shows cooler temperature early in the season
+Arrows(x0 = presos - 35, x1 = presos - 35,
+       y0 = smooth_cc[doy_seq %in% ccsos], 
+       y1 = smooth_pre[doy_seq %in% presos], 
+       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+
+text(x = presos - 72, 
+     y = mean(c(smooth_pre[doy_seq %in% presos], 
+                smooth_cc[doy_seq %in% ccsos])),
+     "Early SOS = cooler first days of growth",
+     col = "black", cex = mysmalltxt)
+
+# End-of-season delimitations
+segments(x0 = preeos, x1 = preeos - 10,
+         y0 = smooth_pre[doy_seq %in% preeos],  
+         lwd = 0.8, lty = 3, col = colpre)
+
+segments(x0 = cceos, x1 = preeos - 10,
+         y0 = smooth_cc[doy_seq %in% cceos],  
+         lwd = 0.8, lty = 3, col = colcc)
+
+# Difference at end of season
+Arrows(x0 = preeos - 15, x1 = preeos - 15,
+       y0 = smooth_cc[doy_seq %in% cceos], 
+       y1 = smooth_pre[doy_seq %in% preeos], 
+       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+
+text(x = preeos - 50, 
+     y = mean(c(smooth_pre[doy_seq %in% preeos], 
+                smooth_cc[doy_seq %in% cceos]))* 0.98,
+     "Late EOS =\nlittle temperature difference",
+     col = "black", cex = mysmalltxt, adj = 0)
+
+# pre: start and end of thick segment
+r <- 1.5  
+filledcircle(r1 = r, mid = c(presos,  smooth_pre[doy_seq %in% presos]),
+             col = adjustcolor(colpre, alpha.f = 1), lcol = NA)
+filledcircle(r1 = r, mid = c(preeos,  smooth_pre[doy_seq %in% preeos]),
+             col = adjustcolor(colpre, alpha.f = 1), lcol = NA)
+
+# cc: start and end of thick segment
+filledcircle(r1 = r, mid = c(ccsos, smooth_cc[doy_seq %in% ccsos]),
+             col = colcc, lcol = NA)
+filledcircle(r1 = r, mid = c(cceos, smooth_cc[doy_seq %in% cceos]),
+             col = colcc, lcol = NA)
 
 # GS delimitations
 segments(x0 = ccsos, y0 = 0, y1 = 30,  lwd = 1.5, lty = 2)
@@ -262,8 +339,6 @@ segments(x0 = cceos, y0 = 0, y1 = 30,  lwd = 1.5, lty = 2)
 # Pre-CC boundaries (lighter)
 segments(x0 = presos, y0 = 0, y1 = 30, lwd = 0.3, lty = 2)
 segments(x0 = preeos, y0 = 0, y1 = 30, lwd = 0.3, lty = 2)
-
-
 
 # Phenology trend arrows
 Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
@@ -274,26 +349,16 @@ Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
 text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = 1.9)
 text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = 1.4)
 
-# Segments that shows cooler temperature early in the season
-Arrows(x0 = ccsos + 30, x1 = ccsos + 30,
-       y0 = smooth_pre[which.min(abs(doy_seq - presos))], 
-       y1 = smooth_pre[which.min(abs(doy_seq - ccsos))], 
-       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
-text(x = ccsos + 64, 
-     y = mean(c(smooth_pre[which.min(abs(doy_seq - presos))], 
-                smooth_pre[which.min(abs(doy_seq - ccsos))])) , 
-     "Cooler first days of growth", col = "black",   cex = 1.4)
-
-# a horizontal line with whiskers
-# arrows(x0 = x - err, y0 = y,
-#        x1 = x + err, y1 = y,
-#        code = 3,        # arrowheads on both ends
-#        angle = 90,      # flat = whisker caps
-#        length = 0.05)   # cap width in inches
+legend(x = ccsos - 80, y = 25, 
+       legend = c("Pre climate change",
+                  "Post climate change"),
+       bty = "o", lwd = 3, cex = 1.2,
+       col = c(colpre, colcc),
+       title = "Curves")
 
 # Panel 3: GDD curves --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
-plot(doy_seq, gdd_cc, ylim = ylimlogis,
+plot(doy_seq, gdd_cc, ylim = range(mean_cc_gdd$GDD_5),
      type = "n", lwd = 1.2,
      xlab = "", ylab = "Accumulated GDD",
      xaxt = "n", bty = "l",
@@ -304,25 +369,23 @@ mtext("(b)", side = 3, adj = 0, line = 0.2, font = 2, cex = 1.3)
 axis(1, at = ticks, labels = dates, cex.axis = axissize)
 
 
-mean_pre_gdd <- subset(mean_pre_gdd, doy <= max(doy_seq))
-mean_pos_gdd <- subset(mean_pos_gdd, doy <= max(doy_seq))
+# mean_pre_gdd <- subset(mean_pre_gdd, doy <= max(doy_seq))
+# mean_cc_gdd <- subset(mean_cc_gdd, doy <= max(doy_seq))
 
-lines(doy_seq, mean_pre_gdd$GDD_5, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.4))
-lines(doy_seq, mean_pos_gdd$GDD_5,  type = "l", lwd = mylwd, col = adjustcolor(colcc))
+lines(mean_pre_gdd$doy, mean_pre_gdd$GDD_5, type = "l", lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+lines(mean_cc_gdd$doy, mean_cc_gdd$GDD_5,  type = "l", lwd = mylwd, col = adjustcolor(colcc))
 
-text(x = 188, y = 2750, "Warmer thermal season", col = "black", cex = 1.9)
-img_w <- 23
-img_h <- 3400 * 0.3
-smll <- 4.3
-norm <- 2
-rasterImage(img_thermom, 
-            x_start + 105 - img_w/smll, 
-            2700 - img_h/smll, 
-            x_start + 105 + img_w/smll, 
-            2700 + img_h/smll)
+# pre
+filledcircle(r1 = r, mid = c(mean_pre_gdd$doy[1],  mean_pre_gdd$GDD_5[1]),
+             col = adjustcolor(colpre, alpha.f = 1), lcol = NA)
+filledcircle(r1 = r, mid = c(mean_pre_gdd$doy[nrow(mean_pre_gdd)], mean_pre_gdd$GDD_5[nrow(mean_pre_gdd)]),
+             col = adjustcolor(colpre, alpha.f = 1), lcol = NA)
 
-Arrows(x0 = cceos, y0 = gdd_pre[200] + 200, x1 = 245, y1 = gdd_cc[200]-150,
-       arr.type = "triangle", arr.width = 0.3, lwd = 2, col = colcc)
+# cc
+filledcircle(r1 = r, mid = c(mean_cc_gdd$doy[1], mean_cc_gdd$GDD_5[1]),
+             col = adjustcolor(colcc), lcol = NA)
+filledcircle(r1 = r, mid = c(mean_cc_gdd$doy[nrow(mean_cc_gdd)], mean_cc_gdd$GDD_5[nrow(mean_cc_gdd)]),
+             col = adjustcolor(colcc), lcol = NA)
 
 # Pre-CC boundaries (lighter)
 segments(x0 = presos, y0 = -2, y1 = 3000, lwd = 0.3, lty = 2)
@@ -330,6 +393,92 @@ segments(x0 = preeos, y0 = -2, y1 = 3000, lwd = 0.3, lty = 2)
 
 segments(x0 = ccsos, y0 = -100, y1 = 3000, lwd = 1.5, lty = 2)
 segments(x0 = cceos, y0 = -100, y1 = 3000, lwd = 1.5, lty = 2)
+
+# Early season gdd
+# Segments that shows cooler temperature early in the season
+segments(x0 = presos, x1 = presos - 30, 
+         y0 = mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% presos],  
+         lwd = 0.8, lty = 3, col = colpre)
+
+segments(x0 = presos, x1 = presos - 30, 
+         y0 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% presos],  
+         lwd = 0.8, lty = 3, col = colcc)
+
+Arrows(x0 = presos - 35, x1 = presos - 35,
+       y0 = min(mean_cc_gdd$GDD_5), 
+       y1 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% presos], 
+       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+
+text(x = presos - 72,
+     y = (mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% presos] +
+            min(mean_cc_gdd$GDD_5)) / 2, 
+     "Early SOS = little effect on GDD", 
+     col = "black", cex = mysmalltxt)
+
+# Late season gdd
+segments(x0 = preeos, x1 = cceos - 30,
+         y0 = mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos],
+         lwd = 0.8, lty = 3, col = colpre)
+
+segments(x0 = cceos, x1 = cceos - 30,
+         y0 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos],
+         lwd = 0.8, lty = 3, col = colcc)
+
+Arrows(x0 = cceos - 35, x1 = cceos - 35,
+       y0 = mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos], 
+       y1 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos], 
+       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+
+text(x = preeos - 65,
+     y = (mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos] +
+            mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos]) / 2, 
+     "Late EOS = bigger effect on GDD", 
+     col = "black", cex = mysmalltxt)
+
+# Polygon for warmer thermal season
+x_arrow <- cceos + 5
+
+shaft_w <- 2
+head_w  <- 4
+head_l  <- 150
+
+y_start <- mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos]
+y_end   <- mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos]
+
+direction <- sign(y_end - y_start)
+y_neck <- y_end - direction * head_l
+
+polygon(
+  x = c(x_arrow - shaft_w,
+        x_arrow - shaft_w,
+        x_arrow - head_w,
+        x_arrow,
+        x_arrow + head_w,
+        x_arrow + shaft_w,
+        x_arrow + shaft_w),
+  y = c(y_start,
+        y_neck,
+        y_neck,
+        y_end,
+        y_neck,
+        y_neck,
+        y_start),
+  col = adjustcolor(colcc, alpha.f = 1),
+  border = NA
+)
+
+text(x = x_arrow + 5, y = y_start + 100, 
+     "Warmer \nthermal season", col = "black", cex = 1.9, adj = 0)
+img_w <- 23
+img_h <- 3400 * 0.3
+smll <- 4.3
+norm <- 2
+
+rasterImage(img_thermom, 
+            x_arrow + 50 - img_w/smll, 
+            y_end- 150 - img_h/smll, 
+            x_arrow + 50 + img_w/smll, 
+            y_end - 150 + img_h/smll)
 
 dev.off()
 
@@ -666,7 +815,7 @@ for (i in 1:ny) {
   text(x = lw - 0.1, 
        y = y_center, 
        labels = years[i], 
-       cex = 0.85, 
+       cex = 1, 
        font = 2, 
        col = "grey15", 
        adj = 1) 
