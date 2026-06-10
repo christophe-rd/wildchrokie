@@ -346,8 +346,8 @@ Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
 Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
        arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd = 2, col = colfall)
 
-text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = 1.9)
-text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = 1.4)
+text(x = ccsos + 30, y = 7, "Earlier SOS", col = colspring, cex = 1.9)
+text(x = cceos - 20, y = 7, "Later EOS",     col = colfall,   cex = 1.4)
 
 legend(x = ccsos - 80, y = 25, 
        legend = c("Pre climate change",
