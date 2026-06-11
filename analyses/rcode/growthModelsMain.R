@@ -34,7 +34,7 @@ fitmodels <- F
 fitmodelfull <- F
 fitmodelsZscored <- F
 fitmodelsBAI <- F
-fit3xpriors <- F
+fit2xpriors <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -3229,9 +3229,9 @@ dev.off()
 }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# 3X PRIORS ####
+# 2X PRIORS ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-if (fit3xpriors){
+if (fit2xpriors){
 # Ill do this with 3x the priors so I don't have to change 3 scripts
 genericmodel <- stan_model("stan/modelGrowth_z_largerPriors.stan")
 

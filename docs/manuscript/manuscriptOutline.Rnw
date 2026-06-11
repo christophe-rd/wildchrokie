@@ -117,7 +117,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 % Conceptual figure
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.jpeg}
+\includegraphics[width=0.9\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/climate/gsconceptualfig.jpeg}
 \caption{We show how shifting growing season length with climate change affects both the temperature trees experience during the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events (green arrow) have advanced and fall phenology (orange arrow) has delayed, but to much lesser extent (day advancements are fake and represented by the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. Growth onset earlier in the season means the first days of growth are cooler (a) resulting in little accumulation of GDD (b). Though shifts in EOS are weaker and the temperature experienced changed little (a), the GDD accumulation rate late in the season is higher than early in the season. Alongside warmer summer temperature, this results in higher GDD accumulation, warming their thermal seasons.}
 \label{fig:GSfig}
 \end{figure}
@@ -266,18 +266,18 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
 \caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/asiteMap.pdf}
 \caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
-
+/Users/christophe_rouleau-desrochers/github/MSthesis/docs/figures/wildchrokie/
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % DISCUSSION
@@ -451,49 +451,49 @@ print(tab,
 
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
 \caption{Full vs most restricted rows of data for the model with SOS (a) EOS (b) as the predictor for Wildchrokie. Each pannel represent the different parameters used to fit the models.}
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
 \caption{Ring width trends in response to thermal season (GDD). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
 \caption{Ring width trends in response to calendar season (GSL). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
 
 % Figure mu atreeid full
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
 \caption{Intercept estimates for each group of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The bigger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
 % Wildchrokie year mu plot
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muayear.jpeg}
 \caption{Model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI) and (b) using box plots of the empirical data. Though the trend is weak, 2020 is systematically the year with the lowest growth shown both as the mean of the model intercepts (a) and as the median of the raw data, for each species (b). The growth of 2018 and 2019 is similar.}
 \label{fig:wcmuplotayear}
 \end{figure}
 
 % Wildchrokie boxplot
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
 \caption{Boxplot representing the empirical data of our ring widths (mm) facetted by species. The dots represent the raw data, the line the mean and the box the IQR.}
 \label{fig:wcboxplot}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/zscored/muALLbspp.pdf}
 \caption{Standardized (z-scored) slope estimates for Wildchrokie. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscored}
 \end{figure}
