@@ -316,11 +316,11 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
   
   axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 1), tck = -0.02)
   # regression line per species
-  for(sp in unique(sub$spp)) { # sp = "River birch"
-    ssp <- sub[sub$spp == sp, ]
-    fit <- lm(lengthCM ~ year, data = ssp)
-    abline(fit, col = wccolslatbi[ssp$latbi], lwd = 1.8)
-  }
+  # for(sp in unique(sub$spp)) { # sp = "River birch"
+  #   ssp <- sub[sub$spp == sp, ]
+  #   fit <- lm(lengthCM ~ year, data = ssp)
+  #   abline(fit, col = wccolslatbi[ssp$latbi], lwd = 1.8)
+  # } 
 }
 dev.off()
 
