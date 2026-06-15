@@ -131,9 +131,9 @@ for (y in years) {
   
   # Calculate GDD for this year only
   prelogan$GDD_5[year_rows] <- gdd(tmax = prelogan$maxTempC[year_rows], 
-                                tmin = prelogan$minTempC[year_rows], 
-                                tbase = 5, 
-                                type = "B")
+                                   tmin = prelogan$minTempC[year_rows], 
+                                   tbase = 5, 
+                                   type = "B")
 }
 mean_pre_gdd <- aggregate(GDD_5 ~ doy, data = prelogan, FUN = mean, na.rm = TRUE)
 
@@ -147,9 +147,9 @@ for (y in years) {
   
   # Calculate GDD for this year only
   cclogan$GDD_5[year_rows] <- gdd(tmax = cclogan$maxTempC[year_rows], 
-                                tmin = cclogan$minTempC[year_rows], 
-                                tbase = 5, 
-                                type = "B")
+                                  tmin = cclogan$minTempC[year_rows], 
+                                  tbase = 5, 
+                                  type = "B")
 }
 mean_cc_gdd  <- aggregate(GDD_5 ~ doy, data = cclogan,  FUN = mean, na.rm = TRUE)
 
@@ -204,10 +204,14 @@ x_end   <- cceos
 x_neck_l <- x_start + 10
 x_neck_r <- x_end - 10
 
-polygon(
-  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colcc, alpha.f = 0.7), border = NA)
+# polygon(
+#   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+#   col = adjustcolor(colcc, alpha.f = 0.7), border = NA)
+
+segments(x0 = x_start, x1 = x_end, y0 = arrow_y, lwd = mylwd, col = colcc)
+segments(x0 = x_start, y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = colcc)
+segments(x0 = x_end,   y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = colcc)
 
 # pictograms width and height
 img_w <- 23
@@ -217,23 +221,23 @@ img_h <- 0.6
 smll <- 4.3
 norm <- 2
 
-rasterImage(img_calenda, 
-            x_start + 125 - img_w/smll, 
-            arrow_y - img_h/smll, 
-            x_start + 125 + img_w/smll, 
-            arrow_y + img_h/smll)
-rasterImage(img_leafout, 
-            x_start - 12 - img_w/norm, 
-            arrow_y - img_h/norm, 
-            x_start - 12 + img_w/norm, 
-            arrow_y + img_h/norm)
-rasterImage(img_budset,  
-            x_end + 12 - img_w/norm,    
-            arrow_y - img_h/norm, 
-            x_end + 12 + img_w/norm,    
-            arrow_y + img_h/norm)
+# rasterImage(img_calenda, 
+#             x_start + 125 - img_w/smll, 
+#             arrow_y - img_h/smll, 
+#             x_start + 125 + img_w/smll, 
+#             arrow_y + img_h/smll)
+# rasterImage(img_leafout, 
+#             x_start - 12 - img_w/norm, 
+#             arrow_y - img_h/norm, 
+#             x_start - 12 + img_w/norm, 
+#             arrow_y + img_h/norm)
+# rasterImage(img_budset,  
+#             x_end + 12 - img_w/norm,    
+#             arrow_y - img_h/norm, 
+#             x_end + 12 + img_w/norm,    
+#             arrow_y + img_h/norm)
 
-text(x = ccsos + (cceos - ccsos)/2, y = arrow_y,
+text(x = ccsos + (cceos - ccsos)/2, y = arrow_y + 0.1,
      "Longer calendar season", col = "black", cex = 1.9)
 
 # Pre season arrow
@@ -245,12 +249,16 @@ x_end    <- preeos
 x_neck_l <- x_start + 10
 x_neck_r <- x_end - 10
 
-polygon(
-  x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-  y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-  col = adjustcolor(colpre, alpha.f = 0.4), border = NA)
+# polygon(
+#   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
+#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
+#   col = adjustcolor(colpre, alpha.f = 0.4), border = NA)
 
-text(x = ccsos + (cceos - ccsos)/2, y = arrow_y,
+segments(x0 = x_start, x1 = x_end, y0 = arrow_y, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+segments(x0 = x_start, y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+segments(x0 = x_end,   y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+
+text(x = ccsos + (cceos - ccsos)/2, y = 0.25,
      "Pre climate change calendar season", col = "black", cex = 1)
 
 # Panel 2: Temperature curves --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -346,15 +354,17 @@ Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
 Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
        arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd = 2, col = colfall)
 
-text(x = ccsos + 30, y = 7, "Earlier SOS", col = colspring, cex = 1.9)
-text(x = cceos - 20, y = 7, "Later EOS",     col = colfall,   cex = 1.4)
+# legend(x = ccsos - 80, y = 25, 
+#        legend = c("Pre climate change",
+#                   "Post climate change"),
+#        bty = "o", lwd = 3, cex = 1.2,
+#        col = c(colpre, colcc),
+#        title = "Curves")
 
-legend(x = ccsos - 80, y = 25, 
-       legend = c("Pre climate change",
-                  "Post climate change"),
-       bty = "o", lwd = 3, cex = 1.2,
-       col = c(colpre, colcc),
-       title = "Curves")
+text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_pre) -9,
+     "Pre climate change", col = adjustcolor(colpre, alpha.f = 0.8), cex = 1.2)
+text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_cc) + -1,
+     "Post climate change", col = colcc, cex = 1.2)
 
 # Panel 3: GDD curves --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
@@ -479,6 +489,13 @@ rasterImage(img_thermom,
             y_end- 150 - img_h/smll, 
             x_arrow + 50 + img_w/smll, 
             y_end - 150 + img_h/smll)
+
+text(x = mean(mean_pre_gdd$doy) - 30 , 
+     y = 200,
+     "Pre climate change", col = adjustcolor(colpre, alpha.f = 0.8), cex = 1.2, adj = 0)
+text(x = mean(mean_pre_gdd$doy) - 30, 
+     y = 1250,
+     "Post climate change", col = colcc, cex = 1.2, adj = 0)
 
 dev.off()
 
