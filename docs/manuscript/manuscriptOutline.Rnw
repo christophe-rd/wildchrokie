@@ -51,7 +51,14 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Early spring + delayed autumn should increase growth
   
-  \item This is important because carbon cycle models rely on this positive relationship
+  \end{enumerate}
+  
+% Paragraph 2
+\item Positive relationship between season length and growth is important
+  \begin{enumerate}
+  \item Carbon cycle models rely on this positive relationship
+  
+  \item This could impact climate solutions
   
   \end{enumerate}
 
@@ -80,15 +87,28 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
 
 % Paragraph 4
-\item Even with good conditions, trees may be internally constrained
+\item Different plant stages (leaves vs wood) differ in their plasticity
   \begin{enumerate}
   
-  \item Leaf phenology may be more plastic than growth
+  \item Leaf phenology is very plastic (well studied)
   
-  \item How plastic growth is depends on species and provenance
+  \item Leaf phenology and growth are synchronized = good proxy for growth SOS and EOS
+  
+  \item However, it this does not say anything about annual growth increment
   
   \end{enumerate}
 
+% Paragraph
+\item Even with good conditions, trees may not be able to respond to longer GS
+  \begin{enumerate}
+  \item Earlier SOS, also means earlier EOS
+  
+  \item Tree growth rate cannot increase indefinitely
+  
+  \item Length and speed of growth is physiologically (or genetically?) controlled
+  
+  \end{enumerate}
+  
 % Paragraph 5
 \item Local adaptation to inform growth with climate change
   \begin{enumerate}
@@ -226,7 +246,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
   \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}).
-  
+  git statusgit status
   \item Three species grew more with a later end of season ({\Ball}: $\beta = $ 
   \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
   [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, 
@@ -277,7 +297,6 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each site with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
-/Users/christophe_rouleau-desrochers/github/MSthesis/docs/figures/wildchrokie/
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % DISCUSSION
@@ -286,86 +305,89 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \section*{Discussion}
 
 \begin{enumerate}
-\item Used 81 juvenile trees of 4 species from 4 provenances to understand if longer GS increased growth 
+% Section ----------------------------------------------------------------------
+\item Subheader: opening
   \begin{enumerate}
-  \item We used annual growth with tree rings and leaf phenology for SOS and EOS
-  
-  \item Longer GS increased growth for all species, but varied depending on the metric 
-  
-  \item Thermal season was a better predictor for growth than the calendar season
-  
-  \item SOS and EOS trend direction changed across species
-  
-  \item Little effect of provenance
+  \item Used 81 juvenile trees of 4 species from 4 provenances to understand if longer GS increased   growth 
+    \begin{enumerate}
+    \item We used annual growth with tree rings and leaf phenology for SOS and EOS
+    
+    \item Longer GS increased growth for all species, but varied depending on the metric 
+    
+    \item Thermal season was a better predictor for growth than the calendar season
+    
+    \item Little effect of provenance
+    \end{enumerate}
   \end{enumerate}
 
-% Section A --------------------------------------------------------------------
-\subsection*{A. Overall patterns}
-% Paragraph
-\item Why thermal season better predicts growth than the calendar season?
+% Section ----------------------------------------------------------------------
+\item Subheader: Patterns across species and predictors
+  % Paragraph
   \begin{enumerate}
+  \item Why thermal season better predicts growth than the calendar season?
+    \begin{enumerate}
+    
+    \item Thermal weights growth days better than calendar season
+    
+    \item Cool spring days count for less for thermal season vs calendar season (Figure \ref{fig:GSfig})
+    
+    \item Stronger response to EOS than SOS, because temperature is warmer = more GDD (Figure \ref{fig:GSfig}) (Buonaiuto, unpublished)
+    
+    \end{enumerate}
   
-  \item Thermal weights growth days better than calendar season
-  
-  \item Cool spring days count for less for thermal season vs calendar season (Figure \ref{fig:GSfig})
-  
-  \item Stronger response to EOS than SOS, because temperature is warmer = more GDD (Figure \ref{fig:GSfig})
-  
-  \end{enumerate}
-  
-% Paragraph
-\item SOS and EOS to disentangle the calendar season effect on growth
-  \begin{enumerate}
-  
-  \item Early SOS didn't increase growth for most species (like Dow 2022)
-  
-  \item Late EOS increased growth for most species; relates to GDD, less to GSL
-  
-  \end{enumerate}
-
-% Section B --------------------------------------------------------------------
-\subsection*{B. Species specific patterns}
-\item Certain species
-  \begin{enumerate}
-  
-  \item {\Ainc} grow more with GSL and earlier SOS: most growth happens in spring
-  
-  \item {\Ainc} is ruderal, takes advantage of cool and short days in spring
-  
-  \item Contrary, {\Bpap} and {\Bpop} driven by EOS: more reactive to warmer, late season temperature
-  
-  \item {\Ball} SOS and EOS trends counterinteract = no response to GSL
-  
+  % Paragraph
+  \item SOS and EOS to disentangle the calendar season effect on growth
+    \begin{enumerate}
+    
+    \item Early SOS didn't increase growth for most species (like Dow 2022)
+    
+    \item Late EOS increased growth for most species; relates to GDD, less to GSL
+    
+    \end{enumerate}
   \end{enumerate}
 
-\item No effect of provenance
+% Section ----------------------------------------------------------------------
+\item Subheader: Species specific patterns
   \begin{enumerate}
-  \item Local adaption effect on growth is weak under current conditions
+  \item Species responded differently to different season predictors
+    \begin{enumerate}
+    
+    \item {\Ainc} grow more with GSL and earlier SOS: most growth happens in spring
+    
+    \item {\Ainc} is ruderal, takes advantage of cool and short days in spring
+    
+    \item Contrary, {\Bpap} and {\Bpop} driven by EOS: more reactive to warmer, late season temperature
+    
+    \item {\Ball} SOS and EOS trends counterinteract = no response to GSL
+    
+    \end{enumerate}
   
-  \item Little effect on budset too (Buonaiuto, unpublished)
+  \item No effect of provenance
+    \begin{enumerate}
+    \item Local adaption effect on growth is weak under current conditions
+    
+    \item Little effect on budset too (Buonaiuto, unpublished)
+    \end{enumerate}
   \end{enumerate}
 
-% Section C --------------------------------------------------------------------
-\subsection*{C. Future directions, limitation and conclusion}
-% Paragraph
-\item Limitations
+% Section ----------------------------------------------------------------------
+\item Subheader: Future directions and conclusion
   \begin{enumerate}
-  \item No extreme temperatures in models
+  % Paragraph
+  \item What we did is important
+    \begin{enumerate}
   
-  \item Low sample size and not a fully crossed study design
-  
-  \item Our trees would be below canopy in nature = light competition
+    \item Species trends differed, even if closely related
+    
+    \item Carbon models that pool across species is a weakness
+    
+    \item Weak population effects; like what others found that environmental effects $>$ population effects
+    
+    \item Implications for range shifts: growth increase where water is not limiting
+    
+    \end{enumerate}
+
   \end{enumerate}
-
-% Paragraph
-\item What we did is important
-  \begin{enumerate}
-
-  \item Species trends differed, even if closely related
-  
-  \item Carbon models that pool across species is a weakness
-  \end{enumerate}
-
 \end{enumerate}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
