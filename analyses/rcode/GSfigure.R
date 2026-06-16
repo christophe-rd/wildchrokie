@@ -197,70 +197,50 @@ plot.new()
 plot.window(xlim = myxlimp3, ylim = c(0, 1))
 
 # CC season arrow
-arrow_y <- 0.5
-shaft_h <- 0.15
-head_h  <- 0.15
-x_start <- ccsos
-x_end   <- cceos
-x_neck_l <- x_start + 10
-x_neck_r <- x_end - 10
-
-# polygon(
-#   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-#   col = adjustcolor(colcc, alpha.f = 0.7), border = NA)
-
-segments(x0 = x_start, x1 = x_end, y0 = arrow_y, lwd = mylwd, col = colcc)
-segments(x0 = x_start, y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = colcc)
-segments(x0 = x_end,   y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = colcc)
+arrow_y <- 0.3
+cap_h <- 0.15
+x_left <- ccsos
+x_right <- cceos
+segments(x0 = x_left, x1 = x_right, y0 = arrow_y, lwd = mylwd, col = colcc)
+segments(x0 = x_left,  y0 = arrow_y - cap_h, y1 = arrow_y + cap_h, lwd = mylwd, col = colcc)
+segments(x0 = x_right, y0 = arrow_y - cap_h, y1 = arrow_y + cap_h, lwd = mylwd, col = colcc)
 
 # pictograms width and height
 img_w <- 23
 img_h <- 0.6
-
 # pictograms scaler
-smll <- 4.3
+smll <- 2
 norm <- 2
-
-rasterImage(img_calenda,
-            x_start + 125 - img_w/smll,
-            arrow_y - img_h/smll,
-            x_start + 125 + img_w/smll,
-            arrow_y + img_h/smll)
 rasterImage(img_leafout,
-            x_start - 12 - img_w/norm,
+            x_left - 13 - img_w/norm,
             arrow_y - img_h/norm,
-            x_start - 12 + img_w/norm,
+            x_left - 13 + img_w/norm,
             arrow_y + img_h/norm)
 rasterImage(img_budset,
-            x_end + 12 - img_w/norm,
+            x_right + 13 - img_w/norm,
             arrow_y - img_h/norm,
-            x_end + 12 + img_w/norm,
+            x_right + 13 + img_w/norm,
             arrow_y + img_h/norm)
-
-text(x = ccsos + (cceos - ccsos)/2, y = arrow_y + 0.1,
+text(x = ccsos + (cceos - ccsos)/2 - 10 , y = arrow_y + 0.1,
      "Longer calendar season", col = "black", cex = mylargetxt)
+arrow_y <- 0.4
+rasterImage(img_calenda,
+            x_left + 115 - img_w/smll,
+            arrow_y - img_h/smll,
+            x_left + 115 + img_w/smll,
+            arrow_y + img_h/smll)
 
 # Pre season arrow
-arrow_y  <- 0.2
-shaft_h  <- 0.06
-head_h   <- 0.06
-x_start  <- presos
-x_end    <- preeos
-x_neck_l <- x_start + 10
-x_neck_r <- x_end - 10
+arrow_y <- 0.1
+cap_h <- 0.06
+x_left <- presos
+x_right <- preeos
+segments(x0 = x_left, x1 = x_right, y0 = arrow_y, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+segments(x0 = x_left,  y0 = arrow_y - cap_h, y1 = arrow_y + cap_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
+segments(x0 = x_right, y0 = arrow_y - cap_h, y1 = arrow_y + cap_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
 
-# polygon(
-#   x = c(x_start, x_neck_l, x_neck_l, x_neck_r, x_neck_r, x_end, x_neck_r, x_neck_r, x_neck_l, x_neck_l),
-#   y = c(arrow_y, arrow_y - head_h, arrow_y - shaft_h, arrow_y - shaft_h, arrow_y - head_h, arrow_y, arrow_y + head_h, arrow_y + shaft_h, arrow_y + shaft_h, arrow_y + head_h),
-#   col = adjustcolor(colpre, alpha.f = 0.4), border = NA)
-
-segments(x0 = x_start, x1 = x_end, y0 = arrow_y, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
-segments(x0 = x_start, y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
-segments(x0 = x_end,   y0 = arrow_y - shaft_h, y1 = arrow_y + shaft_h, lwd = mylwd, col = adjustcolor(colpre, alpha.f = 0.8))
-
-text(x = ccsos + (cceos - ccsos)/2, y = 0.25,
-     "Pre climate change calendar season", col = "black", cex = mysmalltxt)
+# text(x = ccsos + (cceos - ccsos)/2, y = 0.25,
+#      "Pre climate change calendar season", col = "black", cex = mysmalltxt)
 
 # Panel 2: Temperature curves --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p1)
@@ -355,6 +335,9 @@ Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
 Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
        arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd = 2, col = colfall)
 
+text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = mylargetxt)
+text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = mylargetxt)
+
 # legend(x = ccsos - 80, y = 25, 
 #        legend = c("Pre climate change",
 #                   "Post climate change"),
@@ -363,7 +346,7 @@ Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
 #        title = "Curves")
 
 text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_pre) -9,
-     "Pre climate change", col = adjustcolor(colpre, alpha.f = 0.8), 
+     "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
      cex = mysmalltxt)
 text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_cc) + -1,
      "Post climate change", col = colcc, 
@@ -480,27 +463,27 @@ polygon(
   border = NA
 )
 
-text(x = x_arrow + 5, y = y_start + 100, 
-     "Warmer \nthermal season", col = "black", cex = mylargetxt, adj = 0)
+text(x = x_arrow + 5, y = y_start + 200, 
+     "Warmer thermal \nseason", col = "black", cex = mylargetxt, adj = 0)
 img_w <- 23
-img_h <- 3400 * 0.3
+img_h <- 3400 * 0.2
 smll <- 4.3
 norm <- 2
 
 rasterImage(img_thermom, 
-            x_arrow + 50 - img_w/smll, 
-            y_end- 150 - img_h/smll, 
-            x_arrow + 50 + img_w/smll, 
-            y_end - 150 + img_h/smll)
+            x_arrow + 65 - img_w/norm, 
+            y_end- 300 - img_h/norm, 
+            x_arrow + 65 + img_w/norm, 
+            y_end - 300 + img_h/norm)
 
 text(x = mean(mean_pre_gdd$doy) - 30 , 
      y = 200,
-     "Pre climate change", col = adjustcolor(colpre, alpha.f = 0.8), 
+     "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
      cex = mysmalltxt, adj = 0)
 text(x = mean(mean_pre_gdd$doy) - 30, 
      y = 1250,
      "Post climate change", col = colcc, cex = mysmalltxt, adj = 0)
-
+ 
 dev.off()
 
 
