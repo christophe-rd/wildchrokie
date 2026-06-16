@@ -1,5 +1,10 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{8}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Arboretum(2026)}]{arnold_arboretum_weather_2026}
+Arboretum, A. (2026).
+\newblock Weather {Data} at the {Arnold} {Arboretum}.
+\newblock Accessed: 2025-09-24.
 
 \bibitem[{Baskin \& Baskin(2014)}]{baskin_seeds_2014}
 Baskin, C.C. \& Baskin, J.M. (2014).
@@ -17,6 +22,12 @@ Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
 Cook, E.R. \& Kairiukstis, L.A. (eds.)  (1990).
 \newblock \emph{Methods of {Dendrochronology}}.
 \newblock Springer Netherlands, Dordrecht.
+
+\bibitem[{Network~for Environment {and} Weather
+  Applications~(NEWA)(2026)}]{network_for_environment_and_weather_applications_newa_cornell_university_boston_2026}
+Network~for Environment {and} Weather Applications~(NEWA), C.U. (2026).
+\newblock Boston ({Weld} {Hill}), {MA} {Weather} {Data} {Query}.
+\newblock Accessed: 2025-09-24.
 
 \bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
   Kahle}]{raden_potential_2020}
