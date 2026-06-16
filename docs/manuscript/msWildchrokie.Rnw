@@ -76,12 +76,13 @@ for (i in 4: ncol(locations)) {
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % \clearpage
 \section*{Methods}
+%emw14Jun2026: You need to list out the full species names (with genus) the first time you give them in the main text and in figures ... and I would also do it in the methods. 
 
 %-------------------------------------------------------------------------------
 % Common garden setup
 %-------------------------------------------------------------------------------
-\subsection*{Common garden setup}
-We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted them outside in the garden located at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020. 
+\subsection*{Common garden setup} %emw14Jun2026: I would merge with pheno so that is one section. 
+We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted them outside in the garden located near the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020. %emw14Jun2026: I would cite Dan's ms here for more details and not below. 
 
 % Provenance map
 \begin{figure}[!ht]
@@ -94,22 +95,27 @@ We collected seeds from 18 species of deciduous trees and shrubs from four prove
 % Phenological monitoring and sample collection
 %-------------------------------------------------------------------------------
 \subsection*{Phenological monitoring and sample collection}
-For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December (Figure \ref{fig:phenoTimeSeries}). See (Buonuito, unpublished) for more details about the phenological monitoring. In the spring of 2023, we collected tree ring samples only for the tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family : Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individuals (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and were left to dry with the cross-sections at ambient temperature for three months. 
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December (Figure \ref{fig:phenoTimeSeries}). %emw14Jun2026: you need to say why this figure exists, I think maybe have a short section in the supp explaining it or explain it in the caption there? Then here you could say -- exact frequency varied, see XX in Supp. 
+See (Buonuito, unpublished) for more details about the phenological monitoring.%emw14Jun2026: I would just say what we did quickly: what BBCH stages, etc. 
+ In the spring of 2023, we collected tree ring samples only for the tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family : Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individuals (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and left them to dry with the cross-sections at ambient temperature for three months. 
 
 %-------------------------------------------------------------------------------
 % Sample processing, imaging and measuring
 %-------------------------------------------------------------------------------
 \subsection*{Sample processing, imaging and measuring}
-We mounted the cores on wooden mounts, and sanded both the cores and cross-sections using progressively finer sandpaper grits (150, 300, 400, 600, 800, 1000), then scanned the cores and cross-sections at a resolution of 6250 dpi with a high-resolution treering scanner (Fong, unpublished). Using the digitized images, we measured  ring widths with ImageJ \citep{schneider_nih_2012} at three standard locations for each cross-section (at {120\degree} from each other, averaging the three measurements to yield one ring width per year, per individual), and one ring width for each core. When we had cross-sections and cores for an invidividual, we used only the measurement from the cross sections. \\
+We mounted cores on wooden mounts, and sanded both the cores and cross-sections using progressively finer sandpaper grits (150, 300, 400, 600, 800, 1000), then scanned the cores and cross-sections at a resolution of 6250 dpi with a high-resolution treering scanner (Fong, unpublished). Using the digitized images, we measured  ring widths with ImageJ \citep{schneider_nih_2012} at three standard locations for each cross-section (at {120\degree} from each other, averaging the three measurements to yield one ring width per year, per individual), and one ring width for each core. When we had cross-sections and cores for an invidividual, we used only the measurement from the cross sections. \\ %emw14Jun2026: at the end here in () give the n of the 81 total individuals ... 
 \par
-We performed visual cross dating. We did not perform statistical crossdating because of the short chronologies that limit the capacity of these analyses \citep{raden_potential_2020}, and for similar reasons, we did not detrend the ring widths. Visual analyses of trends showed no consistent allometric patterns (Figure \ref{fig:allom}); thus we included only a year intercept to correct for potential effects of different years, not otherwise included in our model. \\
+We performed visual cross dating. %emw14Jun2026: Can you explain this in a sentence or two? 
+We did not perform statistical crossdating or detrending because our chronologies (years of data) were extremely short \citep{raden_potential_2020} and showed no evidence of consistent allometric trends (Figure \ref{fig:allom}). We controlled for effects of different years by including year in our models (see `Data analyses' below) \\
 
 \subsection*{Data analyses}
-To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating ring width with differing season lengths using four different season predictors (GDD, GSL, SOS and EOS). We calculated the thermal season using growing degree days (GDD) (mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length (GSL)) as the number of days between leafout and budset. Finally, we used leafout and budset as the start (SOS) and end of the season (EOS) as separate predictors that represent the boundaries of the growing season. \\
+To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different season ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) %emw14Jun2026: I don't think you can have )( in English, you should change everywhere to a semi-color as I did above. 
+accumulated between leafout and budset, and the calendar season (or growing season length (GSL)) as the number of days between leafout and budset. Finally, we used leafout and budset as the start (SOS) and end of the season (EOS) as separate predictors that represent the boundaries of the growing season. \\
 
-We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). \\
+We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 (\url{https://arboretum.harvard.edu/research/data-resources/weather/}). %emw14Jun2026: These URL needs to be references -- I think you also need an accessed on date, check how to do it and switch. 
+Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 (\url{https://newa.cornell.edu/all-weather-data-query/}). \\
 
-For each predictor, we estimated its effect on ring width observed for each tree in each year as:
+For each predictor, we estimated its effect on ring width observed ($i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
 
 \[
 \begin{aligned} 
@@ -120,33 +126,42 @@ ln(ringwidth)_i &\sim N(\mu, \sigma_y) \\
 \end{aligned}
 \]
 
-where $i$ denotes each observation, $\alpha$ represent intercepts and $\beta$ represent slopes. This model yields a species-specific effect of each seasonal predictor (e.g. GDD) while also allowing other variation due to species ($\alpha_{species}$), alongside variation due to provenance ($\alpha_{prov}$), tree id ($\alpha_{treeid}$), year ($\alpha_{year}$) and a species specific growth rate ($\beta_{species}$). We chose weakly informative priors for all models; increasing the priors by 2x did not change the results trends. We ran four chains for a total of 8000 warmup (discarded) and 8000 sampling iterations, which we kept for posterior distribution estimates. The models did not have any divergent transitions, had a $\hat{R}$ below 1.01, and values of effective sample size ($n_{\text{eff}}$) greater than 10\% of the model iterations. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. \\
+This model estimates a species-specific effect of each season length predictor (e.g. GDD) on growth ($\beta_{species}$), while also controlling for other variation due to species ($\alpha_{species}$),  provenance ($\alpha_{prov}$), individual tree ($\alpha_{treeid}$) and year ($\alpha_{year}$).  We used weakly informative priors for all models (increasing the priors by 2x did not qualitatively affect the results). 
+%emw14Jun2026: you need to give the values per chain and then A TOTAL of sampling iterations ... 
+We ran four chains with 2000 warmup and 2000 sampling iterations each, for a total of 8000 sampling iterations. The models did not have any divergent transitions, had a $\hat{R}$ below 1.01, and values of effective sample size ($n_{\text{eff}}$) greater than 10\% of the model iterations. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{stan_development_team_rstan_2025} to run the Stan code in R. \\ %emw14Jun2026: Is this in z-score or natural units or you ran the models for both? You need to say all that here. 
 
 \par
-As a supplementary analyses, we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring: $\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)$. Then, we averaged across the three BAI for each ring and fit the models with the four different predictors. \\
+As a supplementary analyses, %emw14Jun2026: Say WHY you did this here. 
+we ran the models using basal area increment (BAI), as the response variable. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring: $\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)$. and averaged across the three BAI for each ring. \\
 
 We also fit the models for SOS and EOS using the full vs restricted datasets.
-
+%emw14Jun2026: You need to include in your methods also:
+% UI -- what is 'trend' mean versus reported (Deirdre does this, check with her) 
+% What is a GDD spring day?
+% What are the restricted versus full datasets? I think maybe that goes in your phenology section and then refer to it AGAIN in data analyses. 
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % RESULTS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % \clearpage
-\section*{Results}
+\section*{Results} %emw14Jun2026: you need units on every # you report -- here and check the figures. 
 %-------------------------------------------------------------------------------
 % Info
 %-------------------------------------------------------------------------------
-\subsection*{Summary basic information}
+\subsection*{Summary basic information} %emw14Jun2026: this is not a subheader you can have in a paper. 
+%emw14Jun2026: once you're writing full text you have to drop 'Wildchrokie'
 Wildchrokie includes four deciduous tree species from four sites with leaf phenology data spanning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and 
 \Sexpr{nrow(empfulleos)} budset observations, yielding 
 \Sexpr{nrow(emp)} complete growing seasons (GS) for 
 \Sexpr{length(unique(emp$treeid))} individuals. At the common garden location, the mean summer temperature was similar across years with 2019 being the coolest 
 (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest 
 (\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between 
-(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September. The calendar and thermal seasons ranged from 
+(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.%emw14Jun2026: defined how? And which months were moderate? You also need this in the methods. 
+ The calendar and thermal seasons ranged from 
 \Sexpr{min(emp$pgsGSL)} days and 
 \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
-\Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]}). The earliest leafout day of year was 
+\Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]}). The earliest leafout  %emw14Jun2026: not day of year -- that's a number. 
+was 
 \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
 \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
 \Sexpr{emp$loCal[which.max(emp$leafout)]} (also {\Ainc}, but in
@@ -161,8 +176,9 @@ Wildchrokie includes four deciduous tree species from four sites with leaf pheno
 %-------------------------------------------------------------------------------
 % Question 1
 %-------------------------------------------------------------------------------
-\subsection*{Does tree growth increase with longer growing seasons?}
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Indeed, warmer thermal season increased growth for {\Bpap} ($\beta = $ 
+\subsection*{Does tree growth increase with longer growing seasons?} %emw14Jun2026: I think you cannot have this in a paper -- it's too little info to constitute a subsection; you'll have to make the reader follow you without so many subheaders. 
+%emw14Jun2026: great topic sentence below but it's the topic sentence for the ALL the paragraphs in this section -- merge them all into ONE paragraph. 
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Warmer thermal season increased growth for {\Bpap} ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]), {\Bpop} ($\beta = $ 
@@ -171,7 +187,7 @@ Longer growing seasons increased growth for all species, but varied depending on
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and {\Ball} ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), but {\Ainc} trended in the same direction ($\beta = $ 
+\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), {\Ainc} trended in the same direction ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}a and e) (Table\ref{tab:wc_slope_table}). \\
@@ -179,7 +195,8 @@ Longer growing seasons increased growth for all species, but varied depending on
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta = $ 
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
 [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, 
-\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]). However, of the three species that responded to thermal season, only {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
+%emw14Jun2026: not sure how to fix this without breaking your Sweave -- I would write {\Bpap} also grew more with longer calendar seasons (stats), while the other two Betula did not, though they trending in the the same way (STATS). 
+\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]). {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
 [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}]), but {\Ball} ($\beta = $ 
@@ -190,16 +207,19 @@ Unlike its response to warmer thermal season, {\Ainc} grew more with longer cale
 [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}]) trended in the same direction (Figure \ref{fig:wcmuplotbspp}b and f) (Table \ref{tab:wc_slope_table}). \\
   
-On a scaled axis, both predictors were similarly predictive (Figure \ref{fig:bsppZscored}). Additionally, the results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab}). 
+On a scaled axis, %emw14Jun2026: explain better -- this should be introduced in the methods and referenced here. 
+both predictors were similarly predictive (Figure \ref{fig:bsppZscored}). Additionally, the results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab}). 
 
 %-------------------------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------------------------
 \subsection*{Did a later start and end of season increase growth?}
-A longer calendar season increased growth for two species, but only one also grew more with an earlier start of season ({\Ainc}: $\beta = $ 
+%emw14Jun2026: I would try to sneak in some discussion to the results here! You may get told to take it out but I think it would help readers (and don't fully see the point of the rule):
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. However, while we found that 
+a longer calendar season increased growth for two species, only one also grew more with an earlier start of season ({\Ainc}: $\beta = $ 
 \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, $UI_{90}$
 [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
-\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}). However, {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season---unlike what we expected ($\beta = $ 
+\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table}). However, {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta = $ 
 \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
 [\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
 \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}]) (Figure \ref{fig:wcmuplotbspp}c and g) (Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta = $ 
@@ -211,9 +231,9 @@ A longer calendar season increased growth for two species, but only one also gre
 \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}], and {\Bpap}:$\beta = $ 
 \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, $UI_{90}$
 [\Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}]), with the later being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}). \\
+\Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}]), with the latter being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h) (Table \ref{tab:wc_slope_table}). \\
   
-The estimates were unchanged when using the full (SOS $n =$ 
+The estimates were unchanged when using the full (SOS $n =$ %emw14Jun2026: this sentence just needs to be in the previous paragraph; you cannot have 1 sentence paragraph in sci papers. 
 \Sexpr{nrow(empfullsos)} and $n =$ 
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n=$ 
 \Sexpr{nrow(emp)}) (Figure \ref{fig:wcSOSEOScomparison}a). 
@@ -222,25 +242,29 @@ The estimates were unchanged when using the full (SOS $n =$
 % Question 3
 %-------------------------------------------------------------------------------
 \subsection*{How did tree growth change across years, provenances and tree ids?}
-We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayear}) and there is no apparent differences of growth looking across species (Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}). Likewise, growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}), and the variation across provenances ($\sigma = $
+We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayear}) %emw14Jun2026: you need to embed the stats here to back up this statement and throughout. 
+and there was no apparent differences of growth looking across species (Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}). Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}) (Table \ref{tab:wc_asite_table}).T the variation across provenances ($\sigma = $
 \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
 [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) and tree ids ($\sigma = $ 
-\Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$
+\Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$ 
 [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]) was similar. 
+%emw14Jun2026: somewhere above you are missing a ]
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
-\caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
+\caption{Estimates of ring width change (shown as ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) as a function of four different predictors across four species. GDD %emw14Jun2026:  add the 5C base here also
+represent the accumulated growing degree days between leafout and budset and the models estimates shows  (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).} %emw14Jun2026: I would label the lines in plot a and just say the color are the same throughout the figure. 
+%emw14Jun2026: Also there are MULTIPLE types of lines here so you need to re-write the caption to be clear and you should ref the tables with the full stats here. 
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenances on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.}
+\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.} %emw14Jun2026: You cannot repeat the map here. You should refer back to it and label the lines directly on the left panel with the species names. 
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -276,7 +300,7 @@ We did not find any clear effect of year on growth (Figure \ref{fig:wcmuplotayea
 % Phenology observations time series
 \begin{figure}[!ht]
 \includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
-\caption{Phenology observatons bi-weekly.}
+\caption{Phenology observatons bi-weekly.} %emw14Jun2026: Tell me why I am looking at this. I know but your other readers do not ... 
 \label{fig:phenoTimeSeries}
 \end{figure}
 
@@ -325,7 +349,7 @@ header <- list(
 tab <- xtable(loctable,
               # keep the 2 decimals for lat long
               digits = c(0, 0, 1, 1, 0, 0, 0, 0),
-              caption = "Provenance coordinates and count per species and provenances. We had a total of 81 individual trees",
+              caption = "Provenance coordinates and count per species and provenances out of a total of 81 individual trees.",
               label = "tab:provs"
 )
 print(tab,
@@ -341,7 +365,7 @@ print(tab,
 % Supplemental Results
 %-------------------------------------------------------------------------------
 \clearpage
-\subsection*{Supplemental Results}
+\subsection*{Supplemental Results} %emw14Jun2026: Sometime soon-ish you need to make sure all the figures and tables here are cited. They can either be cited in the main text or cited in some other figure or text in the supp. And they need to be semi-organized (usually in the order of citation, but all tables first and then all figures). Also -- you need to add units here also! I would cut Fig S7 I think... 
 
 
 <<Table slope Wildchrokie, results='asis', echo = FALSE>>=
