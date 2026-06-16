@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1118,26 +1118,21 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 custommar <- c(4, 4, 3, 1.2)
 
-# pictogram parameters
-# icon
-
-
-jpeg(file = "figures/growthModelsMain/muALLbsppWlines.jpeg",
-     width = 2800, height = 3000, res = 300)
+pdf(file = "figures/growthModelsMain/muALLbsppWlines.pdf", width = 8, height = 9)
 
 layout(matrix(c(
-  1, 5, 9,
-  2, 6, 9,
-  3, 7, 9,
-  4, 8, 9
+  1, 5,
+  2, 6,
+  3, 7,
+  4, 8
 ), nrow = 4, byrow = TRUE),
-widths = c(1.1, 1.2, 0.6))
+widths = c(1.1, 1.2))
 
 
-# Row 1, Col 1, Slot 5 : GDD
+# Row 1, Col 1, Slot 1 : GDD
 par(mar = custommar)
 plot(bspp_df2_gdd$mean, y_pos,
-     xlim = c(-0.7, 0.7), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.36, 0.7), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in mean GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1146,33 +1141,32 @@ segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos,
          col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos,
          col = wccolslatbi, lwd = 3)
+text(x = bspp_df2_gdd$p5[1], y = y_pos,
+     labels = parse(text = paste0("italic('", bspp_df2_gdd$spp_name, "')")),
+     col = wccolslatbi, adj = c(+1.1, 0.5), cex = 1.06, xpd = NA)
 mtext("(a) Growing degree days", 
       side = 3, adj = 0.40, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
-# plot dimensions
 xrange <- diff(usr[1:2])
 yrange <- diff(usr[3:4])
-# image size
 w <- xrange * 0.20
-h <- yrange * 0.35
-
-# center position
+h <- yrange * 0.45
 cx <- usr[1]
 cy <- usr[4] + yrange * 0.05
 rasterImage(
   img_thermom,
-  cx - w/2,   # left
-  cy - h/2,   # bottom
-  cx + w/2,   # right
-  cy + h/2,   # top
+  cx - w/2,
+  cy - h/2,
+  cx + w/2,
+  cy + h/2,
   xpd = NA
 )
 
-# Row 2, Col 1, Slot 6 : GSL
+# Row 2, Col 1, Slot 2 : GSL
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
-     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1185,30 +1179,25 @@ mtext("(b) Growing season length",
       side = 3, adj = 0.47, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
-# plot dimensions
 xrange <- diff(usr[1:2])
 yrange <- diff(usr[3:4])
-# image size
 w <- xrange * 0.20
-h <- yrange * 0.35
-
-# center position
+h <- yrange * 0.45
 cx <- usr[1]
 cy <- usr[4] + yrange * 0.05
-
 rasterImage(
   img_calenda,
-  cx - w/2, 
-  cy - h/2, 
-  cx + w/2, 
-  cy + h/2, 
+  cx - w/2,
+  cy - h/2,
+  cx + w/2,
+  cy + h/2,
   xpd = NA
 )
 
-# Row 3, Col 1, Slot 7 : SOS
+# Row 3, Col 1, Slot 3 : SOS
 par(mar = custommar)
 plot(bspp_df2_sos$mean, y_pos,
-     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1221,29 +1210,25 @@ mtext("(c) Start of season",
       side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
-# plot dimensions
 xrange <- diff(usr[1:2])
 yrange <- diff(usr[3:4])
-# image size
 w <- xrange * 0.20
-h <- yrange * 0.35
-
-# center position
+h <- yrange * 0.45
 cx <- usr[1]
 cy <- usr[4] + yrange * 0.05
 rasterImage(
   img_leafout,
-  cx - w/2,   
-  cy - h/2,   
-  cx + w/2,   
-  cy + h/2,   
+  cx - w/2,
+  cy - h/2,
+  cx + w/2,
+  cy + h/2,
   xpd = NA
 )
 
-# Row 4, Col 1, Slot 8 : EOS
+# Row 4, Col 1, Slot 4 : EOS
 par(mar = custommar) 
 plot(bspp_df2_eos$mean, y_pos,
-     xlim = c(-0.4, 0.4), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1256,40 +1241,34 @@ mtext("(d) End of season",
       side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
-# plot dimensions
 xrange <- diff(usr[1:2])
 yrange <- diff(usr[3:4])
-# image size
 w <- xrange * 0.20
-h <- yrange * 0.35
-
-# center position
+h <- yrange * 0.45
 cx <- usr[1]
 cy <- usr[4] + yrange * 0.05
 rasterImage(
   img_budset,
-  cx - w/2,   
-  cy - h/2,   
-  cx + w/2,   
-  cy + h/2,   
+  cx - w/2,
+  cy - h/2,
+  cx + w/2,
+  cy + h/2,
   xpd = NA
 )
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
-plot(emp$pgsGDD5, dgdd$y, type = "n", frame = FALSE,
+plot(emp$pgsGDD5, dgdd$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Loop over trees again to plot each tree individually
-for (i in seq_along(sppvecnum)) { # i = 1
+for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array[, , i])
   
-  # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
@@ -1297,7 +1276,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   line_col <- wccolslatbi[spp_name]
   
   polygon(c(gddseq, rev(gddseq)),
-          c(y_low, rev(y_high)), # low and high interval
+          c(y_low, rev(y_high)),
           col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
   
   lines(gddseq, y_mean,
@@ -1305,24 +1284,21 @@ for (i in seq_along(sppvecnum)) { # i = 1
         lwd = 2)
   
   emp_spp <- emp[emp$latbi == spp_name, ]
-  
 }
 
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
-plot(emp$pgsGSL, dgsl$y, type = "n", frame = FALSE,
+plot(emp$pgsGSL, dgsl$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Growing season length (days)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Loop over trees again to plot each tree individually
-for (i in seq_along(sppvecnum)) { # i = 1
+for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_gsl[, , i])
   
-  # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
@@ -1330,7 +1306,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   line_col <- wccolslatbi[spp_name]
   
   polygon(c(gslseq, rev(gslseq)),
-          c(y_low, rev(y_high)), # low and high interval
+          c(y_low, rev(y_high)),
           col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
   
   lines(gslseq, y_mean,
@@ -1342,19 +1318,17 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
 # Row 3, Col 2, Slot 7 : SOS
 par(mar = custommar)
-plot(emp$leafout, dsos$y, type = "n", frame = FALSE,
+plot(emp$leafout, dsos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Leafout day of year", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Loop over trees again to plot each tree individually
-for (i in seq_along(sppvecnum)) { # i = 1
+for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_sos[, , i])
   
-  # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
@@ -1362,7 +1336,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   line_col <- wccolslatbi[spp_name]
   
   polygon(c(sosseq, rev(sosseq)),
-          c(y_low, rev(y_high)), # low and high interval
+          c(y_low, rev(y_high)),
           col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
   
   lines(sosseq, y_mean,
@@ -1374,19 +1348,17 @@ for (i in seq_along(sppvecnum)) { # i = 1
 
 # Row 4, Col 2, Slot 8 : EOS
 par(mar = custommar)
-plot(emp$budset, deos$y, type = "n", frame = FALSE,
+plot(emp$budset, deos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
      xlab = "Budset day of year", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
 
-# Loop over trees again to plot each tree individually
-for (i in seq_along(sppvecnum)) { # i = 1
+for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_eos[, , i])
   
-  # calculate mean and 50% credible interval (25%-75%)
   y_mean <- apply(y_post, 1, mean)
   y_low  <- apply(y_post, 1, quantile, 0.25)
   y_high <- apply(y_post, 1, quantile, 0.75)
@@ -1394,7 +1366,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   line_col <- wccolslatbi[spp_name]
   
   polygon(c(eosseq, rev(eosseq)),
-          c(y_low, rev(y_high)), # low and high interval
+          c(y_low, rev(y_high)),
           col = adjustcolor(line_col, alpha.f = 0.1), border = NA)
   
   lines(eosseq, y_mean,
@@ -1403,16 +1375,6 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   emp_spp <- emp[emp$latbi == spp_name, ]
 }
-
-# Slot 9: species legend
-par(mar = c(1, 1, 1, 1))
-plot.new()
-legend("center",
-       legend = sapply(unique(bspp_df2_gdd$spp_name), 
-                       function(x) parse(text = paste0("italic('", x, "')"))),
-       col    = wccolslatbi,
-       pch    = 16, pt.cex = 1.5, bty = "n", cex = 1.5,
-       title  = "Species", title.font = 2)
 
 dev.off()
 

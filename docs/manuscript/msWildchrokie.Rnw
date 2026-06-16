@@ -254,7 +254,7 @@ and there was no apparent differences of growth looking across species (Figure \
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
 \caption{Estimates of ring width change (shown as ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) as a function of four different predictors across four species. GDD %emw14Jun2026:  add the 5C base here also
 represent the accumulated growing degree days between leafout and budset and the models estimates shows  (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).} %emw14Jun2026: I would label the lines in plot a and just say the color are the same throughout the figure. 
 %emw14Jun2026: Also there are MULTIPLE types of lines here so you need to re-write the caption to be clear and you should ref the tables with the full stats here. 
