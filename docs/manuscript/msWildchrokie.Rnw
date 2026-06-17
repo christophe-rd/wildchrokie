@@ -170,20 +170,20 @@ The calendar and thermal seasons ranged from
 \subsection*{Does tree growth increase with longer growing seasons?} %emw14Jun2026: I think you cannot have this in a paper -- it's too little info to constitute a subsection; you'll have to make the reader follow you without so many subheaders. 
 %emw14Jun2026: great topic sentence below but it's the topic sentence for the ALL the paragraphs in this section -- merge them all into ONE paragraph. 
 Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Warmer thermal season increased growth for {\Bpap} ($\beta = $ 
-\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, $UI_{90}$
+\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]), {\Bpop} ($\beta = $ 
-\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, $UI_{90}$
+\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and {\Ball} ($\beta = $ 
-\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, $UI_{90}$
+\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), {\Ainc} trended in the same direction ($\beta = $ 
-\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, $UI_{90}$
+\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]}]; Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta = $ 
-\Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, $UI_{90}$
+\Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]} days, $UI_{90}$
 [\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]}.
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]}]). {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, $UI_{90}$
@@ -229,24 +229,23 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 \subsection*{How did tree growth change across years, provenances and tree ids?}
 We did not find any clear effect of year on growth (2018:
-\Sexpr{ayear_df2$mean[which(ayear_df2$year %in% "2018")]},
-[\Sexpr{ayear_df2$p5[which(ayear_df2$year %in% "2018")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year %in% "2018")]}], 2019:
-\Sexpr{ayear_df2$mean[which(ayear_df2$year %in% "2019")]},
-[\Sexpr{ayear_df2$p5[which(ayear_df2$year %in% "2019")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year %in% "2019")]}] and 2020:
-\Sexpr{ayear_df2$mean[which(ayear_df2$year %in% "2020")]},
-[\Sexpr{ayear_df2$p5[which(ayear_df2$year %in% "2020")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year %in% "2020")]}].
+\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2018")]},
+[\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2018")]}, 
+\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2018")]}], 2019:
+\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2019")]},
+[\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2019")]}, 
+\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2019")]}] and 2020:
+\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2020")]},
+[\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2020")]}, 
+\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2020")]}].
 (Figure \ref{fig:wcmuplotayear}) %emw14Jun2026: you need to embed the stats here to back up this statement and throughout. 
 and there was no apparent differences of growth looking across species (Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}). Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The variation across provenances ($\sigma = $
 \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, $UI_{90}$
 [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
-\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}) and tree ids ($\sigma = $ 
+\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]}]) and tree ids ($\sigma = $ 
 \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, $UI_{90}$ 
 [\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]}]) was similar. 
-%emw14Jun2026: somewhere above you are missing a ]
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -259,8 +258,8 @@ represent the accumulated growing degree days between leafout and budset and the
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.} %emw14Jun2026: You cannot repeat the map here. You should refer back to it and label the lines directly on the left panel with the species names. 
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
+\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 

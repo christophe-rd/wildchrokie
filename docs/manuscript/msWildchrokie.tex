@@ -180,20 +180,20 @@ The calendar and thermal seasons ranged from
 \subsection*{Does tree growth increase with longer growing seasons?} %emw14Jun2026: I think you cannot have this in a paper -- it's too little info to constitute a subsection; you'll have to make the reader follow you without so many subheaders. 
 %emw14Jun2026: great topic sentence below but it's the topic sentence for the ALL the paragraphs in this section -- merge them all into ONE paragraph. 
 Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Warmer thermal season increased growth for {\Bpap} ($\beta = $ 
-0.44, $UI_{90}$
+0.44 GDD, $UI_{90}$
 [0.18, 
 0.7]), {\Bpop} ($\beta = $ 
-0.22, $UI_{90}$
+0.22 GDD, $UI_{90}$
 [0.07, 
 0.36]), and {\Ball} ($\beta = $ 
-0.13, $UI_{90}$
+0.13 GDD, $UI_{90}$
 [0.01, 
 0.24]), {\Ainc} trended in the same direction ($\beta = $ 
-0.07, $UI_{90}$
+0.07 GDD, $UI_{90}$
 [-0.04, 
 0.17]; Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta = $ 
-0.05, $UI_{90}$
+0.05 days, $UI_{90}$
 [0.
 0.1]). {\Bpap} also grew more with longer calendar seasons ($\beta = $ 
 0.18, $UI_{90}$
@@ -239,24 +239,23 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 \subsection*{How did tree growth change across years, provenances and tree ids?}
 We did not find any clear effect of year on growth (2018:
-,
-[, 
-], 2019:
-,
-[, 
-] and 2020:
-,
-[, 
-].
+0.19,
+[-0.76, 
+1.1], 2019:
+0.17,
+[-0.76, 
+1.09] and 2020:
+-0.43,
+[-1.38, 
+0.48].
 (Figure \ref{fig:wcmuplotayear}) %emw14Jun2026: you need to embed the stats here to back up this statement and throughout. 
 and there was no apparent differences of growth looking across species (Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}). Growth did not change across any provenances (Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The variation across provenances ($\sigma = $
 0.18, $UI_{90}$
 [0.02, 
-0.5) and tree ids ($\sigma = $ 
+0.5]) and tree ids ($\sigma = $ 
 0.17, $UI_{90}$ 
 [0.05, 
 0.27]) was similar. 
-%emw14Jun2026: somewhere above you are missing a ]
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -269,8 +268,8 @@ represent the accumulated growing degree days between leafout and budset and the
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/asiteMap.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from (b), the map showing their locations.} %emw14Jun2026: You cannot repeat the map here. You should refer back to it and label the lines directly on the left panel with the species names. 
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
+\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -318,7 +317,7 @@ represent the accumulated growing degree days between leafout and budset and the
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 17 14:54:17 2026
+% Wed Jun 17 16:42:46 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances out of a total of 81 individual trees.} 
@@ -346,7 +345,7 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 17 14:54:17 2026
+% Wed Jun 17 16:42:46 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -365,7 +364,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 17 14:54:17 2026
+% Wed Jun 17 16:42:46 2026
 \begin{table}[ht]
 \centering
 \caption{Site level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -441,7 +440,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.08] & -0.10 [-0.34, 0.08] & -0.05 [-0.26, 
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 17 14:54:17 2026
+% Wed Jun 17 16:42:46 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters across predictors} 
@@ -474,7 +473,7 @@ $\sigma_{\alpha_{tree}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.27] & 0.21 [0.11, 0
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 17 14:54:17 2026
+% Wed Jun 17 16:42:46 2026
 \begin{table}[ht]
 \centering
 \caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
