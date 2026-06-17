@@ -1551,10 +1551,6 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### asite with map ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(sf)
-library(cowplot)
 
 site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
 
@@ -1566,71 +1562,28 @@ locations2$col <- wes_palette("Darjeeling1")[1:4]
 sitecolors <- site_color_map[site_df2$site_name]
 lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
-world <- ne_countries(scale = "medium", returnclass = "sf")
-lat_min <- 41.5; lat_max <- 47
-lon_min <- -76; lon_max <- -65 
-
-special_point <- data.frame(
-  name = "Arnold Arboretum of\nHarvard University (MA)",
-  Longitude  = -71.13358611669867,
-  Latitude  =  42.29601035316377
-)
-
-special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
-points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
-
-
-map_plot <- ggplot(data = world) +
-  geom_sf(fill = "white", color = "gray60") +
-  geom_sf(data = points_sf, color = locations2$col, size = 4) +
-  geom_text(data = locations2,
-            aes(x = Longitude, y = Latitude, label = name),
-            nudge_y = 0.35, size = 4.5, fontface = "bold") +
-  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
-  theme_minimal() +
-  theme(
-    strip.text        = element_blank(),
-    legend.key.height = unit(1.5, "lines"),
-    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
-  )
-
-north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
-
-# Combine using cowplot
-final_map <- ggdraw(map_plot)
-
-
 # mu plot for asite
-forest_grob <- as_grob(function() {
-  par(mar = c(7, 5, 5, 0.5))
-  
-  plot(site_df2$mean, y_pos_site,
-       xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
-       xlab = "Provenance intercepts", ylab = "Latitude",
-       yaxt = "n", pch = 16, cex = 2, col = sitecolors,
-       frame.plot = TRUE,
-       panel.first = abline(v = 0, lty = 2, col = "black"))
-  axis(2, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
-  segments(site_df2$p5,  y_pos_site,
-           site_df2$p95, y_pos_site,
-           col = sitecolors, lwd = 1.5)
-  segments(site_df2$p25, y_pos_site,
-           site_df2$p75, y_pos_site,
-           col = sitecolors, lwd = 3)
-})
+pdf(file = "figures/growthModelsMain/muasite.pdf", width = 8, height = 6)
+par(mar = c(7, 10, 5, 7))          # widen left (site names) and right (lat)
 
-combined <- plot_grid(forest_grob, final_map, ncol = 2, rel_widths = c(0.4, 0.7))
+plot(site_df2$mean, y_pos_site,
+     xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
+     xlab = "Provenance intercepts", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = sitecolors,
+     frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
 
-combined_labeled <- ggdraw(combined) +
-  draw_plot_label(
-    label    = c("(a) Provenance effect", "(b) Provenance map"),
-    x        = c(-0.05, 0.3),   # x position: left edge of each panel
-    y        = c(0.92, 0.92),     # y position: top of figure
-    size     = 14,
-    fontface = "bold"
-  )
-ggsave("figures/growthModelsMain/asiteMap.pdf", combined_labeled, width = 10, height = 6)
+axis(2, at = 1:n_site, labels = site_df2$site_name, las = 2, tick = TRUE)
+axis(4, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+mtext("Latitude", side = 4, line = 3.5, cex = 1.1)
 
+segments(site_df2$p5,  y_pos_site,
+         site_df2$p95, y_pos_site,
+         col = sitecolors, lwd = 1.5)
+segments(site_df2$p25, y_pos_site,
+         site_df2$p75, y_pos_site,
+         col = sitecolors, lwd = 3)
+dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
