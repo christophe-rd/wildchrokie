@@ -286,7 +286,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muALLbsppWlines.jpeg}
+\includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
 \caption{Model slope estimates representing ring width change as a function of four different predictors across four species. GDD represent the accumulated growing degree days between leafout and budset and the models estimates shows ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).}
 \label{fig:wcmuplotbspp}
 \end{figure}
