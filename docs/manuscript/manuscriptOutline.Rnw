@@ -62,7 +62,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Paragraph 2
+% Paragraph 3
 \item Maybe longer GS don't increase growth
   \begin{enumerate}
   
@@ -72,8 +72,8 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Paragraph 3
-\item Longer GS does not necessarily mean better conditions throughout the season
+% Paragraph 4
+\item Longer GS does not necessarily mean more favorable conditions for growth throughout the season
   \begin{enumerate}
   
   \item Longer seasons are not necessarily warmer
@@ -86,7 +86,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Paragraph 4
+% Paragraph 5
 \item Different plant stages (leaves vs wood) differ in their plasticity
   \begin{enumerate}
   
@@ -98,10 +98,10 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Paragraph
+% Paragraph 6
 \item Even with good conditions, trees may not be able to respond to longer GS
   \begin{enumerate}
-  \item Earlier SOS, also means earlier EOS
+  \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days 
   
   \item Tree growth rate cannot increase indefinitely
   
@@ -109,7 +109,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
   
-% Paragraph 5
+% Paragraph 7
 \item Local adaptation to inform growth with climate change
   \begin{enumerate}
   
@@ -121,7 +121,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \end{enumerate}
 
-% Paragraph 6
+% Paragraph 8
 \item Answer how GS and growth relate using juvenile trees in a common garden
   \begin{enumerate}
   
@@ -343,6 +343,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
     
     \item Late EOS increased growth for most species; relates to GDD, less to GSL
     
+    \item ACC and decreasing water availability means that importance of EOS could harm tree growth in nature
     \end{enumerate}
   \end{enumerate}
 
