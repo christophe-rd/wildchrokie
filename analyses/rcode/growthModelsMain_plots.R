@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1320,7 +1320,7 @@ for (i in seq_along(sppvecnum)) {
 par(mar = custommar)
 plot(emp$leafout, dsos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Leafout day of year", ylab = "log(ring width)",
+     xlab = "Leafout (day of year)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1350,7 +1350,7 @@ for (i in seq_along(sppvecnum)) {
 par(mar = custommar)
 plot(emp$budset, deos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Budset day of year", ylab = "log(ring width)",
+     xlab = "Budset (day of year)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
@@ -1549,7 +1549,7 @@ legend("center",
 dev.off()
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### asite with map ##### 
+##### asite only for GDD ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
 site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
@@ -1564,7 +1564,7 @@ lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
 # mu plot for asite
 pdf(file = "figures/growthModelsMain/muasite.pdf", width = 8, height = 6)
-par(mar = c(7, 10, 5, 7))          # widen left (site names) and right (lat)
+par(mar = c(2, 10, 5, 7))          # widen left (site names) and right (lat)
 
 plot(site_df2$mean, y_pos_site,
      xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
