@@ -169,16 +169,16 @@ The calendar and thermal seasons ranged from
 %-------------------------------------------------------------------------------
 \subsection*{Does tree growth increase with longer growing seasons?} %emw14Jun2026: I think you cannot have this in a paper -- it's too little info to constitute a subsection; you'll have to make the reader follow you without so many subheaders. 
 %emw14Jun2026: great topic sentence below but it's the topic sentence for the ALL the paragraphs in this section -- merge them all into ONE paragraph. 
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Warmer thermal season increased growth for {\Bpap} ($\beta = $ 
-\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]} GDD, $UI_{90}$
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. Warmer thermal season increased growth for Paper birch (\textit{Betula papyrifera}) ($\beta = $ 
+\Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]} ring width (log scale) change per 174 GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]), {\Bpop} ($\beta = $ 
+\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}]), Grey birch (\textit{Betula populifolia}) ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}, 
-\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and {\Ball} ($\beta = $ 
+\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. populifolia")]}]), and Yellow birch (\textit{Betula alleghaniensis}) ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), {\Ainc} trended in the same direction ($\beta = $ 
+\Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. alleghaniensis")]}]), Grey alder (\textit{Alnus incana}) trended in the same direction ($\beta = $ 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "A. incana")]} GDD, $UI_{90}$
 [\Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]}]; Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
@@ -250,16 +250,15 @@ and there was no apparent differences of growth looking across species (Figure \
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (shown as ring width change per 7 average spring days GDD (\Sexpr{wcgddscale}) as a function of four different predictors across four species. GDD %emw14Jun2026:  add the 5C base here also
-represent the accumulated growing degree days between leafout and budset and the models estimates shows  (a). GSL is the number of days between leafout and budset (b). SOS represent the start of season, which is leafout (c) and EOS, the end of season through budset (d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI).} %emw14Jun2026: I would label the lines in plot a and just say the color are the same throughout the figure. 
-%emw14Jun2026: Also there are MULTIPLE types of lines here so you need to re-write the caption to be clear and you should ref the tables with the full stats here. 
+\caption{Estimates of ring width change as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent as ring width change on the log scale per seven average spring days GDD (\Sexpr{wcgddscale} GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
+
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. (a) Model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The sites are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
+\caption{The effect of provenance on growth across a latitudinal gradient. We show the model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -421,10 +420,10 @@ df_all_site <- df_all_site[order(df_all_site$Lat.), ]
 df_all_site$Lat. <- NULL
 df_all_site$Long. <- NULL
 
-colnames(df_all_site)[1] <- "Site"
+colnames(df_all_site)[1] <- "Provenance"
 
 tab <- xtable(df_all_site,
-              caption = "Site level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.",
+              caption = "Provenance level intercept parameters (mean and 90\\% uncertainty intervals, in square brackets) across the four different predictors for Wildchrokie. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.",
               label = "tab:wc_asite_table"
 )
 print(tab,
@@ -459,13 +458,6 @@ print(tab,
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
 \caption{Intercept estimates for each group of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The bigger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The larger dots and lines represent aggregated average across these values. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% UI.}
 \label{fig:wcmuplotatreeid}
-\end{figure}
-
-% Wildchrokie year mu plot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/muayear.jpeg}
-\caption{Model estimates for the year intercepts with the dots depicting the mean and the lines, the 50\% and 90\% uncertainty intervals (UI)}
-\label{fig:wcmuplotayear}
 \end{figure}
 
 % Wildchrokie boxplot
