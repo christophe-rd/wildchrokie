@@ -83,12 +83,12 @@ treeid_spp_site_ordered <- treeid_spp_site[order(treeid_spp_site$treeid_num), ]
 # scale gdd to how many gdd are in 10 average spring days
 temp<- subset(gddyr, doy <151 & doy > 120)
 temp$mingddperiod <- ave(temp$GDD_5, temp$year, FUN = min)
-temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
+temp$gdddiff <- temp$meanTempC - 5
 
 temp <- temp[order(temp$year, temp$doy), ]
 
 temp$bin7 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 7))
-gdd_7day <- aggregate(gdddiff ~ year + bin7, data = temp, max)
+gdd_7day <- aggregate(gdddiff ~ year + bin7, data = temp, sum)
 wcgddscale <- mean(gdd_7day$gdddiff)
 
 gddseq <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)
@@ -194,8 +194,7 @@ deos <- list(
 if (fitmodels){
 # Fit model GDD
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
-fitgdd <- sampling(gddmodel, data = dgdd,
-                warmup = 2000, iter = 4000, chains=4)
+fitgdd <- sampling(gddmodel, data = dgdd, warmup = 2000, iter = 4000, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
 
 # check warnings
@@ -204,20 +203,17 @@ util$check_all_hmc_diagnostics(diagnostics)
 
 # fit gsl
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
-fitgsl <- sampling(gslmodel, data = dgsl,
-                warmup = 2000, iter = 4000, chains = 4)
+fitgsl <- sampling(gslmodel, data = dgsl, warmup = 2000, iter = 4000, chains=4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
 
 # Fit model SOS
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
-fitsos <- sampling(sosmodel, data = dsos,
-                warmup = 2000, iter = 4000, chains=4)
+fitsos <- sampling(sosmodel, data = dsos, warmup = 2000, iter = 4000, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
 
 # Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
-fiteos <- sampling(eosmodel, data = deos,
-                warmup = 2000, iter = 4000, chains=4)
+fiteos <- sampling(eosmodel, data = deos, warmup = 2000, iter = 4000, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
