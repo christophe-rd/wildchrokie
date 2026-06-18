@@ -1132,7 +1132,7 @@ widths = c(1.1, 1.2))
 # Row 1, Col 1, Slot 1 : GDD
 par(mar = custommar)
 plot(bspp_df2_gdd$mean, y_pos,
-     xlim = c(-0.36, 0.7), ylim = c(0.5, n_spp + 0.5),
+     xlim = c(-0.15, 0.3), ylim = c(0.5, n_spp + 0.5),
      xlab = "log(ring width) change in mean GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
@@ -1145,7 +1145,7 @@ text(x = bspp_df2_gdd$p5[1], y = y_pos,
      labels = parse(text = paste0("italic('", bspp_df2_gdd$spp_name, "')")),
      col = wccolslatbi, adj = c(+1.1, 0.5), cex = 1.06, xpd = NA)
 mtext("(a) Growing degree days", 
-      side = 3, adj = 0.40, line = 1, font = 2, cex = 1)
+      side = 3, adj = 0.30, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
 xrange <- diff(usr[1:2])
@@ -1176,7 +1176,7 @@ segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(b) Growing season length", 
-      side = 3, adj = 0.47, line = 1, font = 2, cex = 1)
+      side = 3, adj = 0.32, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
 xrange <- diff(usr[1:2])
@@ -1207,7 +1207,7 @@ segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(c) Start of season",
-      side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
+      side = 3, adj = 0.22, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
 xrange <- diff(usr[1:2])
@@ -1238,7 +1238,7 @@ segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
          col = wccolslatbi, lwd = 3)
 mtext("(d) End of season", 
-      side = 3, adj = 0.27, line = 1, font = 2, cex = 1)
+      side = 3, adj = 0.22, line = 1, font = 2, cex = 1)
 
 usr <- par("usr")
 xrange <- diff(usr[1:2])
@@ -1263,7 +1263,7 @@ plot(emp$pgsGDD5, dgdd$y, type = "n", frame = TRUE, bty = "l",
      xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
-mtext("(e)", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(e)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
@@ -1293,7 +1293,7 @@ plot(emp$pgsGSL, dgsl$y, type = "n", frame = TRUE, bty = "l",
      xlab = "Growing season length (days)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
-mtext("(f)", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(f)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
@@ -1323,7 +1323,7 @@ plot(emp$leafout, dsos$y, type = "n", frame = TRUE, bty = "l",
      xlab = "Leafout (day of year)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
-mtext("(g)", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(g)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
@@ -1353,7 +1353,7 @@ plot(emp$budset, deos$y, type = "n", frame = TRUE, bty = "l",
      xlab = "Budset (day of year)", ylab = "log(ring width)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
-mtext("(h)", side = 3, adj = 0, font = 2, cex = 0.9)
+mtext("(h)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
