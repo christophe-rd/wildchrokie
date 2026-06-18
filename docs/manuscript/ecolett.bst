@@ -1217,6 +1217,8 @@ FUNCTION {misc}
   howpublished "howpublished" bibinfo.check output
   new.block
   format.note output
+  new.block
+  url "url" bibinfo.check output
   fin.entry
 }
 FUNCTION {phdthesis}
