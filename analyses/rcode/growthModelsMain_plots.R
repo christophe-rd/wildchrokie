@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 # interceptmuplots <- TRUE
 
@@ -1584,6 +1584,7 @@ segments(site_df2$p25, y_pos_site,
          site_df2$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 dev.off()
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 

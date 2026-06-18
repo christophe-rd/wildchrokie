@@ -87,8 +87,8 @@ temp$gdddiff <- temp$GDD_5 - temp$mingddperiod
 
 temp <- temp[order(temp$year, temp$doy), ]
 
-temp$bin10 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 7))
-gdd_7day <- aggregate(gdddiff ~ year + bin10, data = temp, max)
+temp$bin7 <- ave(temp$doy, temp$year, FUN = function(x) ceiling((x - min(x) + 1) / 7))
+gdd_7day <- aggregate(gdddiff ~ year + bin7, data = temp, max)
 wcgddscale <- mean(gdd_7day$gdddiff)
 
 gddseq <- seq(min(emp$pgsGDD5), max(emp$pgsGDD5), length.out = lineplotseqlength)

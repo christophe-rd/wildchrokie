@@ -295,7 +295,7 @@ ids <- unique(suby$treeid)
 
 pdf("figures/empiricalData/rwXyearAll.pdf", width = 8, height = 10)
 par(mfrow = c(5,ceiling(length(ids)/5)),
-    mar = c(3, 2, 1.5, 0.5),
+    mar = c(2, 3, 1.5, 0.5),
     mgp = c(1.5, 0.5, 0))
 
 year <- as.integer(suby$year)
@@ -309,7 +309,7 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
        main = i,
        xlab = "",
        xaxt = "n",
-       ylab = "",
+       ylab = "Ring width (mm)",
        tck = -0.02,
        bty = 'l',
        col = wccolslatbi[sub$latbi])
