@@ -1,8 +1,9 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 
-\bibitem[{{Arnold Arboretum}(n.d.)}]{arnoldarboretum_weather_n.d.}
-{Arnold Arboretum} (n.d.) Weather {{Data}} at the {{Arnold Arboretum}}.
+\bibitem[{{Arnold Arboretum}(2026)}]{arnoldarboretum_weather_2026}
+{Arnold Arboretum} (2026) Weather {Data} at the {Arnold} {Arboretum}. Accessed:
+  2025-09-24.
 
 \bibitem[{Baskin \& Baskin(2014)}]{baskin_seeds_2014}
 Baskin, C.C. \& Baskin, J.M. (2014) \emph{Seeds}. Elsevier.
@@ -10,22 +11,33 @@ Baskin, C.C. \& Baskin, J.M. (2014) \emph{Seeds}. Elsevier.
 \bibitem[{Carpenter \emph{et~al.}(2017)Carpenter, Gelman, Hoffman, Lee,
   Goodrich, Betancourt, Brubaker, Guo, Li \& Riddell}]{carpenter_stan_2017}
 Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
-  M., Brubaker, M., Guo, J., Li, P. \& Riddell, A. (2017) {\emph{Stan}} : {{A
-  Probabilistic Programming Language}}. \emph{Journal of Statistical Software}
-  \textbf{76}.
+  M., Brubaker, M., Guo, J., Li, P. \& Riddell, A. (2017) \textit{{Stan}} : {A}
+  {Probabilistic} {Programming} {Language}. \emph{Journal of Statistical
+  Software} \textbf{76}.
 
-\bibitem[{Carroll \emph{et~al.}(n.d.)Carroll, Weigle \&
-  Petzoldt}]{carroll_network_n.d.}
-Carroll, J., Weigle, T. \& Petzoldt, C. (n.d.) The {{Network}} for
-  {{Environment}} and {{Weather Applications}} ({{NEWA}}) .
+\bibitem[{Carroll \emph{et~al.}(2026)Carroll, Weigle \&
+  Petzoldt}]{carroll_network_2026}
+Carroll, J., Weigle, T. \& Petzoldt, C. (2026) The {Network} for {Environment}
+  and {Weather} {Applications} ({NEWA}) Accessed: 2025-09-24.
 
 \bibitem[{Cook \& Kairiukstis(1990)}]{cook_methods_1990}
 Cook, E.R. \& Kairiukstis, L.A. (eds.) (1990) \emph{Methods of
-  {{Dendrochronology}}}. Springer Netherlands, Dordrecht.
+  {Dendrochronology}}. Springer Netherlands, Dordrecht.
+
+\bibitem[{Finn \emph{et~al.}(2007)Finn, Straszewski \&
+  Peterson}]{finn_general_2007}
+Finn, G., Straszewski, A. \& Peterson, V. (2007) A general growth stage key for
+  describing trees and woody plants. \emph{Annals of Applied Biology}
+  \textbf{151}, 127--131.
 
 \bibitem[{Gelman \& Hill(2006)}]{gelman_data_2006}
-Gelman, A. \& Hill, J. (2006) \emph{Data {{Analysis Using Regression}} and
-  {{Multilevel}}/{{Hierarchical Models}}}. Cambridge University Press, 1 edn.
+Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
+  {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
+
+\bibitem[{{National Centers for Environmental Information
+  (NCEI)}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
+{National Centers for Environmental Information (NCEI)} (2026) North {American}
+  {Drought} {Monitor}. Shortauthor: NCEI Accessed: 2026-04-22.
 
 \bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
   Kahle}]{raden_potential_2020}
@@ -35,11 +47,11 @@ Raden, M., Mattheis, A., Spiecker, H., Backofen, R. \& Kahle, H.P. (2020) The
 
 \bibitem[{Schneider \emph{et~al.}(2012)Schneider, Rasband \&
   Eliceiri}]{schneider_nih_2012}
-Schneider, C.A., Rasband, W.S. \& Eliceiri, K.W. (2012) {{NIH Image}} to
-  {{ImageJ}}: 25 years of image analysis. \emph{Nature Methods} \textbf{9},
+Schneider, C.A., Rasband, W.S. \& Eliceiri, K.W. (2012) {NIH} {Image} to
+  {ImageJ}: 25 years of image analysis. \emph{Nature Methods} \textbf{9},
   671--675.
 
 \bibitem[{{Stan Development Team}(2025)}]{standevelopmentteam_rstan_2025}
-{Stan Development Team} (2025) {{RStan}}: The {{R}} interface to {{Stan}}.
+{Stan Development Team} (2025) {RStan}: the {R} interface to {Stan}.
 
 \end{thebibliography}

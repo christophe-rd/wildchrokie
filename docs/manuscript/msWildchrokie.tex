@@ -93,7 +93,7 @@
 \subsection*{Common garden setup and data collection}
 We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted them outside in the garden located near the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020 (Buonuito, unpublished). \\
 \par
-For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact monitoring frequency varies (see Figure \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe the phenological stages (e.g. leafout: BBCH 15 and used an additional phase for budset: BBCH 102; *REF). We had a total of 239 leafout and 230 budset observations (which we refer as the full datasets), together yielding 227 full growing season observations (restricted dataset). \\ %emw14Jun2026: you need to say why this figure exists, I think maybe have a short section in the supp explaining it or explain it in the caption there? Then here you could say -- exact frequency varied, see XX in Supp. 
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact monitoring frequency varies (see Figure \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe the phenological stages (e.g. leafout: BBCH 15 and used an additional phase for budset: BBCH 102; \citep{finn_general_2007}; Buonuito, unpublished). We had a total of 239 leafout and 230 budset observations (which we refer as the full datasets), together yielding 227 full growing season observations (restricted dataset). \\ %emw14Jun2026: you need to say why this figure exists, I think maybe have a short section in the supp explaining it or explain it in the caption there? Then here you could say -- exact frequency varied, see XX in Supp. OK
 \par
 In the spring of 2023, we collected tree ring samples only for the tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family : Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individuals (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and left them to dry with the cross-sections at ambient temperature for three months. 
 
@@ -115,7 +115,7 @@ We performed visual cross dating. This consists of assigning a calendar year to 
 \subsection*{Data analyses}
 To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different season ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length (GSL)) as the number of days between leafout and budset. Finally, we used leafout and budset as the start (SOS) and end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (on the log scale) as the number of GDDs accumulated in an average week in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per seven days of season length, leafout and budset for GSL, SOS and EOS, respectively.\\
 
-We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 \citep{arnoldarboretum_weather_n.d.}. Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_n.d.}. \\
+We used the daily climate data from the climate station located at Weldhill research station for 2018 and 2019 \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurence across year at our study location and used the proposed drought intensity to qualify the moderete, severe and extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026} \\
 For each predictor, we estimated its effect on ring width observed ($i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
 
 \[
@@ -136,7 +136,7 @@ Because ring widths decrease with age---particularly with young trees---we also 
 %emw14Jun2026: You need to include in your methods also:
 % UI -- what is 'trend' mean versus reported (Deirdre does this, check with her) 
 % What is a GDD spring day? OK
-% What are the restricted versus full datasets? I think maybe that goes in your phenology section and then refer to it AGAIN in data analyses. 
+% What are the restricted versus full datasets? I think maybe that goes in your phenology section and then refer to it AGAIN in data analyses.  OK
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % RESULTS
@@ -152,7 +152,7 @@ Our dataset includes four deciduous tree species from four sites with leaf pheno
 81 individuals. At the common garden location, the mean summer temperature was similar across years with 2019 being the coolest 
 (22.38$^\circ$C), 2020 the hottest 
 (23.07$^\circ$C), and 2018 in between 
-(22.85$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought ramped up to a severe drought in September.%emw14Jun2026: defined how? And which months were moderate? You also need this in the methods. QUESTION: should we bring back PDSI? This is why I included them. Should I just refer to the map then?
+(22.85$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought (June, July and August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.
 The calendar and thermal seasons ranged from 
 90 days and 
 1465.1 GDD ({\Ball} in 2018) to 
@@ -173,33 +173,33 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 % Question 1
 %-------------------------------------------------------------------------------
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width (RW) change on the log scale per scaled predictor (7 average spring growing degree days (GDD) for the thermal season, 7 days of growing season length (GSL) for the calendar season, 7 days of leafout for the start of season (SOS) and 7 days of budset for the end of season (EOS). 
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henseforth "RW" per scaled predictor (7 average spring growing degree days (GDD); (55.73) for the thermal season, 7 days of growing season length (GSL) for the calendar season, 7 days of leafout for the start of season (SOS) and 7 days of budset for the end of season (EOS). 
 Warmer thermal season increased growth for Paper birch (\textit{Betula papyrifera}; 
 0.15, UI:
 0.06, 
-0.23 ring width change per 7 averaged spring GDD (55.73)), Grey birch (\textit{Betula populifolia};
+0.23 RW change per scaled GDD), Grey birch (\textit{Betula populifolia};
 0.07, UI: 
 0.02, 
-0.12 ring width change per 7 averaged spring GDD), and Yellow birch (\textit{Betula alleghaniensis}; 
+0.12 RW change per scaled GDD), and Yellow birch (\textit{Betula alleghaniensis}; 
 0.04, UI: 
 0, 
-0.08 ring width change per 7 averaged spring GDD), Grey alder (\textit{Alnus incana}) trended in the same direction
+0.08 RW change per scaled GDD), Grey alder (\textit{Alnus incana}) trended in the same direction
 (0.02, UI: 
 -0.01, 
-0.05 ring width change per 7 averaged spring GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+0.05 RW change per scaled GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons (
 0.05, UI: 
 0.
-0.1 ring width change per 7 growing season length (GSL) days). {\Bpap} also grew more with longer calendar seasons (
-0.18, UI: 
+0.1 RW change per seven GSL days). {\Bpap} also grew more with longer calendar seasons
+(0.18, UI: 
 0.06, 
-0.31 ring width change per 7 GSL days), while the other two \textit{Betula} did not, though they are trending in the same same way ({\Ball}: 
+0.31 RW change per seven GSL days), while the other two \textit{Betula} did not, though they are trending in the same same way ({\Ball}: 
 0.03, UI: 
 -0.03, 
-0.09 ring width change per 7 GSL days and {\Bpop}: 
+0.09 RW change per seven GSL days, and {\Bpop}: 
 0.06, UI: 
 -0.02, 
-0.13 ring width change per 7 GSL days; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+0.13 RW change per seven GSL days; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis (through z-scoring \citep{gelman_data_2006}), %emw14Jun2026: explain better -- this should be introduced in the methods and referenced here. 
 both predictors were similarly predictive (Figure \ref{fig:bsppZscored}). Additionally, the results with basal area increment (BAI) for the GDD model were broadly similar to ring width (see Table \ref{tab:BAItab}). \\
 \par 
@@ -208,23 +208,23 @@ both predictors were similarly predictive (Figure \ref{fig:bsppZscored}). Additi
 % Question 2
 %-------------------------------------------------------------------------------
 %emw14Jun2026: I would try to sneak in some discussion to the results here! You may get told to take it out but I think it would help readers (and don't fully see the point of the rule):
-Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. However, while we found that a longer calendar season increased growth for two species, only one also grew more with an earlier start of season ({\Ainc}: $\beta = $ 
--0.07, $UI_{90}$
-[-0.14, 
--0.01]; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). However, {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta = $ 
-0.1, $UI_{90}$
-[0, 
-0.2]; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta = $ 
-0.12, $UI_{90}$
-[0.05, 
-0.18]). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta = $ 
-0.1, $UI_{90}$
-[0.02, 
-0.17], and {\Bpap}:$\beta = $ 
-0.21, $UI_{90}$
-[0.09, 
-0.33]), with the latter being the only one of those three that also grew more with longer calendar season (Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}). The estimates were unchanged when using the full (SOS $n =$
-239 and $n =$ 
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. However, while we found that a longer calendar season increased growth for two species, only one also grew more with an earlier start of season ({\Ainc}
+-0.07, UI:
+-0.14, 
+-0.01 RW change per seven SOS days; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). However, {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season
+(0.1, UI:
+0, 
+0.2 RW change per seven SOS days; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season
+(0.12, UI:
+0.05, 
+0.18 RW change per seven EOS days). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}
+0.1, UI:
+0.02, 
+0.17 RW change per seven EOS days, and {\Bpap}: 
+0.21, UI:
+0.09, 
+0.33 RW change per seven EOS days; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS $n =$
+239 and EOS $n =$ 
 230) or restricted datasets ($n=$ 
 227; Figure \ref{fig:wcSOSEOScomparison}a). \\
 \par
@@ -232,52 +232,51 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
-We did not find any clear effect of year on growth (2018: $\alpha = $ 
-0.18,
-[-0.76, 
-1.1], 2019: $\alpha = $ 
-0.16,
-[-0.78, 
-1.08] and 2020: $\alpha = $ 
--0.45,
-[-1.38, 
-0.48]; Table \ref{tab:tab_all}), and there was no apparent differences of growth looking across species ({\Ainc}: $\alpha = $ 
-1,
-[-3.08, 
-5.07]; {\Ball}: $\alpha = $ 
-0.15,
-[-3.97, 
-4.24]; {\Bpap}: $\alpha = $ 
--4.04,
-[-8.95, 
-0.81]; {\Bpop}: $\alpha = $ 
--0.71,
-[-4.93, 
-3.38]; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not change across any provenances (Dartmouth College (NH): $\alpha = $ 
--0.03,
-[-0.23, 
-0.16]; Harvard Forest (MA): $\alpha = $ 
--0.1,
-[-0.33, 
-0.07]; St-Hippolyte (Qc): $\alpha = $ 
-0.04,
-[-0.15, 
-0.26]; White Mountains (NH): $\alpha = $ 
-0.08,
-[-0.09, 
-0.3]; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The variation across provenances ($\sigma = $
-0.17, $UI_{90}$
-[0.02, 
-0.47]) and tree ids ($\sigma = $ 
-0.17, $UI_{90}$ 
-[0.04, 
-0.27]; Table \ref{tab:tab_all}) was similar. 
+We did not find any clear effect of year on growth (2018:
+0.18, UI:
+-0.76, 
+1.1 RW (on the log) deviation from the grand mean; 2019:
+0.16, UI:
+-0.78, 
+1.08 RW deviation from the grand mean; 2020:
+-0.45, UI:
+-1.38, 
+0.48 RW deviation from the grand mean; Table \ref{tab:tab_all}), and there was no apparent differences of growth looking across species ({\Ainc}:
+1, UI:
+-3.08, 
+5.07 RW deviation from the grand mean; {\Ball}:
+0.15, UI:
+-3.97, 
+4.24 RW deviation from the grand mean; {\Bpap}:
+-4.04, UI:
+-8.95, 
+0.81 RW deviation from the grand mean; {\Bpop}:
+-0.71, UI:
+-4.93, 
+3.38 RW deviation from the grand mean; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not change across any provenances (Dartmouth College (NH):
+-0.03, UI:
+-0.23, 
+0.16 RW deviation from the grand mean; Harvard Forest (MA):
+-0.1, UI:
+-0.33, 
+0.07 RW deviation from the grand mean; St-Hippolyte (Qc):
+0.04, UI:
+-0.15, 
+0.26 RW deviation from the grand mean; White Mountains (NH):
+0.08, UI:
+-0.09, 
+0.3 RW deviation from the grand mean; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The variation across provenances ($\sigma = $
+0.17, UI:
+0.02, 
+0.47 RW deviation from the grand mean) and tree ids ($\sigma = $ 
+0.17, UI: 
+0.04, 
+0.27 RW deviation from the grand mean; Table \ref{tab:tab_all}) was similar. 
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent as ring width change on the log scale per seven average spring days GDD (55.73 GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
-
+\caption{Estimates of ring width change on the log scale as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent as ring width change on the log scale per seven average spring days GDD (55.73 GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -305,7 +304,7 @@ We did not find any clear effect of year on growth (2018: $\alpha = $
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 
-\section*{Supplemental}
+\section*{Supplemental material}
 
 \setcounter{table}{0}
 \renewcommand{\thetable}{S\arabic{table}}
@@ -317,22 +316,8 @@ We did not find any clear effect of year on growth (2018: $\alpha = $
 %-------------------------------------------------------------------------------
 \subsection*{Supplemental Methods}
 
-% Phenology observations time series
-\begin{figure}[!ht]
-\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
-\caption{Phenology observatons bi-weekly.} %emw14Jun2026: Tell me why I am looking at this. I know but your other readers do not ... 
-\label{fig:phenoTimeSeries}
-\end{figure}
-
-% Rw per year for allometry
-\begin{figure}[!ht]
-\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
-\caption{We randomly sampled 20 trees from our dataset and represent the ring width as a function of year to represent the allometry patterns across all years we had ring width for.}
-\label{fig:allom}
-\end{figure}
-
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun 18 15:09:07 2026
+% Thu Jun 18 17:11:51 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances out of a total of 81 individual trees.} 
@@ -352,6 +337,21 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 
 
 
+% Phenology observations time series
+\begin{figure}[!ht]
+\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
+\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represent the number of observations that were made during a period of 14 days and the lines represent the earliest, the average and last recorded budburst observations. This demonstrates that despite the irregular frequency, it is unlikely that we missed early spring phenophases by more than six days.} %emw14Jun2026: Tell me why I am looking at this. I know but your other readers do not ... 
+\label{fig:phenoTimeSeries}
+\end{figure}
+
+% Rw per year for allometry
+\begin{figure}[!ht]
+\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
+\caption{We randomly sampled 20 trees from our dataset and represent the ring width as a function of year to represent the allometry patterns across all years we had ring width for.}
+\label{fig:allom}
+\end{figure}
+
+
 %-------------------------------------------------------------------------------
 % Supplemental Results
 %-------------------------------------------------------------------------------
@@ -360,7 +360,7 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun 18 15:09:07 2026
+% Thu Jun 18 17:11:51 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters (mean and 90\% uncertainty intervals, in square brackets) across our four different predictors. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -379,7 +379,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun 18 15:09:07 2026
+% Thu Jun 18 17:11:51 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance level intercept parameters (mean and 90\% uncertainty intervals, in square brackets) across our four different predictors. GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season.} 
@@ -392,6 +392,72 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 
   White Mountains (NH) & 0.08 [-0.09, 0.30] & 0.08 [-0.10, 0.31] & 0.08 [-0.07, 0.29] & 0.07 [-0.08, 0.27] & -71.23 \\ 
   Dartmouth College (NH) & -0.03 [-0.23, 0.16] & -0.04 [-0.25, 0.14] & -0.07 [-0.28, 0.09] & -0.04 [-0.22, 0.12] & -71.15 \\ 
   St-Hippolyte (Qc) & 0.04 [-0.15, 0.26] & 0.03 [-0.16, 0.26] & 0.02 [-0.16, 0.21] & 0.04 [-0.12, 0.24] & -74.03 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu Jun 18 17:11:51 2026
+\begin{table}[ht]
+\centering
+\caption{Posterior means and 90\% uncertainty intervals for all model parameters across predictors} 
+\label{tab:tab_all}
+\begin{tabular}{lllll}
+  \hline
+Parameter & GDD & GSL & SOS & EOS \\ 
+  \hline
+$\sigma_{\alpha_{tree}}$ & 0.17 [0.04, 0.27] & 0.18 [0.05, 0.28] & 0.21 [0.10, 0.30] & 0.18 [0.07, 0.28] \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.17 [0.02, 0.47] & 0.18 [0.02, 0.52] & 0.16 [0.02, 0.45] & 0.17 [0.02, 0.44] \\ 
+  $\sigma_{y}$ & 0.48 [0.43, 0.52] & 0.48 [0.44, 0.53] & 0.47 [0.43, 0.52] & 0.47 [0.42, 0.52] \\ 
+  $\beta_{spp_{A. incana}}$ & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
+  $\beta_{spp_{B. alleghaniensis}}$ & 0.04 [0.00, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
+  $\beta_{spp_{B. papyrifera}}$ & 0.15 [0.06, 0.23] & 0.18 [0.06, 0.31] & 0.05 [-0.11, 0.20] & 0.21 [0.09, 0.33] \\ 
+  $\beta_{spp_{B. populifolia}}$ & 0.07 [0.02, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.02, 0.17] \\ 
+  $\alpha_{prov_{Dartmouth College (NH)}}$ & -0.03 [-0.23, 0.16] & -0.04 [-0.25, 0.14] & -0.07 [-0.28, 0.09] & -0.04 [-0.22, 0.12] \\ 
+  $\alpha_{prov_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 0.12] & -0.09 [-0.32, 0.06] \\ 
+  $\alpha_{prov_{St-Hippolyte (Qc)}}$ & 0.04 [-0.15, 0.26] & 0.03 [-0.16, 0.26] & 0.02 [-0.16, 0.21] & 0.04 [-0.12, 0.24] \\ 
+  $\alpha_{prov_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.30] & 0.08 [-0.10, 0.31] & 0.08 [-0.07, 0.29] & 0.07 [-0.08, 0.27] \\ 
+  $\alpha_{year_{2018}}$ & 0.18 [-0.76, 1.10] & 0.22 [-0.73, 1.17] & 0.21 [-0.75, 1.16] & 0.23 [-0.71, 1.17] \\ 
+  $\alpha_{year_{2019}}$ & 0.16 [-0.78, 1.08] & 0.09 [-0.87, 1.04] & 0.11 [-0.85, 1.06] & 0.12 [-0.83, 1.05] \\ 
+  $\alpha_{year_{2020}}$ & -0.45 [-1.38, 0.48] & -0.36 [-1.32, 0.59] & -0.37 [-1.33, 0.59] & -0.47 [-1.41, 0.47] \\ 
+  $\alpha_{spp_{A. incana}}$ & 1.00 [-3.08, 5.07] & 0.15 [-3.89, 4.32] & 1.57 [-1.99, 5.15] & 3.12 [-1.35, 7.53] \\ 
+  $\alpha_{spp_{B. alleghaniensis}}$ & 0.15 [-3.97, 4.24] & 0.38 [-3.72, 4.63] & -1.84 [-5.53, 1.75] & -1.80 [-6.37, 2.65] \\ 
+  $\alpha_{spp_{B. papyrifera}}$ & -4.04 [-8.95, 0.81] & -2.67 [-7.20, 1.95] & -0.74 [-4.90, 3.44] & -5.51 [-11.12, 0.08] \\ 
+  $\alpha_{spp_{B. populifolia}}$ & -0.71 [-4.93, 3.38] & 0.24 [-3.98, 4.52] & -0.48 [-4.34, 3.21] & -0.83 [-5.53, 3.95] \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Thu Jun 18 17:11:51 2026
+\begin{table}[ht]
+\centering
+\caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
+\label{tab:BAItab}
+\begin{tabular}{ll}
+  \hline
+Parameter & Estimate \\ 
+  \hline
+$\sigma_{\alpha_{tree}}$ & 0.52 [0.41, 0.64] \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.27 [0.03, 0.73] \\ 
+  $\sigma_{y}$ & 0.63 [0.57, 0.70] \\ 
+  $\beta_{spp_{A. incana}}$ & 0.11 [-0.03, 0.25] \\ 
+  $\beta_{spp_{B. alleghaniensis}}$ & 0.20 [0.02, 0.36] \\ 
+  $\beta_{spp_{B. papyrifera}}$ & 0.92 [0.49, 1.34] \\ 
+  $\beta_{spp_{B. populifolia}}$ & 0.41 [0.20, 0.61] \\ 
+  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 [-0.47, 0.17] \\ 
+  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.09 [-0.45, 0.19] \\ 
+  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.06 [-0.23, 0.42] \\ 
+  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 [-0.11, 0.52] \\ 
+  $\alpha_{year_{2018}}$ & -0.36 [-1.32, 0.61] \\ 
+  $\alpha_{year_{2019}}$ & 0.33 [-0.65, 1.32] \\ 
+  $\alpha_{year_{2020}}$ & -0.04 [-1.01, 0.94] \\ 
+  $\alpha_{spp_{A. incana}}$ & 3.23 [-2.25, 8.55] \\ 
+  $\alpha_{spp_{B. alleghaniensis}}$ & 2.09 [-3.40, 7.54] \\ 
+  $\alpha_{spp_{B. papyrifera}}$ & -7.59 [-14.84, -0.29] \\ 
+  $\alpha_{spp_{B. populifolia}}$ & -0.07 [-5.98, 5.57] \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -446,72 +512,6 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 
 \caption{Standardized (z-scored) slope estimates across our four different predictors. The dots represent the mean of the posterior distribution, the thick lines the 50\% uncertainty intervals (UI) and the thinner lines, the 90\% UI.}
 \label{fig:bsppZscored}
 \end{figure}
-
-% latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun 18 15:09:07 2026
-\begin{table}[ht]
-\centering
-\caption{Posterior means and 90\% uncertainty intervals for all model parameters across predictors} 
-\label{tab:tab_all}
-\begin{tabular}{lllll}
-  \hline
-Parameter & GDD & GSL & SOS & EOS \\ 
-  \hline
-$\sigma_{\alpha_{tree}}$ & 0.17 [0.04, 0.27] & 0.18 [0.05, 0.28] & 0.21 [0.10, 0.30] & 0.18 [0.07, 0.28] \\ 
-  $\sigma_{\alpha_{prov}}$ & 0.17 [0.02, 0.47] & 0.18 [0.02, 0.52] & 0.16 [0.02, 0.45] & 0.17 [0.02, 0.44] \\ 
-  $\sigma_{y}$ & 0.48 [0.43, 0.52] & 0.48 [0.44, 0.53] & 0.47 [0.43, 0.52] & 0.47 [0.42, 0.52] \\ 
-  $\beta_{spp_{A. incana}}$ & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
-  $\beta_{spp_{B. alleghaniensis}}$ & 0.04 [0.00, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
-  $\beta_{spp_{B. papyrifera}}$ & 0.15 [0.06, 0.23] & 0.18 [0.06, 0.31] & 0.05 [-0.11, 0.20] & 0.21 [0.09, 0.33] \\ 
-  $\beta_{spp_{B. populifolia}}$ & 0.07 [0.02, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.02, 0.17] \\ 
-  $\alpha_{prov_{Dartmouth College (NH)}}$ & -0.03 [-0.23, 0.16] & -0.04 [-0.25, 0.14] & -0.07 [-0.28, 0.09] & -0.04 [-0.22, 0.12] \\ 
-  $\alpha_{prov_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 0.12] & -0.09 [-0.32, 0.06] \\ 
-  $\alpha_{prov_{St-Hippolyte (Qc)}}$ & 0.04 [-0.15, 0.26] & 0.03 [-0.16, 0.26] & 0.02 [-0.16, 0.21] & 0.04 [-0.12, 0.24] \\ 
-  $\alpha_{prov_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.30] & 0.08 [-0.10, 0.31] & 0.08 [-0.07, 0.29] & 0.07 [-0.08, 0.27] \\ 
-  $\alpha_{year_{2018}}$ & 0.18 [-0.76, 1.10] & 0.22 [-0.73, 1.17] & 0.21 [-0.75, 1.16] & 0.23 [-0.71, 1.17] \\ 
-  $\alpha_{year_{2019}}$ & 0.16 [-0.78, 1.08] & 0.09 [-0.87, 1.04] & 0.11 [-0.85, 1.06] & 0.12 [-0.83, 1.05] \\ 
-  $\alpha_{year_{2020}}$ & -0.45 [-1.38, 0.48] & -0.36 [-1.32, 0.59] & -0.37 [-1.33, 0.59] & -0.47 [-1.41, 0.47] \\ 
-  $\alpha_{spp_{A. incana}}$ & 1.00 [-3.08, 5.07] & 0.15 [-3.89, 4.32] & 1.57 [-1.99, 5.15] & 3.12 [-1.35, 7.53] \\ 
-  $\alpha_{spp_{B. alleghaniensis}}$ & 0.15 [-3.97, 4.24] & 0.38 [-3.72, 4.63] & -1.84 [-5.53, 1.75] & -1.80 [-6.37, 2.65] \\ 
-  $\alpha_{spp_{B. papyrifera}}$ & -4.04 [-8.95, 0.81] & -2.67 [-7.20, 1.95] & -0.74 [-4.90, 3.44] & -5.51 [-11.12, 0.08] \\ 
-  $\alpha_{spp_{B. populifolia}}$ & -0.71 [-4.93, 3.38] & 0.24 [-3.98, 4.52] & -0.48 [-4.34, 3.21] & -0.83 [-5.53, 3.95] \\ 
-   \hline
-\end{tabular}
-\end{table}
-
-
-% latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jun 18 15:09:07 2026
-\begin{table}[ht]
-\centering
-\caption{Posterior means and 90\% uncertainty intervals for all model parameters, when using basal area increment (BAI) as the response variable} 
-\label{tab:BAItab}
-\begin{tabular}{ll}
-  \hline
-Parameter & Estimate \\ 
-  \hline
-$\sigma_{\alpha_{tree}}$ & 0.52 [0.41, 0.64] \\ 
-  $\sigma_{\alpha_{prov}}$ & 0.27 [0.03, 0.73] \\ 
-  $\sigma_{y}$ & 0.63 [0.57, 0.70] \\ 
-  $\beta_{spp_{A. incana}}$ & 0.11 [-0.03, 0.25] \\ 
-  $\beta_{spp_{B. alleghaniensis}}$ & 0.20 [0.02, 0.36] \\ 
-  $\beta_{spp_{B. papyrifera}}$ & 0.92 [0.49, 1.34] \\ 
-  $\beta_{spp_{B. populifolia}}$ & 0.41 [0.20, 0.61] \\ 
-  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 [-0.47, 0.17] \\ 
-  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.09 [-0.45, 0.19] \\ 
-  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.06 [-0.23, 0.42] \\ 
-  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 [-0.11, 0.52] \\ 
-  $\alpha_{year_{2018}}$ & -0.36 [-1.32, 0.61] \\ 
-  $\alpha_{year_{2019}}$ & 0.33 [-0.65, 1.32] \\ 
-  $\alpha_{year_{2020}}$ & -0.04 [-1.01, 0.94] \\ 
-  $\alpha_{spp_{A. incana}}$ & 3.23 [-2.25, 8.55] \\ 
-  $\alpha_{spp_{B. alleghaniensis}}$ & 2.09 [-3.40, 7.54] \\ 
-  $\alpha_{spp_{B. papyrifera}}$ & -7.59 [-14.84, -0.29] \\ 
-  $\alpha_{spp_{B. populifolia}}$ & -0.07 [-5.98, 5.57] \\ 
-   \hline
-\end{tabular}
-\end{table}
-
 
 
 \end{document}
