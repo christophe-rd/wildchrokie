@@ -17,9 +17,8 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
-# interceptmuplots <- TRUE
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
@@ -1551,37 +1550,32 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### asite only for GDD ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Define order and colors consistently
+site_order <- locations$name[order(locations$Latitude)]  # south to north
+site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], rev(site_order))
 
-site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
+# Integer y-positions based on latitude order (1 = southernmost)
+y_pos_site <- match(site_df2$site_name, site_order)
+sitecolors  <- site_color_map[site_df2$site_name]
 
-# order same as figure
-locations2 <- locations[order(locations$Latitude), ]              
-locations2$col <- wes_palette("Darjeeling1")[1:4]     
-
-# site map 
-sitecolors <- site_color_map[site_df2$site_name]
+# Latitude labels for right axis, in the same order
 lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
-# mu plot for asite
-pdf(file = "figures/growthModelsMain/muasite.pdf", width = 8, height = 6)
-par(mar = c(2, 10, 5, 7))          # widen left (site names) and right (lat)
-
+# mu plot for site
+pdf(file = "figures/growthModelsMain/muasite.pdf", width = 7, height = 5)
+par(mar = c(4, 10, 5, 7))
 plot(site_df2$mean, y_pos_site,
      xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
-     xlab = "Provenance intercepts", ylab = "",
+     xlab = "Provenance effect", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors,
      frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-
-axis(2, at = 1:n_site, labels = site_df2$site_name, las = 2, tick = TRUE)
-axis(4, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
+axis(2, at = 1:n_site, labels = site_order,   las = 2, tick = TRUE)
+axis(4, at = 1:n_site, labels = lat_labels,   las = 2, tick = TRUE)
 mtext("Latitude", side = 4, line = 3.5, cex = 1.1)
-
-segments(site_df2$p5,  y_pos_site,
-         site_df2$p95, y_pos_site,
+segments(site_df2$p5,  y_pos_site, site_df2$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)
-segments(site_df2$p25, y_pos_site,
-         site_df2$p75, y_pos_site,
+segments(site_df2$p25, y_pos_site, site_df2$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 dev.off()
 
@@ -1983,7 +1977,7 @@ mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.26, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 
 # Panel 3: SOS
@@ -2001,7 +1995,7 @@ text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 # arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 # text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.27, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 2: GSL
 par(mar = mumar)
@@ -2035,7 +2029,7 @@ text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 # arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 # text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 5: species legend
 par(mar = c(mumar))
@@ -2215,7 +2209,7 @@ mtext("(a) Growing degree days", adj = 0, side = 3, line = 2.5, font = 2, cex = 
 arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 text(0.18, n_spp + 0.85, "Larger/Warmer", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
+rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.26, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 
 # Panel 3: SOS
@@ -2233,7 +2227,7 @@ text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 # arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 # text(0.18, n_spp + 0.85, "Larger/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.27, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 2: GSL
 par(mar = mumar)
@@ -2267,7 +2261,7 @@ text(-0.18, n_spp + 0.85, "Larger/Earlier", pos = 3, xpd = TRUE, cex = 0.9)
 # arrows(x0 = 0.05, y0 = n_spp + 0.85, x1 = 0.5, y1 = n_spp + 0.85, length = 0.1, xpd = TRUE)
 # text(0.18, n_spp + 0.85, "Smaller/Later", pos = 3, xpd = TRUE, cex = 0.9)
 usr <- par("usr")
-rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(usr[1:2]) * 0.25, usr[4])
+rasterImage(img_budset, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(usr[1:2]) * 0.20, usr[4])
 
 # Panel 5: species legend
 par(mar = c(mumar))
