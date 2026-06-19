@@ -287,20 +287,24 @@ emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
 
 rw$latbi <- emp$latbi[match(rw$spp, emp$spp)]
 
-vec <- unique(emp$treeid)
+
 
 set.seed(7)
-suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2015 & year < 2024)
-ids <- unique(suby$treeid)
 
-pdf("figures/empiricalData/rwXyearAll.pdf", width = 8, height = 10)
-par(mfrow = c(5,ceiling(length(ids)/5)),
-    mar = c(2, 3, 1.5, 0.5),
+rw$newid <- paste0(rw$latbi, ": \n", rw$site, "_", rw$plot, "_", rw$replicate)
+emp$newid <- paste0(emp$latbi, ": \n", emp$site, "_", emp$plot, "_", emp$replicate)
+vec <- unique(emp$newid)
+suby <- subset(rw, newid %in% sample(vec, 20) & year > 2015 & year < 2024)
+ids <- unique(suby$newid)
+
+pdf("figures/empiricalData/rwXyearAll.pdf", width = 10, height = 8)
+par(mfrow = c(4,5),
+    mar = c(2, 3, 2, 0.5),
     mgp = c(1.5, 0.5, 0))
 
 year <- as.integer(suby$year)
 for(i in ids) { # i = "BETPOP_HF4_P9"
-  sub <- suby[suby$treeid == i, ]
+  sub <- suby[suby$newid == i, ]
   if(nrow(sub) == 0) next
   plot(sub$year, sub$lengthCM,
        # col = col_vals,
@@ -324,12 +328,14 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
 }
 dev.off()
 
+
+
 suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
 # suby <- subset(rw, treeid %in% sample(vec, 20))
 pdf("figures/empiricalData/rwXyearRestricted.pdf",
     width = 8, height = 10)
 ids <- unique(suby$treeid)
-par(mfrow = c(5,ceiling(length(ids)/5)),
+par(mfrow = c(5, 5),
     mar = c(3, 2, 1.5, 0.5),
     mgp = c(1.5, 0.5, 0))
 
