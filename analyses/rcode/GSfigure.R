@@ -172,14 +172,14 @@ loess_pos  <- loess(meanTempC ~ doy, data = mean_pos,  span = 0.4)
 smooth_pre <- predict(loess_pre, newdata = data.frame(doy = doy_seq))
 smooth_cc  <- predict(loess_pos,  newdata = data.frame(doy = doy_seq))
 
-
-# Shaded area: below threshold on the PRE curve
+# Set data for 5C threshold
 threshold <- 5
-x_poly <- c(doy_seq, rev(doy_seq))
-y_poly <- c(pmin(smooth_pre, threshold), rev(rep(0, length(doy_seq))))
-"#FFF2FF"
-# y-axis limit based on real data
-ylim_temp <- c(0,max(smooth_cc))
+mask <- smooth_pre <= threshold & doy_seq > 53
+doy_seq2   <- doy_seq[mask]
+smooth_pre2 <- smooth_pre[mask]
+
+x_poly <- c(doy_seq2, rev(doy_seq2))
+y_poly <- c(smooth_pre2, rev(rep(0, length(doy_seq2))))
 
 # rasterized pictograms
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
@@ -188,7 +188,7 @@ img_leafout <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicLeafout.svg")
 img_budset  <- rsvg::rsvg("figures/pictogramsLeaves/bepaPicBudset.svg")
 
 # Plot! --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-jpeg("figures/climate/gsconceptualfig.jpeg", width = 11, height = 8, units = "in", res = 400)
+pdf("figures/climate/gsconceptualfig.pdf", width = 11, height = 8)
 layout(matrix(c(1, 2, 3), nrow = 3), heights = matheights)
 
 # Panel 1 --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -279,13 +279,13 @@ segments(x0 = ccsos, x1 = presos - 30, y0 = smooth_cc[doy_seq %in% ccsos],
 Arrows(x0 = presos - 35, x1 = presos - 35,
        y0 = smooth_cc[doy_seq %in% ccsos], 
        y1 = smooth_pre[doy_seq %in% presos], 
-       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+       lwd = 1, lty = 1, col = colspring, arr.type = "T", code = 3)
 
-text(x = presos - 72, 
+text(x = presos - 90, 
      y = mean(c(smooth_pre[doy_seq %in% presos], 
                 smooth_cc[doy_seq %in% ccsos])),
-     "Early SOS = cooler first days of growth",
-     col = "black", cex = mysmalltxt)
+     "Early SOS =\ncooler first days of growth",
+     col = colspring, cex = mysmalltxt, adj = 0)
 
 # End-of-season delimitations
 segments(x0 = preeos, x1 = preeos - 10,
@@ -300,13 +300,13 @@ segments(x0 = cceos, x1 = preeos - 10,
 Arrows(x0 = preeos - 15, x1 = preeos - 15,
        y0 = smooth_cc[doy_seq %in% cceos], 
        y1 = smooth_pre[doy_seq %in% preeos], 
-       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+       lwd = 1, lty = 1, col = colfall, arr.type = "T", code = 3)
 
 text(x = preeos - 50, 
      y = mean(c(smooth_pre[doy_seq %in% preeos], 
                 smooth_cc[doy_seq %in% cceos]))* 0.98,
      "Late EOS =\nlittle temperature difference",
-     col = "black", cex = mysmalltxt, adj = 0)
+     col = colfall, cex = mysmalltxt, adj = 0)
 
 # pre: start and end of thick segment
 r <- 1.5  
@@ -335,8 +335,8 @@ Arrows(x0 = ccsos + 20, y0 = 5, x1 = ccsos + 5, y1 = 5,
 Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
        arr.type = "triangle", arr.width = 0.2, arr.lwd = 0.5, arr.length = 0.2, lwd = 2, col = colfall)
 
-text(x = ccsos + 30, y = 7, "Earlier spring", col = colspring, cex = mylargetxt)
-text(x = cceos - 20, y = 7, "Later fall",     col = colfall,   cex = mylargetxt)
+text(x = ccsos + 30, y = 7, "Earlier SOS", col = colspring, cex = mylargetxt)
+text(x = cceos - 20, y = 7, "Later EOS",     col = colfall,   cex = mylargetxt)
 
 # legend(x = ccsos - 80, y = 25, 
 #        legend = c("Pre climate change",
@@ -403,13 +403,13 @@ segments(x0 = presos, x1 = presos - 30,
 Arrows(x0 = presos - 35, x1 = presos - 35,
        y0 = min(mean_cc_gdd$GDD_5), 
        y1 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% presos], 
-       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+       lwd = 1, lty = 1, col = colspring, arr.type = "T", code = 3)
 
-text(x = presos - 72,
+text(x = presos - 78,
      y = (mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% presos] +
-            min(mean_cc_gdd$GDD_5)) / 2, 
-     "Early SOS = little effect on GDD", 
-     col = "black", cex = mysmalltxt)
+            min(mean_cc_gdd$GDD_5)), 
+     "Early SOS =\nlittle effect on GDD", 
+     col = colspring, cex = mysmalltxt, adj = 0)
 
 # Late season gdd
 segments(x0 = preeos, x1 = cceos - 30,
@@ -423,13 +423,13 @@ segments(x0 = cceos, x1 = cceos - 30,
 Arrows(x0 = cceos - 35, x1 = cceos - 35,
        y0 = mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos], 
        y1 = mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos], 
-       lwd = 1, lty = 1, col = "black", arr.type = "T", code = 3)
+       lwd = 1, lty = 1, col = colfall, arr.type = "T", code = 3)
 
-text(x = preeos - 65,
+text(x = preeos - 70,
      y = (mean_pre_gdd$GDD_5[mean_pre_gdd$doy %in% preeos] +
             mean_cc_gdd$GDD_5[mean_cc_gdd$doy %in% cceos]) / 2, 
-     "Late EOS = bigger effect on GDD", 
-     col = "black", cex = mysmalltxt)
+     "Late EOS =\nbigger effect on GDD", 
+     col = colfall, cex = mysmalltxt, adj = 0)
 
 # Polygon for warmer thermal season
 x_arrow <- cceos + 5
@@ -483,7 +483,7 @@ text(x = mean(mean_pre_gdd$doy) - 30 ,
 text(x = mean(mean_pre_gdd$doy) - 30, 
      y = 1250,
      "Post climate change", col = colcc, cex = mysmalltxt, adj = 0)
- 
+
 dev.off()
 
 
