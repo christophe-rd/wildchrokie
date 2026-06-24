@@ -260,6 +260,9 @@ site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgdd, "ayear", "fit_ayear", 
                              "year", "ayear\\[(\\d+)\\]")
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
+a_df2  <- extract_params(df_fitgdd, "a", "fit_a", 
+                             "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_sigma.csv",  row.names = FALSE)
@@ -268,6 +271,7 @@ write.csv(treeid_df2, "output/GM_GDDparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GDDparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GDDparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GDDparam_ayear.csv",  row.names = FALSE)
+write.csv(a_df2,      "output/GM_GDDparam_a.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -387,6 +391,9 @@ site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgsl, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
+a_df2  <- extract_params(df_fitgsl, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_sigma.csv",  row.names = FALSE)
@@ -395,6 +402,7 @@ write.csv(treeid_df2, "output/GM_GSLparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GSLparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GSLparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GSLparam_ayear.csv",  row.names = FALSE)
+write.csv(a_df2,      "output/GM_GSLparam_a.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for GSL fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -514,6 +522,9 @@ site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asit
 site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
 ayear_df2_sos  <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2_sos <- subset(ayear_df2_sos, !grepl("mean", year))
+a_df2  <- extract_params(df_fitsos, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",  row.names = FALSE)
@@ -522,6 +533,7 @@ write.csv(treeid_df2_sos, "output/GM_SOSparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2_sos,   "output/GM_SOSparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2_sos,   "output/GM_SOSparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2_sos,  "output/GM_SOSparam_ayear.csv",  row.names = FALSE)
+write.csv(a_df2,          "output/GM_SOSparam_a.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -641,6 +653,9 @@ site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asit
 site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
 ayear_df2_eos  <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2_eos <- subset(ayear_df2_eos, !grepl("mean", year))
+a_df2  <- extract_params(df_fiteos, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",  row.names = FALSE)
@@ -649,6 +664,7 @@ write.csv(treeid_df2_eos, "output/GM_EOSparam_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2_eos,   "output/GM_EOSparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2_eos,   "output/GM_EOSparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2_eos,  "output/GM_EOSparam_ayear.csv",  row.names = FALSE)
+write.csv(a_df2,          "output/GM_EOSparam_a.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -2654,6 +2670,9 @@ site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgdd, "ayear", "fit_ayear", 
                              "year", "ayear\\[(\\d+)\\]")
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
+a_df2  <- extract_params(df_fitgdd, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_sigma_BAI.csv",  row.names = FALSE)
@@ -2662,6 +2681,7 @@ write.csv(treeid_df2, "output/GM_GDDparam_treeid_BAI.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GDDparam_aspp_BAI.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GDDparam_site_BAI.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GDDparam_ayear_BAI.csv",  row.names = FALSE)
+write.csv(a_df2,      "output/GM_GDDparam_a_BAI.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
@@ -2780,6 +2800,9 @@ site_df2   <- extract_params(df_fitgsl, "asite", "fit_a_site", "site", "asite\\[
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2  <- extract_params(df_fitgsl, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
+a_df2  <- extract_params(df_fitgsl, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2 <- subset(a_df2, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_sigma_BAI.csv",  row.names = FALSE)
@@ -2788,6 +2811,7 @@ write.csv(treeid_df2, "output/GM_GSLparam_treeid_BAI.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GSLparam_aspp_BAI.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GSLparam_site_BAI.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GSLparam_ayear_BAI.csv",  row.names = FALSE)
+write.csv(a_df2,      "output/GM_GSLparam_a_BAI.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for GSL fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
@@ -2906,6 +2930,9 @@ site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asit
 site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
 ayear_df2_sos  <- extract_params(df_fitsos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2_sos <- subset(ayear_df2_sos, !grepl("mean", year))
+a_df2_sos  <- extract_params(df_fitsos, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2_sos <- subset(a_df2_sos, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma_BAI.csv",  row.names = FALSE)
@@ -2914,6 +2941,7 @@ write.csv(treeid_df2_sos, "output/GM_SOSparam_treeid_BAI.csv", row.names = FALSE
 write.csv(aspp_df2_sos,   "output/GM_SOSparam_aspp_BAI.csv",   row.names = FALSE)
 write.csv(site_df2_sos,   "output/GM_SOSparam_site_BAI.csv",   row.names = FALSE)
 write.csv(ayear_df2_sos,  "output/GM_SOSparam_ayear_BAI.csv",  row.names = FALSE)
+write.csv(a_df2_sos,     "output/GM_SOSparam_a_BAI.csv",       row.names = FALSE)
 
 ##### Plot posterior vs priors for sos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
@@ -3032,6 +3060,9 @@ site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asit
 site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
 ayear_df2_eos  <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", "ayear\\[(\\d+)\\]")
 ayear_df2_eos <- subset(ayear_df2_eos, !grepl("mean", year))
+a_df2_eos  <- extract_params(df_fiteos, "a", "fit_a", 
+                         "grandmean", "a\\[(\\d+)\\]")
+a_df2_eos <- subset(a_df2_eos, grandmean == "a")
 
 # save csvs
 write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma_BAI.csv",  row.names = FALSE)
@@ -3040,6 +3071,7 @@ write.csv(treeid_df2_eos, "output/GM_EOSparam_treeid_BAI.csv", row.names = FALSE
 write.csv(aspp_df2_eos,   "output/GM_EOSparam_aspp_BAI.csv",   row.names = FALSE)
 write.csv(site_df2_eos,   "output/GM_EOSparam_site_BAI.csv",   row.names = FALSE)
 write.csv(ayear_df2_eos,  "output/GM_EOSparam_ayear_BAI.csv",  row.names = FALSE)
+write.csv(a_df2_eos,      "output/GM_EOSparam_a_BAI.csv",      row.names = FALSE)
 
 ##### Plot posterior vs priors for eos fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
