@@ -88,7 +88,7 @@ bspp_df2_gdd_mm[paste0(log_cols, "_mm_perGDD")] <- lapply(bspp_df2_gdd_mm[log_co
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% \section*{Introduction}
+\section*{Introduction}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % METHODS
@@ -110,7 +110,7 @@ In the spring of 2023, we collected tree ring samples only for the tree species 
 % Provenance map
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/mapSourcePop.jpeg}
-\caption{Provenance where the seeds were sourced from are depicted as circles, while the diamond denotes the location of the common garden. The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of Figure \ref{fig:wcmuplotasite}.} %DLJune19: typo: Weld Hill Research Building; axes labels and numbers should be larger for publication
+\caption{Provenance where the seeds were sourced from are depicted as circles, while the diamond denotes the location of the common garden. The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of Figure \ref{fig:wcmuplotasite}.}
 \label{fig:mapProv}
 \end{figure}
 
@@ -281,14 +281,14 @@ We did not find any clear effect of year on growth (2018:
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change on the log scale as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent as ring width change on the log scale per seven average spring days GDD (\Sexpr{wcgddscale} GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
+\caption{Estimates of ring width change (on the log scale) as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent the ring width change on the log scale per seven average spring days GDD (\Sexpr{wcgddscale} GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. We show the model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
+\caption{The effect of provenance on growth across a latitudinal gradient. We show the ring width (on the log scale) deviation from the grand mean (see Table \ref{tab:tab_all} for grand mean estimate) for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -390,7 +390,7 @@ print(tab,
 % Supplemental Results
 %-------------------------------------------------------------------------------
 \clearpage
-\subsection*{Supplemental Results} % They can either be cited in the main text or cited in some other figure or text in the supp. And they need to be semi-organized (usually in the order of citation, but all tables first and then all figures). Also -- you need to add units here also! I would cut Fig S7 I think... 
+\subsection*{Supplemental Results} 
 
 
 <<Table slope Wildchrokie, results='asis', echo = FALSE>>=
@@ -427,7 +427,7 @@ print(tab,
       caption.placement = "top")
 @
 
-<<Table site Wildchrokie, results='asis', echo = FALSE>>=
+<<Table provenance Wildchrokie, results='asis', echo = FALSE>>=
 site_df2$GDD <- sprintf("%.2f [%.2f, %.2f]", site_df2$mean, site_df2$p5, site_df2$p95)
 site_df2_gsl$GSL <- sprintf("%.2f [%.2f, %.2f]", site_df2_gsl$mean, site_df2_gsl$p5, site_df2_gsl$p95)
 site_df2_sos$SOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_sos$mean, site_df2_sos$p5, site_df2_sos$p95)
@@ -448,7 +448,7 @@ df_all_site <- df_all_site[order(df_all_site$Lat.), ]
 
 # remove lat long cols since we have them in methods
 df_all_site$Lat. <- NULL
-df_all_site$Long. <- NULL
+df_all_site$Lon. <- NULL
 
 colnames(df_all_site)[1] <- "Provenance"
 

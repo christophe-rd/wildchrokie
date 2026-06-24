@@ -79,7 +79,7 @@
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-% \section*{Introduction}
+\section*{Introduction}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % METHODS
@@ -101,7 +101,7 @@ In the spring of 2023, we collected tree ring samples only for the tree species 
 % Provenance map
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/mapSourcePop.jpeg}
-\caption{Provenance where the seeds were sourced from are depicted as circles, while the diamond denotes the location of the common garden. The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of Figure \ref{fig:wcmuplotasite}.} %DLJune19: typo: Weld Hill Research Building; axes labels and numbers should be larger for publication
+\caption{Provenance where the seeds were sourced from are depicted as circles, while the diamond denotes the location of the common garden. The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of Figure \ref{fig:wcmuplotasite}.}
 \label{fig:mapProv}
 \end{figure}
 
@@ -272,14 +272,14 @@ We did not find any clear effect of year on growth (2018:
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change on the log scale as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent as ring width change on the log scale per seven average spring days GDD (55.73 GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
+\caption{Estimates of ring width change (on the log scale) as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent the ring width change on the log scale per seven average spring days GDD (55.73 GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. We show the model intercept parameters for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
+\caption{The effect of provenance on growth across a latitudinal gradient. We show the ring width (on the log scale) deviation from the grand mean (see Table \ref{tab:tab_all} for grand mean estimate) for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -313,7 +313,7 @@ We did not find any clear effect of year on growth (2018:
 \subsection*{Supplemental Methods}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 24 12:33:22 2026
+% Wed Jun 24 12:54:10 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances out of a total of 81 individual trees.} 
@@ -352,11 +352,11 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 % Supplemental Results
 %-------------------------------------------------------------------------------
 \clearpage
-\subsection*{Supplemental Results} % They can either be cited in the main text or cited in some other figure or text in the supp. And they need to be semi-organized (usually in the order of citation, but all tables first and then all figures). Also -- you need to add units here also! I would cut Fig S7 I think... 
+\subsection*{Supplemental Results} 
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 24 12:33:22 2026
+% Wed Jun 24 12:54:10 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters which represent ring width change (on the log scale), per scaled predictor (see data analyses section for more details). We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
@@ -375,26 +375,26 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 24 12:33:22 2026
+% Wed Jun 24 12:54:10 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance level intercepts which represents the ring width (on the log scale) deviation from the grand mean (See Table \ref{tab:tab_all}). We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
 \label{tab:wc_asite_table}
-\begin{tabular}{lllllr}
+\begin{tabular}{lllll}
   \hline
-Provenance & GDD & GSL & SOS & EOS & Lon. \\ 
+Provenance & GDD & GSL & SOS & EOS \\ 
   \hline
-Harvard Forest (MA) & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 0.12] & -0.09 [-0.32, 0.06] & -72.19 \\ 
-  White Mountains (NH) & 0.08 [-0.09, 0.30] & 0.08 [-0.10, 0.31] & 0.08 [-0.07, 0.29] & 0.07 [-0.08, 0.27] & -71.23 \\ 
-  Dartmouth College (NH) & -0.03 [-0.23, 0.16] & -0.04 [-0.25, 0.14] & -0.07 [-0.28, 0.09] & -0.04 [-0.22, 0.12] & -71.15 \\ 
-  St-Hippolyte (Qc) & 0.04 [-0.15, 0.26] & 0.03 [-0.16, 0.26] & 0.02 [-0.16, 0.21] & 0.04 [-0.12, 0.24] & -74.03 \\ 
+Harvard Forest (MA) & -0.10 [-0.33, 0.07] & -0.09 [-0.35, 0.08] & -0.05 [-0.26, 0.12] & -0.09 [-0.32, 0.06] \\ 
+  White Mountains (NH) & 0.08 [-0.09, 0.30] & 0.08 [-0.10, 0.31] & 0.08 [-0.07, 0.29] & 0.07 [-0.08, 0.27] \\ 
+  Dartmouth College (NH) & -0.03 [-0.23, 0.16] & -0.04 [-0.25, 0.14] & -0.07 [-0.28, 0.09] & -0.04 [-0.22, 0.12] \\ 
+  St-Hippolyte (Qc) & 0.04 [-0.15, 0.26] & 0.03 [-0.16, 0.26] & 0.02 [-0.16, 0.21] & 0.04 [-0.12, 0.24] \\ 
    \hline
 \end{tabular}
 \end{table}
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 24 12:33:22 2026
+% Wed Jun 24 12:54:10 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our four predictors, using ring width (on the log scale) as the reponse variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.} 
@@ -428,7 +428,7 @@ $\alpha$ & -0.56 [-4.47, 3.48] & 0.11 [-4.05, 4.17] & 1.10 [-2.55, 4.76] & -1.36
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Jun 24 12:33:22 2026
+% Wed Jun 24 12:54:10 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our four predictors, using basal area increment (on the log scale) as the reponse variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.} 
