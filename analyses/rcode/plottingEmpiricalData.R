@@ -191,9 +191,9 @@ points_sf <- st_as_sf(locations2, coords = c("lon", "lat"), crs = 4326)
 main_map <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
-  geom_sf(data = special_sf, color = "black", shape = 23, size = 6, fill = "black") +
+  geom_sf(data = special_sf, color = "black", shape = 23, size = 5, fill = "black") +
   geom_text(data = locations2, aes(x = lon, y = lat, label = name),
-            nudge_y = 0.3, nudge_x = 0, size = 4.5, fontface = "bold") +
+            nudge_y = 0.3, nudge_x = 0, size = 6, fontface = "bold") +
   geom_text(data = special_point,
             aes(x = lon, y = lat, label = name),
             nudge_y = 0.08, nudge_x = 2.3, color = "black", size = 6, fontface = "bold") +
@@ -204,7 +204,8 @@ main_map <- ggplot(data = world) +
     legend.key.height = unit(1.5, "lines"),
     panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
     panel.background = element_rect(fill = "aliceblue"),
-    panel.grid.major = element_line(color = "gray80", linetype = "dotted")
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted"),
+    axis.title = element_text(size = 16)
   ) +
   labs(title = "", x = "Longitude", y = "Latitude")
 
