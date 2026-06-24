@@ -385,7 +385,7 @@ print(tab,
 % Rw per year for allometry
 \begin{figure}[!ht]
 \includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
-\caption{We randomly sampled 20 trees from our dataset and represent the ring width as a function of year to represent the allometry patterns across all years we had ring width for.}
+\caption{We randomly sampled 20 trees from our dataset and represent the ring width (mm) as a function of year to represent the allometry patterns across all years we had ring width for.}
 \label{fig:allom}
 \end{figure}
 
