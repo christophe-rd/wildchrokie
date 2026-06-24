@@ -94,22 +94,11 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Leaf phenology and growth are synchronized = good proxy for growth SOS and EOS
   
-  \item However, it this does not say anything about annual growth increment %emw22Jun -- not 100% sure what you mean here ... be care to be TOO detailed (`annual growth increment' is pretty specific for the reader at this point) too fast.
+  \item However, it this does not say anything how much trees grow in a year %emw22Jun -- not 100% sure what you mean here ... be care to be TOO detailed (`annual growth increment' is pretty specific for the reader at this point) too fast.
   
   \end{enumerate}
 
-% Paragraph 6
-\item Even with good conditions, trees may not be able to respond to longer GS
-  \begin{enumerate}
-  \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days 
-  
-  \item Tree growth rate cannot increase indefinitely
-  
-  \item Length and speed of growth is physiologically (or genetically?) controlled
-  
-  \end{enumerate}
-  
-% Paragraph 7 %emw22Jun -- I wonder if this belongs after paragraph 5? It may be easier for the reader if you keep leaf phenology = plastic (or not) together 
+% Paragraph 6 %emw22Jun -- I wonder if this belongs after paragraph 5? It may be easier for the reader if you keep leaf phenology = plastic (or not) together %crd25Jun: changed for after paragraph 5
 \item Local adaptation to inform growth with climate change
   \begin{enumerate}
   
@@ -120,6 +109,18 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Common gardens are important for climate change and tree growth
   
   \end{enumerate}
+
+% Paragraph 7
+\item Even with good conditions, trees may not be able to respond to longer GS
+  \begin{enumerate}
+  \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days 
+  
+  \item Tree growth rate cannot increase indefinitely
+  
+  \item Length and speed of growth is physiologically (or genetically?) controlled
+  
+  \end{enumerate}
+  
 
 % Paragraph 8
 \item Answer how GS and growth relate using juvenile trees in a common garden
