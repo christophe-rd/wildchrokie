@@ -1563,16 +1563,16 @@ sitecolors  <- site_color_map[site_df2$site_name]
 lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
 # mu plot for site
-pdf(file = "figures/growthModelsMain/muasite.pdf", width = 7, height = 5)
-par(mar = c(4, 10, 5, 7))
+pdf(file = "figures/growthModelsMain/muasite.pdf", width = 7, height = 4)
+par(mar = c(4, 10, 1, 7))
 plot(site_df2$mean, y_pos_site,
      xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
      xlab = "Provenance effect", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = sitecolors,
      frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
-axis(2, at = 1:n_site, labels = site_order,   las = 2, tick = TRUE)
-axis(4, at = 1:n_site, labels = lat_labels,   las = 2, tick = TRUE)
+axis(2, at = 1:n_site, labels = site_order, las = 2, tick = TRUE)
+axis(4, at = 1:n_site, labels = lat_labels, las = 2, tick = TRUE)
 mtext("Latitude", side = 4, line = 3.5, cex = 1.1)
 segments(site_df2$p5,  y_pos_site, site_df2$p95, y_pos_site,
          col = sitecolors, lwd = 1.5)

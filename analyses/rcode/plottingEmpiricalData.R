@@ -296,6 +296,8 @@ rw$newid <- paste0(rw$latbi, ": \n", rw$site, "_", rw$plot, "_", rw$replicate)
 emp$newid <- paste0(emp$latbi, ": \n", emp$site, "_", emp$plot, "_", emp$replicate)
 vec <- unique(emp$newid)
 suby <- subset(rw, newid %in% sample(vec, 20) & year > 2015 & year < 2024)
+nrow(suby)
+suby <- suby[!duplicated(paste(suby$newid, suby$year)),]
 ids <- unique(suby$newid)
 
 pdf("figures/empiricalData/rwXyearAll.pdf", width = 10, height = 8)
@@ -331,7 +333,7 @@ dev.off()
 
 
 
-suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
+ suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
 # suby <- subset(rw, treeid %in% sample(vec, 20))
 pdf("figures/empiricalData/rwXyearRestricted.pdf",
     width = 8, height = 10)
