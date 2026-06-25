@@ -389,9 +389,10 @@ print(tab,
 % Phenology observations time series
 \begin{figure}[!ht]
 \includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
-\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represents the number of observations that were made during a period of 14 days and the lines represent the earliest, the average and last recorded budburst observations. This demonstrates that across the different frequencies of observation, distances between early spring phenophases were similar across years.} %emw25Jun -- check my edits are correct. 
+\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represents the number of observations that were made during a period of 14 days and the lines represent the earliest, the average and last recorded budburst observations. This demonstrates that across the different frequencies of observation, distances between early spring phenophases were similar across years.}
 \label{fig:phenoTimeSeries}
 \end{figure}
+%emw25Jun -- check my edits are correct.
 
 % Rw per year for allometry
 \begin{figure}[!ht]
