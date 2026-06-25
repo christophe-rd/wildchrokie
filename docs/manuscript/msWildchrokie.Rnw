@@ -102,10 +102,10 @@ bspp_df2_gdd_mm[paste0(log_cols, "_mm_perGDD")] <- lapply(bspp_df2_gdd_mm[log_co
 \subsection*{Common garden setup and data collection}
 We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv} and Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted the seedlings outside at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020 (Buonuito, unpublished). \\
 \par
-For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact frequency varies within and across years (see Figure for more details about the monitoring frequency \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe two phenological stages: leafout which we defined as: BBCH 15 and budset as BBCH 102; \citep{finn_general_2007}; Buonuito, unpublished). 
-We had a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations (which we refer as the full datasets), together yielding \Sexpr{nrow(emp)} full growing season durations (restricted dataset). \\
+For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact frequency varied within and across years (for more details see Figure \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe two phenological stages: leafout which we defined as: BBCH 15 and budset as BBCH 102; \citep{finn_general_2007}; Buonuito, unpublished). 
+We had a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations (which we refer as the full datasets), together yielding \Sexpr{nrow(emp)} full growing season durations (restricted dataset). \\ %emw25Jun -- you need to explain this better. Something like: We had a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations (which we refer as the full datasets), but for some individual trees in certain years we did have both events, thus our total of matched full growing season durations (which we refer to as the restricted dataset) is \Sexpr{nrow(emp)}. 
 \par
-In the spring of 2023, we collected tree ring samples only for the tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family : Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individuals (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and left them to dry with the cross-sections at ambient temperature for three months. 
+In the spring of 2023, we collected tree ring samples from tree species with high survivorship. Thus, we have four species in the \textit{Betulaceae} family : Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). We collected cross-sections on 78 individuals by cutting the trunk above the root collar, and cores on 43 individuals using standard dendrochonological methods \citep{cook_methods_1990}, for a total of 81 individual trees (Table \ref{tab:provs}). We stored the cores in modified plastic straws to allow aeration and left them to dry with the cross-sections at ambient temperature for three months. 
 
 % Provenance map
 \begin{figure}[!ht]
@@ -124,9 +124,13 @@ We performed visual cross dating. This consists of assigning a calendar year to 
 
 \subsection*{Data analyses}
 To understand how growth shifted with season lengths we used linear Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different season ways: GDD, GSL, SOS and EOS. 
-We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (on the log scale) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report results when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero. \\
+We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (on the log scale) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero. \\
 
-We used the daily climate data from the climate station located at Weld Hill research station for 2018 and 2019 \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used the daily climate data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurence across year at our study location and used the proposed drought intensity to qualify the moderete, severe and extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026} \\
+%emw25Jun -- you need something closer to a topic sentence here -- 
+For daily climate data across all the years of phenological sampling (2018-2020) we combined two sources. 
+For 2018 and 2019 we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used data from the weather station “Boston (Weld Hill)" of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurence across year at our study location and used the proposed drought intensity to qualify presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026} \\
+
+%emw25Jun -- z in a-score should be $z$ throughout
 For each predictor, we estimated its effect on ring width observed ($i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
 
 \[
@@ -140,7 +144,7 @@ ln(ringwidth)_i &\sim N(\mu, \sigma_y) \\
 
 This model estimates a species-specific effect of each season length predictor (e.g. GDD) on growth ($\beta_{species}$), while also controlling for other variation due to species ($\alpha_{species}$), provenance ($\alpha_{prov}$), individual tree ($\alpha_{treeid}$) and year ($\alpha_{year}$). We ran the models using both natural units and scaled predictors through z-scoring \citep{gelman_data_2006} to allow for direct effect size comparison. We report estimates as means and 90\% uncertainty intervals (UI). \\ 
 
-We used weakly informative priors for all models (increasing the priors by 2x for the z-scored models did not qualitatively affect the results). We ran four chains with 2000 warmup and 2000 sampling iterations each, for a total of 8000 sampling iterations. The models did not have any divergent transitions, had a $\hat{R}$ below 1.01, and values of effective sample size ($n_{\text{eff}}$) greater than 10\% of the model iterations. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{standevelopmentteam_rstan_2025} to run the Stan code in R. \\
+We used weakly informative priors for all models (increasing the priors by 2X for the z-scored models did not qualitatively affect the results). We ran four chains with 2000 warmup and 2000 sampling iterations each, for a total of 8000 sampling iterations and checked diagnostics of output: chains had no divergent transitions, $\hat{R}$ values below 1.01, and effective sample sizes ($n_{\text{eff}}$) greater than 10\% of the model iterations. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{standevelopmentteam_rstan_2025} to run the Stan code in R. \\
 \par
 Because ring widths decrease with age---particularly with young trees---we also ran the models using basal area increment (BAI) as the response variable. This allows for a more representative portrayal of annual growth increment by using the total ring area, instead of its width alone. For this, we summed each ring width separately at the three distinct locations on the cross sections yielding three radii from pit to bark. We then calculated the area of each ring by subtracting the radius from the inner ring from the outer ring: $\pi \times (\text{Inner radius}^2 - \text{Outer radius}^2)$, and averaged across the three BAI for each ring. Finally, we also fit the models for SOS and EOS using both the restricted ($n = $\Sexpr{nrow(emp)}) and full datasets for each predictor (SOS $n = $\Sexpr{nrow(empfullsos)} and EOS $n = $\Sexpr{nrow(empfulleos)}.
 
@@ -180,8 +184,14 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 % Question 1
 %-------------------------------------------------------------------------------
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henseforth "RW" per scaled predictor (one week (seven days) of average spring growing degree days (GDD); (\Sexpr{wcgddscale}) for the thermal season, one week of growing season length (GSL) for the calendar season, one week of leafout for the start of season (SOS) and one week of of budset for the end of season (EOS).
-Warmer thermal season increased growth for Paper birch (\textit{Betula papyrifera}; 
+%emw25Jun -- slope units usually use a / so, $\Delta$ RW/scaled GSL but better would be $\Delta$ mm/GSL etc.
+%emw25Jun --  you use trending below but you do not define it in the methods. Also, results are usually in PAST tense, I fixed some of it, please fix the rest.
+%emw25Jun -- change your quotes to `' and make sure they compile correctly
+%emw25Jun -- I think this is too long and sounds too identical to the methods:
+% We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henceforth "RW" per scaled predictor (one week (seven days) of average spring growing degree days (GDD); (\Sexpr{wcgddscale}) for the thermal season, one week of growing season length (GSL) for the calendar season, one week of leafout for the start of season (SOS) and one week of of budset for the end of season (EOS).
+% Make sure it's in the methods and then shorten it here and refer the reader back: We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henceforth "RW" per scaled predictor, see XX section in Methods for more details. 
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report results as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henceforth "RW" per scaled predictor (one week (seven days) of average spring growing degree days (GDD); (\Sexpr{wcgddscale}) for the thermal season, one week of growing season length (GSL) for the calendar season, one week of leafout for the start of season (SOS) and one week of of budset for the end of season (EOS).
+Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; 
 \Sexpr{bspp_df2_gdd$mean[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, UI:
 \Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "B. papyrifera")]} RW change per scaled GDD), Grey birch (\textit{Betula populifolia};
@@ -200,7 +210,7 @@ Unlike its response to warmer thermal season, {\Ainc} grew more with longer cale
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]} RW change per seven GSL days). {\Bpap} also grew more with longer calendar seasons
 (\Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, UI: 
 \Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]} RW change per seven GSL days), while the other two \textit{Betula} did not, though they are trending in the same way ({\Ball}: 
+\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]} RW change per seven GSL days), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: 
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, UI: 
 \Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]} RW change per seven GSL days, and {\Bpop}: 
@@ -213,10 +223,10 @@ On a scaled axis (through z-scoring \citep{gelman_data_2006}), the thermal and c
 %-------------------------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------------------------
-Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. However, while we found that a longer calendar season increased growth for two species, only one also grew more with an earlier start of season ({\Ainc}
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (of the two species that a longer calendar season increased growth for two species, %emw25Jun -- fix whatever bad thing I have now done to ()
 \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, UI:
 \Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
-\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]} RW change per seven SOS days; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). However, {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season
+\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]} RW change per seven SOS days; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season
 (\Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, UI:
 \Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
 \Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]} RW change per seven SOS days; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season
@@ -228,8 +238,8 @@ Increased growth with longer seasons is often presumed to come from growth in th
 \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. populifolia")]} RW change per seven EOS days, and {\Bpap}: 
 \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, UI:
 \Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]} RW change per seven EOS days; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS $n =$
-\Sexpr{nrow(empfullsos)} and EOS $n =$ 
+\Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]} RW change per seven EOS days; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+\Sexpr{nrow(empfullsos)} and EOS: $n =$ 
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n=$ 
 \Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a). \\
 \par
@@ -237,6 +247,8 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
+%emw25Jun -- 'deviation from the grand mean' is not units; remove that and add the units, I am pretty sure it's just mm
+%emw25Jun -- these's an odd 1 below ... I think you need to add decimals throughout when they are 1.0 or 1.00 (use the round command I think) 
 We did not find any clear effect of year on growth (2018:
 \Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2018")]}, UI:
 \Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2018")]}, 
@@ -246,7 +258,7 @@ We did not find any clear effect of year on growth (2018:
 \Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2019")]} RW deviation from the grand mean; 2020:
 \Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2020")]}, UI:
 \Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2020")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2020")]} RW deviation from the grand mean; Table \ref{tab:tab_all}), and there was no apparent differences of growth looking across species ({\Ainc}:
+\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2020")]} RW deviation from the grand mean; Table \ref{tab:tab_all}), and there were no apparent differences on baseline growth between species ({\Ainc}:
 \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "A. incana")]}, UI:
 \Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "A. incana")]}, 
 \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "A. incana")]} RW deviation from the grand mean; {\Ball}:
@@ -258,7 +270,7 @@ We did not find any clear effect of year on growth (2018:
 \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. papyrifera")]} RW deviation from the grand mean; {\Bpop}:
 \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. populifolia")]}, UI:
 \Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. populifolia")]}, 
-\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. populifolia")]} RW deviation from the grand mean; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not change across any provenances (Dartmouth College (NH):
+\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. populifolia")]} RW deviation from the grand mean; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH):
 \Sexpr{site_df2$mean[which(site_df2$site_name == "Dartmouth College (NH)")]}, UI:
 \Sexpr{site_df2$p5[which(site_df2$site_name == "Dartmouth College (NH)")]}, 
 \Sexpr{site_df2$p95[which(site_df2$site_name == "Dartmouth College (NH)")]} RW deviation from the grand mean; Harvard Forest (MA):
@@ -270,18 +282,21 @@ We did not find any clear effect of year on growth (2018:
 \Sexpr{site_df2$p95[which(site_df2$site_name == "St-Hippolyte (Qc)")]} RW deviation from the grand mean; White Mountains (NH):
 \Sexpr{site_df2$mean[which(site_df2$site_name == "White Mountains (NH)")]}, UI:
 \Sexpr{site_df2$p5[which(site_df2$site_name == "White Mountains (NH)")]}, 
-\Sexpr{site_df2$p95[which(site_df2$site_name == "White Mountains (NH)")]} RW deviation from the grand mean; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The variation across provenances ($\sigma = $
+\Sexpr{site_df2$p95[which(site_df2$site_name == "White Mountains (NH)")]} RW deviation from the grand mean; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
 \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, UI:
 \Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
-\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]} RW deviation from the grand mean) and tree ids ($\sigma = $ 
+\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]} RW deviation from the grand mean) was similar to variation across individual trees ($\sigma = $ 
 \Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, UI: 
 \Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]} RW deviation from the grand mean; Table \ref{tab:tab_all}) was similar. 
 
 % Figure mu across all species and climate predictors
-\begin{figure}[!ht]
+\begin{figure}[!ht] %emw25Jun -- mm needs to appear here! Is my edit below correct? Fix throughout. 
+%emw25Jun -- for all tables and figures -- you do not need to give the acronyms (e.g., SOS) if you do not use them. Please fix. 
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (on the log scale) as a function of four different predictors (growing degree days, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season, SOS; end of season, EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}). The species colors are the same throughout the figures. Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent the ring width change on the log scale per seven average spring days GDD (\Sexpr{wcgddscale} GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
+\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season (SOS); end of season (EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). 
+%emw25Jun -- can you try to shorten this and add in the missing word and period? Also 25-75 is just 50%, just say 50% (and tell anyone in the lab doing this to STOP doing this). You can open an issue if you need help. 
+Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent the ring width change on the log scale per seven average spring days GDD (\Sexpr{wcgddscale} GDD; panel a), seven days of GSL (panel b), seven days of leafout (SOS; panel c) and seven days of budset (EOS; panel d). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (25\% and 75\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -359,7 +374,7 @@ header <- list(
 tab <- xtable(loctable,
               # keep the 2 decimals for lat long
               digits = c(0, 0, 1, 1, 0, 0, 0, 0),
-              caption = "Provenance coordinates and count per species and provenances out of a total of 81 individual trees.",
+              caption = "Provenance coordinates and count per species and provenances out of a total of 81 individual trees sampled from the USA (in MA and NH) and Canada (in Qc).",
               label = "tab:provs"
 )
 print(tab,
@@ -374,14 +389,14 @@ print(tab,
 % Phenology observations time series
 \begin{figure}[!ht]
 \includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.jpeg}
-\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represent the number of observations that were made during a period of 14 days and the lines represent the earliest, the average and last recorded budburst observations. This demonstrates that despite the irregular frequency, it is unlikely that we missed early spring phenophases by more than six days.}
+\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represents the number of observations that were made during a period of 14 days and the lines represent the earliest, the average and last recorded budburst observations. This demonstrates that across the different frequencies of observation, distances between early spring phenophases were similar across years.} %emw25Jun -- check my edits are correct. 
 \label{fig:phenoTimeSeries}
 \end{figure}
 
 % Rw per year for allometry
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
-\caption{We randomly sampled 20 trees from our dataset and represent the ring width (mm) as a function of year to represent the allometry patterns across all years we had ring width for.}
+\caption{We show 20 randomly sampled trees from our dataset and represent the ring width (mm) as a function of year to represent the potential allometry patterns across all years we had ring width for.}
 \label{fig:allom}
 \end{figure}
 
@@ -417,7 +432,7 @@ df_all$Species <- wctablespp[df_all$Species]
 
 # Print table
 tab <- xtable(df_all,
-              caption = "Species level slope parameters which represent ring width change (on the log scale), per scaled predictor (see data analyses section for more details). We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).",
+              caption = "Species level slope parameters which represent ring width change (on the log scale), per scaled predictor (see data analyses section for more details). We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different phenological predictors (GDD: growing degree days across the growing season, GSL: growing season length, SOS: start of season and EOS: end of season).",
               label = "tab:wc_slope_table"
 )
 
@@ -519,7 +534,7 @@ combined <- data.frame(
 )
 
 print(xtable(combined,
-             caption = "Summary output of each parameter from our four predictors, using ring width (on the log scale) as the reponse variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.",
+             caption = "Summary output of each parameter from our four predictors, using ring width (on the log scale) as the reponse variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in the Methods section for more details.",
              label = "tab:tab_all"),
       include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
 @
@@ -599,8 +614,8 @@ print(xtable(binded,
 
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg}
-\caption{Full vs most restricted rows of data for the model with start of season (SOS; a) and end of season (EOS; b) as the predictor. Each pannel represent the different parameters used to fit the models. `aspp` and `ayear` represent the ring width (on the log scale) deviation from the grand mean for species and year, respectively. `bspp` represent the change in ring width (on the log scale) per scaled predictor for each species (see data analyses section for more details).} 
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.jpeg} %emw25Jun -- you need to make these greek letters that match your equations. 
+\caption{Full vs, most restricted rows of data for the model with start of season (SOS; a) and end of season (EOS; b) as the predictor. Each pannel represent the different parameters used to fit the models. `aspp` and `ayear` represent the ring width (on the log scale) deviation from the grand mean for species and year, respectively. `bspp` represent the change in ring width (on the log scale) per scaled predictor for each species (see data analyses section for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
