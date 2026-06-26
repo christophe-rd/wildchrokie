@@ -84,17 +84,21 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Competition may offset extra days to grow especially for below canopy trees
   
+  \item And how much phenology can respond will matter ...
+  
   \end{enumerate}
 
 % Paragraph 5
-\item Different plant stages (leaves vs wood) differ in their plasticity
+%emwJun26 -- this paragraph currently does not really hold together (how do the topics fit?) nor does it fit perfectly in the intro flow ... when you write it up to try to fix these problems. 
+\item Different plant stages (leaves vs wood) differ in their plasticity %emwJun26 -- great you moved this up, but how will it flow from last paragraph now? I tried to fix this but you should think on if it works ... 
   \begin{enumerate}
   
-  \item Leaf phenology is very plastic (well studied)
+  \item Leaf phenology is very plastic (well studied) %emwJun26 -- but below you say the reverse for budset!
   
   \item Leaf phenology and growth are synchronized = good proxy for growth SOS and EOS
   
   \item However, this does not say anything how much trees grow in a year %emw22Jun -- not 100% sure what you mean here ... be care to be TOO detailed (`annual growth increment' is pretty specific for the reader at this point) too fast.
+  %emwJun26: You also need a transition here ...
   
   \end{enumerate}
 
@@ -111,13 +115,14 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
 
 % Paragraph 7
-\item Even with good conditions, trees may not be able to respond to longer GS
+\item Even with good conditions, trees may not be able to respond to longer GS %emwJun26 -- how will this flow from last paragraph now? And you basically have the same topic sentence for paragraph 4 ... I think this paragraph HERE needs to be a set up of the full intro two prepare for the next paragraph ... so you need a different topic and a couple more points and ... 
   \begin{enumerate}
-  \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days 
+  \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days  
   
-  \item Tree growth rate cannot increase indefinitely
+  \item Tree growth rate cannot increase indefinitely %emwJun26 -- this should be cut from here or move up
   
-  \item Length and speed of growth is physiologically (or genetically?) controlled
+  \item Length and speed of growth is physiologically (or genetically?) controlled %emwJun26 -- this probably should move up, I might put it before I added:   \item And how much phenology can respond will matter ...
+  
   
   \end{enumerate}
   
@@ -357,7 +362,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
     
     \item No current increased drought in our species native range $=$ growth would increase
     
-    \item Positive effect of later EOS offset if soil moisture becomes inadequate
+    \item Positive effect of later EOS offset if soil moisture becomes inadequate %emwJun26 and here you could discuss the one late season drought year a little perhaps? I suggest a quick lit search on whether late season droughts are expected to increase of have increased in the NE of NA with ACC. 
     
     \item Other temperate regions have growth decrease attributed to reduced soil moisture
     
@@ -385,6 +390,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
     \item Good understanding of which leaf phenophase is locally adapted: budset $>$ leafout
     
     \item Even though provenance had little effect on budset (Buonaiuto, unpublished), which may transpose into growth %crd25JunL: not sure about "transpose", but I want to say that we don't see growth difference because of the little effect that provenance had on budset 
+    %emwJun26 -- yeah, I am not 100% sure what you mean ... do you mean: Since budset had little evidence of local adaptation, then growth also did not? I think we can figure it out as you start writing ... 
     
     \item We know little about the effect of local adaptation on growth
     
@@ -396,6 +402,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Future carbon models and range shift projections need to consider species %emw22Jun -- Hmm, I might close with TWO (2.5) big things your model suggests (and hint at a third): (1) EOS vs SOS looks like they differentially matter to growth and we don't understand that at all (come back to Dow and any other studies that JUST used SOS, in the grephon repo is a lit review table you could check for this (2) species matter and we don't consider them enough (but you can skip population) and (3) maybe juvenile trees are more responsive? I am not sure about (3) here though, you may do better to sneak in it above. 
 
 %crd25Jun: I don't know where to sneak in the argument on juvenile trees which relates both to their potentially more reactive life stage, but also their structural position in the forest. In a natural environment, they would be competing for light so they might not grow that much more. It feels like a rather "new" argument that doesn't belong in the conclusion...
+%emwJun26 -- I agree and would move it up -- put in a new short bit between 3a and 3b: Here you could acknowledge that these are more fast growing species (so maybe other species will differ) and also that you worked on juvenile trees (and maybe they are more responsive) ... 
 
   \begin{enumerate}
   % Paragraph
