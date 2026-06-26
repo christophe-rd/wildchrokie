@@ -97,13 +97,12 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   
   \item Leaf phenology and growth are synchronized = good proxy for growth SOS and EOS
   
-  \item However, this does not say anything how much trees grow in a year %emw22Jun -- not 100% sure what you mean here ... be care to be TOO detailed (`annual growth increment' is pretty specific for the reader at this point) too fast.
+  \item However, this does not say anything how much trees grow in a year 
   %emwJun26: You also need a transition here ...
   
   \end{enumerate}
 
-% Paragraph 6 %emw22Jun -- I wonder if this belongs after paragraph 5? It may be easier for the reader if you keep leaf phenology = plastic (or not) together %crd25Jun: changed for after paragraph 5
-\item Local adaptation to inform growth with climate change
+% Paragraph 6 
   \begin{enumerate}
   
   \item Trees from northern provenance may grow less with longer seasons
@@ -118,7 +117,6 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Even with good conditions, trees may not be able to respond to longer GS %emwJun26 -- how will this flow from last paragraph now? And you basically have the same topic sentence for paragraph 4 ... I think this paragraph HERE needs to be a set up of the full intro two prepare for the next paragraph ... so you need a different topic and a couple more points and ... 
   \begin{enumerate}
   \item Earlier SOS, also means earlier EOS---gains cool early season days but miss warmer late season days  
-  
   \item Tree growth rate cannot increase indefinitely %emwJun26 -- this should be cut from here or move up
   
   \item Length and speed of growth is physiologically (or genetically?) controlled %emwJun26 -- this probably should move up, I might put it before I added:   \item And how much phenology can respond will matter ...
@@ -151,7 +149,6 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % RESULTS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-%emw22Jun -- I mostly skipped this ..  but a reminder that need units EVERYWHERE so that means also on your betas ... at least add for the first beta of each paragraph
 \clearpage
 \section*{Results}
 \begin{enumerate}
