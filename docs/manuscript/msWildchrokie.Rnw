@@ -89,6 +89,24 @@ bspp_df2_gdd_mm[paste0(log_cols, "_mm_perGDD")] <- lapply(bspp_df2_gdd_mm[log_co
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section*{Introduction}
+The most frequently observed biological impact of climate change is major changes in phenology---the timing of recurring life history events. For trees, shits in spring and autumn phenology modify when the seasons start and end. In the northern hemisphere, spring events have advanced, and autumn have delayed, but to a much lesser extent. Together, early springs and later autumns should increase tree growth. \\
+\par 
+The positive relationship between growing season length and tree growth is crucial for climate forecasting. With anthropogenic climate change that will keep affecting biological processes worldwide, increasing the accuracy of carbon cycle models is crucial. Indeed, among the many processes that are included in these models, carbon sequestration by forests is an important one. In particular, temperate forests contribute offset a large part of human-emitted greenhouse gas emissions. However, this relies on the positive relationship between growing season length and tree growth. If this relationship changes, current and future climate solutions could be impacted. \\
+\par
+Recent evidence suggests that longer growing seasons did not increase growth. Indeed, *Dow showed at a local scale that longer growing season did not increase growth. Additionally, *Cabon found a similar trend where different biomes gross primary production (GPP) and growth were decoupled at the global scale. Understanding these findings requires answering why trees do not grow more despite longer growing seasons. \\
+\par
+Longer growing seasons do not necessarily mean more favorable conditions for growth throughout the season. Longer seasons are not necessarily warmer. In addition, the well-documented advancement of spring phenology increases the growing season length, but does not increase growing degree days (GDD) by that much (Figure \ref{fig:GSfig}). In addition, while trees have a longer period to grow, water availability may not be sufficient to support continuous growth throughout the growing season. Finally, while intra and inter-specific competition has no relationship with climate change, the extra days trees get in the season may be offset by competition for light, which juvenile trees are especially vulnerable to. \\
+\par 
+Different plant organs (e.g. leaves vs wood) differ in their plasticity. Leaf phenology is a highly plastic trait, supported by decades of research on the relationship between warming spring and leaf phenology. However, we know a lot less about the plasticity of growth in response to temperature and duration of growth. In deciduous trees diffuse-porous trees, leaf phenology and growth are closely synchronized. However, this does not indicate anything about how much trees grow in a year.\\
+\par
+Local adaptation could inform tree growth responses with future climate change. Trees from northern provenances will likely grow less with longer seasons, because they adapted for shorter seasons and therefore have a shorter window of opportunity, despite potentially better conditions for a longer period. Between the start and end of season, budset (EOS) is much more locally adapted than leafout, which indicates that the end of season may actually be the most constraining factors affecting trees across a latitudinal gradient. Thus, common gardens investigating the effect of provenance latitude are really important to better understand how climate change will affect tree growth. 
+
+% Conceptual figure
+\begin{figure}[!ht]
+\includegraphics[width=0.9\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/climate/gsconceptualfig.pdf}
+\caption{We show how shifting growing season length with climate change affects both the temperature trees experience throughout the growing season (a), and how much growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston airport Climate station for the smoothed temperature and GDD curves. We represent the changes in temperature before (1945-1965 in blue) and after the 1980s increase in climate warming (2005-2025 in red). With climate change, spring events (green arrow) have advanced and fall phenology (orange arrow) has delayed, but to much lesser extent (day advancements are fake and represented by the arrows), this lengthened the calendar growing season, but concurently changed the temperature trees experience early in their season. Growth onset earlier in the season means the first days of growth are cooler (a) resulting in little accumulation of GDD (b). Though shifts in EOS are weaker and the temperature experienced changed little (a), the GDD accumulation rate late in the season is higher than early in the season. Alongside warmer summer temperature, this results in higher GDD accumulation, warming their thermal seasons.}
+\label{fig:GSfig}
+\end{figure}
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % METHODS
@@ -312,6 +330,13 @@ Panels (a) to (d) represent the model slope estimates for each species, for each
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 \section*{Discussion}
+Here we used 81 juvenile trees of four species from four provenances to answer if longer growing seasons increased tree growth. For this, we used annual growth via tree rings and leaf phenology as a proxy for the start (SOS) and end of season (EOS). We found that the thermal season (GDD) was a better predictor for growth than the calendar season (GSL) and that provenance had little effect on growth.
+
+\subsection*{The thermal season better predicts growth than the calendar season}
+The thermal season is a better predictor for growth because it is more closely aligned to when, but also how fast trees grow. Indeed, by accounting for the temperature throughout the year, the thermal season weighs growing days better than the calendar season which assumes a constant importance of each day. For instance, the short and cool spring days early in the season count for less for the thermal season vs the calendar season (Figure \ref{fig:GSfig})---which our results reflect by showing a stronger response to the thermal season. Coherently, our results demonstrate a stronger response of the end of season than SOS, because the temperature late in the season is warmer than early in the season, so the GDD accumulation is higher. Thus, any extra days late in the season has a bigger effect than any extra days early in the season. \\
+
+We can use the start and end of season to disentangle the calendar season effect on growth. Our findings showed that an early SOS did not increase growth for most species, which is aligned with previous studies (e.g. *Dow). As a result, studies that solely focus on SOS might miss that longer seasons lead to more growth. Most of our species grew more with a later EOS which furthermore relates to the thermal than the calendar season. \\
+
 
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
