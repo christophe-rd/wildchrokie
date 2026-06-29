@@ -1014,6 +1014,11 @@ saveRDS(fiteosfull, "output/stanOutput/fitGrowthEOSFull")
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Recover and plot parameters SOS restricted vs full #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+fitsos     <- readRDS("output/stanOutput/fitGrowthSOS")
+fitsosfull <- readRDS("output/stanOutput/fitGrowthSOSFull")
+fiteos     <- readRDS("output/stanOutput/fitGrowthEOS")
+fiteosfull <- readRDS("output/stanOutput/fitGrowthEOSFull")
+  
 df_fitsos <- as.data.frame(fitsos)
 # posterior summaries
 sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
@@ -1066,13 +1071,15 @@ ayear_df2_full_eos   <- extract_params(df_fiteos, "ayear", "fit_ayear", "year", 
 ayear_df2_full_eos <- subset(ayear_df2_full_eos, !grepl("mean", year))
 
 # Open device
-jpeg("figures/growthModelsMain/FullVSRestricted.jpeg", width = 9, height = 6, units = "in", res = 300)
-par(mfrow = c(2,4), oma = c(0, 2, 0, 0))
- 
+pdf("figures/growthModelsMain/FullVSRestricted.pdf", width = 9, height = 6)
+par(mfrow = c(2, 4), oma = c(2, 2, 2, 0))
+
 plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = bquote(sigma),
+     type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_sos$p25, sigma_df2_full_sos$p75)),
-     xlim = range(c(sigma_df2_sos$p25, sigma_df2_sos$p75)))
+     xlim = range(c(sigma_df2_sos$p25, sigma_df2_sos$p95)))
 arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$p25,
        x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1083,11 +1090,15 @@ points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
-text(sigma_df2_sos$p75, sigma_df2_full_sos$p25, labels = sigma_df2_sos$sigma, pos = c(3,3), cex = 0.75)
+text(sigma_df2_sos$p25, sigma_df2_full_sos$p75,
+     labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
+     pos = c(4, 4), cex = 1)
 
 # bspp
 plot(bspp_df2_sos$mean, bspp_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("species", function(s) bquote(beta[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(bspp_df2_full_sos$p25, bspp_df2_full_sos$p75)),
      xlim = range(c(bspp_df2_sos$p25, bspp_df2_sos$p75)))
 arrows(x0 = bspp_df2_sos$mean, y0 = bspp_df2_full_sos$p25,
@@ -1102,7 +1113,9 @@ abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
 plot(aspp_df2_sos$mean, aspp_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("species", function(s) bquote(alpha[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(aspp_df2_full_sos$p25, aspp_df2_full_sos$p75)),
      xlim = range(c(aspp_df2_sos$p25, aspp_df2_sos$p75)))
 arrows(x0 = aspp_df2_sos$mean, y0 = aspp_df2_full_sos$p25,
@@ -1117,7 +1130,9 @@ abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # ayear
 plot(ayear_df2_sos$mean, ayear_df2_full_sos$mean,
-     xlab = "restricted", ylab = "full", main = "ayear", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("year", function(s) bquote(alpha[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(ayear_df2_full_sos$p25, ayear_df2_full_sos$p75)),
      xlim = range(c(ayear_df2_sos$p25, ayear_df2_sos$p75)))
 arrows(x0 = ayear_df2_sos$mean, y0 = ayear_df2_full_sos$p25,
@@ -1131,13 +1146,11 @@ points(ayear_df2_sos$mean, ayear_df2_full_sos$mean,
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 
-
-# add label
-mtext("a)", side = 2, outer = TRUE, at = 0.95, font = 2, las = 1, line = 0.5)
-
 # EOS
 plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "sigmas", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = bquote(sigma),
+     type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_eos$p25, sigma_df2_full_eos$p75)),
      xlim = range(c(sigma_df2_eos$p25, sigma_df2_eos$p75)))
 arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$p25,
@@ -1150,11 +1163,15 @@ points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#d39822", cex = 1.5)
-text(sigma_df2_eos$p75, sigma_df2_full_eos$p25, labels = sigma_df2_eos$sigma, pos = c(3,3), cex = 0.75)
+text(sigma_df2_sos$p25, sigma_df2_full_sos$p75,
+     labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
+     pos = c(4, 4), cex = 1)
 
 # bspp
 plot(bspp_df2_eos$mean, bspp_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "bspp", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("species", function(s) bquote(beta[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(bspp_df2_full_eos$p25, bspp_df2_full_eos$p75)),
      xlim = range(c(bspp_df2_eos$p25, bspp_df2_eos$p75)))
 arrows(x0 = bspp_df2_eos$mean, y0 = bspp_df2_full_eos$p25,
@@ -1169,7 +1186,9 @@ abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # aspp
 plot(aspp_df2_eos$mean, aspp_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "aspp", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("species", function(s) bquote(alpha[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(aspp_df2_full_eos$p25, aspp_df2_full_eos$p75)),
      xlim = range(c(aspp_df2_eos$p25, aspp_df2_eos$p75)))
 arrows(x0 = aspp_df2_eos$mean, y0 = aspp_df2_full_eos$p25,
@@ -1184,7 +1203,9 @@ abline(0, 1, lty = 2, col = "black", lwd = 2)
 
 # ayear
 plot(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
-     xlab = "restricted", ylab = "full", main = "ayear", type = "n", frame = FALSE,
+     xlab = "Restricted dataset", ylab = "Full dataset",
+     main = lapply("year", function(s) bquote(alpha[.(s)])),
+     type = "n", frame = FALSE,
      ylim = range(c(ayear_df2_full_eos$p25, ayear_df2_full_eos$p75)),
      xlim = range(c(ayear_df2_eos$p25, ayear_df2_eos$p75)))
 arrows(x0 = ayear_df2_eos$mean, y0 = ayear_df2_full_eos$p25,
@@ -1197,9 +1218,10 @@ points(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
-# add label
-mtext("b)", side = 2, outer = TRUE, at = 0.42, font = 2, las = 1, line = 0.5)
-
+mtext("(a) Start of season (SOS)",
+      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, line = -0.5)
+mtext("(b) End of season (EOS)",
+      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, line = -22)
 dev.off()
 }
 
