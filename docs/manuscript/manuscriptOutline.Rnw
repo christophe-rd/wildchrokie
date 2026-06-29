@@ -91,8 +91,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
 
 % Paragraph 5
-%emwJun26 -- this paragraph currently does not really hold together (how do the topics fit?) nor does it fit perfectly in the intro flow ... when you write it up to try to fix these problems. 
-\item Leaf and wood phenology are not symmetrically plastic %emwJun26 -- great you moved this up, but how will it flow from last paragraph now? I tried to fix this but you should think on if it works ... 
+\item Leaf and wood phenology are not symmetrically plastic
   \begin{enumerate}
   
   \item Leaf phenology in the spring is very plastic (well studied)
@@ -100,9 +99,8 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \item Leaf phenology and growth are synchronized = good proxy for growth SOS and EOS
   
   \item However, this does not say anything how much trees grow in a year
-  %emwJun26: You also need a transition here ...
   
-  \item Looking at species and population 
+  \item How flexible growth is may change between species, but also across populations
   \end{enumerate}
 
 % Paragraph 6 
@@ -118,13 +116,14 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
   \end{enumerate}
 
 % Paragraph 7
-\item How much trees will respond to future conditions depends on a mix  %emwJun26 I think this paragraph HERE needs to be a set up of the full intro two prepare for the next paragraph ... so you need a different topic and a couple more points and ... 
+\item Tree growth will vary across species but will also depend on future environmental conditions   %emwJun26 I think this paragraph HERE needs to be a set up of the full intro two prepare for the next paragraph ... so you need a different topic and a couple more points and ... 
+%crdJun29: not totally sure about the set up... I tried something.
   \begin{enumerate}
-  \item We need to look at the precise timing when trees grow which can better inform as to how much they grow at different moment during the season
+  \item To understand GS and growth relationship, need to look more precisely at when trees grow during the GS
   
   \item If growth is not plastic enough, trees may not be able to track favorable changing conditions in the season
   
-  \item Differences across species, but also at their population is likely to inform how they react in a certain way, but also predict how they will respond to future conditions. 
+  \item Varies across species and population, with the latter having a potential to inform how species will respond to future conditions
   
   \item Juvenile trees store little carbon, but are crucial for forest regeneration capacity
   
