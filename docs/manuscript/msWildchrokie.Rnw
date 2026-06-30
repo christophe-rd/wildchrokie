@@ -106,13 +106,13 @@ Longer GS does not necessarily mean more favorable conditions for growth through
 Leaf and wood phenology differ in their plasticity in response to changing environmental conditions. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait and is very responsive to temperature, while end of season phenology (e.g. budset) is much less plastic and mostly driven by photoperiod [*Baumgarten2026Indetermency]. Additionally, leaf phenology and growth are closely synchronized in diffuse-porous species (e.g. \textit{Betula}), making leaf phenology a good proxy for setting the start and end of the GS \citep{marchand_timing_2021,silvestro_roots_2025,suzuki_phenological_1996}. While this proxy is useful for setting the boundaries of the GS, it does indicate how much trees grow yearly. How flexible growth is in response to changing GS length and conditions varies between species, but also across populations [*Baumgarten2026Indetermency, Way and Montgomerry2015]. \\
 
 % Paragraph 6
-Local adaptation could inform tree growth responses with future climate change \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}. Trees from northern provenances will likely grow less with longer seasons, because they adapted for shorter seasons and therefore a shorter window for growth \citep{aitken_time_2016,way_photoperiod_2015}. This makes them likely to be genetically limited to respond to better conditions for a longer period. Indeed between the start and end of season, budset is known to be strongly locally adapted while leafout is not. This hints towards the EOS as a bigger constraining factor than SOS for tree growth potential across a latitudinal gradient. Thus, common gardens investigating the effect of provenance latitude are really important to better understand how climate change will affect tree growth. \\
+Local adaptation could inform tree growth responses with future climate change \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}. Trees from northern provenances will likely grow less with longer seasons, because they adapted for shorter seasons and therefore a shorter window for growth \citep{aitken_time_2016,way_photoperiod_2015}. This makes them likely to be limited genetically in their response to better conditions that occur over a longer period. Indeed between the start and end of season, budset is known to be strongly locally adapted while leafout is not (Zeng2024Weak). This hints towards the EOS as a bigger constraining factor than SOS for tree growth potential across a latitudinal gradient. Thus, common gardens investigating the effect of provenance latitude could be crucial to better understand how climate change will affect tree growth. \\
 
 % Paragraph 7
-Tree growth will vary between species, but will also depend on how they respond to future environmental conditions. To understand the relationship between GS and growth, we need to look precisely at when trees grow during the GS. If growth is not plastic enough, trees may not be able to track favorable changing condition during the GS. This plasticity varies heavily across species and populations, with the latter having a great potential to inform how species will respond to future conditions. Then, while juvenile trees store little carbon and are particularly vulnerable to light competition, they are crucial for forest regeneration capacity. \\
+Tree growth will vary between species, but will also depend on how they respond to future environmental conditions. To understand the relationship between GS and growth, we need to look precisely at when trees grow during the GS. If growth is not plastic enough, trees may not be able to track favorable changing condition during the GS [*Baumgarten2026Indetermency]. This plasticity varies heavily across species and populations, with the latter having a great potential to inform how species will respond to future conditions \citep{aitken_time_2016,way_photoperiod_2015}. Then, while juvenile trees store little carbon and are particularly vulnerable to light competition, they are crucial for forest regeneration capacity [REF]. \\
 
 % Paragraph 8
-Here, we aim to answer how GS and growth relate using juvenile trees in a common garden setting. For this, we aim to disentangle the GS length (i.e. number of growing days in the season) from the GS thermal conditions (i.e. GDD accumulated in the season). We will use tree rings for growth and will set the boundaries of the growing season with leaf phenology. The calendar season depicts the number of days between the start and end of season as the thermal season is determined the number of GDD accumulated between these seasonal boundaries. Thus, we will look at the effect of these season metrics across four different species from four provenances.
+Here, we ask how GS and growth relate using juvenile trees in a common garden setting. For this, we aim to disentangle the GS length (i.e. number of growing days in the season) from the GS thermal conditions (i.e. GDD accumulated in the season). We will use tree rings for growth and will set the boundaries of the growing season with leaf phenology. The calendar season depicts the number of days between the start and end of season as the thermal season is determined the number of GDD accumulated between these seasonal boundaries. Thus, we will look at the effect of these season metrics across four different species from four provenances.
 
 % Conceptual figure
 \begin{figure}[!ht]
@@ -229,15 +229,15 @@ Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrife
 \Sexpr{bspp_df2_gdd$p5[which(bspp_df2_gdd$spp_name %in% "A. incana")]}, 
 \Sexpr{bspp_df2_gdd$p95[which(bspp_df2_gdd$spp_name %in% "A. incana")]} \RW scaled GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
-\Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")]}, UI: 
-\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")]},
-\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")]} \RW scaled GSL). {\Bpap} also grew more with longer calendar seasons
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "A. incana")])}, UI: 
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "A. incana")])},
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "A. incana")])} \RW scaled GSL). {\Bpap} also grew more with longer calendar seasons
 ($\beta =$ \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, UI: 
 \Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. papyrifera")]} \RW scaled GSL), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
-\Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, UI: 
-\Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")]} \RW scaled GSL, and {\Bpop}: $\beta =$
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")])}, UI: 
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")])}, 
+\Sexpr{sprintf("%.2f", bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. alleghaniensis")])} \RW scaled GSL, and {\Bpop}: $\beta =$
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, UI: 
 \Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]} \RW scaled GSL; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
@@ -250,14 +250,14 @@ On a scaled axis (through $z$-scoring \citep{gelman_data_2006}), the thermal and
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for) $\beta =$
 \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "A. incana")]}, UI:
 \Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "A. incana")]}, 
-\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]} \RW scaled SOS; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season
-($\beta =$ \Sexpr{bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, UI:
-\Sexpr{bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")]} \RW scaled SOS; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season
-($\beta =$ \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, UI:
+\Sexpr{bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "A. incana")]} \RW scaled SOS; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball} which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+\Sexpr{sprintf("%.2f", bspp_df2_sos$mean[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")])}, UI:
+\Sexpr{sprintf("%.2f", bspp_df2_sos$p5[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")])}, 
+\Sexpr{sprintf("%.2f", bspp_df2_sos$p95[which(bspp_df2_sos$spp_name %in% "B. alleghaniensis")])} \RW scaled SOS; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season($\beta =$ 
+\Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, UI:
 \Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]}, 
 \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. alleghaniensis")]} \RW scaled EOS). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
-\Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}, UI:
+\Sexpr{sprintf("%.2f", bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. populifolia")])}, UI:
 \Sexpr{bspp_df2_eos$p5[which(bspp_df2_eos$spp_name %in% "B. populifolia")]}, 
 \Sexpr{bspp_df2_eos$p95[which(bspp_df2_eos$spp_name %in% "B. populifolia")]} \RW scaled EOS, and {\Bpap}: $\beta =$
 \Sexpr{bspp_df2_eos$mean[which(bspp_df2_eos$spp_name %in% "B. papyrifera")]}, UI:
@@ -271,7 +271,6 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
-%emw25Jun -- there's an odd 1 below ... I think you need to add decimals throughout when they are 1.0 or 1.00 (use the round command I think) 
 We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2018")]}, UI:
 \Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2018")]}, 
@@ -279,16 +278,16 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2019")]}, UI:
 \Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2019")]}, 
 \Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2019")]} RW; 2020: $\alpha =$
-\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2020")]}, UI:
-\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2020")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2020")]} RW; Table \ref{tab:tab_all}), and there were no apparent differences on baseline growth between species ({\Ainc}: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2020")])}, 
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])} RW; Table \ref{tab:tab_all}), and there were no apparent differences on baseline growth between species ({\Ainc}: $\alpha =$
 \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "A. incana")]}, UI:
 \Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "A. incana")]}, 
 \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "A. incana")]} RW; {\Ball}: $\alpha =$
 \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. alleghaniensis")]}, UI:
 \Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. alleghaniensis")]}, 
 \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. alleghaniensis")]} RW; {\Bpap}: $\alpha =$
-\Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. papyrifera")]}, UI:
+\Sexpr{sprintf("%.2f", aspp_df2$mean[which(aspp_df2$spp_name == "B. papyrifera")])}, UI:
 \Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. papyrifera")]}, 
 \Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. papyrifera")]} RW; {\Bpop}: $\alpha =$
 \Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. populifolia")]}, UI:
@@ -297,7 +296,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{site_df2$mean[which(site_df2$site_name == "Dartmouth College (NH)")]}, UI:
 \Sexpr{site_df2$p5[which(site_df2$site_name == "Dartmouth College (NH)")]}, 
 \Sexpr{site_df2$p95[which(site_df2$site_name == "Dartmouth College (NH)")]} RW; Harvard Forest (MA): $\alpha =$
-\Sexpr{site_df2$mean[which(site_df2$site_name == "Harvard Forest (MA)")]}, UI:
+\Sexpr{sprintf("%.2f", site_df2$mean[which(site_df2$site_name == "Harvard Forest (MA)")])}, UI:
 \Sexpr{site_df2$p5[which(site_df2$site_name == "Harvard Forest (MA)")]}, 
 \Sexpr{site_df2$p95[which(site_df2$site_name == "Harvard Forest (MA)")]} RW; St-Hippolyte (Qc): $\alpha =$
 \Sexpr{site_df2$mean[which(site_df2$site_name == "St-Hippolyte (Qc)")]}, UI:
@@ -314,19 +313,16 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]} RW; Table \ref{tab:tab_all}).
 
 % Figure mu across all species and climate predictors
-\begin{figure}[!ht] %emw25Jun -- mm needs to appear here! Is my edit below correct? Fix throughout. 
-%emw25Jun -- for all tables and figures -- you do not need to give the acronyms (e.g., SOS) if you do not use them. Please fix. 
+\begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season, GDD (mean daily temperature above 5\degree C); growing season length, GSL; start of season (SOS); end of season (EOS) across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). 
-%emw25Jun -- can you try to shorten this and add in the missing word and period? 
-Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through \RW scaled predictor (see `Data analyses' section in Methods for more details on predictor scaling). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
+\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through \RW scaled predictor (see `Data analyses' section in Methods for more details on predictor scaling). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muasite.pdf}
-\caption{The effect of provenance on growth across a latitudinal gradient. We show the ring width (log(mm)) (see Table \ref{tab:tab_all} for grand mean estimate) for each provenance with growing degree days (GDD) as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
+\caption{The effect of provenance on growth across a latitudinal gradient. We show the ring width (log(mm)) (see Table \ref{tab:tab_all} for grand mean estimate) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Table \ref{tab:wc_asite_table}). The dots represent the mean of each provenance and the thick lines, the 50\% and 90\% uncertainty intervals (UI). The provenances are color-coded from Figure \ref{fig:mapProv}, the map showing their locations.}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -338,11 +334,11 @@ Panels (a) to (d) represent the model slope estimates for each species, for each
 Here we used 81 juvenile trees of four species from four provenances to answer if longer growing seasons increased tree growth. For this, we used annual growth via tree rings and leaf phenology as a proxy for the start (SOS) and end of season (EOS). Longer GS increased growth for all species, but varied on the season metric used to measure it. We found that the thermal season (GDD) was a better predictor for growth than the calendar season (GSL) with little impact from provenance.
 
 \subsection*{The thermal season better predicts growth than the calendar season}
-The thermal season is a better predictor for growth because it is more closely aligned to when, but also how fast trees grow. Indeed, by accounting for the daily temperature throughout the year, the thermal season weighs growing days better than the calendar season which assumes a stable influence of each day on growth. For instance, the short and cool spring days early in the season count for less for the thermal season vs the calendar season (Figure \ref{fig:GSfig})---which our results reflect by demonstrating a stronger response to the thermal season. Coherently, our findings hint towards a stronger response from the EOS than the SOS, because the temperature late in the season is warmer than early in the season, so the GDD accumulation is higher (Figure \ref{fig:GSfig}). This makes any extra days late in the season more important than any extra days early in the season. \\
+The thermal season is a better predictor for growth because it is more closely aligned to when, but also how fast plants grow [*Chuine2017Process]. Indeed, by accounting for the daily temperature throughout the year, the thermal season weighs growing days better than the calendar season which assumes a stable influence of each day on growth. For instance, the short and cool spring days early in the season count for less for the thermal season vs the calendar season (Figure \ref{fig:GSfig})---which our results reflect by demonstrating a stronger response to the thermal season. Coherently, our findings hint towards a stronger response from the EOS than the SOS likely because the temperature late in the season is warmer than early in the season, yielding a higher GDD accumulation (Figure \ref{fig:GSfig}). This makes any extra days late in the season more important than any extra days early in the season (Buoniuto, unpublished). \\
 
-We disentangle the calendar season by using the SOS and EOS separately. We showed that an early SOS did not increase growth for most species, which is aligned with previous studies (e.g. *Dow). In contrast, most of our species grew more with a later EOS which furthermore relates to the thermal than the calendar season---because the temperature is warmer late in the season. As a result, studies that solely focus on the SOS will likely miss that longer seasons lead to more growth.  \\
+We disentangled the calendar season by using the SOS and EOS separately. We showed that an early SOS did not increase growth for most species, which is aligned with previous studies (e.g. [*Dow, Wheeler2016Snow, Gao2022]). In contrast, most of our species grew more with a later EOS which relates furthermore to the thermal than the calendar season---because the temperature is warmer late in the season. As a result, studies that solely focus on the SOS will likely miss that longer seasons lead to more growth.  \\
 
-Future growth response with varying soil moisture during the growing season is unclear. A later EOS when coupled with appropriate soil moisture leads to increased growth, as we and other studies have found. There are currently no increases in droughts within our species range, suggesting that growth should increase with longer and warmer GS. However, the positive effect of a later EOS could be offset if soil moisture becomes inadequate. While during our study, the driest period was late in the season (2020), this is not a current observed trend throughout the Northeastern United States. Nevertheless, if this water regime shifts with future climate change, tree growth could be declining in response to decreased soil moisture---a pattern observed in other temperate regions.
+Future growth response with varying soil moisture during the growing season is unclear [*Gao2022, Li2023Widespread]. A later EOS when coupled with appropriate soil moisture leads to increased growth, as we and other studies have found [*Gao2022]. There are currently no increases in droughts within our species range, suggesting that growth should increase with longer and warmer GS [*Agel2025Drought]. However, the positive effect of a later EOS could be offset if soil moisture becomes inadequate. While during our study, the driest period was late in the season (2020), this is not a current observed trend throughout the Northeastern United States. Nevertheless, if this water regime shifts with future climate change, tree growth could be declining in response to decreased soil moisture---a pattern observed in other temperate regions.
 
 \subsection*{Contrasting growth responses across species, but not across provenances}
 Our four species did not symmetrically respond to the different season predictors. Indeed, {\Ainc} grew more with a longer calendar season and an earlier SOS, suggesting that most of that species' growth happens in the spring. {\Ainc} is ruderal and species with that life-history strategy allows them to be very flexible in response to changing conditions, potentially providing them the opportunity of growing most early in the spring when days are shorter and cooler [*Flora1997, Bowman2023, Grime1977]. In contrast, {\Bpap} and {\Bpop} were most driven by the EOS, suggesting that they are both reactive these late of season days characterized by warmer temperatures. Lastly, {\Ball} which responded to both the SOS and the EOS points towards a counter interacting trend where an an early SOS decreases growth, but a later EOS increases it, leading this species to not respond to a longer calendar season. \\
@@ -656,21 +652,21 @@ print(xtable(binded,
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} %emw25Jun -- you need to make these greek letters that match your equations. 
-\caption{Full vs most restricted datasets for the model with start of season (SOS; a) and end of season (EOS; b) as the predictor. Each panel represent the different parameters used to fit the models. $\alpha_{species}$ and $\alpha_{year}$ represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ represent the change in ring width (log(mm)) per scaled predictor for each species (see data analyses section for more details).} 
+\caption{Full vs most restricted datasets for the model with start of season (a) and end of season (b) as the predictor. Each panel represent the different parameters used to fit the models. $\alpha_{species}$ and $\alpha_{year}$ represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ represent the change in ring width (log(mm)) per scaled predictor for each species (see data analyses section for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width (log(mm)) trends in response to thermal season (growing degree days; GDD). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
+\caption{Ring width (log(mm)) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width trends (log(mm)) in response to calendar season (growing season length; GSL). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the interquantile range (IQR). The dots are the empirical data shaped by year.}
+\caption{Ring width trends (log(mm)) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the interquantile range (IQR). The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
 
@@ -695,11 +691,10 @@ print(xtable(binded,
 \label{fig:wcboxplotPred}
 \end{figure}
 
-
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
-\caption{Effect size of each predictors across our four species. We depict ring width (log(mm)) change per scaled ($z$-scored; see data analyses section for more details) predictor for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).}
+\caption{Effect size of each predictors across our four species. We depict ring width (log(mm)) change per scaled ($z$-scored; see data analyses section for more details) predictor for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (growing degree days, growing season length, start of season and end of season).}
 \label{fig:bsppZscored}
 \end{figure}
 
