@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{{Arnold Arboretum}(2026)}]{arnoldarboretum_weather_2026}
@@ -20,9 +20,35 @@ Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
 Carroll, J., Weigle, T. \& Petzoldt, C. (2026) The {Network} for {Environment}
   and {Weather} {Applications} ({NEWA}) Accessed: 2025-09-24.
 
+\bibitem[{Chmielewski \& Rötzer(2001)}]{chmielewski_response_2001}
+Chmielewski, F.M. \& Rötzer, T. (2001) Response of tree phenology to climate
+  change across {Europe}. \emph{Agricultural and Forest Meteorology}
+  \textbf{108}, 101--112.
+
+\bibitem[{Cleland \emph{et~al.}(2007)Cleland, Chuine, Menzel, Mooney \&
+  Schwartz}]{cleland_shifting_2007}
+Cleland, E., Chuine, I., Menzel, A., Mooney, H. \& Schwartz, M. (2007) Shifting
+  plant phenology in response to global change. \emph{Trends in Ecology \&
+  Evolution} \textbf{22}, 357--365.
+
 \bibitem[{Cook \& Kairiukstis(1990)}]{cook_methods_1990}
 Cook, E.R. \& Kairiukstis, L.A. (eds.) (1990) \emph{Methods of
   {Dendrochronology}}. Springer Netherlands, Dordrecht.
+
+\bibitem[{Dow \emph{et~al.}(2022)Dow, Kim, D’Orangeville, Gonzalez-Akre,
+  Helcoski, Herrmann, Harley, Maxwell, McGregor, McShea, McMahon, Pederson,
+  Tepley \& Anderson-Teixeira}]{dow_warm_2022}
+Dow, C., Kim, A.Y., D’Orangeville, L., Gonzalez-Akre, E.B., Helcoski, R.,
+  Herrmann, V., Harley, G.L., Maxwell, J.T., McGregor, I.R., McShea, W.J.,
+  McMahon, S.M., Pederson, N., Tepley, A.J. \& Anderson-Teixeira, K.J. (2022)
+  Warm springs alter timing but not total growth of temperate deciduous trees.
+  \emph{Nature} \textbf{608}, 552--557.
+
+\bibitem[{Duputié \emph{et~al.}(2015)Duputié, Rutschmann, Ronce \&
+  Chuine}]{duputie_phenological_2015}
+Duputié, A., Rutschmann, A., Ronce, O. \& Chuine, I. (2015) Phenological
+  plasticity will not help all species adapt to climate change. \emph{Global
+  Change Biology} \textbf{21}, 3062--3073.
 
 \bibitem[{Finn \emph{et~al.}(2007)Finn, Straszewski \&
   Peterson}]{finn_general_2007}
@@ -30,14 +56,75 @@ Finn, G., Straszewski, A. \& Peterson, V. (2007) A general growth stage key for
   describing trees and woody plants. \emph{Annals of Applied Biology}
   \textbf{151}, 127--131.
 
+\bibitem[{Fu \emph{et~al.}(2014)Fu, Piao, Op~De~Beeck, Cong, Zhao, Zhang,
+  Menzel \& Janssens}]{fu_recent_2014}
+Fu, Y.H., Piao, S., Op~De~Beeck, M., Cong, N., Zhao, H., Zhang, Y., Menzel, A.
+  \& Janssens, I.A. (2014) Recent spring phenology shifts in western {Central}
+  {Europe} based on multiscale observations. \emph{Global Ecology and
+  Biogeography} \textbf{23}, 1255--1263.
+
+\bibitem[{Gallinat \emph{et~al.}(2015)Gallinat, Primack \&
+  Wagner}]{gallinat_autumn_2015}
+Gallinat, A.S., Primack, R.B. \& Wagner, D.L. (2015) Autumn, the neglected
+  season in climate change research. \emph{Trends in Ecology \& Evolution}
+  \textbf{30}, 169--176.
+
 \bibitem[{Gelman \& Hill(2006)}]{gelman_data_2006}
 Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
   {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
+
+\bibitem[{Green \& Keenan(2022)}]{green_limits_2022}
+Green, J.K. \& Keenan, T.F. (2022) The limits of forest carbon sequestration.
+  \emph{Science} \textbf{376}, 692--693.
+
+\bibitem[{Jeong \& Medvigy(2014)}]{jeong_macroscale_2014}
+Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
+  throughout the continental {United} {States}. \emph{Global Ecology and
+  Biogeography} \textbf{23}, 1245--1254.
+
+\bibitem[{Keenan \emph{et~al.}(2014)Keenan, Gray, Friedl, Toomey, Bohrer,
+  Hollinger, Munger, O’Keefe, Schmid, Wing, Yang \&
+  Richardson}]{keenan_net_2014}
+Keenan, T.F., Gray, J., Friedl, M.A., Toomey, M., Bohrer, G., Hollinger, D.Y.,
+  Munger, J.W., O’Keefe, J., Schmid, H.P., Wing, I.S., Yang, B. \&
+  Richardson, A.D. (2014) Net carbon uptake has increased through
+  warming-induced changes in temperate forest phenology. \emph{Nature Climate
+  Change} \textbf{4}, 598--604.
+
+\bibitem[{Lieth \emph{et~al.}(1974)Lieth, Jacobs, Lange, Olson \&
+  Wieser}]{lieth_phenology_1974}
+Lieth, H., Jacobs, J., Lange, O.L., Olson, J.S. \& Wieser, W. (eds.) (1974)
+  \emph{Phenology and {Seasonality} {Modeling}}, vol.~8 of \emph{Ecological
+  {Studies}}. Springer Berlin Heidelberg, Berlin, Heidelberg.
+
+\bibitem[{Matula \emph{et~al.}(2023)Matula, Knířová, Vítámvás, Šrámek,
+  Kníř, Ulbrichová, Svoboda \& Plichta}]{matula_shifts_2023}
+Matula, R., Knířová, S., Vítámvás, J., Šrámek, M., Kníř, T.,
+  Ulbrichová, I., Svoboda, M. \& Plichta, R. (2023) Shifts in intra-annual
+  growth dynamics drive a decline in productivity of temperate trees in
+  {Central} {European} forest under warmer climate. \emph{Science of The Total
+  Environment} \textbf{905}, 166906.
+
+\bibitem[{Menzel \emph{et~al.}(2006)Menzel, Sparks, Estrella, Koch, Aasa, Ahas,
+  Alm‐Kübler, Bissolli, Braslavská, Briede, Chmielewski, Crepinsek, Curnel,
+  Defila, Donnelly, Filella, Jatczak, Mestre, Peñuelas, Pirinen, Scheifinger,
+  Striz, Susnik, Van~Vliet, Wielgolaski, Zach \& Zust}]{menzel_european_2006}
+Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
+  Alm‐Kübler, K., Bissolli, P., Braslavská, O., Briede, A., Chmielewski,
+  F.M., Crepinsek, Z., Curnel, Y., Defila, C., Donnelly, A., Filella, Y.,
+  Jatczak, K., Mestre, A., Peñuelas, J., Pirinen, P., Scheifinger, H., Striz,
+  M., Susnik, A., Van~Vliet, A.J.H., Wielgolaski, F., Zach, S. \& Zust, A.
+  (2006) European phenological response to climate change matches the warming
+  pattern. \emph{Global Change Biology} \textbf{12}, 1969--1976.
 
 \bibitem[{{National Centers for Environmental Information
   (NCEI)}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
 {National Centers for Environmental Information (NCEI)} (2026) North {American}
   {Drought} {Monitor}. Shortauthor: NCEI Accessed: 2026-04-22.
+
+\bibitem[{Parmesan \& Yohe(2003)}]{parmesan_globally_2003}
+Parmesan, C. \& Yohe, G. (2003) A globally coherent fingerprint of climate
+  change impacts across natural systems. \emph{Nature} \textbf{421}, 37--42.
 
 \bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
   Kahle}]{raden_potential_2020}
@@ -51,7 +138,51 @@ Schneider, C.A., Rasband, W.S. \& Eliceiri, K.W. (2012) {NIH} {Image} to
   {ImageJ}: 25 years of image analysis. \emph{Nature Methods} \textbf{9},
   671--675.
 
+\bibitem[{Silvestro \emph{et~al.}(2023)Silvestro, Zeng, Buttò, Sylvain,
+  Drolet, Mencuccini, Thiffault, Yuan \& Rossi}]{silvestro_longer_2023}
+Silvestro, R., Zeng, Q., Buttò, V., Sylvain, J.D., Drolet, G., Mencuccini, M.,
+  Thiffault, N., Yuan, S. \& Rossi, S. (2023) A longer wood growing season does
+  not lead to higher carbon sequestration. \emph{Scientific Reports}
+  \textbf{13}, 4059.
+
 \bibitem[{{Stan Development Team}(2025)}]{standevelopmentteam_rstan_2025}
 {Stan Development Team} (2025) {RStan}: the {R} interface to {Stan}.
+
+\bibitem[{Stridbeck \emph{et~al.}(2022)Stridbeck, Björklund, Fuentes,
+  Gunnarson, Jönsson, Linderholm, Ljungqvist, Olsson, Rayner, Rocha, Zhang \&
+  Seftigen}]{stridbeck_partly_2022}
+Stridbeck, P., Björklund, J., Fuentes, M., Gunnarson, B.E., Jönsson, A.M.,
+  Linderholm, H.W., Ljungqvist, F.C., Olsson, C., Rayner, D., Rocha, E., Zhang,
+  P. \& Seftigen, K. (2022) Partly decoupled tree-ring width and leaf phenology
+  response to 20th century temperature change in {Sweden}.
+  \emph{Dendrochronologia} \textbf{75}, 125993.
+
+\bibitem[{Wang \emph{et~al.}(2025)Wang, Qin, Zhang, Yang, Cabon, Wang, Zhou,
+  Zhang, Fonti \& Huang}]{wang_seasonal_2025}
+Wang, W., Qin, L., Zhang, T., Yang, F., Cabon, A., Wang, Z., Zhou, P., Zhang,
+  Y., Fonti, P. \& Huang, J. (2025) Seasonal climate variations drive
+  decoupling between the duration and amount of xylem growth along a
+  hydrothermal gradient in the southern {Altai} {Mountains}. \emph{Journal of
+  Ecology} \textbf{113}, 1793--1806.
+
+\bibitem[{Wolfe \emph{et~al.}(2005)Wolfe, Schwartz, Lakso, Otsuki, Pool \&
+  Shaulis}]{wolfe_climate_2005}
+Wolfe, D.W., Schwartz, M.D., Lakso, A.N., Otsuki, Y., Pool, R.M. \& Shaulis,
+  N.J. (2005) Climate change and shifts in spring phenology of three
+  horticultural woody perennials in northeastern {USA}. \emph{International
+  Journal of Biometeorology} \textbf{49}, 303--309.
+
+\bibitem[{Woolway \emph{et~al.}(2021)Woolway, Sharma, Weyhenmeyer, Debolskiy,
+  Golub, Mercado-Bettín, Perroud, Stepanenko, Tan, Grant, Ladwig, Mesman,
+  Moore, Shatwell, Vanderkelen, Austin, DeGasperi, Dokulil, La~Fuente, Mackay,
+  Schladow, Watanabe, Marcé, Pierson, Thiery \&
+  Jennings}]{woolway_phenological_2021}
+Woolway, R.I., Sharma, S., Weyhenmeyer, G.A., Debolskiy, A., Golub, M.,
+  Mercado-Bettín, D., Perroud, M., Stepanenko, V., Tan, Z., Grant, L., Ladwig,
+  R., Mesman, J., Moore, T.N., Shatwell, T., Vanderkelen, I., Austin, J.A.,
+  DeGasperi, C.L., Dokulil, M., La~Fuente, S., Mackay, E.B., Schladow, S.G.,
+  Watanabe, S., Marcé, R., Pierson, D.C., Thiery, W. \& Jennings, E. (2021)
+  Phenological shifts in lake stratification under climate change. \emph{Nature
+  Communications} \textbf{12}, 2318.
 
 \end{thebibliography}
