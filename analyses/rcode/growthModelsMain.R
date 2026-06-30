@@ -34,11 +34,11 @@ wrmUp <- 2000
 itrns <- 4000
 
 # flags
-fitmodels <- T
-fitmodelfull <- T
-fitmodelsZscored <- T
-fitmodelsBAI <- T
-fit2xpriors <- T
+fitmodels <- F
+fitmodelfull <- F
+fitmodelsZscored <- F
+fitmodelsBAI <- F
+fit2xpriors <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
