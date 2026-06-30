@@ -201,8 +201,6 @@ if (fitmodels){
 gddmodel <- stan_model("stan/modelGrowthGDD.stan")
 fitgdd <- sampling(gddmodel, data = dgdd, warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD")
-
-# check warnings
 diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
 util$check_all_hmc_diagnostics(diagnostics)
 
@@ -210,16 +208,22 @@ util$check_all_hmc_diagnostics(diagnostics)
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 fitgsl <- sampling(gslmodel, data = dgsl, warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL")
+diagnostics <- util$extract_hmc_diagnostics(fitgsl) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model SOS
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsos <- sampling(sosmodel, data = dsos, warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS")
+diagnostics <- util$extract_hmc_diagnostics(fitsos) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = deos, warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS")
+diagnostics <- util$extract_hmc_diagnostics(fiteos) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GDD fit ####
@@ -974,7 +978,7 @@ dsosfull <- list(
 
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsosfull <- sampling(sosmodel, data = dsosfull,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitsosfull, "output/stanOutput/fitGrowthSOSFull")
 
 # Fit model EOS
@@ -1013,7 +1017,7 @@ deosfull <- list(
 )
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteosfull <- sampling(eosmodel, data = deosfull,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteosfull, "output/stanOutput/fitGrowthEOSFull")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -1245,8 +1249,10 @@ dgddz <- dgdd[1:10]
 dgddz$covariate <- gddz
 
 fitgdd <- sampling(genericmodel, data = dgddz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored")
+diagnostics <- util$extract_hmc_diagnostics(fitgdd) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model GSL
 gslz <- (emp$pgsGSL - mean(emp$pgsGSL)) / sd(emp$pgsGSL)
@@ -1254,8 +1260,10 @@ dgslz <- dgdd[1:10]
 dgslz$covariate <- gslz
 
 fitgsl <- sampling(genericmodel, data = dgslz,
-                   warmup = wrmp, iter = itrns, chains = 4)
+                   warmup = wrmUp, iter = itrns, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored")
+diagnostics <- util$extract_hmc_diagnostics(fitgsl) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model SOS
 sosz <- (emp$leafout - mean(emp$leafout)) / sd(emp$leafout)
@@ -1263,8 +1271,10 @@ dsosz <- dgdd[1:10]
 dsosz$covariate <- sosz
 
 fitsos <- sampling(genericmodel, data = dsosz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored")
+diagnostics <- util$extract_hmc_diagnostics(fitsos) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # Fit model EOS
 eosz <- (emp$budset - mean(emp$budset)) / sd(emp$budset)
@@ -1272,14 +1282,14 @@ deosz <- dgdd[1:10]
 deosz$covariate <- eosz
 
 fiteos <- sampling(genericmodel, data = deosz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored")
+diagnostics <- util$extract_hmc_diagnostics(fiteos) 
+util$check_all_hmc_diagnostics(diagnostics)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### Diagnostics #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-diagnostics <- util$extract_hmc_diagnostics(fitgsl) 
-util$check_all_hmc_diagnostics(diagnostics)
 samples <- util$extract_expectand_vals(fitgsl)
 
 # asite
@@ -1712,7 +1722,7 @@ dgdd$Nyear <- length(unique(dgdd$year))
 
 gddmodelpp <- stan_model("stan/modelGrowthGDD_PPsite.stan")
 fitgddppsite <- sampling(gddmodelpp, data = dgdd,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgddppsite, "output/stanOutput/fitGrowthGDD_PPsite")
 fitgddppsite <- readRDS("output/stanOutput/fitGrowthGDD_PPsite")
 
@@ -1955,7 +1965,7 @@ dgdd$Nyear <- length(unique(dgdd$year))
 
 gddmodelayear <- stan_model("stan/modelGrowthGDD_ayear.stan")
 fitgddayear <- sampling(gddmodelayear, data = dgdd,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgddayear, "output/stanOutput/fitGrowthGDD_ayear")
 # fitgddayear <- readRDS("output/stanOutput/fitGrowthGDD_ayear")
 
@@ -2266,7 +2276,7 @@ dgdd$gddabv <- as.numeric(emp$n30) / 4
 # Fit model GDD with slope on temp above 30 C
 gddmodelabv <- stan_model("stan/modelGrowthGDD_bMax30.stan")
 fitgdd <- sampling(gddmodelabv, data = dgdd,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_abv30")
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_abv30")
 
@@ -2632,7 +2642,7 @@ deos$y <- log(emp$BAI)
 
 gddmodel <- stan_model("stan/modelGrowthGDD_BAI.stan")
 fitgdd <- sampling(gddmodel, data = dgdd,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_BAI")
 
 # check warnings
@@ -2642,19 +2652,19 @@ util$check_all_hmc_diagnostics(diagnostics)
 # fit gsl
 gslmodel <- stan_model("stan/modelGrowthGSL.stan")
 fitgsl <- sampling(gslmodel, data = dgsl,
-                   warmup = wrmp, iter = itrns, chains = 4)
+                   warmup = wrmUp, iter = itrns, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSL_BAI")
 
 # Fit model SOS
 sosmodel <- stan_model("stan/modelGrowthSOS.stan")
 fitsos <- sampling(sosmodel, data = dsos,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOS_BAI")
 
 # Fit model EOS
 eosmodel <- stan_model("stan/modelGrowthEOS.stan")
 fiteos <- sampling(eosmodel, data = deos,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS_BAI")
 
 
@@ -3296,7 +3306,7 @@ dgddz <- dgdd[1:10]
 dgddz$covariate <- gddz
 
 fitgdd <- sampling(genericmodel, data = dgddz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDDZscored_largerPriors")
 
 # Fit model GSL
@@ -3305,7 +3315,7 @@ dgslz <- dgdd[1:10]
 dgslz$covariate <- gslz
 
 fitgsl <- sampling(genericmodel, data = dgslz,
-                   warmup = wrmp, iter = itrns, chains = 4)
+                   warmup = wrmUp, iter = itrns, chains = 4)
 saveRDS(fitgsl, "output/stanOutput/fitGrowthGSLZscored_largerPriors")
 
 # Fit model SOS
@@ -3314,7 +3324,7 @@ dsosz <- dgdd[1:10]
 dsosz$covariate <- sosz
 
 fitsos <- sampling(genericmodel, data = dsosz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fitsos, "output/stanOutput/fitGrowthSOSZscored_largerPriors")
 
 # Fit model EOS
@@ -3323,6 +3333,6 @@ deosz <- dgdd[1:10]
 deosz$covariate <- eosz
 
 fiteos <- sampling(genericmodel, data = deosz,
-                   warmup = wrmp, iter = itrns, chains=4)
+                   warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored_largerPriors")
 }
