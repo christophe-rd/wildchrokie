@@ -17,8 +17,8 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
-runzscore <- T
+makeplots <- F
+runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
 # EMPIRICAL DATA ####
