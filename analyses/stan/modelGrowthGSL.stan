@@ -29,7 +29,7 @@ real<lower=0> sigma_asite;
 real<lower=0> sigma_y; 	// measurement error, noise etc. 	
 vector[Ntreeid] zatreeid; // variation of intercept across tree ids, no-centered
 vector[Nspp] aspp;
-vector[Nsite] asite;
+vector[Nsite] zasite; // variation of intercept across sites, non-centered
 vector[Nyear] ayear;
 vector[Nspp] bsp;
 }
@@ -37,6 +37,9 @@ vector[Nspp] bsp;
 transformed parameters{
 vector[Ntreeid] atreeid;
 atreeid = 0 + sigma_atreeid*zatreeid; // non-centered parameterization on atreeid
+
+vector[Nsite] asite;
+asite = 0 + sigma_asite*zasite; // non-centered parameterization on asite
 
 array[N] real ypred;
 for (i in 1:N){ // don't change this for reparameterization
@@ -54,7 +57,6 @@ for (i in 1:N){ // don't change this for reparameterization
 model{	
   a ~ normal(1, 4);
   aspp ~ normal(0, 6);
-  asite ~ normal(0, sigma_asite);
   ayear ~ normal(0, 1);
   
   bsp ~ normal(0, 0.8);
@@ -63,6 +65,7 @@ model{
   sigma_y ~ normal(0, 1);
   
   zatreeid ~ normal(0, 1); // this creates the partial pooling on intercepts for tree ids, standard sigma for non-centered parameterization
+  zasite ~ normal(0, 1); // this creates the partial pooling on intercepts for sites, standard sigma for non-centered parameterization
   y ~ normal(ypred, sigma_y); // this creates an error model where error is normally distributed
 }	
 
@@ -83,7 +86,8 @@ generated quantities {
   real a_prior = normal_rng(1, 4);
   real aspp_prior = normal_rng(0, 6);
   real sigma_asite_prior = abs(normal_rng(0, 1));  
-  real asite_prior = normal_rng(0, sigma_asite_prior);
+  real zasite_prior = normal_rng(0, 1);
+  real asite_prior = sigma_asite_prior * zasite_prior;
   real ayear_prior = normal_rng(0, 1);
   
   real bsp_prior = normal_rng(0, 0.8);
