@@ -239,8 +239,8 @@ final_map <- ggdraw(main_map) +
     height = 0.35
   )
 
-ggsave("figures/empiricalData/mapSourcePop.jpeg", plot = final_map,
-       width = 9, height = 6, units = "in", dpi = 300)
+ggsave("figures/empiricalData/mapSourcePop.pdf", plot = final_map,
+       width = 10, height = 6)
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Time series phenological data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
