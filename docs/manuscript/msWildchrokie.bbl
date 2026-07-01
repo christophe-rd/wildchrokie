@@ -1,4 +1,4 @@
-\begin{thebibliography}{58}
+\begin{thebibliography}{62}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -129,6 +129,55 @@ Finn, G., Straszewski, A. \& Peterson, V. (2007) A general growth stage key for
   describing trees and woody plants. \emph{Annals of Applied Biology}
   \textbf{151}, 127--131.
 
+\bibitem[{Fong \emph{et~al.}(2026)Fong, Curry, Zhang \&
+  Wolkovich}]{fong_tim_2026}
+Fong, A., Curry, C., Zhang, Y. \& Wolkovich, E. (2026) {TIM}: {Tree} {Imaging}
+  {Machine} for high resolution rapid digital images of tree cores and cookies.
+  \emph{Unpublished} .
+
+\bibitem[{Friedlingstein \emph{et~al.}(2026)Friedlingstein, O'Sullivan, Jones,
+  Andrew, Bakker, Hauck, Landschützer, Le~Quéré, Li, Luijkx, Peters, Peters,
+  Pongratz, Schwingshackl, Sitch, Canadell, Ciais, Aas, Alin, Anthoni, Barbero,
+  Bates, Bellouin, Benoit-Cattin, Berghoff, Bernardello, Bopp, Brasika,
+  Chamberlain, Chandra, Chevallier, Chini, Collier, Colligan, Cronin,
+  Djeutchouang, Dou, Enright, Enyo, Erb, Evans, Feely, Feng, Ford, Foster,
+  Fransner, Gasser, Gehlen, Gkritzalis, Goncalves De~Souza, Grassi, Gregor,
+  Gruber, Guenet, Harris, Heinke, Hurtt, Iida, Ilyina, Ito, Jacobson, Jain,
+  Jarníková, Jersild, Jiang, Jones, Kato, Keeling, Klein~Goldewijk, Knauer,
+  Kong, Korsbakken, Koven, Kunimitsu, Lan, Liu, Liu, Liu, Lo~Monaco, Ma,
+  Marland, McGuire, McKinley, Melton, Monacci, Monier, Morgan, Munro, Müller,
+  Nakaoka, Nayagam, Niwa, Nutzel, Olsen, Omar, Pan, Pandey, Pierrot, Qin,
+  Regnier, Rehder, Resplandy, Roobaert, Rosan, Rödenbeck, Schwinger, Skjelvan,
+  Smallman, Spada, Sreeush, Sun, Sutton, Sweeney, Swingedouw, Séférian,
+  Takao, Tatebe, Tian, Tian, Tilbrook, Tsujino, Tubiello, Van~Ooijen, Van
+  Der~Werf, Van De~Velde, Walker, Wanninkhof, Yang, Yuan, Yue \&
+  Zeng}]{friedlingstein_global_2026}
+Friedlingstein, P., O'Sullivan, M., Jones, M.W., Andrew, R.M., Bakker, D.C.E.,
+  Hauck, J., Landschützer, P., Le~Quéré, C., Li, H., Luijkx, I.T., Peters,
+  G.P., Peters, W., Pongratz, J., Schwingshackl, C., Sitch, S., Canadell, J.G.,
+  Ciais, P., Aas, K., Alin, S.R., Anthoni, P., Barbero, L., Bates, N.R.,
+  Bellouin, N., Benoit-Cattin, A., Berghoff, C.F., Bernardello, R., Bopp, L.,
+  Brasika, I.B.M., Chamberlain, M.A., Chandra, N., Chevallier, F., Chini, L.P.,
+  Collier, N.O., Colligan, T.H., Cronin, M., Djeutchouang, L.M., Dou, X.,
+  Enright, M.P., Enyo, K., Erb, M., Evans, W., Feely, R.A., Feng, L., Ford,
+  D.J., Foster, A., Fransner, F., Gasser, T., Gehlen, M., Gkritzalis, T.,
+  Goncalves De~Souza, J., Grassi, G., Gregor, L., Gruber, N., Guenet, B.,
+  Harris, I., Heinke, J., Hurtt, G.C., Iida, Y., Ilyina, T., Ito, A., Jacobson,
+  A.R., Jain, A.K., Jarníková, T., Jersild, A., Jiang, F., Jones, S.D., Kato,
+  E., Keeling, R.F., Klein~Goldewijk, K., Knauer, J., Kong, Y., Korsbakken,
+  J.I., Koven, C., Kunimitsu, T., Lan, X., Liu, J., Liu, Z., Liu, Z.,
+  Lo~Monaco, C., Ma, L., Marland, G., McGuire, P.C., McKinley, G.A., Melton,
+  J.R., Monacci, N., Monier, E., Morgan, E.J., Munro, D.R., Müller, J.D.,
+  Nakaoka, S.I., Nayagam, L.R., Niwa, Y., Nutzel, T., Olsen, A., Omar, A.M.,
+  Pan, N., Pandey, S., Pierrot, D., Qin, Z., Regnier, P., Rehder, G.,
+  Resplandy, L., Roobaert, A., Rosan, T.M., Rödenbeck, C., Schwinger, J.,
+  Skjelvan, I., Smallman, T.L., Spada, V., Sreeush, M.G., Sun, Q., Sutton,
+  A.J., Sweeney, C., Swingedouw, D., Séférian, R., Takao, S., Tatebe, H.,
+  Tian, H., Tian, X., Tilbrook, B., Tsujino, H., Tubiello, F., Van~Ooijen, E.,
+  Van Der~Werf, G.R., Van De~Velde, S.J., Walker, A.P., Wanninkhof, R., Yang,
+  X., Yuan, W., Yue, X. \& Zeng, J. (2026) Global {Carbon} {Budget} 2025.
+  \emph{Earth System Science Data} \textbf{18}, 3211--3288.
+
 \bibitem[{Fu \emph{et~al.}(2014)Fu, Piao, Op~De~Beeck, Cong, Zhao, Zhang,
   Menzel \& Janssens}]{fu_recent_2014}
 Fu, Y.H., Piao, S., Op~De~Beeck, M., Cong, N., Zhao, H., Zhang, Y., Menzel, A.
@@ -138,6 +187,12 @@ Fu, Y.H., Piao, S., Op~De~Beeck, M., Cong, N., Zhao, H., Zhang, Y., Menzel, A.
 
 \bibitem[{Furlow(1997)}]{furlow_alnus_1997}
 Furlow, J.J. (1997) Flora of {North} {America} {North} of {Mexico}.
+
+\bibitem[{Gallinat \emph{et~al.}(2015)Gallinat, Primack \&
+  Wagner}]{gallinat_autumn_2015}
+Gallinat, A.S., Primack, R.B. \& Wagner, D.L. (2015) Autumn, the neglected
+  season in climate change research. \emph{Trends in Ecology \& Evolution}
+  \textbf{30}, 169--176.
 
 \bibitem[{Gao \emph{et~al.}(2022)Gao, Liang, Liu, Babst, Camarero, Fu, Piao,
   Rossi, Shen, Wang \& Peñuelas}]{gaoEarlierStartThermal2022}
@@ -353,6 +408,19 @@ Wolkovich, E.M., Ettinger, A.K., Chin, A.R., Chamberlain, C.J., Baumgarten, F.,
   Pradhan, K., Manzanedo, R.D. \& Hille Ris~Lambers, J. (2025) Why longer
   seasons with climate change may not increase tree growth. \emph{Nature
   Climate Change} \textbf{15}, 1283--1292.
+
+\bibitem[{Woolway \emph{et~al.}(2021)Woolway, Sharma, Weyhenmeyer, Debolskiy,
+  Golub, Mercado-Bettín, Perroud, Stepanenko, Tan, Grant, Ladwig, Mesman,
+  Moore, Shatwell, Vanderkelen, Austin, DeGasperi, Dokulil, La~Fuente, Mackay,
+  Schladow, Watanabe, Marcé, Pierson, Thiery \&
+  Jennings}]{woolway_phenological_2021}
+Woolway, R.I., Sharma, S., Weyhenmeyer, G.A., Debolskiy, A., Golub, M.,
+  Mercado-Bettín, D., Perroud, M., Stepanenko, V., Tan, Z., Grant, L., Ladwig,
+  R., Mesman, J., Moore, T.N., Shatwell, T., Vanderkelen, I., Austin, J.A.,
+  DeGasperi, C.L., Dokulil, M., La~Fuente, S., Mackay, E.B., Schladow, S.G.,
+  Watanabe, S., Marcé, R., Pierson, D.C., Thiery, W. \& Jennings, E. (2021)
+  Phenological shifts in lake stratification under climate change. \emph{Nature
+  Communications} \textbf{12}, 2318.
 
 \bibitem[{Zeng \& Wolkovich(2024)}]{zeng_weak_2024}
 Zeng, Z.A. \& Wolkovich, E.M. (2024) Weak evidence of provenance effects in
