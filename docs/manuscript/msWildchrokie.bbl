@@ -1,4 +1,4 @@
-\begin{thebibliography}{62}
+\begin{thebibliography}{65}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -224,6 +224,11 @@ Harris, N.L., Gibbs, D.A., Baccini, A., Birdsey, R.A., De~Bruin, S., Farina,
   \& Tyukavina, A. (2021) Global maps of twenty-first century forest carbon
   fluxes. \emph{Nature Climate Change} \textbf{11}, 234--240.
 
+\bibitem[{Jeong \& Medvigy(2014)}]{jeong_macroscale_2014}
+Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
+  throughout the continental {United} {States}. \emph{Global Ecology and
+  Biogeography} \textbf{23}, 1245--1254.
+
 \bibitem[{Keenan \emph{et~al.}(2014)Keenan, Gray, Friedl, Toomey, Bohrer,
   Hollinger, Munger, O’Keefe, Schmid, Wing, Yang \&
   Richardson}]{keenan_net_2014}
@@ -315,6 +320,12 @@ Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
   plants: from trees to ecosystems. \emph{New Phytologist} \textbf{191},
   926--941.
 
+\bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
+  Kahle}]{radenPotentialIntraannualDensity2020a}
+Raden, M., Mattheis, A., Spiecker, H., Backofen, R. \& Kahle, H.P. (2020) The
+  potential of intra-annual density information for crossdating of short
+  tree-ring series. \emph{Dendrochronologia} \textbf{60}, 125679.
+
 \bibitem[{Schneider \emph{et~al.}(2012)Schneider, Rasband \&
   Eliceiri}]{schneider_nih_2012}
 Schneider, C.A., Rasband, W.S. \& Eliceiri, K.W. (2012) {NIH} {Image} to
@@ -372,6 +383,10 @@ Suzuki, M., Yoda, K. \& Suzuki, H. (1996) Phenological {Comparison} of the
 Sweeney, C.J., Butler, F. \& Wingler, A. (2024) Comparison of the timing of
   spring phenological events between phenological garden trees and wild
   populations. \emph{Journal of Plant Ecology} \textbf{17}, rtae008.
+
+\bibitem[{Wang \& Engel(1998)}]{wang_simulation_1998}
+Wang, E. \& Engel, T. (1998) Simulation of phenological development of wheat
+  crops. \emph{Agricultural Systems} \textbf{58}, 1--24.
 
 \bibitem[{Wang \emph{et~al.}(2025)Wang, Qin, Zhang, Yang, Cabon, Wang, Zhou,
   Zhang, Fonti \& Huang}]{wang_seasonal_2025}
