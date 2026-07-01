@@ -858,7 +858,7 @@ for (s in unique(dgdd$species)) { # s = 2
                            4,
                            0.4,
                            baseline_values = dgdd$y[idxs],
-                           xlab = "log(ring width)",
+                           xlab = "ring width (log(mm))",
                            main = unique(emp$latbi[which(emp$spp_num == s)]))
 }
 dev.off()
@@ -876,7 +876,7 @@ for (s in unique(dgsl$species)) { # s = 2
                            4,
                            0.3,
                            baseline_values = dgsl$y[idxs],
-                           xlab = "log(ring width)",
+                           xlab = "ring width (log(mm))",
                            main = unique(emp$latbi[which(emp$spp_num == s)]))
 }
 dev.off()
@@ -895,7 +895,7 @@ for (s in unique(dsos$species)) { # s = 2
                            4,
                            0.3,
                            baseline_values = dsos$y[idxs],
-                           xlab = "log(ring width)",
+                           xlab = "ring width (log(mm))",
                            main = unique(emp$latbi[which(emp$spp_num == s)]))
 }
 dev.off()
@@ -913,7 +913,7 @@ for (s in unique(deos$species)) { # s = 2
                            4,
                            0.3,
                            baseline_values = deos$y[idxs],
-                           xlab = "log(ring width)",
+                           xlab = "ring width (log(mm))",
                            main = unique(emp$latbi[which(emp$spp_num == s)]))
 }
 dev.off()
@@ -931,7 +931,7 @@ for (s in unique(dgdd$site)) { # s = 2
                            4,
                            0.4,
                            baseline_values = dgdd$y[idxs],
-                           xlab = "log(ring width)",
+                           xlab = "ring width (log(mm))",
                            main = unique(emp$site[which(emp$site_num == s)]))
 }
 dev.off()
@@ -2125,7 +2125,7 @@ par(mfrow = c(2,1))
 y_pos <- rev(1:4)
 plot(bspp_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, 4 + 0.5),
-     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     xlab = "ring width (log(mm)) change per 10 spring days GDD", ylab = "",
      main = "with ayear",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -2135,7 +2135,7 @@ segments(bspp_df2$p25, y_pos, bspp_df2$p75, y_pos, col = wccolslatbi, lwd = 3)
 
 plot(bspp_df2_noayr$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, 4 + 0.5),
-     xlab = "log(ring width) change per 10 spring days GDD", ylab = "",
+     xlab = "ring width (log(mm)) change per 10 spring days GDD", ylab = "",
      main = "without ayear",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
@@ -2418,7 +2418,7 @@ y_pos <- rev(1:4)
 n_spp <- 4
 plot(bsppabv_df2$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 4 days above 30C", ylab = "",
+     xlab = "ring width (log(mm)) change per 4 days above 30C", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bsppabv_df2$p5,  y_pos, bsppabv_df2$p95, y_pos, col = wccolslatbi, lwd = 1.5)

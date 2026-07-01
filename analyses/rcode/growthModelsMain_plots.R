@@ -362,7 +362,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        type = "n",
        ylim = ylimline,
        xlab = "Growing season growing degree days (GDD)",
-       ylab = "log(ring width)",
+       ylab = "ring width (log(mm))",
             main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
@@ -523,7 +523,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        type = "n",
        ylim = ylimline,
        xlab = "Growing season length (days)",
-       ylab = "log(ring width)",
+       ylab = "ring width (log(mm))",
        main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
@@ -1036,7 +1036,7 @@ mumar <- c(4, 1, 4, 1)
 par(mar = mumar)
 plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.5, 1.2), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 spring days GDD", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 spring days GDD", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1054,7 +1054,7 @@ rasterImage(img_thermom, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of leafout", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1071,7 +1071,7 @@ rasterImage(img_leafout, usr[1], usr[4] - diff(usr[3:4]) * 0.35, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.5, 1.2), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of GSL", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1088,7 +1088,7 @@ rasterImage(img_calenda, usr[1], usr[4] - diff(usr[3:4]) * 0.25, usr[1] + diff(u
 par(mar = mumar)
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.5, 0.6), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of budset", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE,
      panel.first = abline(v = 0, lty = 2, col = "black"))
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos, col = wccolslatbi, lwd = 1.5)
@@ -1133,7 +1133,7 @@ widths = c(1.1, 1.2))
 par(mar = custommar)
 plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.15, 0.3), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change in mean GDD of 7 spring days", ylab = "",
+     xlab = "ring width (log(mm)) change in mean GDD of 7 spring days", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1167,7 +1167,7 @@ rasterImage(
 par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of GSL", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of GSL", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1198,7 +1198,7 @@ rasterImage(
 par(mar = custommar)
 plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of leafout", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of leafout", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1229,7 +1229,7 @@ rasterImage(
 par(mar = custommar) 
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
-     xlab = "log(ring width) change per 7 days of budset", ylab = "",
+     xlab = "ring width (log(mm)) change per 7 days of budset", ylab = "",
      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1260,7 +1260,7 @@ rasterImage(
 par(mar = custommar)
 plot(emp$pgsGDD5, dgdd$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Growing season growing degree days (GDD)", ylab = "log(ring width)",
+     xlab = "Growing season growing degree days (GDD)", ylab = "ring width (log(mm))",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(e)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1290,7 +1290,7 @@ for (i in seq_along(sppvecnum)) {
 par(mar = custommar)
 plot(emp$pgsGSL, dgsl$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Growing season length (days)", ylab = "log(ring width)",
+     xlab = "Growing season length (days)", ylab = "ring width (log(mm))",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(f)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1320,7 +1320,7 @@ for (i in seq_along(sppvecnum)) {
 par(mar = custommar)
 plot(emp$leafout, dsos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Leafout (day of year)", ylab = "log(ring width)",
+     xlab = "Start of season (day of year)", ylab = "ring width (log(mm))",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1350,7 +1350,7 @@ for (i in seq_along(sppvecnum)) {
 par(mar = custommar)
 plot(emp$budset, deos$y, type = "n", frame = TRUE, bty = "l",
      ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Budset (day of year)", ylab = "log(ring width)",
+     xlab = "End of season (day of year)", ylab = "ring width (log(mm))",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
