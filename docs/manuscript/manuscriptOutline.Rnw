@@ -47,7 +47,7 @@ pgsGSLagg$pgsGSL <- round(pgsGSLagg$pgsGSL, 1)
 \item Phenological shifts with climate change
   \begin{enumerate}
   
-  \item Shifts in spring/autumn modify start and end of season
+  \item Shifts in spring/autumn modify start and end of season \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}
   
   \item Early spring + delayed autumn should increase growth
   
