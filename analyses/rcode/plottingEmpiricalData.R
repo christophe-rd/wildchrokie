@@ -245,6 +245,8 @@ ggsave("figures/empiricalData/mapSourcePop.pdf", plot = final_map,
 # Time series phenological data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 comb <- read.csv("output/uncleanedTimeseriesPheno.csv")
+comb$date <- as.Date(comb$doy - 1, origin = paste0(comb$year, "-01-01"))
+comb$calday <- format(comb$date, "%d-%b")
 comb$yeardoy <- paste(comb$year, comb$doy, sep = "_")
 comb2 <- comb[!duplicated(comb$yeardoy),]
 
@@ -253,29 +255,43 @@ meanbb <- aggregate(budburst ~ year, emp, FUN = mean)
 maxbb <- aggregate(budburst ~ year, emp, FUN = max)
 bb <- merge(minbb, meanbb, by = "year")
 bb <- merge(bb, maxbb, by = "year")
-colnames(bb) <- c("year", "min", "mean", "max")
+colnames(bb) <- c("year", "First", "Average", "Last")
 
+axissize <- 1.2
+labsize <- 1.5
 
-jpeg(
-  filename = "figures/empiricalData/phenoTimeseries.jpeg",
-  width = 2000, height = 2800, res = 400)
-colsyr
-par(mfrow = c(length(unique(comb2$year)), 1))
+pdf("figures/empiricalData/phenoTimeseries.pdf", width = 6, height = 8)
+
+par(mfrow = c(length(unique(comb2$year)), 1), mar = c(2,6,4,4))
+
 for (yr in sort(unique(comb2$year))) { # i =1
   hist(comb2$doy[comb2$year == yr], breaks = seq(0, 366, by = 14),
-       main = yr, xlab = "Day of year", xlim = c(50, 366), ylim = c(0,4),
-       ylab = "Number of observations per 14 days", col = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2))
+       main = yr, 
+       xlab = "", xlim = c(50, 366), 
+       ylab = "Number of observations \nper 14 days", ylim = c(0,4), 
+       col = adjustcolor(colsyr[as.character(yr)], alpha.f = 0.2),
+       cex.axis = axissize, cex.lab = labsize, cex.main = 2,
+       frame.plot = "TRUE", xaxt = "n", bty = "o")
+  
+  doy_ticks <- seq(50, 366, by = 50)
+  axis(1, at = doy_ticks,
+       labels = format(as.Date(doy_ticks - 1, origin = paste0(yr, "-01-01")), "%d-%b"),
+       cex.axis = axissize)
+  
   bbx <- bb[bb$year == yr,]
-  segments(x0 = bbx$min, y0 = 0, y1 = 5, lwd = 2, lty = 1, col = "#247d3f")
-  segments(x0 = bbx$mean, y0 = 0, y1 = 5, lwd = 2, lty = 1, col = "black")
-  segments(x0 = bbx$max, y0 = 0, y1 = 5, lwd = 2, lty = 1, col = "#da7901")
+  
+  segments(x0 = bbx$First,   y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "#247d3f")
+  segments(x0 = bbx$Average, y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "black")
+  segments(x0 = bbx$Last,    y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "#da7901")
+  
   if(yr == min(unique(comb2$year))) {
-    legend("topright", legend = c("Min", "Mean", "Max"),
+    legend("topright", legend = c("First", "Average", "Last"),
            col = c("#247d3f", "black", "#da7901"),
-           lwd = 2, lty = 1, bty = "n", cex = 0.8)
+           lwd = 2, lty = 1, bty = "n", cex = 1.4)
   }
 }
 dev.off()
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Year allometry ####
