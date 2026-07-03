@@ -1089,6 +1089,7 @@ plot(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_sos$p25, sigma_df2_full_sos$p75)),
      xlim = range(c(sigma_df2_sos$p25, sigma_df2_sos$p95)))
+mtext("a)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = sigma_df2_sos$mean, y0 = sigma_df2_full_sos$p25,
        x1 = sigma_df2_sos$mean, y1 = sigma_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1099,9 +1100,9 @@ points(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
        pch = 16, col = "#0a6a3c", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_sos$mean, sigma_df2_full_sos$mean, pch = 16, col = "#0a6a3c", cex = 1.5)
-text(sigma_df2_sos$p25, sigma_df2_full_sos$p75,
-     labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
-     pos = c(4, 4), cex = 1)
+# text(sigma_df2_sos$mean, sigma_df2_full_sos$mean,
+#      labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
+#      pos = 3, cex = 1.3)
 
 # bspp
 plot(bspp_df2_sos$mean, bspp_df2_full_sos$mean,
@@ -1110,6 +1111,7 @@ plot(bspp_df2_sos$mean, bspp_df2_full_sos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(bspp_df2_full_sos$p25, bspp_df2_full_sos$p75)),
      xlim = range(c(bspp_df2_sos$p25, bspp_df2_sos$p75)))
+mtext("b)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = bspp_df2_sos$mean, y0 = bspp_df2_full_sos$p25,
        x1 = bspp_df2_sos$mean, y1 = bspp_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1127,6 +1129,7 @@ plot(aspp_df2_sos$mean, aspp_df2_full_sos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(aspp_df2_full_sos$p25, aspp_df2_full_sos$p75)),
      xlim = range(c(aspp_df2_sos$p25, aspp_df2_sos$p75)))
+mtext("c)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = aspp_df2_sos$mean, y0 = aspp_df2_full_sos$p25,
        x1 = aspp_df2_sos$mean, y1 = aspp_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1144,6 +1147,7 @@ plot(ayear_df2_sos$mean, ayear_df2_full_sos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(ayear_df2_full_sos$p25, ayear_df2_full_sos$p75)),
      xlim = range(c(ayear_df2_sos$p25, ayear_df2_sos$p75)))
+mtext("d)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = ayear_df2_sos$mean, y0 = ayear_df2_full_sos$p25,
        x1 = ayear_df2_sos$mean, y1 = ayear_df2_full_sos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1162,6 +1166,7 @@ plot(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(sigma_df2_full_eos$p25, sigma_df2_full_eos$p75)),
      xlim = range(c(sigma_df2_eos$p25, sigma_df2_eos$p75)))
+mtext("e)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = sigma_df2_eos$mean, y0 = sigma_df2_full_eos$p25,
        x1 = sigma_df2_eos$mean, y1 = sigma_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1172,9 +1177,9 @@ points(sigma_df2_eos$mean, sigma_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 points(sigma_df2_eos$mean, sigma_df2_full_eos$mean, pch = 16, col = "#d39822", cex = 1.5)
-text(sigma_df2_sos$p25, sigma_df2_full_sos$p75,
-     labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
-     pos = c(4, 4), cex = 1)
+# text(sigma_df2_sos$p25, sigma_df2_full_sos$p75,
+#      labels = parse(text = c("sigma[alpha[treeid]]", "sigma[prov]", "sigma[y]")),
+#      pos = c(4, 4), cex = 1)
 
 # bspp
 plot(bspp_df2_eos$mean, bspp_df2_full_eos$mean,
@@ -1183,6 +1188,7 @@ plot(bspp_df2_eos$mean, bspp_df2_full_eos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(bspp_df2_full_eos$p25, bspp_df2_full_eos$p75)),
      xlim = range(c(bspp_df2_eos$p25, bspp_df2_eos$p75)))
+mtext("f)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = bspp_df2_eos$mean, y0 = bspp_df2_full_eos$p25,
        x1 = bspp_df2_eos$mean, y1 = bspp_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1200,6 +1206,7 @@ plot(aspp_df2_eos$mean, aspp_df2_full_eos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(aspp_df2_full_eos$p25, aspp_df2_full_eos$p75)),
      xlim = range(c(aspp_df2_eos$p25, aspp_df2_eos$p75)))
+mtext("g)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = aspp_df2_eos$mean, y0 = aspp_df2_full_eos$p25,
        x1 = aspp_df2_eos$mean, y1 = aspp_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1217,6 +1224,7 @@ plot(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
      type = "n", frame = FALSE,
      ylim = range(c(ayear_df2_full_eos$p25, ayear_df2_full_eos$p75)),
      xlim = range(c(ayear_df2_eos$p25, ayear_df2_eos$p75)))
+mtext("h)", side = 3, adj = 0, line = 1, cex = 1, font = 2)
 arrows(x0 = ayear_df2_eos$mean, y0 = ayear_df2_full_eos$p25,
        x1 = ayear_df2_eos$mean, y1 = ayear_df2_full_eos$p75,
        angle = 90, code = 3, length = 0, lwd = 1.5, col = "darkgray")
@@ -1227,10 +1235,10 @@ points(ayear_df2_eos$mean, ayear_df2_full_eos$mean,
        pch = 16, col = "#d39822", cex = 1.5)
 abline(0, 1, lty = 2, col = "black", lwd = 2)
 
-mtext("(a) Start of season (SOS)",
-      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, line = -0.5)
-mtext("(b) End of season (EOS)",
-      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, line = -22)
+mtext("Start of season (SOS)",
+      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, cex = 1.2, line = -0.5)
+mtext("End of season (EOS)",
+      side = 3, outer = TRUE, at = 0, adj = 0, font = 2, las = 1, cex = 1.2, line = -22)
 dev.off()
 }
 
