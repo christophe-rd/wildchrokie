@@ -1,4 +1,4 @@
-\begin{thebibliography}{65}
+\begin{thebibliography}{63}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -204,10 +204,6 @@ Gao, S., Liang, E., Liu, R., Babst, F., Camarero, J.J., Fu, Y.H., Piao, S.,
 \bibitem[{Gelman \& Hill(2006)}]{gelman_data_2006}
 Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
   {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
-
-\bibitem[{Green \& Keenan(2022)}]{green_limits_2022}
-Green, J.K. \& Keenan, T.F. (2022) The limits of forest carbon sequestration.
-  \emph{Science} \textbf{376}, 692--693.
 
 \bibitem[{Grime(1977)}]{grime_evidence_1977}
 Grime, J.P. (1977) Evidence for the {Existence} of {Three} {Primary}
@@ -441,12 +437,5 @@ Woolway, R.I., Sharma, S., Weyhenmeyer, G.A., Debolskiy, A., Golub, M.,
 Zeng, Z.A. \& Wolkovich, E.M. (2024) Weak evidence of provenance effects in
   spring phenology across {Europe} and {North} {America}. \emph{New
   Phytologist} \textbf{242}, 1957--1964.
-
-\bibitem[{Čufar \emph{et~al.}(2015)Čufar, De~Luis, Prislan, Gričar,
-  Črepinšek, Merela \& Kajfež-Bogataj}]{cufar_variations_2015}
-Čufar, K., De~Luis, M., Prislan, P., Gričar, J., Črepinšek, Z., Merela, M.
-  \& Kajfež-Bogataj, L. (2015) Do variations in leaf phenology affect radial
-  growth variations in {Fagus} sylvatica? \emph{International Journal of
-  Biometeorology} \textbf{59}, 1127--1132.
 
 \end{thebibliography}
