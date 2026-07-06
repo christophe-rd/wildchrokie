@@ -12,7 +12,8 @@
 % \SweaveOpts{concordance=TRUE}
 
 \title{Longer growing seasons increased growth for juvenile trees in a common garden} % emw5Jul -- Or is it longer warmer growing seasons? 
-\author{Christophe Rouleau-Desrochers} % emw5Jul -- Your thesis chapters authors include all the co-authors you would also have on the ms. 
+\author{Christophe Rouleau-Desrochers, Victor Van der Meersch, Deirdre Loughnan, Neil Pederson, Catherine Chamberlain, Daniel Buonaiuto and E.M Wolkovich
+} % emw5Jul -- Your thesis chapters authors include all the co-authors you would also have on the ms. 
 \date{\today}
 \maketitle
 
@@ -92,65 +93,49 @@ bspp_df2_gdd_mm[paste0(log_cols, "_mm_perGDD")] <- lapply(bspp_df2_gdd_mm[log_co
 \section*{Introduction}
 % Paragraph 1
 % emw5Jul -- I feel like unless you are making a very controversial point, you only need max 3 refs ever (I would pick one older -- meaning 2000s -- classic and a recent IPCC personally), so cut down here -- also, how can an article from 1974 support this statement below about ACC? ... Fix this THROUGHOUT. If you really want to have a lot, then have 4 max methinks. 
-The most frequently observed biological impact of climate change is shifts in phenology---the timing of recurring life history events \citep{parmesan_globally_2003,cleland_shifting_2007,lieth_phenology_1974,woolway_phenological_2021,menzel_european_2006}. 
-% emw5Jul -- this reads funny (almost tautological), I would just cut it... 
-% For trees, shifts in spring and autumn phenology modify when the seasons start and end \citep{duputie_phenological_2015}. 
-% emw5Jul -- Being precise about the northern hemisphere makes it sound like the trends would be opposite in the southern
-Across many plant species, spring events have advanced \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014}, while autumn events have delayed---but to a much lesser extent \citep{gallinat_autumn_2015,jeong_macroscale_2014}. Together, early springs and later autumns lengthen the growing season (GS), which should increase growth for many species, including trees \citep{keenan_net_2014, stridbeck_partly_2022}. \\
+The most frequently observed biological impact of climate change is shifts in phenology---the timing of recurring life history events \citep{parmesan_poleward_1999, menzel_european_2006, calvin_ipcc_2023}. Across many plant species, spring events have advanced \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014}, while autumn events have delayed---but to a much lesser extent \citep{gallinat_autumn_2015,jeong_macroscale_2014}. Together, early springs and later autumns lengthen the growing season (GS), which should increase growth for many species, including trees \citep{keenan_net_2014, stridbeck_partly_2022}. \\
 
 % Paragraph 2
 % emw5Jul -- precision and accuracy are different; you mean accurate here and you should memorize this difference
-The positive relationship between growing season length and tree growth is important for accurate climate models because of the role of trees in mitigating emissions. % emw5Jul -- How is a climate model a 'solution'?
-Carbon sequestration by forests is an important process in climate models \citep{friedlingstein_global_2026}.
+The positive relationship between growing season length and tree growth is important for accurate climate models because of the role of trees in mitigating emissions. Carbon sequestration by forests is an important process in climate models \citep{friedlingstein_global_2026}.
 % emw5Jul -- you need a sentence right here that says (with refs and correct which noun you -- growth or storage or something else -- goes best): With warming, research has repeatedly found a connection between longer seasons and increased growth/carbon storage (REFS). 
-Temperate forests offset roughly 47\% of the global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{harrisGlobalMapsTwentyfirst2021}. The future of this net carbon sink by temperate forests relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. However, a shift in this relationship could impact current and future climate solutions. \\ % emw5Jul -- I thought the use of 'climate solutions' in the outline sounded good, but you're super unclear here ... If you're not sure what you mean by climate solutions and cannot introduce it to your reader clearly then I suggest you cut it (and leave a note somewhere to work on it for the ms submission). This last sentence could just be: However, a shift in this relationship could impact the future of this critical carbon sink.
+Temperate forests offset roughly 47\% of the global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{harrisGlobalMapsTwentyfirst2021}. The future of this net carbon sink by temperate forests relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. However, a shift in this relationship could impact the future of this critical carbon sink. \\ 
 
 % Paragraph 3
 % emw5Jul -- 'Indeed' does not work here for me. 
-New studies suggest that longer GS do not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}.  Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in a temperate forest community. % emw5Jul -- I think he found this in TWO temperate forest communities, no? 
-Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where the gross primary production and growth appeared decoupled. 
-% emw5Jul -- You need one more sentence here that says something about how these studies do not clearly established why they found no relationship while previous studies have, and then make sure it flows to the next sentence (which you may then need to adjust). 
+New studies suggest that longer GS do not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}.  Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in two temperate forest communities. Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where the gross primary production and growth appeared decoupled. However, neither of these studies could clearly establish why they found no relationship while previous studies have.
+% emw5Jul -- make sure it flows to the next sentence (which you may then need to adjust). 
 Understanding whether temperate forests will keep being a net carbon sink requires answering why trees do not grow more despite longer GS. \\
 
 % Paragraph 4
 % emw5Jul -- add a ref below before next time I see this.
-A longer GS does not necessarily mean more favorable thermal conditions for growth. First, longer seasons are not necessarily warmer (REF). While the well-documented advance of spring phenology elongates the GS \citep{keenan_net_2014}, spring days are short and usually cool (Figure \ref{fig:GSfig}a). Therefore, this advance may contribute little to a tree's annual growing degree days (GDD) accumulation (Figure \ref{fig:GSfig}b). 
-% emw5Jul -- I don't think we know (at least in the intro) when trees accumulate GDD, so I edited this
-In contrast, even small shifts to later end of season events can lead to larger changes in annual GDD; since much more GDD accumulates per day during this period any extra end of season (EOS) days may be more important than start of season \citep[SOS][]{buonaiuto_early_2026}. 
+A longer GS does not necessarily mean more favorable thermal conditions for growth. First, longer seasons are not necessarily warmer (REF). While the well-documented advance of spring phenology elongates the GS \citep{keenan_net_2014}, spring days are short and usually cool (Figure \ref{fig:GSfig}a). Therefore, this advance may contribute little to a tree's annual growing degree days (GDD) accumulation (Figure \ref{fig:GSfig}b). In contrast, even small shifts to later end of season events can lead to larger changes in annual GDD; since much more GDD accumulates per day during this period any extra end of season (EOS) days may be more important than start of season \citep[SOS][]{buonaiuto_early_2026}.  \\
 
 % emw5Jul -- start a new paragraph here and be a bit easier on your reader -- you're making contrasting statement here without acknowledging it for the reader; you just said later seasons EOS is important than you suggest 'water availability may become insufficient to support continuous growth throughout the GS' -- see edits below. 
 Other factors beyond the thermal season may affect whether longer seasons increase growth. While trees may have a longer period to grow, water availability may become insufficient to support continuous growth throughout the GS \citep{wang_seasonal_2025}. Competition for light and nutrients may further limit the capacity of trees to benefit from longer seasons, especially for the ones positioned below the forest canopy \citep{cleland_effects_2024,augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. Additionally, trees may have internal constraints that prevent them from increasing growth with longer seasons. Growth like other biological processes is under strict genetic control. Thus, even with optimal environmental conditions, physiological constraints may prevent temperate trees from growing indefinitely \citep{korner_four_2023,wolkovich_why_2025}, but we currently have a limited understanding of how well tree phenology can track changing conditions. \\
 % emw5Jul -- above, you don't really mean 'all these factors' since competition and water won't so much affect phenology, so see my edits below. 
 
 % Paragraph 5
-% emw5Jul -- yearly --> annually (fix throughout)
-Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait and is very responsive to temperature, while end of season phenology (e.g. budset) is much less plastic and mostly driven by photoperiod \citep{baumgarten_indeterminacy_2026}. Additionally, leaf phenology and growth are closely synchronized in diffuse-porous species (e.g. \textit{Betula}), making leaf phenology a good proxy for setting the start and end of the GS in such species \citep{marchand_timing_2021,silvestro_roots_2025,suzuki_phenological_1996}. % emw5Jul -- are they less synchronized in ring porous? You write above that 'leaf and wood phenology differ in their plasticity' but you do not back that up in this paragraph ... I think you should change the topic sentence to: Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages (I would go with this sentence!). 
+Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages [*REF]. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait and is very responsive to temperature, while end of season phenology (e.g. budset) is much less plastic and mostly driven by photoperiod \citep{baumgarten_indeterminacy_2026}. Additionally, leaf phenology and growth are closely synchronized in diffuse-porous species (e.g. \textit{Betula}), making leaf phenology a good proxy for setting the start and end of the GS in such species \citep{marchand_timing_2021,silvestro_roots_2025,suzuki_phenological_1996}. % emw5Jul -- are they less synchronized in ring porous? You write above that 'leaf and wood phenology differ in their plasticity' but you do not back that up in this paragraph ... I think you should change the topic sentence to: Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages (I would go with this sentence!). 
 While this proxy is useful for setting the boundaries of the GS, it does not indicate how much trees grow annually. How flexible growth is in response to changing GS length and conditions varies between species, and may also differ with tree age, with juvenile trees being generally ... % emw5Jul -- more responsive I think? Finish the sentence, I moved it up since it felt massively tacked on below. 
 This relationship may also vary also below the species-level, across populations \citep{baumgarten_indeterminacy_2026,way_photoperiod_2015}. \\
 
 % Paragraph 6
 % emw5Jul -- you just talked about 'changing environmental conditions' and now you write 'abiotic conditions' -- I don't see how these are different so you're just confusing your reader with the new term. So I just cut it. 
-Local adaptation could limit tree growth responses of different populations with future climate \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}. Trees from northern provenances will likely grow less with longer seasons, because they have adapted to shorter seasons \citep{aitken_time_2016,way_photoperiod_2015}. 
-% emw5Jul -- the below sentence says the same thing you just said (adapted means genetic)
-% This makes them likely to be limited genetically in their response to better conditions that occur over a longer period. 
-Additionally, budset (EOS event) is known to be strongly locally adapted while leafout (SOS event) is not \citep{zeng_weak_2024}, which likely explains why shifts in SOS with warming have been so much greater than shifts in EOS. 
+Local adaptation could limit tree growth responses of different populations with future climate \citep{soolanayakanahally_timing_2013,wolkovich_why_2025}. Trees from northern provenances will likely grow less with longer seasons, because they have adapted to shorter seasons \citep{aitken_time_2016,way_photoperiod_2015}. Additionally, budset (EOS event) is known to be strongly locally adapted while leafout (SOS event) is not \citep{zeng_weak_2024}, which likely explains why shifts in SOS with warming have been so much greater than shifts in EOS. 
 % emw5Jul -- I am not 100% sure what you're trying to say below ... Maybe you just mean: Longer seasons may thus be driven by earlier SOS, when thermal conditions are less favorable, and little change in EOS when thermal conditions are more favorable, limited any increases in growth ... Or: This predicts a latitudinal gradient in growth responses, with more limited responses in northern populations where EOS is constrained to earlier. ????
 This hints towards the EOS as a bigger constraining factor than SOS for tree growth potential across a latitudinal gradient. Thus, common gardens investigating the effect of provenance latitude could  help predict how climate change will affect tree growth. \\
 
 % Paragraph 7 (I cut 8) 
-To understand the relationship between GS and growth, we need to understand how growth varies across species and populations while disentangling how much longer seasons are also more thermally favorable seasons. To this aim, here 
-% emw5Jul -- you do not look at the below, so I would not say this so close to the end of the intro ... it seems like a discussion point. 
-%  precisely at when each trees grow during the GS. 
-% emw5Jul -- you have said all of the below already ... 
-% If a species growth is not plastic enough, they may not be able to track favorable changing condition during the GS \citep{baumgarten_indeterminacy_2026}. This plasticity varies heavily across species and populations, with the latter having the potential to inform how species will respond to future conditions \citep{aitken_time_2016,way_photoperiod_2015}. 
-we study how growth and GS relate across species, populations and multiple metrics of GS length. Working with juvenile trees sourced from four populations and grown in one common garden, we examine how growth, measured via tree rings, and leaf phenology covary over three years. We consider effects of both the length of the season (i.e. number of growing days in the season) and its thermal conditions (i.e. GDD accumulated in the season). 
+To understand the relationship between GS and growth, we need to understand how growth varies across species and populations while disentangling how much longer seasons are also more thermally favorable seasons. We aim to address this by studying how growth and GS relate across species, populations and multiple metrics of GS length. Working with juvenile trees sourced from four populations and grown in one common garden, we examine how growth, measured via tree rings, and leaf phenology covary over three years. We consider effects of both the length of the season (i.e. number of growing days in the season) and its thermal conditions (i.e. GDD accumulated in the season). 
+
 % emw5Jul -- I would move the below to the discussion 
 % and while juvenile trees store little carbon and are particularly vulnerable to light competition, they are crucial for forest regeneration capacity and range expansion \citep{luu_importance_2024}
 
 % Conceptual figure
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/climate/gsconceptualfig.pdf}
-\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. We represent the changes in temperature before (1945-1965, in blue) and after the 1980s increase in climate warming (2005-2025, in red). With climate change, spring events (green arrow) have advanced and fall phenology (orange arrow) has delayed, but to a much lesser extent (day advancements are hypothetical and represented by the arrows). This lengthened the calendar growing season, but concurrently changed the temperature trees experience early in their season. Growth onset earlier in the season means the first days of growth are cooler (a) resulting in little accumulation of GDD (b). Though shifts in EOS are weaker and the temperature experienced changed little (a), the GDD accumulation rate late in the season is higher than early in the season. Alongside, warmer summer temperatures increase GDD accumulation, further warming their thermal seasons.} % emw5Jul -- I would try to shorten this caption for clarity if you can .... try to separate out the message from the methods more. 
+\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. We represent the changes in temperature before (1945-1965, in blue) and after the 1980s increase in climate warming (2005-2025, in red). The arrows represent hypothetical shifts in spring (green) and fall (orange) phenology. With climate change, spring events have advanced and fall phenology has delayed, but to a much lesser extent---lengthening the calendar growing season. This concurrently changed the temperature trees experience early in their season, with cooler first days of growth (a) causing little accumulation of GDD (b). In contrast, weaker shifts in EOS and little temperature change (a) results in a relatively high GDD accumulation (b) due to warmer temperature at this time of the season. Alongside these SOS and EOS shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons.}
 \label{fig:GSfig}
 \end{figure}
 
@@ -214,7 +199,6 @@ Because ring widths decrease with age---particularly with young trees---we also 
 % RESULTS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % \clearpage
-% emw5Jul -- we don't do (XX)(YY), it should just be (XX; YY) -- try to fix throughout
 \section*{Results}
 %-------------------------------------------------------------------------------
 % Info
@@ -229,16 +213,16 @@ Our dataset comprised four deciduous tree species from four sites with leaf phen
 The calendar and thermal seasons ranged from 
 \Sexpr{min(emp$pgsGSL)} days and 
 \Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
-\Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]}) (Figure \ref{fig:wcboxplotPred}a and b). 
+\Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]}; Figure \ref{fig:wcboxplotPred}a and b). 
 The earliest leafout was
 \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
 \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
 \Sexpr{emp$loCal[which.max(emp$leafout)]} (also {\Ainc}, but in
-\Sexpr{emp$year[which.max(emp$leafout)]}) (Figure \ref{fig:wcboxplotPred}c. The earliest budset was 
+\Sexpr{emp$year[which.max(emp$leafout)]}; Figure \ref{fig:wcboxplotPred}c). The earliest budset was 
 \Sexpr{emp$bsCal[which.min(emp$budset)]} ({\Ball} in
 \Sexpr{emp$year[which.min(emp$budset)]}) and the latest, 
 \Sexpr{emp$bsCal[which.max(emp$budset)]} ({\Ainc} in
-\Sexpr{emp$year[which.max(emp$budset)]}) (Figure \ref{fig:wcboxplotPred}d. Finally, annual ring widths across years varied from 
+\Sexpr{emp$year[which.max(emp$budset)]}; Figure \ref{fig:wcboxplotPred}d. Finally, annual ring widths across years varied from 
 \Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
 \Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}; Figure \ref{fig:wcboxplotRW}).  \\
 
@@ -275,8 +259,7 @@ Unlike its response to warmer thermal season, {\Ainc} grew more with longer cale
 \Sexpr{bspp_df2_gsl$mean[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, UI: 
 \Sexpr{bspp_df2_gsl$p5[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]}, 
 \Sexpr{bspp_df2_gsl$p95[which(bspp_df2_gsl$spp_name %in% "B. populifolia")]} \RW scaled GSL; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
-% emw5Jul -- this (through $z$-scoring \citep{gelman_data_2006}), need to be \citep[through $z$-scoring,][]{gelman_data_2006} .... fix THROUGHOUT. 
-On a scaled axis (through $z$-scoring \citep{gelman_data_2006}), the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). \\
+On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). \\
 
 
 %-------------------------------------------------------------------------------
@@ -371,19 +354,20 @@ Here we used 81 juvenile trees of four species from four provenances to study ho
 % \subsection*{The thermal season better predicts growth than the calendar season}
 % emw5Jul --  this header breaks up the flow and seems unnecessary to me. You usually connect the results a little earlier than in the middle of the paragraph, so see changes below. Also, please check this paragraph for flow and repetitiveness.... I am not sure if I fully fixed this but you say the same thing often twice (or, across these two paragraph, you say some things 5X!) in a row. 
 Our results support the idea that the thermal season is be a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}.  By accounting for differences in daily temperatures, the thermal season may be more closely aligned to when and how fast each day plants can grow compared to the calendar season, which assumes a stable influence of each day on growth. Thus, the short and cool spring days early in the season count for less in the thermal season than the calendar season \citep{buonaiuto_early_2026}. Further supporting this, when we disentangled the calendar season by using the SOS and EOS separately, we found a larger response of growth to EOS, with little effect of SOS. \\
-The finding that EOS appears more related to growth than SOS  is aligned with previous studies \citep[e.g.,][]{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016}, and has important implications. It suggests that studies that solely focus on the SOS (REFS?) could miss when longer seasons lead to more growth, and also that the strong focus on SOS in phenology research may ignore the most important part of the season for growth (REFS). While studies have long called for more research on EOS (cite Gallinat and others), our results suggest we may especially need more work that monitors how growth and phenology shift across the season (Cite Zohner and Zani papers here I think). More studies using fine temporal scale dendrometers and/or xylogenesis could confirm if most growth occurs closer to EOS versus SOS. To date... 
+
+The finding that EOS appears more related to growth than SOS is aligned with previous studies \citep[e.g.,][]{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016}, and has important implications. It suggests that studies that solely focus on the SOS (REFS?) could miss when longer seasons lead to more growth, and also that the strong focus on SOS in phenology research may ignore the most important part of the season for growth (REFS). While studies have long called for more research on EOS (cite Gallinat and others), our results suggest we may especially need more work that monitors how growth and phenology shift across the season (Cite Zohner and Zani papers here I think). More studies using fine temporal scale dendrometers and/or xylogenesis could confirm if most growth occurs closer to EOS versus SOS. To date... 
 % emw5Jul -- what do studies find so far? Check Zweifel and others... I would then end on how we need these type of data ACROSS species also ... and make it flow to the follow paragraph which I have moved up... 
  \\
 % emw5Jul -- you don't actually test for differences BETWEEN species, so you need to be careful in how you phrase everything in this paragraph; it's not bad but  I would rewrite as... 
 Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier SOS. This suggests that species with more ruderal, flexible life-history strategies may actually take advantage of growing more in the spring despite cooler, shorter days  \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. 
 % emw5Jul -- now re-write the below to introduce the strategy with the result not AFTER the result ... see above, how I introduced alninc as ruderal before stating its response. 
-In contrast, {\Bpap} and {\Bpop} were most driven by the EOS, suggesting that they are both reactive to these late season days characterized by warmer temperatures \citep{burns_silvics_1990}. {\Bpap} juveniles can specifically grow for a long time provided appropriate conditions \citep{burns_silvics_1990}, thus explaining this positive growth response to a later EOS. Lastly, {\Ball} which responded to both the SOS and the EOS points towards a counter interacting % emw5Jul -- counter interacting isn't really a term ... 
+In contrast, {\Bpap} and {\Bpop} were most driven by the EOS, suggesting that they are both reactive to these late season days characterized by warmer temperatures \citep{burns_silvics_1990}. {\Bpap} juveniles can specifically grow for a long time provided appropriate conditions \citep{burns_silvics_1990}, thus explaining this positive growth response to a later EOS. Lastly, {\Ball} which responded to both the SOS and the EOS points towards a neutralizing % emw5Jul -- counter interacting isn't really a term ... 
 trend where an early SOS decreases growth, but a later EOS increases it, muting this species' response to a longer calendar season. \\
 
 Studies including an even wider span of growth strategies across species may find further differences. Our four study species are all relatively fast growing, which should allow them to track changing conditions better than their slower growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used 
 % emw5Jul -- fix ()() below, use \citep[][]{}
-slower growing species, such as oaks (\textit{Quercus})\citep{burns_silvics_1990}. \\
-
+slower growing species, such as \citep[\textit{Quercus};][]{burns_silvics_1990}. \\
+ 
 % emw5Jul -- you can say a little more here. You should say if the other studies that find this are on juvenile trees, if not, I would have the second sentence here be: while other studies on mature trees have found the same result, our results may have been more muted if the trees were grown in a forest setting. We grew trees in a common garden setting with potentially more space between trees [here give this distance -- it was actually not much! I would estimate maybe 2 m... ask Dan and Cat!] without any shade cloth on tree species. Then, add your ... However, if these trees ... 
 Additionally, we used juvenile trees which tend to be more reactive and could in part explain why they grew more with warmer seasons \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. However, if these trees grew in nature in a mature forest they would have been below the canopy, competing for light and other resources and thus might not have responded as much as we observed in our competition-limited conditions \citep{polgar_leafout_2011}. \\
 
@@ -392,7 +376,6 @@ Our focus on juvenile trees may suggest how forests regrow with the longer warme
 While many plant phenology studies find invasive species appear more responsive to spring warming (CITES, lots by me here so should be easy) these studies are often on herbaceous species. Our results thus suggest more studies of how later season events affect invasions could be especially important for understanding woody plant invasions. Further, the contrasting responses we found across species suggest assembly of native species may depend on growth strategies at both the start and end of the season. 
 
 Our results also suggest assembly models may need less of a focus on population-level differences than previously suggested (CITES). While studies of large latitudinal gradients (CITES) have found lower growth in tree species from poleward latitudes, we found no differences in growth across a latitudinal gradient of 3.5 (ADDdegree) C. Thus, at least across this latitudinal range, local adaption on growth appears weak. Supporting this, we found no evidence of shifting EOS across provenances, despite decades of work finding that EOS events, such as budset, are usually more locally adapted than SOS events such as leafout \citep{zeng_weak_2024}. Yet, a study of the same common garden including all tree and shrub species found EOS appeared to vary strongly by year and shift earlier with earlier SOS \citep{buonaiuto_early_2026}, suggesting EOS may be more variable than currently suggested (CITES). Taken together these results suggest our current understanding of budset being strongly locally adapted and thus varying little with temperature or SOS need more study.
-% The extent to which provenances affect growth remain an outstanding question. Understanding this would require teasing out the effects of leaf and wood phenology at the SOS and EOS.
 
 \subsection*{Implications for models and other regions} % emw5Jul -- this subheader does not match the below .. I just changed it but you probably could also just cut it. 
 
@@ -493,7 +476,6 @@ print(tab,
 \end{figure}
 
 % Rw per year for allometry
-%DLJul2: I would flip the order of this caption, "We show the potential allometery patterns of 20..."
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
 \caption{We show the potential allometry patterns across all years we had ring width for. For this, we randomly sampled 20 trees from our dataset and represent their ring width (mm) for each year.}
@@ -748,7 +730,6 @@ print(xtable(binded,
 \end{figure}
 
 % Wildchrokie boxplot
-%DLJul2: minor rephrasing
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotPredictorsAll.pdf}  
 \caption{Boxplots representing the empirical data of all our predictors clustered by species, and for each year. The dots represent the raw data, the line is the mean and the box depicts the 50\% UI.}
@@ -756,7 +737,6 @@ print(xtable(binded,
 \end{figure}
 
 % Z-scored slope results Wildchrokie
-%DLJul2: minor rephrasing
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
 \caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per scaled predictor ($z$-scored; see data analyses section for more details) for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (growing degree days, growing season length, start of season and end of season).}

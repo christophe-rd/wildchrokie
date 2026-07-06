@@ -1,4 +1,4 @@
-\begin{thebibliography}{63}
+\begin{thebibliography}{58}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -93,12 +93,6 @@ Chuine, I. \& Régnière, J. (2017) Process-{Based} {Models} of {Phenology} for
   {Plants} and {Animals}. \emph{Annual Review of Ecology, Evolution, and
   Systematics} \textbf{48}, 159--182.
 
-\bibitem[{Cleland \emph{et~al.}(2007)Cleland, Chuine, Menzel, Mooney \&
-  Schwartz}]{cleland_shifting_2007}
-Cleland, E., Chuine, I., Menzel, A., Mooney, H. \& Schwartz, M. (2007) Shifting
-  plant phenology in response to global change. \emph{Trends in Ecology \&
-  Evolution} \textbf{22}, 357--365.
-
 \bibitem[{Cleland \& Wolkovich(2024)}]{cleland_effects_2024}
 Cleland, E.E. \& Wolkovich, E. (2024) Effects of {Phenology} on {Plant}
   {Community} {Assembly} and {Structure}. \emph{Annual Review of Ecology,
@@ -116,12 +110,6 @@ Dow, C., Kim, A.Y., D’Orangeville, L., Gonzalez-Akre, E.B., Helcoski, R.,
   McMahon, S.M., Pederson, N., Tepley, A.J. \& Anderson-Teixeira, K.J. (2022)
   Warm springs alter timing but not total growth of temperate deciduous trees.
   \emph{Nature} \textbf{608}, 552--557.
-
-\bibitem[{Duputié \emph{et~al.}(2015)Duputié, Rutschmann, Ronce \&
-  Chuine}]{duputie_phenological_2015}
-Duputié, A., Rutschmann, A., Ronce, O. \& Chuine, I. (2015) Phenological
-  plasticity will not help all species adapt to climate change. \emph{Global
-  Change Biology} \textbf{21}, 3062--3073.
 
 \bibitem[{Finn \emph{et~al.}(2007)Finn, Straszewski \&
   Peterson}]{finn_general_2007}
@@ -247,19 +235,6 @@ Li, Y., Zhang, W., Schwalm, C.R., Gentine, P., Smith, W.K., Ciais, P., Kimball,
   {Northern} {Hemisphere} ecosystems. \emph{Nature Climate Change} \textbf{13},
   182--188.
 
-\bibitem[{Lieth \emph{et~al.}(1974)Lieth, Jacobs, Lange, Olson \&
-  Wieser}]{lieth_phenology_1974}
-Lieth, H., Jacobs, J., Lange, O.L., Olson, J.S. \& Wieser, W. (eds.) (1974)
-  \emph{Phenology and {Seasonality} {Modeling}}, vol.~8 of \emph{Ecological
-  {Studies}}. Springer Berlin Heidelberg, Berlin, Heidelberg.
-
-\bibitem[{Luu \emph{et~al.}(2024)Luu, Ris~Lambers, Lutz, Metz \&
-  Snell}]{luu_importance_2024}
-Luu, H., Ris~Lambers, J.H., Lutz, J.A., Metz, M. \& Snell, R.S. (2024) The
-  importance of regeneration processes on forest biodiversity in old-growth
-  forests in the {Pacific} {Northwest}. \emph{Philosophical Transactions of the
-  Royal Society B: Biological Sciences} \textbf{379}, 20230016.
-
 \bibitem[{Marchand \emph{et~al.}(2021)Marchand, Dox, Gričar, Prislan, Van
   Den~Bulcke, Fonti \& Campioli}]{marchand_timing_2021}
 Marchand, L.J., Dox, I., Gričar, J., Prislan, P., Van Den~Bulcke, J., Fonti,
@@ -307,9 +282,14 @@ Pan, Y., Birdsey, R.A., Phillips, O.L., Houghton, R.A., Fang, J., Kauppi, P.E.,
   (2024) The enduring world forest carbon sink. \emph{Nature} \textbf{631},
   563--569.
 
-\bibitem[{Parmesan \& Yohe(2003)}]{parmesan_globally_2003}
-Parmesan, C. \& Yohe, G. (2003) A globally coherent fingerprint of climate
-  change impacts across natural systems. \emph{Nature} \textbf{421}, 37--42.
+\bibitem[{Parmesan \emph{et~al.}(1999)Parmesan, Ryrholm, Stefanescu, Hill,
+  Thomas, Descimon, Huntley, Kaila, Kullberg, Tammaru, Tennent, Thomas \&
+  Warren}]{parmesan_poleward_1999}
+Parmesan, C., Ryrholm, N., Stefanescu, C., Hill, J.K., Thomas, C.D., Descimon,
+  H., Huntley, B., Kaila, L., Kullberg, J., Tammaru, T., Tennent, W.J., Thomas,
+  J.A. \& Warren, M. (1999) Poleward shifts in geographical ranges of butterfly
+  species associated with regional warming. \emph{Nature} \textbf{399},
+  579--583.
 
 \bibitem[{Polgar \& Primack(2011)}]{polgar_leafout_2011}
 Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
@@ -419,19 +399,6 @@ Wolkovich, E.M., Ettinger, A.K., Chin, A.R., Chamberlain, C.J., Baumgarten, F.,
   Pradhan, K., Manzanedo, R.D. \& Hille Ris~Lambers, J. (2025) Why longer
   seasons with climate change may not increase tree growth. \emph{Nature
   Climate Change} \textbf{15}, 1283--1292.
-
-\bibitem[{Woolway \emph{et~al.}(2021)Woolway, Sharma, Weyhenmeyer, Debolskiy,
-  Golub, Mercado-Bettín, Perroud, Stepanenko, Tan, Grant, Ladwig, Mesman,
-  Moore, Shatwell, Vanderkelen, Austin, DeGasperi, Dokulil, La~Fuente, Mackay,
-  Schladow, Watanabe, Marcé, Pierson, Thiery \&
-  Jennings}]{woolway_phenological_2021}
-Woolway, R.I., Sharma, S., Weyhenmeyer, G.A., Debolskiy, A., Golub, M.,
-  Mercado-Bettín, D., Perroud, M., Stepanenko, V., Tan, Z., Grant, L., Ladwig,
-  R., Mesman, J., Moore, T.N., Shatwell, T., Vanderkelen, I., Austin, J.A.,
-  DeGasperi, C.L., Dokulil, M., La~Fuente, S., Mackay, E.B., Schladow, S.G.,
-  Watanabe, S., Marcé, R., Pierson, D.C., Thiery, W. \& Jennings, E. (2021)
-  Phenological shifts in lake stratification under climate change. \emph{Nature
-  Communications} \textbf{12}, 2318.
 
 \bibitem[{Zeng \& Wolkovich(2024)}]{zeng_weak_2024}
 Zeng, Z.A. \& Wolkovich, E.M. (2024) Weak evidence of provenance effects in
