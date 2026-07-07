@@ -21,7 +21,7 @@
 \noindent $^2$Arnold Arboretum of Harvard University, Boston, Massachusetts, USA.\\
 $^3$Department of Organismic and Evolutionary Biology, Harvard University, Cambridge, Massachusetts, USA \\
 $^4$The Nature Conservancy, USA \\
-\noindent $^5$Department of Plant Science and Landscape Architecture, University of Maryland, College Park, Maryland, USA. ORCID: 0000-0003-4022-2591\\
+\noindent $^5$Department of Plant Science and Landscape Architecture, University of Maryland, College Park, Maryland, USA.\\
 
 
 % Set Wildchrokie species shortcut
@@ -195,7 +195,7 @@ ln(ringwidth)_i &\sim Normal(\mu, \sigma_y) \\
 \label{eq:mainMdl}
 \end{equation}
 
-This model estimates a species-specific effect of each season length predictor (e.g. GDD) on growth ($\beta_{species}$), while also controlling for other variation due to species ($\alpha_{species}$), provenance ($\alpha_{prov}$), individual tree ($\alpha_{treeid}$) and year ($\alpha_{year}$). We ran the models using both natural units, and also scaled predictors that we $z$-scored \citep{gelman_data_2006} to allow for direct comparison of effect sizes across different metrics. We report estimates as means and 90\% uncertainty intervals (UI). \\ 
+This model estimates a species-specific effect of each season length predictor (e.g. GDD) on growth ($\beta_{species}$), while also controlling for other variation due to species ($\alpha_{species}$), provenance ($\alpha_{prov}$), individual tree ($\alpha_{treeid}$) and year ($\alpha_{year}$). We ran the models using both natural units, and also adjusted predictors that we $z$-scored \citep{gelman_data_2006} to allow for direct comparison of effect sizes across different metrics. We report estimates as means and 90\% uncertainty intervals (UI). \\ 
 
 We used weakly informative priors for all models (increasing the priors by 2$\times$ for the $z$-scored models did not qualitatively affect the results). We ran four chains with 2000 warmup and 2000 sampling iterations each, for a total of 8000 sampling iterations and checked diagnostics of output: chains had no divergent transitions, $\hat{R}$ values below 1.01, and effective sample sizes ($n_{\text{eff}}$) greater than 10\% of the model iterations. We also fit the models for SOS and EOS using both the restricted ($n =$ \Sexpr{nrow(emp)}) and full datasets for each predictor (SOS $n =$ \Sexpr{nrow(empfullsos)} and EOS $n =$ \Sexpr{nrow(empfulleos)}. We wrote our models using Stan \citep{carpenter_stan_2017} with the rstan package version 2.32.7 \citep{standevelopmentteam_rstan_2025} to run the Stan code in R. \\
 
@@ -343,7 +343,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through RW/GDD scaled predictor (see `Data analyses' section in Methods for more details on predictor scaling). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
+\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -368,17 +368,9 @@ Our results support the idea that the thermal season is be a better predictor fo
 The finding that EOS appears more related to growth than SOS is aligned with previous studies \citep[e.g.,][]{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016}, and has important implications. It suggests that studies that solely focus on the SOS (REFS?) could miss when longer seasons lead to more growth, and also that the strong focus on SOS in phenology research may ignore the most important part of the season for growth (REFS). While studies have long called for more research on EOS (cite Gallinat and others), our results suggest we may especially need more work that monitors how growth and phenology shift across the season (Cite Zohner and Zani papers here I think). More studies using fine temporal scale dendrometers and/or xylogenesis could confirm if most growth occurs closer to EOS versus SOS. To date... 
 % emw5Jul -- what do studies find so far? Check Zweifel and others... I would then end on how we need these type of data ACROSS species also ... and make it flow to the follow paragraph which I have moved up... 
  \\
-% emw5Jul -- you don't actually test for differences BETWEEN species, so you need to be careful in how you phrase everything in this paragraph; it's not bad but  I would rewrite as... 
-Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier SOS. This suggests that species with more ruderal, flexible life-history strategies may actually take advantage of growing more in the spring despite cooler, shorter days  \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. 
-% emw5Jul -- now re-write the below to introduce the strategy with the result not AFTER the result ... see above, how I introduced alninc as ruderal before stating its response. 
-In contrast, {\Bpap} and {\Bpop} were most driven by the EOS, suggesting that they are both reactive to these late season days characterized by warmer temperatures \citep{burns_silvics_1990}. {\Bpap} juveniles can specifically grow for a long time provided appropriate conditions \citep{burns_silvics_1990}, thus explaining this positive growth response to a later EOS. Lastly, {\Ball} which responded to both the SOS and the EOS points towards a neutralizing % emw5Jul -- counter interacting isn't really a term ... 
-trend where an early SOS decreases growth, but a later EOS increases it, muting this species' response to a longer calendar season. \\
-
-Studies including an even wider span of growth strategies across species may find further differences. Our four study species are all relatively fast growing, which should allow them to track changing conditions better than their slower growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used 
-% emw5Jul -- fix ()() below, use \citep[][]{}
-slower growing species, such as \citep[\textit{Quercus};][]{burns_silvics_1990}. \\
+Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier SOS. This suggests that species with more ruderal, flexible life-history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. In contrast, {\Bpap} and {\Bpop} which are fast growing, but more conservative than {\Ainc} were both most driven by the EOS, suggesting that they are able to exploit these late season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly our slowest growth and longest lived species, {\Ball}, responded to both the SOS and the EOS. This points towards a  `neutralizing' trend where an early SOS decreases growth, but a later EOS increases it, muting this species' response to a longer calendar season. Studies including an even wider span of growth strategies across species may find further differences. Our four study species are all relatively fast growing, which should allow them to track changing conditions better than their slower growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used slower growing species, such as \citep[\textit{Quercus};][]{burns_silvics_1990}. \\
  
-% emw5Jul -- you can say a little more here. You should say if the other studies that find this are on juvenile trees, if not, I would have the second sentence here be: while other studies on mature trees have found the same result, our results may have been more muted if the trees were grown in a forest setting. We grew trees in a common garden setting with potentially more space between trees [here give this distance -- it was actually not much! I would estimate maybe 2 m... ask Dan and Cat!] without any shade cloth on tree species. Then, add your ... However, if these trees ... 
+% emw5Jul -- you can say a little more here. You should say if the other studies that find this are on juvenile trees, if not, I would have the second sentence here be: while other studies on mature trees have found the same result, our results may have been more muted if the trees were grown in a forest setting. We grew trees in a common garden setting with potentially more space between trees [here give this distance -- it was actually not much! I would estimate maybe 2 m... ask Dan and Cat!] without any shade cloth on tree species. Then, add your ... However, if these trees ...
 Additionally, we used juvenile trees which tend to be more reactive and could in part explain why they grew more with warmer seasons \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. However, if these trees grew in nature in a mature forest they would have been below the canopy, competing for light and other resources and thus might not have responded as much as we observed in our competition-limited conditions \citep{polgar_leafout_2011}. \\
 
 % emw5Jul -- I would actually then have a short paragraph on the relevance of these findings for how forests may regrow ... 
@@ -390,7 +382,7 @@ Our results also suggest assembly models may need less of a focus on population-
 \subsection*{Implications for models and other regions} % emw5Jul -- this subheader does not match the below .. I just changed it but you probably could also just cut it. 
 
 Using a rarely available dataset of tree growth coupled with leaf phenology SOS and EOS, we found an overall positive response from our trees to longer seasons, which has important implications for models of forest assembly, as discussed above, and and also models of future carbon storage. 
-% emw5Jul -- I would re-work the below a little, something more like: We found that SOS and EOS asymmetrically matter to growth, which means that how we model these in vegetation and related earth system models may be critical for accurate predictions. [If you know anything about these models you could add it here, for example, do they model SOS as super variable and EOS as photoperiod controlled? Then flow from that if you can ... If you cannot figure out it just skip it for now.] To get EOS right means we need more studies, especially on more species across a larger gradient. This could help tease out whether local adaptation of EOS depends on the species, latitudinal range (both distance and how far north provenances come from) or some combination of the two, which could then feed into improve models. 
+% emw5Jul -- I would re-work the below a little, something more like: We found that SOS and EOS asymmetrically matter to growth, which means that how we model these in vegetation and related earth system models may be critical for accurate predictions. To get EOS right means we need more studies, especially on more species across a larger gradient. This could help tease out whether local adaptation of EOS depends on the species, latitudinal range (both distance and how far north provenances come from) or some combination of the two, which could then feed into improve models. 
 Our findings suggest that the SOS and EOS asymmetrically matter to growth, which we explained by differences in temperatures at the boundaries of the GS. Hence, we highlight the importance of considering different metrics of season length and not only SOS \citep[e.g.,][]{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016}. 
 Finally, we showed strong species differences despite them being closely related. Species differences matter and it is important to include them in carbon model and range shifts projections.
 
@@ -524,7 +516,7 @@ df_all$Species <- wctablespp[df_all$Species]
 
 # Print table
 tab <- xtable(df_all,
-              caption = "Species level slope parameters which represent ring width change (log(mm)), per scaled predictor (see data analyses section for more details). We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different phenological predictors (GDD: growing degree days across the growing season, GSL: growing season length, SOS: start of season and EOS: end of season).",
+              caption = "Species level slope parameters which represent ring width change (log(mm)), per adjusted predictor (see `Data analyses' in Methods for more details). We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different phenological predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).",
               label = "tab:wc_slope_table"
 )
 
@@ -626,7 +618,7 @@ combined <- data.frame(
 )
 
 print(xtable(combined,
-             caption = "Summary output of each parameter from our four predictors, using ring width (log(mm)) as the reponse variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.",
+             caption = "Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.",
              label = "tab:tab_all"),
       include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
 @
@@ -699,7 +691,7 @@ ayear <- data.frame(
 binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 
 print(xtable(binded,
-             caption = "Summary output of each parameter from our four predictors, using basal area increment (log($mm^2$)) as the reponse variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.",
+             caption = "Summary output of each parameter from our four predictors, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.",
              label = "tab:BAItab"),
       include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
 @
@@ -707,7 +699,7 @@ print(xtable(binded,
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
-\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the $\Delta$ ring width (log(mm))/scaled predictor, for each species (see 'Data analyses' section in Methods for more details).} 
+\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the $\Delta$ ring width (log(mm))/adjusted predictor, for each species (see 'Data analyses' section in Methods for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
@@ -749,7 +741,7 @@ print(xtable(binded,
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
-\caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per scaled predictor ($z$-scored; see data analyses section for more details) for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (growing degree days, growing season length, start of season and end of season).}
+\caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see data analyses section for more details) for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (growing degree days, growing season length, start of season and end of season).}
 \label{fig:bsppZscored}
 \end{figure}
 
