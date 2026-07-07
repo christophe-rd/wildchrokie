@@ -12,7 +12,7 @@
 \begin{document}
 % \SweaveOpts{concordance=TRUE}
 \begin{center}
-{\sc} {\Large Warmer growing seasons increased growth for juvenile trees in a common garden} \\
+{\sc} {\Large Warmer and longer growing seasons increased growth for juvenile trees in a common garden} \\
 \vspace{5ex}
 {\sc} Christophe Rouleau-Desrochers$^1$, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson, , \& E.M. Wolkovich$^{1,2,3}$
 \end{center}
