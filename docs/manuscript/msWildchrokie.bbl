@@ -1,4 +1,4 @@
-\begin{thebibliography}{58}
+\begin{thebibliography}{77}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -11,6 +11,15 @@ Agel, L., Barlow, M., Skinner, C.B. \& Karmalkar, A.V. (2025) Drought {Weather}
 Aitken, S.N. \& Bemmels, J.B. (2016) Time to get moving: assisted gene flow of
   forest trees. \emph{Evolutionary Applications} \textbf{9}, 271--290.
 
+\bibitem[{Alberto \emph{et~al.}(2013)Alberto, Aitken, Alía,
+  González‐Martínez, Hänninen, Kremer, Lefèvre, Lenormand, Yeaman,
+  Whetten \& Savolainen}]{alberto_potential_2013}
+Alberto, F.J., Aitken, S.N., Alía, R., González‐Martínez, S.C., Hänninen,
+  H., Kremer, A., Lefèvre, F., Lenormand, T., Yeaman, S., Whetten, R. \&
+  Savolainen, O. (2013) Potential for evolutionary responses to climate change
+  – evidence from tree populations. \emph{Global Change Biology} \textbf{19},
+  1645--1661.
+
 \bibitem[{{Arnold Arboretum}(2026)}]{arnoldarboretum_weather_2026}
 {Arnold Arboretum} (2026) Weather {Data} at the {Arnold} {Arboretum}. Accessed:
   2025-09-24.
@@ -19,6 +28,12 @@ Aitken, S.N. \& Bemmels, J.B. (2016) Time to get moving: assisted gene flow of
 Augspurger, C.K. \& Bartlett, E.A. (2003) Differences in leaf phenology between
   juvenile and adult trees in a temperate deciduous forest. \emph{Tree
   Physiology} \textbf{23}, 517--525.
+
+\bibitem[{Balducci \emph{et~al.}(2019)Balducci, Deslauriers, Rossi \&
+  Giovannelli}]{balducci_stem_2019}
+Balducci, L., Deslauriers, A., Rossi, S. \& Giovannelli, A. (2019) Stem cycle
+  analyses help decipher the nonlinear response of trees to concurrent warming
+  and drought. \emph{Annals of Forest Science} \textbf{76}, 88.
 
 \bibitem[{Baskin \& Baskin(2014)}]{baskin_seeds_2014}
 Baskin, C.C. \& Baskin, J.M. (2014) \emph{Seeds}. Elsevier.
@@ -29,6 +44,11 @@ Baumgarten, F., Aitken, S., Vitasse, Y., Guy, R.D. \& Wolkovich, E. (2026)
   ({In})determinacy in {Woody} {Plants}: {Limits} and {Opportunities} for
   {Timing} {Growth} in a {Changing} {Climate}. \emph{Ecology Letters}
   \textbf{29}, e70435.
+
+\bibitem[{Boisvenue \& Running(2006)}]{boisvenue_impacts_2006}
+Boisvenue, C. \& Running, S.W. (2006) Impacts of climate change on natural
+  forest productivity – evidence since the middle of the 20th century.
+  \emph{Global Change Biology} \textbf{12}, 862--882.
 
 \bibitem[{Bowman \& Hacker(2023)}]{bowmanEcology2023}
 Bowman, W. \& Hacker, S. (2023) \emph{Ecology}. Oxford University Press,
@@ -58,6 +78,39 @@ Cabon, A., Kannenberg, S.A., Arain, A., Babst, F., Baldocchi, D., Belmecheri,
   Cross-biome synthesis of source versus sink limits to tree growth.
   \emph{Science} \textbf{376}, 758--761.
 
+\bibitem[{Calvin \emph{et~al.}(2023)Calvin, Dasgupta, Krinner, Mukherji,
+  Thorne, Trisos, Romero, Aldunce, Barrett, Blanco, Cheung, Connors, Denton,
+  Diongue-Niang, Dodman, Garschagen, Geden, Hayward, Jones, Jotzo, Krug, Lasco,
+  Lee, Masson-Delmotte, Meinshausen, Mintenbeck, Mokssit, Otto, Pathak, Pirani,
+  Poloczanska, Pörtner, Revi, Roberts, Roy, Ruane, Skea, Shukla, Slade,
+  Slangen, Sokona, Sörensson, Tignor, Van~Vuuren, Wei, Winkler, Zhai, Zommers,
+  Hourcade, Johnson, Pachauri, Simpson, Singh, Thomas, Totin, Alegría, Armour,
+  Bednar-Friedl, Blok, Cissé, Dentener, Eriksen, Fischer, Garner, Guivarch,
+  Haasnoot, Hansen, Hauser, Hawkins, Hermans, Kopp, Leprince-Ringuet, Lewis,
+  Ley, Ludden, Niamir, Nicholls, Some, Szopa, Trewin, Van Der~Wijst, Winter,
+  Witting, Birt \& Ha}]{calvin_ipcc_2023}
+Calvin, K., Dasgupta, D., Krinner, G., Mukherji, A., Thorne, P.W., Trisos, C.,
+  Romero, J., Aldunce, P., Barrett, K., Blanco, G., Cheung, W.W., Connors, S.,
+  Denton, F., Diongue-Niang, A., Dodman, D., Garschagen, M., Geden, O.,
+  Hayward, B., Jones, C., Jotzo, F., Krug, T., Lasco, R., Lee, Y.Y.,
+  Masson-Delmotte, V., Meinshausen, M., Mintenbeck, K., Mokssit, A., Otto,
+  F.E., Pathak, M., Pirani, A., Poloczanska, E., Pörtner, H.O., Revi, A.,
+  Roberts, D.C., Roy, J., Ruane, A.C., Skea, J., Shukla, P.R., Slade, R.,
+  Slangen, A., Sokona, Y., Sörensson, A.A., Tignor, M., Van~Vuuren, D., Wei,
+  Y.M., Winkler, H., Zhai, P., Zommers, Z., Hourcade, J.C., Johnson, F.X.,
+  Pachauri, S., Simpson, N.P., Singh, C., Thomas, A., Totin, E., Alegría, A.,
+  Armour, K., Bednar-Friedl, B., Blok, K., Cissé, G., Dentener, F., Eriksen,
+  S., Fischer, E., Garner, G., Guivarch, C., Haasnoot, M., Hansen, G., Hauser,
+  M., Hawkins, E., Hermans, T., Kopp, R., Leprince-Ringuet, N., Lewis, J., Ley,
+  D., Ludden, C., Niamir, L., Nicholls, Z., Some, S., Szopa, S., Trewin, B.,
+  Van Der~Wijst, K.I., Winter, G., Witting, M., Birt, A. \& Ha, M. (2023)
+  {IPCC}, 2023: {Climate} {Change} 2023: {Synthesis} {Report}. {Contribution}
+  of {Working} {Groups} {I}, {II} and {III} to the {Sixth} {Assessment}
+  {Report} of the {Intergovernmental} {Panel} on {Climate} {Change} [{Core}
+  {Writing} {Team}, {H}. {Lee} and {J}. {Romero} (eds.)]. {IPCC}, {Geneva},
+  {Switzerland}. Tech. rep., Intergovernmental Panel on Climate Change (IPCC),
+  edition: First.
+
 \bibitem[{Carpenter \emph{et~al.}(2017)Carpenter, Gelman, Hoffman, Lee,
   Goodrich, Betancourt, Brubaker, Guo, Li \& Riddell}]{carpenter_stan_2017}
 Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
@@ -69,6 +122,11 @@ Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
   Petzoldt}]{carroll_network_2026}
 Carroll, J., Weigle, T. \& Petzoldt, C. (2026) The {Network} for {Environment}
   and {Weather} {Applications} ({NEWA}) Accessed: 2025-09-24.
+
+\bibitem[{Cavender‐Bares(2019)}]{cavender-bares_diversification_2019}
+Cavender‐Bares, J. (2019) Diversification, adaptation, and community assembly
+  of the {American} oaks ( \textit{{Quercus}} ), a model clade for integrating
+  ecology and evolution. \emph{New Phytologist} \textbf{221}, 669--692.
 
 \bibitem[{Charlet De~Sauvage \emph{et~al.}(2022)Charlet De~Sauvage, Vitasse,
   Meier, Delzon \& Bigler}]{charletdesauvage_temperature_2022}
@@ -111,11 +169,42 @@ Dow, C., Kim, A.Y., D’Orangeville, L., Gonzalez-Akre, E.B., Helcoski, R.,
   Warm springs alter timing but not total growth of temperate deciduous trees.
   \emph{Nature} \textbf{608}, 552--557.
 
+\bibitem[{Dox \emph{et~al.}(2022)Dox, Mariën, Zuccarini, Marchand, Prislan,
+  Gričar, Flores, Gehrmann, Fonti, Lange, Peñuelas \&
+  Campioli}]{dox_wood_2022}
+Dox, I., Mariën, B., Zuccarini, P., Marchand, L.J., Prislan, P., Gričar, J.,
+  Flores, O., Gehrmann, F., Fonti, P., Lange, H., Peñuelas, J. \& Campioli, M.
+  (2022) Wood growth phenology and its relationship with leaf phenology in
+  deciduous forest trees of the temperate zone of {Western} {Europe}.
+  \emph{Agricultural and Forest Meteorology} \textbf{327}, 109229.
+
+\bibitem[{Etzold \emph{et~al.}(2022)Etzold, Sterck, Bose, Braun, Buchmann,
+  Eugster, Gessler, Kahmen, Peters, Vitasse, Walthert, Ziemińska \&
+  Zweifel}]{etzold_number_2022}
+Etzold, S., Sterck, F., Bose, A.K., Braun, S., Buchmann, N., Eugster, W.,
+  Gessler, A., Kahmen, A., Peters, R.L., Vitasse, Y., Walthert, L., Ziemińska,
+  K. \& Zweifel, R. (2022) Number of growth days and not length of the growth
+  period determines radial stem growth of temperate trees. \emph{Ecology
+  Letters} \textbf{25}, 427--439.
+
 \bibitem[{Finn \emph{et~al.}(2007)Finn, Straszewski \&
   Peterson}]{finn_general_2007}
 Finn, G., Straszewski, A. \& Peterson, V. (2007) A general growth stage key for
   describing trees and woody plants. \emph{Annals of Applied Biology}
   \textbf{151}, 127--131.
+
+\bibitem[{Finzi \emph{et~al.}(2020)Finzi, Giasson, Barker~Plotkin, Aber, Boose,
+  Davidson, Dietze, Ellison, Frey, Goldman, Keenan, Melillo, Munger,
+  Nadelhoffer, Ollinger, Orwig, Pederson, Richardson, Savage, Tang, Thompson,
+  Williams, Wofsy, Zhou \& Foster}]{finziCarbonBudgetHarvard2020}
+Finzi, A.C., Giasson, M., Barker~Plotkin, A.A., Aber, J.D., Boose, E.R.,
+  Davidson, E.A., Dietze, M.C., Ellison, A.M., Frey, S.D., Goldman, E., Keenan,
+  T.F., Melillo, J.M., Munger, J.W., Nadelhoffer, K.J., Ollinger, S.V., Orwig,
+  D.A., Pederson, N., Richardson, A.D., Savage, K., Tang, J., Thompson, J.R.,
+  Williams, C.A., Wofsy, S.C., Zhou, Z. \& Foster, D.R. (2020) Carbon budget of
+  the {Harvard} {Forest} {Long}‐{Term} {Ecological} {Research} site: pattern,
+  process, and response to global change. \emph{Ecological Monographs}
+  \textbf{90}, e01423.
 
 \bibitem[{Fong \emph{et~al.}(2026)Fong, Curry, Zhang \&
   Wolkovich}]{fong_tim_2026}
@@ -193,11 +282,26 @@ Gao, S., Liang, E., Liu, R., Babst, F., Camarero, J.J., Fu, Y.H., Piao, S.,
 Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
   {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
 
+\bibitem[{González-González \emph{et~al.}(2013)González-González,
+  García-González \& Vázquez-Ruiz}]{gonzalez-gonzalez_comparative_2013}
+González-González, B.D., García-González, I. \& Vázquez-Ruiz, R.A. (2013)
+  Comparative cambial dynamics and phenology of {Quercus} robur {L}. and {Q}.
+  pyrenaica {Willd}. in an {Atlantic} forest of the northwestern {Iberian}
+  {Peninsula}. \emph{Trees} \textbf{27}, 1571--1585.
+
 \bibitem[{Grime(1977)}]{grime_evidence_1977}
 Grime, J.P. (1977) Evidence for the {Existence} of {Three} {Primary}
   {Strategies} in {Plants} and {Its} {Relevance} to {Ecological} and
   {Evolutionary} {Theory}. \emph{The American Naturalist} \textbf{111},
   1169--1194.
+
+\bibitem[{Gunderson \emph{et~al.}(2012)Gunderson, Edwards, Walker, O'Hara,
+  Campion \& Hanson}]{gunderson_forest_2012}
+Gunderson, C.A., Edwards, N.T., Walker, A.V., O'Hara, K.H., Campion, C.M. \&
+  Hanson, P.J. (2012) Forest phenology and a warmer climate – growing season
+  extension in relation to climatic provenance. \emph{Global Change Biology}
+  \textbf{18}, 2008--2025, \_eprint:
+  https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1365-2486.2011.02632.x.
 
 \bibitem[{Harris \emph{et~al.}(2021)Harris, Gibbs, Baccini, Birdsey, De~Bruin,
   Farina, Fatoyinbo, Hansen, Herold, Houghton, Potapov, Suarez, Roman-Cuesta,
@@ -234,6 +338,13 @@ Li, Y., Zhang, W., Schwalm, C.R., Gentine, P., Smith, W.K., Ciais, P., Kimball,
   Wu, X. (2023) Widespread spring phenology effects on drought recovery of
   {Northern} {Hemisphere} ecosystems. \emph{Nature Climate Change} \textbf{13},
   182--188.
+
+\bibitem[{Luu \emph{et~al.}(2024)Luu, Ris~Lambers, Lutz, Metz \&
+  Snell}]{luu_importance_2024}
+Luu, H., Ris~Lambers, J.H., Lutz, J.A., Metz, M. \& Snell, R.S. (2024) The
+  importance of regeneration processes on forest biodiversity in old-growth
+  forests in the {Pacific} {Northwest}. \emph{Philosophical Transactions of the
+  Royal Society B: Biological Sciences} \textbf{379}, 20230016.
 
 \bibitem[{Marchand \emph{et~al.}(2021)Marchand, Dox, Gričar, Prislan, Van
   Den~Bulcke, Fonti \& Campioli}]{marchand_timing_2021}
@@ -291,6 +402,13 @@ Parmesan, C., Ryrholm, N., Stefanescu, C., Hill, J.K., Thomas, C.D., Descimon,
   species associated with regional warming. \emph{Nature} \textbf{399},
   579--583.
 
+\bibitem[{Piao \emph{et~al.}(2019)Piao, Liu, Chen, Janssens, Fu, Dai, Liu,
+  Lian, Shen \& Zhu}]{piao_plant_2019}
+Piao, S., Liu, Q., Chen, A., Janssens, I.A., Fu, Y., Dai, J., Liu, L., Lian,
+  X., Shen, M. \& Zhu, X. (2019) Plant phenology and global climate change:
+  {Current} progresses and challenges. \emph{Global Change Biology}
+  \textbf{25}, 1922--1940.
+
 \bibitem[{Polgar \& Primack(2011)}]{polgar_leafout_2011}
 Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
   plants: from trees to ecosystems. \emph{New Phytologist} \textbf{191},
@@ -301,6 +419,32 @@ Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
 Raden, M., Mattheis, A., Spiecker, H., Backofen, R. \& Kahle, H.P. (2020) The
   potential of intra-annual density information for crossdating of short
   tree-ring series. \emph{Dendrochronologia} \textbf{60}, 125679.
+
+\bibitem[{Richardson \emph{et~al.}(2012)Richardson, Anderson, Arain, Barr,
+  Bohrer, Chen, Chen, Ciais, Davis, Desai, Dietze, Dragoni, Garrity, Gough,
+  Grant, Hollinger, Margolis, McCaughey, Migliavacca, Monson, Munger, Poulter,
+  Raczka, Ricciuto, Sahoo, Schaefer, Tian, Vargas, Verbeeck, Xiao \&
+  Xue}]{richardson_terrestrial_2012}
+Richardson, A.D., Anderson, R.S., Arain, M.A., Barr, A.G., Bohrer, G., Chen,
+  G., Chen, J.M., Ciais, P., Davis, K.J., Desai, A.R., Dietze, M.C., Dragoni,
+  D., Garrity, S.R., Gough, C.M., Grant, R., Hollinger, D.Y., Margolis, H.A.,
+  McCaughey, H., Migliavacca, M., Monson, R.K., Munger, J.W., Poulter, B.,
+  Raczka, B.M., Ricciuto, D.M., Sahoo, A.K., Schaefer, K., Tian, H., Vargas,
+  R., Verbeeck, H., Xiao, J. \& Xue, Y. (2012) Terrestrial biosphere models
+  need better representation of vegetation phenology: results from the
+  {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{N}{\textless}/span{\textgreater}
+  orth {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{A}{\textless}/span{\textgreater}
+  merican {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{C}{\textless}/span{\textgreater}
+  arbon {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{P}{\textless}/span{\textgreater}
+  rogram {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{S}{\textless}/span{\textgreater}
+  ite {\textless}span
+  style="font-variant:small-caps;"{\textgreater}{S}{\textless}/span{\textgreater}
+  ynthesis. \emph{Global Change Biology} \textbf{18}, 566--584.
 
 \bibitem[{Schneider \emph{et~al.}(2012)Schneider, Rasband \&
   Eliceiri}]{schneider_nih_2012}
@@ -393,6 +537,13 @@ Wolfe, D.W., Schwartz, M.D., Lakso, A.N., Otsuki, Y., Pool, R.M. \& Shaulis,
   horticultural woody perennials in northeastern {USA}. \emph{International
   Journal of Biometeorology} \textbf{49}, 303--309.
 
+\bibitem[{Wolkovich \emph{et~al.}(2013)Wolkovich, Davies, Schaefer, Cleland,
+  Cook, Travers, Willis \& Davis}]{wolkovich_temperaturedependent_2013}
+Wolkovich, E.M., Davies, T.J., Schaefer, H., Cleland, E.E., Cook, B.I.,
+  Travers, S.E., Willis, C.G. \& Davis, C.C. (2013) Temperature‐dependent
+  shifts in phenology contribute to the success of exotic species with climate
+  change. \emph{American Journal of Botany} \textbf{100}, 1407--1421.
+
 \bibitem[{Wolkovich \emph{et~al.}(2025)Wolkovich, Ettinger, Chin, Chamberlain,
   Baumgarten, Pradhan, Manzanedo \& Hille Ris~Lambers}]{wolkovich_why_2025}
 Wolkovich, E.M., Ettinger, A.K., Chin, A.R., Chamberlain, C.J., Baumgarten, F.,
@@ -400,9 +551,41 @@ Wolkovich, E.M., Ettinger, A.K., Chin, A.R., Chamberlain, C.J., Baumgarten, F.,
   seasons with climate change may not increase tree growth. \emph{Nature
   Climate Change} \textbf{15}, 1283--1292.
 
+\bibitem[{Zani \emph{et~al.}(2020)Zani, Crowther, Mo, Renner \&
+  Zohner}]{zani_increased_2020}
+Zani, D., Crowther, T.W., Mo, L., Renner, S.S. \& Zohner, C.M. (2020) Increased
+  growing-season productivity drives earlier autumn leaf senescence in
+  temperate trees. \emph{Science} \textbf{370}, 1066--1071.
+
 \bibitem[{Zeng \& Wolkovich(2024)}]{zeng_weak_2024}
 Zeng, Z.A. \& Wolkovich, E.M. (2024) Weak evidence of provenance effects in
   spring phenology across {Europe} and {North} {America}. \emph{New
   Phytologist} \textbf{242}, 1957--1964.
+
+\bibitem[{Zettlemoyer \emph{et~al.}(2019)Zettlemoyer, Schultheis \&
+  Lau}]{zettlemoyer_phenology_2019}
+Zettlemoyer, M.A., Schultheis, E.H. \& Lau, J.A. (2019) Phenology in a warming
+  world: differences between native and non‐native plant species.
+  \emph{Ecology Letters} \textbf{22}, 1253--1263.
+
+\bibitem[{Zohner \emph{et~al.}(2023)Zohner, Mirzagholi, Renner, Mo, Rebindaine,
+  Bucher, Palouš, Vitasse, Fu, Stocker \& Crowther}]{zohner_effect_2023}
+Zohner, C.M., Mirzagholi, L., Renner, S.S., Mo, L., Rebindaine, D., Bucher, R.,
+  Palouš, D., Vitasse, Y., Fu, Y.H., Stocker, B.D. \& Crowther, T.W. (2023)
+  Effect of climate warming on the timing of autumn leaf senescence reverses
+  after the summer solstice. \emph{Science} \textbf{381}.
+
+\bibitem[{Zweifel \emph{et~al.}(2016)Zweifel, Haeni, Buchmann \&
+  Eugster}]{zweifel_are_2016}
+Zweifel, R., Haeni, M., Buchmann, N. \& Eugster, W. (2016) Are trees able to
+  grow in periods of stem shrinkage? \emph{New Phytologist} \textbf{211},
+  839--849.
+
+\bibitem[{Čufar \emph{et~al.}(2008)Čufar, Prislan, De~Luis \&
+  Gričar}]{cufar_treering_2008}
+Čufar, K., Prislan, P., De~Luis, M. \& Gričar, J. (2008) Tree-ring variation,
+  wood formation and phenology of beech ({Fagus} sylvatica) from a
+  representative site in {Slovenia}, {SE} {Central} {Europe}. \emph{Trees}
+  \textbf{22}, 749--758.
 
 \end{thebibliography}
