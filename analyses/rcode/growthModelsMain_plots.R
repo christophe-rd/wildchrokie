@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -1116,9 +1116,9 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 ##### bspp with lines #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-custommar <- c(4, 4, 3, 1.2)
+custommar <- c(5, 4, 3, 1.5)
 
-pdf(file = "figures/growthModelsMain/muALLbsppWlines.pdf", width = 8, height = 9)
+pdf(file = "figures/growthModelsMain/muALLbsppWlines.pdf", width = 8, height = 10)
 
 layout(matrix(c(
   1, 5,
@@ -1126,7 +1126,7 @@ layout(matrix(c(
   3, 7,
   4, 8
 ), nrow = 4, byrow = TRUE),
-widths = c(1.1, 1.2))
+widths = c(1.2, 1.2))
 
 
 # Row 1, Col 1, Slot 1 : GDD
