@@ -325,7 +325,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the simulated response curves of ring width as a function of each predictor, with the lines depicting the mean response at each simulated predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
+\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species (Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels (a) to (d) represent the model slope estimates for each species, for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). The dots represent the mean of each species and the lines, the 50\% and 90\% uncertainty intervals (UI). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels (e) to (h) represent the response curves of ring width as a function of each predictor, with the lines depicting the mean response at each predictor value, and the shaded area, the interquantile ranges (50\% UI)}.
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -678,14 +678,14 @@ print(xtable(binded,
 % XY facetted by species GDD
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
-\caption{Ring width (log(mm)) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each simulated predictor value. The dots are the empirical data shaped by year.}
+\caption{Ring width (log(mm)) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
-\caption{Ring width trends (log(mm)) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each simulated predictor value. The dots are the empirical data shaped by year.}
+\caption{Ring width trends (log(mm)) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
 
