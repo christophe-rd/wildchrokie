@@ -1,4 +1,4 @@
-\begin{thebibliography}{77}
+\begin{thebibliography}{79}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -288,6 +288,12 @@ Gao, S., Liang, E., Liu, R., Babst, F., Camarero, J.J., Fu, Y.H., Piao, S.,
 Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
   {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
 
+\bibitem[{Gibbs \emph{et~al.}(2025)Gibbs, Rose, Grassi, Melo, Rossi, Heinrich
+  \& Harris}]{gibbs_revised_2025}
+Gibbs, D.A., Rose, M., Grassi, G., Melo, J., Rossi, S., Heinrich, V. \& Harris,
+  N.L. (2025) Revised and updated geospatial monitoring of 21st century forest
+  carbon fluxes. \emph{Earth System Science Data} \textbf{17}, 1217--1243.
+
 \bibitem[{González-González \emph{et~al.}(2013)González-González,
   García-González \& Vázquez-Ruiz}]{gonzalez-gonzalez_comparative_2013}
 González-González, B.D., García-González, I. \& Vázquez-Ruiz, R.A. (2013)
@@ -335,6 +341,14 @@ Li, Y., Zhang, W., Schwalm, C.R., Gentine, P., Smith, W.K., Ciais, P., Kimball,
   Wu, X. (2023) Widespread spring phenology effects on drought recovery of
   {Northern} {Hemisphere} ecosystems. \emph{Nature Climate Change} \textbf{13},
   182--188.
+
+\bibitem[{Loughnan \emph{et~al.}(2025)Loughnan, Jones, Legault, Buonaiuto,
+  Chamberlain, Ettinger, Garner, Morales‐Castilla, Sodhi \&
+  Wolkovich}]{loughnan_budburst_2025}
+Loughnan, D., Jones, F.A.M., Legault, G., Buonaiuto, D., Chamberlain, C.,
+  Ettinger, A., Garner, M., Morales‐Castilla, I., Sodhi, D. \& Wolkovich,
+  E.M. (2025) Budburst timing within a functional trait framework.
+  \emph{Journal of Ecology} \textbf{113}, 3787--3798.
 
 \bibitem[{Luu \emph{et~al.}(2024)Luu, Ris~Lambers, Lutz, Metz \&
   Snell}]{luu_importance_2024}

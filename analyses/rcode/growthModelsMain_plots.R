@@ -39,12 +39,12 @@ emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc)"
 emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH)"
   
 # Load parameter summaries generated in growthModelsMain.R ####
-sigma_df2  <- read.csv("output/GM_GDDparam_sigma.csv")
-bspp_df2_gdd   <- read.csv("output/GM_GDDparam_bspp.csv")
-treeid_df2 <- read.csv("output/GM_GDDparam_treeid.csv")
-aspp_df2   <- read.csv("output/GM_GDDparam_aspp.csv")
-site_df2   <- read.csv("output/GM_GDDparam_site.csv")
-ayear_df2   <- read.csv("output/GM_GDDparam_ayear.csv")
+sigma_df2     <- read.csv("output/GM_GDDparam_sigma.csv")
+bspp_df2_gdd  <- read.csv("output/GM_GDDparam_bspp.csv")
+treeid_df2    <- read.csv("output/GM_GDDparam_treeid.csv")
+aspp_df2      <- read.csv("output/GM_GDDparam_aspp.csv")
+site_df2      <- read.csv("output/GM_GDDparam_site.csv")
+ayear_df2     <- read.csv("output/GM_GDDparam_ayear.csv")
 
 treeid_df2$treeid <- as.numeric(treeid_df2$treeid)  
 treeid_df2$treeid_name <- emp$treeid[match(treeid_df2$treeid, emp$treeid_num)]
