@@ -176,14 +176,18 @@ locations <- data.frame(
 )
 
 # order same as figure
+site_order <- locations$name[rev(order(locations$lat))]
+site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
+# sitecolors <- site_color_map[site_df2$site_name]
 locations2 <- locations[order(locations$lat), ]              
-locations2$col <- wes_palette("Darjeeling1")[1:4]     
+locations2$col <- site_color_map[match(locations2$name, names(site_color_map))]
 
 special_point <- data.frame(
   name = "Common garden location",
   lon = -71.13358611669867,
   lat = 42.29601035316377
 )
+
 special_sf <- st_as_sf(special_point, coords = c("lon", "lat"), crs = 4326)
 points_sf <- st_as_sf(locations2, coords = c("lon", "lat"), crs = 4326)
 
