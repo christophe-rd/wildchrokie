@@ -181,6 +181,9 @@ smooth_pre2 <- smooth_pre[mask]
 x_poly <- c(doy_seq2, rev(doy_seq2))
 y_poly <- c(smooth_pre2, rev(rep(0, length(doy_seq2))))
 
+# y-axis limit based on real data
+ylim_temp <- c(0,max(smooth_cc))
+
 # rasterized pictograms
 img_thermom <- rsvg::rsvg("figures/pictogramsLeaves/thermometer.svg")
 img_calenda <- rsvg::rsvg("figures/pictogramsLeaves/calendar.svg")
