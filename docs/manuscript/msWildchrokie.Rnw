@@ -11,6 +11,7 @@
 
 \begin{document}
 % \SweaveOpts{concordance=TRUE}
+
 \begin{center}
 {\sc} {\Large Warmer and longer growing seasons increase growth for juvenile trees in a common garden} \\
 \vspace{5ex}
@@ -34,7 +35,7 @@ source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/g
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 samples <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
 
-options(digits = 2)
+options(digits = 4)
 
 locations <- data.frame(
   name       = c("Harvard Forest (MA)", "White Mountains (NH)", 
@@ -90,6 +91,47 @@ bspp_df2_gdd_mm[paste0(log_cols, "_mm_perGDD")] <- lapply(bspp_df2_gdd_mm[log_co
 
 # Temporary convertion to log(mm)/Unit
 # bspp_df2_gdd[log_cols] <- lapply(bspp_df2_gdd[log_cols], function(x) x / wcgddscale)
+
+# bspp_df2_gsl
+# 
+# ln(y) = a + b * x
+# x = gsl / 7
+# (exp(bspp_df2_gsl$mean)-1) * 100
+# 
+# z = ln(y)
+# 
+# exp(bspp_df2_gdd$mean)
+# ln(ringwidth) = a + b * gdd/gddin7days
+# bspp_df2_gdd$mean * 56
+# 
+# b <- bspp_df2_gdd[1,2]
+# b --> 56 GDD
+# x --> 100 GDD
+# w = ln(ringwidth)
+# w = a + b * x
+# x = gdd/56
+# 
+# exp(b)
+# 
+# logan <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/output/loganLongTermCleaned.csv")
+# mean(emp$leafout, na.rm = TRUE)
+# # 2 weeks before averaged leafout
+# sublo <- subset(logan, doy <= mean(emp$leafout, na.rm = TRUE) & 
+#                   doy >= mean(emp$leafout, na.rm = TRUE) - 14)
+# sublo2 <- aggregate(GDD_5 ~ doy, sublo, FUN = mean)
+# sosgain <- max(sublo2$GDD_5) - min(sublo2$GDD_5)
+# 
+# # 2 weeks after averaged budset
+# subbs <- subset(logan, doy >= mean(emp$budset, na.rm = TRUE) & 
+#                   doy <= mean(emp$budset, na.rm = TRUE) + 14)
+# subbs2 <- aggregate(GDD_5 ~ doy, subbs, FUN = mean)
+# eosgain <- max(subbs2$GDD_5) - min(subbs2$GDD_5)
+# 
+# b <- bspp_df2_gdd[1,2]
+# (exp(((b * sosgain) / 56)) - 1) *100
+# (exp(((b * eosgain) / 56)) - 1) *100
+# 
+
 @
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -122,7 +164,7 @@ To understand the relationship between GS and growth, we need to understand how 
 
 % Conceptual figure
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/climate/gsconceptualfig.pdf}
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.pdf}
 \caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). Here we show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red) using data local to our study. The arrows represent hypothetical shifts in spring (green) and fall (orange) phenology. With climate change, spring events have advanced and fall phenology has delayed, but to a much lesser extent---lengthening the calendar growing season. This concurrently changed the temperature trees experience early in their season, with cooler first days of growth (a) causing little accumulation of GDD (b). In contrast, weaker shifts in EOS and little temperature change (a) results in a relatively high GDD accumulation (b) due to warmer temperature at this time of the season. Alongside these SOS and EOS shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. }
 \label{fig:GSfig}
 \end{figure}
@@ -379,6 +421,7 @@ Integrating our results into models will also require considering how environmen
 %-------------------------------------------------------------------------------
 \subsection*{Supplemental Methods}
 
+\setlength{\tabcolsep}{3pt}
 <<Table count per spp per prov, results='asis', echo = FALSE>>=
 loctable <- data.frame(
   Provenance = locations$`Provenance name`,
@@ -657,7 +700,7 @@ print(xtable(binded,
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
-\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the $\Delta$ ring width (log(mm))/adjusted predictor, for each species (see 'Data analyses' section in Methods for more details).} 
+\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see 'Data analyses' section in Methods for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 

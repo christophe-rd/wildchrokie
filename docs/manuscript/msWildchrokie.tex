@@ -61,6 +61,7 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 % \SweaveOpts{concordance=TRUE}
+
 \begin{center}
 {\sc} {\Large Warmer and longer growing seasons increase growth for juvenile trees in a common garden} \\
 \vspace{5ex}
@@ -110,7 +111,7 @@ To understand the relationship between GS and growth, we need to understand how 
 
 % Conceptual figure
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/climate/gsconceptualfig.pdf}
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.pdf}
 \caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). Here we show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red) using data local to our study. The arrows represent hypothetical shifts in spring (green) and fall (orange) phenology. With climate change, spring events have advanced and fall phenology has delayed, but to a much lesser extent---lengthening the calendar growing season. This concurrently changed the temperature trees experience early in their season, with cooler first days of growth (a) causing little accumulation of GDD (b). In contrast, weaker shifts in EOS and little temperature change (a) results in a relatively high GDD accumulation (b) due to warmer temperature at this time of the season. Alongside these SOS and EOS shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. }
 \label{fig:GSfig}
 \end{figure}
@@ -182,8 +183,8 @@ Our dataset comprised four deciduous tree species from four sites with leaf phen
 230 budset observations, yielding 
 227 complete growing seasons (GS) for 
 81 individuals. At the common garden location, the mean summer temperature was similar across years with 2019 being the coolest 
-(22.38$^\circ$C), 2020 the hottest 
-(23.07$^\circ$C), and 2018 in between 
+(22.3833$^\circ$C), 2020 the hottest 
+(23.0667$^\circ$C), and 2018 in between 
 (22.85$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.
 The calendar and thermal seasons ranged from 
 90 days and 
@@ -198,8 +199,8 @@ The earliest leafout was
 2018) and the latest, 
 24-Oct ({\Ainc} in
 2018; Figure \ref{fig:wcboxplotPred}d. Finally, annual ring widths across years varied from 
-0.39 mm ({\Ball} in 2020) to 
-13.55 mm ({\Bpop} in 2018; Figure \ref{fig:wcboxplotRW}).  
+0.3895 mm ({\Ball} in 2020) to 
+13.5467 mm ({\Bpop} in 2018; Figure \ref{fig:wcboxplotRW}).  
 
 
 %-------------------------------------------------------------------------------
@@ -207,31 +208,31 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in mm on the log scale---henceforth `RW/day'  or `RW/GDD,' with days and GDD being adjusted to represent more meaningful units, as described above (see `Data analyses' section in Methods for more details).
 Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; $\beta =$
-0.15, UI:
-0.06, 
-0.23 RW/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
-0.07, UI: 
-0.02, 
-0.12 RW/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
+0.148, UI:
+0.062, 
+0.231 RW/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
+0.069, UI: 
+0.023, 
+0.116 RW/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
 0.04, UI: 
 0.00, 
 0.08 RW/GDD), grey alder (\textit{Alnus incana}) trended in the same direction
-($\beta =$ 0.02, UI: 
--0.01, 
-0.05 RW/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+($\beta =$ 0.021, UI: 
+-0.011, 
+0.054 RW/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
 0.05, UI: 
 0.00,
 0.10 RW/day). {\Bpap} also grew more with longer calendar seasons
-($\beta =$ 0.18, UI: 
-0.05, 
-0.31 RW/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
+($\beta =$ 0.181, UI: 
+0.049, 
+0.308 RW/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
 0.03, UI: 
 -0.03, 
 0.09 RW/day, and {\Bpop}: $\beta =$
-0.05, UI: 
--0.02, 
-0.13 RW/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+0.054, UI: 
+-0.021, 
+0.129 RW/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). 
 
 
@@ -239,9 +240,9 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
--0.07, UI:
--0.13, 
--0.01 RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). 
+-0.073, UI:
+-0.133, 
+-0.012 RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). 
 {\Bpop} trended in the opposite direction ($\beta =$
 0.05, UI:
 -0.07, 
@@ -249,9 +250,9 @@ Increased growth with longer seasons is often presumed to come from growth in th
 0.10, UI:
 0.00, 
 0.20 RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
-0.12, UI:
-0.05, 
-0.18 RW/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
+0.115, UI:
+0.051, 
+0.178 RW/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
 0.10, UI:
 0.02, 
 0.17 RW/day, and {\Bpap}: $\beta =$
@@ -267,45 +268,45 @@ Increased growth with longer seasons is often presumed to come from growth in th
 % Question 3
 %-------------------------------------------------------------------------------
 We did not find any clear effect of year on growth (2018: $\alpha =$
-0.19, UI:
--0.77, 
-1.15 RW; 2019: $\alpha =$
-0.18, UI:
--0.79, 
-1.14 RW; 2020: $\alpha =$
+0.193, UI:
+-0.766, 
+1.154 RW; 2019: $\alpha =$
+0.176, UI:
+-0.786, 
+1.138 RW; 2020: $\alpha =$
 -0.43, UI:
 -1.40, 
 0.53 RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
-1.06, UI:
--3.19, 
-5.21 RW; {\Ball}: $\alpha =$
-0.21, UI:
--3.97, 
-4.34 RW; {\Bpap}: $\alpha =$
+1.059, UI:
+-3.189, 
+5.206 RW; {\Ball}: $\alpha =$
+0.208, UI:
+-3.967, 
+4.338 RW; {\Bpap}: $\alpha =$
 -4.00, UI:
 -8.89, 
-0.75 RW; {\Bpop}: $\alpha =$
--0.66, UI:
--4.94, 
-3.63 RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
--0.03, UI:
+0.748 RW; {\Bpop}: $\alpha =$
+-0.664, UI:
+-4.943, 
+3.635 RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
+-0.028, UI:
 -0.22, 
-0.14 RW; Harvard Forest (MA): $\alpha =$
+0.143 RW; Harvard Forest (MA): $\alpha =$
 -0.10, UI:
--0.33, 
-0.07 RW; St-Hippolyte (Qc): $\alpha =$
+-0.328, 
+0.066 RW; St-Hippolyte (Qc): $\alpha =$
 0.04, UI:
 -0.14, 
-0.24 RW; White Mountains (NH): $\alpha =$
-0.08, UI:
--0.09, 
+0.244 RW; White Mountains (NH): $\alpha =$
+0.078, UI:
+-0.091, 
 0.29 RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
-0.17, UI:
-0.02, 
-0.48 RW) was similar to variation across individual trees ($\sigma =$ 
+0.171, UI:
+0.017, 
+0.475 RW) was similar to variation across individual trees ($\sigma =$ 
 0.17, UI: 
-0.05, 
-0.27 RW; Table \ref{tab:tab_all}).
+0.048, 
+0.268 RW; Table \ref{tab:tab_all}).
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
@@ -367,8 +368,9 @@ Integrating our results into models will also require considering how environmen
 %-------------------------------------------------------------------------------
 \subsection*{Supplemental Methods}
 
+\setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jul  9 12:43:01 2026
+% Sat Jul 11 14:08:43 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances out of a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire(NH)) and Canada (in Quebec (Qc)).} 
@@ -410,7 +412,7 @@ Harvard Forest (MA) & -72.2 & 42.5 & 7 & 0 & 4 & 7 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jul  9 12:43:01 2026
+% Sat Jul 11 14:08:43 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters which represent ring width change (log(mm)), per adjusted predictor (see `Data analyses' in Methods for more details). We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different phenological predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
@@ -429,7 +431,7 @@ Species & GDD & GSL & SOS & EOS \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jul  9 12:43:01 2026
+% Sat Jul 11 14:08:43 2026
 \begin{table}[ht]
 \centering
 \caption{The effect of provenance on ring widths (log(mm)). We report these intercept estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
@@ -448,7 +450,7 @@ Harvard Forest (MA) & -0.10 [-0.33, 0.07] & -0.09 [-0.34, 0.09] & -0.04 [-0.26, 
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jul  9 12:43:01 2026
+% Sat Jul 11 14:08:43 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.} 
@@ -482,7 +484,7 @@ $\alpha$ & -0.62 [-4.69, 3.53] & 0.12 [-3.92, 4.13] & 1.15 [-2.58, 4.83] & -1.29
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Jul  9 12:43:01 2026
+% Sat Jul 11 14:08:43 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our four predictors, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.} 
@@ -518,7 +520,7 @@ $\alpha$ & 0.62 [-4.52, 5.84] \\
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
-\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the $\Delta$ ring width (log(mm))/adjusted predictor, for each species (see 'Data analyses' section in Methods for more details).} 
+\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see 'Data analyses' section in Methods for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
