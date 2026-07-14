@@ -4,8 +4,6 @@
 # housekeeping
 rm(list=ls())
 options(stringsAsFactors = FALSE)
-options(max.print = 150)
-options(digits = 3)
 
 # Load library 
 library(future)
