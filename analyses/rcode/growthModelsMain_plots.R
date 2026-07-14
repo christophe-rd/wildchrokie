@@ -26,12 +26,6 @@ runzscore <- F
 climatesum <- read.csv("output/climateSummariesYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
-# abreviated spp names: 
-emp$latbi[which(emp$latbi %in% "Alnus incana")] <- "A. incana"
-emp$latbi[which(emp$latbi %in% "Betula alleghaniensis")] <- "B. alleghaniensis"
-emp$latbi[which(emp$latbi %in% "Betula papyrifera")] <- "B. papyrifera"
-emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
-
 # Full site names
 emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH)"
 emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA)"
@@ -1668,6 +1662,80 @@ for(sp in species) { # sp = "A. incana"
 mtext("(b) Ring width (mm) observations per year and species",
       side = 3, outer = TRUE, adj = 0.6, font = 2, cex = 0.9, line = 0)
 dev.off()
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### SOS VS EOS GAIN VS GSL#####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+# Read data
+b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
+b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
+b_eosgain <- read.csv("output/GM_GSL_eosgain.csv")
+
+# Set layout: 3 rows, 1 column
+par(mfrow = c(3, 1), mar = c(4, 4, 3, 1))
+
+# Common y positions
+n_spp <- nrow(b_gsl_per)
+y_pos <- n_spp:1
+
+# -------------------------------
+# (a) Growing season length
+# -------------------------------
+plot(b_gsl_per$mean, y_pos,
+     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+     xlab = "Growing season length change (%)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+     frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+
+segments(b_gsl_per$p5, y_pos, b_gsl_per$p95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(b_gsl_per$p25, y_pos, b_gsl_per$p75, y_pos,
+         col = wccolslatbi, lwd = 3)
+
+axis(2, at = y_pos, labels = b_gsl_per$spp_name, las = 1)
+mtext("(a) Growing season length", adj = 0, side = 3,
+      line = 1, font = 2, cex = 0.9)
+
+# -------------------------------
+# (b) SOS gain
+# -------------------------------
+plot(b_sosgain$mean, y_pos,
+     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+     xlab = "SOS gain (%)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+     frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+
+segments(b_sosgain$p5, y_pos, b_sosgain$p95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(b_sosgain$p25, y_pos, b_sosgain$p75, y_pos,
+         col = wccolslatbi, lwd = 3)
+
+axis(2, at = y_pos, labels = b_sosgain$spp_name, las = 1)
+mtext("(b) Start of season gain", adj = 0, side = 3,
+      line = 1, font = 2, cex = 0.9)
+
+
+# -------------------------------
+# (c) EOS gain
+# -------------------------------
+plot(b_eosgain$mean, y_pos,
+     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+     xlab = "EOS gain (%)", ylab = "",
+     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+     frame.plot = TRUE,
+     panel.first = abline(v = 0, lty = 2, col = "black"))
+
+segments(b_eosgain$p5, y_pos, b_eosgain$p95, y_pos,
+         col = wccolslatbi, lwd = 1.5)
+segments(b_eosgain$p25, y_pos, b_eosgain$p75, y_pos,
+         col = wccolslatbi, lwd = 3)
+
+axis(2, at = y_pos, labels = b_eosgain$spp_name, las = 1)
+mtext("(c) End of season gain", adj = 0, side = 3,
+      line = 1, font = 2, cex = 0.9)
+
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Some empirical data ####
