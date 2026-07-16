@@ -120,9 +120,9 @@ ggplot(y2020, aes(x = doy, y = meanTempC, color = source, fill = source)) +
   geom_ribbon(aes(ymin = minTempC, ymax = maxTempC), alpha = 0.2, color = NA) +
   geom_line() +
   labs(
-    title = "2020 overlapping climate data",
-    x = "doy",
-    y = "TempC",
+    title = "",
+    x = "Day of year",
+    y = expression(paste("Temperature (", degree, "C)")),
     color = "Dataset",
     fill = "Dataset"
   ) +
