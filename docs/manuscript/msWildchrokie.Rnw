@@ -7,6 +7,8 @@
 \usepackage{natbib}
 \usepackage{parskip}
 
+\setcounter{secnumdepth}{0} 
+
 \setlength{\parindent}{0pt}
 
 \begin{document}
@@ -88,20 +90,19 @@ b_eosgain <- read.csv("output/GM_GSL_eosgain.csv")
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % ABSTRACT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Abstract}
-Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. Most species showed a stronger response to the end of season than the start of season, suggesting that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion.
-
+\section{Abstract}
+Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models.
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-\section*{Introduction}
+\section{Introduction}
 
 % Paragraph 1
 The most frequently observed biological impact of climate change is shifts in phenology---the timing of recurring life history events \citep{parmesan_poleward_1999, menzel_european_2006, calvin_ipcc_2023}. Across many plant species, spring events have advanced \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014}, while autumn events have delayed---but to a much lesser extent \citep{gallinat_autumn_2015,jeong_macroscale_2014}. Together, early springs and later autumns lengthen the growing season, which should increase growth for many species, including trees \citep{keenan_net_2014, stridbeck_partly_2022}. 
 
 % Paragraph 2
-How much trees increase growth with longer seasons is important given the major role of forests in carbon sequestration \citep{friedlingstein_global_2026}. Temperate forests account for roughly 40\% of the annual global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{gibbs_revised_2025}. With warming, research has repeatedly found a connection between longer seasons and increased carbon storage \citep{boisvenue_impacts_2006,gaoEarlierStartThermal2022,finziCarbonBudgetHarvard2020}. The future of this net carbon sink by temperate forests, however, relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. A shift in this relationship could impact the future of this critical carbon sink as well as to hinder natural climate solutions. As we better understand how tree growth and its relation to climate works, across species and biomes, natural climate solutions that aim to mitigate climate change through the restoration and management forests habitat restoration or avoid conversion. The restoration and avoided conversion of habitats could be better informed by better forecasts of carbon sequestration by forests in specific biomes or ecosystems that could optimize these solutions [*Chang2024Global].
+How much trees increase growth with longer seasons is important given the major role of forests in carbon sequestration \citep{friedlingstein_global_2026}. Temperate forests account for roughly 40\% of the annual global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{gibbs_revised_2025}. With warming, research has repeatedly found a connection between longer seasons and increased carbon storage \citep{boisvenue_impacts_2006,gaoEarlierStartThermal2022,finziCarbonBudgetHarvard2020}. The future of this net carbon sink by temperate forests, however, relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. A shift in this relationship could impact the future of this critical carbon sink as well as to hinder current natural climate solutions. As we better understand how tree growth and its relation to climate works across species and biomes, natural climate solutions that aim to mitigate climate change through the restoration and management forests habitat restoration or avoid conversion could be better informed. This could result in targeting forests in specific biomes or ecosystems for restoration and avoided conversion of habitats, optimizing the outcome of these solutions \citep{cook-patton_mapping_2020,chang_global_2024}.
 
 % Paragraph 3
 New studies suggest that longer growing season do not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}. Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in two temperate forest communities. Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where gross primary production and growth appeared decoupled. However, neither of these studies could clearly establish why they found no relationship while previous studies have. Understanding whether temperate forests will persist as a net carbon sink requires answering why trees do not grow more despite longer growing seasons. 
@@ -132,7 +133,7 @@ To understand the relationship between growing seasons and growth, we need to un
 % METHODS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
-\section*{Materials and Methods}
+\section{Materials and Methods}
 
 %-------------------------------------------------------------------------------
 % Common garden setup
@@ -187,7 +188,7 @@ Because ring widths decrease with age---particularly with young trees---we also 
 % RESULTS
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % \clearpage
-\section*{Results}
+\section{Results}
 %-------------------------------------------------------------------------------
 % Info
 %-------------------------------------------------------------------------------
@@ -218,40 +219,39 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 % Question 1
 %-------------------------------------------------------------------------------
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change \% ---henceforth `RW/day'  or `RW/GDD,' with days and GDD being adjusted to represent more meaningful units, as described above (see `Data analyses' section in Methods for more details).
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in \% ---henceforth `\%/day'  or `\%/GDD,' with days and GDD being adjusted to represent more meaningful units, as described above (see `Data analyses' section in Methods for more details).
 Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; $\beta =$
 \Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. papyrifera")]}, UI:
 \Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. papyrifera")]} RW/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
+\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. papyrifera")]} \%/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
 \Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. populifolia")]}, UI: 
 \Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. populifolia")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. populifolia")]} RW/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
+\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. populifolia")]} \%/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
 \Sexpr{sprintf("%.2f", b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])}, UI: 
 \Sexpr{sprintf("%.2f", b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])} RW/GDD), grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
+\Sexpr{sprintf("%.2f", b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])} \%/GDD), grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
 \Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "A. incana")]}, UI: 
 \Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "A. incana")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "A. incana")]} RW/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "A. incana")]} \%/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
 \Sexpr{sprintf("%.2f", b_gsl_per$mean[which(b_gsl_per$spp_name %in% "A. incana")])}, UI: 
 \Sexpr{sprintf("%.2f", b_gsl_per$p5[which(b_gsl_per$spp_name %in% "A. incana")])},
-\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "A. incana")])} RW/day). {\Bpap} also grew more with longer calendar seasons
+\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "A. incana")])} \%/day). {\Bpap} also grew more with longer calendar seasons
 ($\beta =$ \Sexpr{b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. papyrifera")]}, UI: 
 \Sexpr{b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. papyrifera")]} RW/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
+\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. papyrifera")]} \%/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
 \Sexpr{sprintf("%.2f", b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])}, UI: 
 \Sexpr{sprintf("%.2f", b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])} RW/day, and {\Bpop}: $\beta =$
+\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])} \%/day, and {\Bpop}: $\beta =$
 \Sexpr{b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. populifolia")]}, UI: 
 \Sexpr{b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. populifolia")]}, 
-\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. populifolia")]} RW/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
-\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. populifolia")]} RW/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. populifolia")]} \%/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). 
 
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
-The asymmetric extension of season of spring versus fall comes from differences in temperature. Thus extending the season by seven days in the fall results in higher growth than extending it in the spring versus spring ({\Ainc}, 
+The asymmetric extension of season of spring versus fall comes from differences in temperature. We report the results for each season by the average GDD accumulated (calculated from 2005 to 2025) seven days before the median leafout (for SOS) and after the median budset (for EOS) of our dataset. Extending the season by seven days in the fall results in higher growth than extending it in the spring across all species ({\Ainc}, 
 SOS: 
 \Sexpr{sprintf("%.2f", b_sosgain$mean[which(b_sosgain$spp_name %in% "A. incana")])}, UI: 
 \Sexpr{sprintf("%.2f", b_sosgain$p5[which(b_sosgain$spp_name %in% "A. incana")])}, 
@@ -291,23 +291,23 @@ EOS:
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
 \Sexpr{b_sos_per$mean[which(b_sos_per$spp_name %in% "A. incana")]}, UI:
 \Sexpr{b_sos_per$p5[which(b_sos_per$spp_name %in% "A. incana")]}, 
-\Sexpr{b_sos_per$p95[which(b_sos_per$spp_name %in% "A. incana")]} RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). 
+\Sexpr{b_sos_per$p95[which(b_sos_per$spp_name %in% "A. incana")]} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). 
 {\Bpop} trended in the opposite direction ($\beta =$
 \Sexpr{sprintf("%.2f", b_sos_per$mean[which(b_sos_per$spp_name %in% "B. populifolia")])}, UI:
 \Sexpr{sprintf("%.2f", b_sos_per$p5[which(b_sos_per$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. populifolia")])} RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. populifolia")])} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
 \Sexpr{sprintf("%.2f", b_sos_per$mean[which(b_sos_per$spp_name %in% "B. alleghaniensis")])}, UI:
 \Sexpr{sprintf("%.2f", b_sos_per$p5[which(b_sos_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. alleghaniensis")])} RW/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
+\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. alleghaniensis")])} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
 \Sexpr{b_eos_per$mean[which(b_eos_per$spp_name %in% "B. alleghaniensis")]}, UI:
 \Sexpr{b_eos_per$p5[which(b_eos_per$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{b_eos_per$p95[which(b_eos_per$spp_name %in% "B. alleghaniensis")]} RW/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
+\Sexpr{b_eos_per$p95[which(b_eos_per$spp_name %in% "B. alleghaniensis")]} \%/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
 \Sexpr{sprintf("%.2f", b_eos_per$mean[which(b_eos_per$spp_name %in% "B. populifolia")])}, UI:
 \Sexpr{sprintf("%.2f",b_eos_per$p5[which(b_eos_per$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. populifolia")])} RW/day, and {\Bpap}: $\beta =$
+\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. populifolia")])} \%/day, and {\Bpap}: $\beta =$
 \Sexpr{sprintf("%.2f",b_eos_per$mean[which(b_eos_per$spp_name %in% "B. papyrifera")])}, UI:
 \Sexpr{sprintf("%.2f",b_eos_per$p5[which(b_eos_per$spp_name %in% "B. papyrifera")])}, 
-\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. papyrifera")])} RW/day; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. papyrifera")])} \%/day; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
 \Sexpr{nrow(empfullsos)} and EOS: $n =$
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n =$ 
 \Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a). 
@@ -358,7 +358,6 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]} RW; Table \ref{tab:tab_all}).
 
 
-
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
@@ -377,7 +376,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 % DISCUSSION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
-\section*{Discussion}
+\section{Discussion}
 Here we used 81 juvenile trees of four species from four provenances to study how longer growing seasons affect tree growth (using annual growth via tree rings and leaf phenology as a proxy for the start and end of season, SOS and EOS, respectively). Longer growing season increased growth for all species, but varied depending on the season metric used to measure it, with the thermal growing season more often relating to growth than the calendar season.
 
 Our results support the idea that the thermal season is be a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}. By accounting for differences in daily temperatures, the thermal season may be more closely aligned to when and how fast plants can grow each day compared to the calendar season, which assumes a stable influence of each day on growth. Thus, the short and cool spring days early in the season count for less in the thermal season than the calendar season \citep{buonaiuto_early_2026}. Further supporting this, when we disentangled the calendar season by using the SOS and EOS separately, we found a larger response of growth to EOS, with little effect of SOS. 
@@ -407,17 +406,12 @@ Integrating our results into models will also require considering how environmen
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 
-\section*{Supplemental material}
+\section{Supplemental material}
 
 \setcounter{table}{0}
 \renewcommand{\thetable}{S\arabic{table}}
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
-
-%-------------------------------------------------------------------------------
-% Supplemental Methods
-%-------------------------------------------------------------------------------
-\subsection*{Supplemental Methods}
 
 \setlength{\tabcolsep}{3pt}
 <<Table count per spp per prov, results='asis', echo = FALSE>>=
@@ -430,10 +424,8 @@ loctable <- data.frame(
   Bpap       = locations$`B. papyrifera`,
   Bpop       = locations$`B. populifolia`
 )
-
 loctable <- loctable[order(loctable$Latitude),]
 
-# compute totals for header
 n_ainc <- sum(loctable$Ainc)
 n_ball <- sum(loctable$Ball)
 n_bpap <- sum(loctable$Bpap)
@@ -442,6 +434,7 @@ n_bpop <- sum(loctable$Bpop)
 header <- list(
   pos = list(-1),
   command = paste0(
+    "\\hline\n",
     "Provenance & Longitude & Latitude & ",
     "\\textit{A. incana} & ",
     "\\textit{B. alleghaniensis} & ",
@@ -451,20 +444,22 @@ header <- list(
     "$(n = ", n_ainc, ")$ & ",
     "$(n = ", n_ball, ")$ & ",
     "$(n = ", n_bpap, ")$ & ",
-    "$(n = ", n_bpop, ")$ \\\\\n"
+    "$(n = ", n_bpop, ")$ \\\\\n",
+    "\\hline\n"
   )
 )
 
 tab <- xtable(loctable,
-              # keep the 2 decimals for lat long
               digits = c(0, 0, 1, 1, 0, 0, 0, 0),
               caption = "Provenance coordinates and count per species and provenances out of a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire(NH)) and Canada (in Quebec (Qc)).",
               label = "tab:provs"
 )
+
 print(tab,
       include.rownames = FALSE,
       include.colnames = FALSE,
       add.to.row = header,
+      hline.after = c(-1, nrow(loctable)),
       sanitize.text.function = identity,
       caption.placement = "top")
 @
@@ -482,14 +477,6 @@ print(tab,
 \caption{We show the potential allometry patterns across all years we had ring width for. For this, we randomly sampled 20 trees from our dataset and represent their ring width (mm) for each year.}
 \label{fig:allom}
 \end{figure}
-
-
-%-------------------------------------------------------------------------------
-% Supplemental Results
-%-------------------------------------------------------------------------------
-\clearpage
-\subsection*{Supplemental Results} 
-
 
 <<Table slope Wildchrokie, results='asis', echo = FALSE>>=
 library(xtable)
