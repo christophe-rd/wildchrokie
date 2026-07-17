@@ -73,6 +73,15 @@ for (i in 4: ncol(locations)) {
   locations[[i]][is.na(locations[[i]])] <- 0
 }
 
+# Helper function to report results more efficiently:
+fmt_stat <- function(df, spp) {
+  row <- df[df$spp_name == spp, ]
+  if (nrow(row) != 1) {
+    stop("Expected exactly 1 row for '", spp, "', got ", nrow(row))
+  }
+  sprintf("%.2f, UI: %.2f, %.2f", row$mean, row$p5, row$p95)
+}
+
 mean_rw_mm <- aggregate(lengthMM ~ spp_num, data = emp, FUN = mean)
 names(mean_rw_mm)[2] <- "mean_rw_mm"
 
@@ -82,9 +91,14 @@ b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
 b_sos_per <- read.csv("output/GM_SOSparam_bspp_per.csv")
 b_eos_per <- read.csv("output/GM_EOSparam_bspp_per.csv")
 
+# growth gain by extending y days in spring vs fall
 b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
-b_eosgain <- read.csv("output/GM_GSL_eosgain.csv")
-
+b_eosgain <- read.csv("output/GM_GDD_eosgain.csv")
+# average across species
+b_sosgain_mu <- read.csv("output/GM_GDD_sosgain_mu.csv")
+b_eosgain_mu <- read.csv("output/GM_GDD_eosgain_mu.csv")
+b_sosgain_mu$spp_name <- "all"
+b_eosgain_mu$spp_name <- "all"
 @
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -161,7 +175,9 @@ We mounted cores on wooden mounts, and sanded both the cores and cross-sections 
 We performed visual cross dating. This consists of assigning a calendar year to each ring and comparing the year-to-year growth variation and anomalies across replicates of the same species \citep{cook_methods_1990}. We did not perform statistical crossdating or detrending because our chronologies (number of years of data) were extremely short \citep{radenPotentialIntraannualDensity2020a} and showed no evidence of consistent allometric trends (Figure \ref{fig:allom}). We controlled for effects of different years by including `year' in our models (see equation \ref{eq:mainMdl} in `Data analyses' below).
 
 \subsection*{Data analyses}
-To understand how growth shifted with season length we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (log(mm)) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero.
+To understand how growth shifted with season length we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (log(mm)) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero. 
+
+In addition, we compared the relative effect of an extension in the SOS versus EOS using our estimated effect of GDD. To do this, we averaged the GDD (mean daily GDD from 2005 to 2025) accumulated seven days before the median leafout (for SOS) and after the median budset (for EOS). Then with our estimated parameters, we report the effect of GDD on growth for seven autumn and spring days averaged across and for each species.
 
 For daily climate data across all the years of phenological sampling (2018-2020) we combined two sources. For 2018 and 2019 we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used data from the weather station `Boston (Weld Hill)' of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across year at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
@@ -192,17 +208,21 @@ Because ring widths decrease with age---particularly with young trees---we also 
 %-------------------------------------------------------------------------------
 % Info
 %-------------------------------------------------------------------------------
-Our dataset comprised four deciduous tree species from four sites with leaf phenology data spanning three years (2018 to 2020) for a total of \Sexpr{nrow(empfullsos)} leafout and 
+Our dataset comprised four deciduous tree species from four sites with leaf phenology data spanning three years (2018 to 2020) for a total of 
+\Sexpr{nrow(empfullsos)} leafout and 
 \Sexpr{nrow(empfulleos)} budset observations, yielding 
 \Sexpr{nrow(emp)} complete growing seasons for 
 \Sexpr{length(unique(emp$treeid))} individuals. At the common garden location, the mean summer temperature was similar across years with 2019 being the coolest 
-(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2019)]}$^\circ$C), 2020 the hottest 
-(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2020)]}$^\circ$C), and 2018 in between 
-(\Sexpr{wcjja$tmeanmean[which(wcjja$year == 2018)]}$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.
+(\Sexpr{wcjja$tmeanmean[wcjja$year == 2019]}$^\circ$C), 2020 the hottest 
+(\Sexpr{wcjja$tmeanmean[wcjja$year == 2020]}$^\circ$C), and 2018 in between 
+(\Sexpr{wcjja$tmeanmean[wcjja$year == 2018]}$^\circ$C). There was no drought for those three years, except for in 2020, where a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.
 The calendar and thermal seasons ranged from 
 \Sexpr{min(emp$pgsGSL)} days and 
-\Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in \Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
-\Sexpr{max(emp$pgsGSL)} days and \Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in \Sexpr{emp$year[which.max(emp$pgsGSL)]}; Figure \ref{fig:wcboxplotPred}a and b). 
+\Sexpr{round(min(emp$pgsGDD5),1)} GDD ({\Ball} in 
+\Sexpr{emp$year[which.min(emp$pgsGSL)]}) to 
+\Sexpr{max(emp$pgsGSL)} days and 
+\Sexpr{round(max(emp$pgsGDD5),1)} GDD ({\Ainc} in 
+\Sexpr{emp$year[which.max(emp$pgsGSL)]}; Figure \ref{fig:wcboxplotPred}a and b). 
 The earliest leafout was
 \Sexpr{emp$loCal[which.min(emp$leafout)]} ({\Ainc} in
 \Sexpr{emp$year[which.min(emp$leafout)]}) and the latest,
@@ -212,8 +232,10 @@ The earliest leafout was
 \Sexpr{emp$year[which.min(emp$budset)]}) and the latest, 
 \Sexpr{emp$bsCal[which.max(emp$budset)]} ({\Ainc} in
 \Sexpr{emp$year[which.max(emp$budset)]}; Figure \ref{fig:wcboxplotPred}d. Finally, annual ring widths across years varied from 
-\Sexpr{min(emp$lengthMM)} mm ({\Ball} in \Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
-\Sexpr{max(emp$lengthMM)} mm ({\Bpop} in \Sexpr{emp$year[which.max(emp$lengthMM)]}; Figure \ref{fig:wcboxplotRW}).  
+\Sexpr{min(emp$lengthMM)} mm ({\Ball} in 
+\Sexpr{emp$year[which.min(emp$lengthMM)]}) to 
+\Sexpr{max(emp$lengthMM)} mm ({\Bpop} in 
+\Sexpr{emp$year[which.max(emp$lengthMM)]}; Figure \ref{fig:wcboxplotRW}).  
 
 
 %-------------------------------------------------------------------------------
@@ -221,141 +243,81 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in \% ---henceforth `\%/day'  or `\%/GDD,' with days and GDD being adjusted to represent more meaningful units, as described above (see `Data analyses' section in Methods for more details).
 Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; $\beta =$
-\Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. papyrifera")]}, UI:
-\Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. papyrifera")]} \%/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
-\Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. populifolia")]}, UI: 
-\Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. populifolia")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. populifolia")]} \%/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
-\Sexpr{sprintf("%.2f", b_gdd_per$mean[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])}, UI: 
-\Sexpr{sprintf("%.2f", b_gdd_per$p5[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_gdd_per$p95[which(b_gdd_per$spp_name %in% "B. alleghaniensis")])} \%/GDD), grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
-\Sexpr{b_gdd_per$mean[which(b_gdd_per$spp_name %in% "A. incana")]}, UI: 
-\Sexpr{b_gdd_per$p5[which(b_gdd_per$spp_name %in% "A. incana")]}, 
-\Sexpr{b_gdd_per$p95[which(b_gdd_per$spp_name %in% "A. incana")]} \%/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+\Sexpr{fmt_stat(b_gdd_per, "B. papyrifera")} \%/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
+\Sexpr{fmt_stat(b_gdd_per, "B. populifolia")} \%/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
+\Sexpr{fmt_stat(b_gdd_per, "B. alleghaniensis")} \%/GDD), grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
+\Sexpr{fmt_stat(b_gdd_per, "A. incana")} \%/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
-\Sexpr{sprintf("%.2f", b_gsl_per$mean[which(b_gsl_per$spp_name %in% "A. incana")])}, UI: 
-\Sexpr{sprintf("%.2f", b_gsl_per$p5[which(b_gsl_per$spp_name %in% "A. incana")])},
-\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "A. incana")])} \%/day). {\Bpap} also grew more with longer calendar seasons
-($\beta =$ \Sexpr{b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. papyrifera")]}, UI: 
-\Sexpr{b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. papyrifera")]}, 
-\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. papyrifera")]} \%/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
-\Sexpr{sprintf("%.2f", b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])}, UI: 
-\Sexpr{sprintf("%.2f", b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. alleghaniensis")])} \%/day, and {\Bpop}: $\beta =$
-\Sexpr{b_gsl_per$mean[which(b_gsl_per$spp_name %in% "B. populifolia")]}, UI: 
-\Sexpr{b_gsl_per$p5[which(b_gsl_per$spp_name %in% "B. populifolia")]}, 
-\Sexpr{b_gsl_per$p95[which(b_gsl_per$spp_name %in% "B. populifolia")]} \%/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
-On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). 
+\Sexpr{fmt_stat(b_gsl_per, "A. incana")} \%/day). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
+\Sexpr{fmt_stat(b_gsl_per, "B. papyrifera")} \%/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
+\Sexpr{fmt_stat(b_gsl_per, "B. alleghaniensis")} \%/day, and {\Bpop}: $\beta =$
+\Sexpr{fmt_stat(b_gsl_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}).
 
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
-The asymmetric extension of season of spring versus fall comes from differences in temperature. We report the results for each season by the average GDD accumulated (calculated from 2005 to 2025) seven days before the median leafout (for SOS) and after the median budset (for EOS) of our dataset. Extending the season by seven days in the fall results in higher growth than extending it in the spring across all species ({\Ainc}, 
-SOS: 
-\Sexpr{sprintf("%.2f", b_sosgain$mean[which(b_sosgain$spp_name %in% "A. incana")])}, UI: 
-\Sexpr{sprintf("%.2f", b_sosgain$p5[which(b_sosgain$spp_name %in% "A. incana")])}, 
-\Sexpr{sprintf("%.2f", b_sosgain$p95[which(b_sosgain$spp_name %in% "A. incana")])} \% versus
-EOS:
-\Sexpr{sprintf("%.2f", b_eosgain$mean[which(b_eosgain$spp_name %in% "A. incana")])}, UI: 
-\Sexpr{sprintf("%.2f", b_eosgain$p5[which(b_eosgain$spp_name %in% "A. incana")])}, 
-\Sexpr{sprintf("%.2f", b_eosgain$p95[which(b_eosgain$spp_name %in% "A. incana")])}, {\Ball}, 
-SOS: 
-\Sexpr{sprintf("%.2f", b_sosgain$mean[which(b_sosgain$spp_name %in% "B. alleghaniensis")])}, UI: 
-\Sexpr{sprintf("%.2f", b_sosgain$p5[which(b_sosgain$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_sosgain$p95[which(b_sosgain$spp_name %in% "B. alleghaniensis")])} \% versus
-EOS:
-\Sexpr{sprintf("%.2f", b_eosgain$mean[which(b_eosgain$spp_name %in% "B. alleghaniensis")])}, UI: 
-\Sexpr{sprintf("%.2f", b_eosgain$p5[which(b_eosgain$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_eosgain$p95[which(b_eosgain$spp_name %in% "B. alleghaniensis")])}, {\Bpap}, 
-SOS: 
-\Sexpr{sprintf("%.2f", b_sosgain$mean[which(b_sosgain$spp_name %in% "B. papyrifera")])}, UI: 
-\Sexpr{sprintf("%.2f", b_sosgain$p5[which(b_sosgain$spp_name %in% "B. papyrifera")])}, 
-\Sexpr{sprintf("%.2f", b_sosgain$p95[which(b_sosgain$spp_name %in% "B. papyrifera")])} \% versus
-EOS:
-\Sexpr{sprintf("%.2f", b_eosgain$mean[which(b_eosgain$spp_name %in% "B. papyrifera")])}, UI: 
-\Sexpr{sprintf("%.2f", b_eosgain$p5[which(b_eosgain$spp_name %in% "B. papyrifera")])}, 
-\Sexpr{sprintf("%.2f", b_eosgain$p95[which(b_eosgain$spp_name %in% "B. papyrifera")])}, {\Bpop}, 
-SOS: 
-\Sexpr{sprintf("%.2f", b_sosgain$mean[which(b_sosgain$spp_name %in% "B. populifolia")])}, UI: 
-\Sexpr{sprintf("%.2f", b_sosgain$p5[which(b_sosgain$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f", b_sosgain$p95[which(b_sosgain$spp_name %in% "B. populifolia")])} \% versus
-EOS:
-\Sexpr{sprintf("%.2f", b_eosgain$mean[which(b_eosgain$spp_name %in% "B. populifolia")])}, UI: 
-\Sexpr{sprintf("%.2f", b_eosgain$p5[which(b_eosgain$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f", b_eosgain$p95[which(b_eosgain$spp_name %in% "B. populifolia")])})
+ Across species, extending the season by seven days in the fall increased growth by 
+\Sexpr{fmt_stat(b_eosgain_mu, "all")} \% compared to 
+\Sexpr{fmt_stat(b_sosgain_mu, "all")} \% by extending it in the spring ({\Ainc}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "A. incana")} \%; {\Ball}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. alleghaniensis")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. alleghaniensis")} \%; {\Bpap}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. papyrifera")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. papyrifera")} \%; {\Bpop}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. populifolia")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. populifolia")} \%).
 
 %-------------------------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
-\Sexpr{b_sos_per$mean[which(b_sos_per$spp_name %in% "A. incana")]}, UI:
-\Sexpr{b_sos_per$p5[which(b_sos_per$spp_name %in% "A. incana")]}, 
-\Sexpr{b_sos_per$p95[which(b_sos_per$spp_name %in% "A. incana")]} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). 
-{\Bpop} trended in the opposite direction ($\beta =$
-\Sexpr{sprintf("%.2f", b_sos_per$mean[which(b_sos_per$spp_name %in% "B. populifolia")])}, UI:
-\Sexpr{sprintf("%.2f", b_sos_per$p5[which(b_sos_per$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. populifolia")])} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
-\Sexpr{sprintf("%.2f", b_sos_per$mean[which(b_sos_per$spp_name %in% "B. alleghaniensis")])}, UI:
-\Sexpr{sprintf("%.2f", b_sos_per$p5[which(b_sos_per$spp_name %in% "B. alleghaniensis")])}, 
-\Sexpr{sprintf("%.2f", b_sos_per$p95[which(b_sos_per$spp_name %in% "B. alleghaniensis")])} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
-\Sexpr{b_eos_per$mean[which(b_eos_per$spp_name %in% "B. alleghaniensis")]}, UI:
-\Sexpr{b_eos_per$p5[which(b_eos_per$spp_name %in% "B. alleghaniensis")]}, 
-\Sexpr{b_eos_per$p95[which(b_eos_per$spp_name %in% "B. alleghaniensis")]} \%/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
-\Sexpr{sprintf("%.2f", b_eos_per$mean[which(b_eos_per$spp_name %in% "B. populifolia")])}, UI:
-\Sexpr{sprintf("%.2f",b_eos_per$p5[which(b_eos_per$spp_name %in% "B. populifolia")])}, 
-\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. populifolia")])} \%/day, and {\Bpap}: $\beta =$
-\Sexpr{sprintf("%.2f",b_eos_per$mean[which(b_eos_per$spp_name %in% "B. papyrifera")])}, UI:
-\Sexpr{sprintf("%.2f",b_eos_per$p5[which(b_eos_per$spp_name %in% "B. papyrifera")])}, 
-\Sexpr{sprintf("%.2f",b_eos_per$p95[which(b_eos_per$spp_name %in% "B. papyrifera")])} \%/day; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+\Sexpr{fmt_stat(b_sos_per, "A. incana")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
+\Sexpr{fmt_stat(b_eos_per, "B. alleghaniensis")} \%/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
+\Sexpr{fmt_stat(b_eos_per, "B. populifolia")} \%/day, and {\Bpap}: $\beta =$
+\Sexpr{fmt_stat(b_eos_per, "B. papyrifera")} \%/day; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
 \Sexpr{nrow(empfullsos)} and EOS: $n =$
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n =$ 
-\Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a). 
-
+\Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a).
 
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
 We did not find any clear effect of year on growth (2018: $\alpha =$
-\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2018")]}, UI:
-\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2018")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2018")]} RW; 2019: $\alpha =$
-\Sexpr{ayear_df2$mean[which(ayear_df2$year_name %in% "2019")]}, UI:
-\Sexpr{ayear_df2$p5[which(ayear_df2$year_name %in% "2019")]}, 
-\Sexpr{ayear_df2$p95[which(ayear_df2$year_name %in% "2019")]} RW; 2020: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2018")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2018")])}, 
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2018")])} RW; 2019: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2019")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2019")])}, 
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2019")])} RW; 2020: $\alpha =$
 \Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])}, UI:
 \Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2020")])}, 
 \Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])} RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
-\Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "A. incana")]}, UI:
-\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "A. incana")]}, 
-\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "A. incana")]} RW; {\Ball}: $\alpha =$
-\Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. alleghaniensis")]}, UI:
-\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. alleghaniensis")]}, 
-\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. alleghaniensis")]} RW; {\Bpap}: $\alpha =$
-\Sexpr{sprintf("%.2f", aspp_df2$mean[which(aspp_df2$spp_name == "B. papyrifera")])}, UI:
-\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. papyrifera")]}, 
-\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. papyrifera")]} RW; {\Bpop}: $\alpha =$
-\Sexpr{aspp_df2$mean[which(aspp_df2$spp_name == "B. populifolia")]}, UI:
-\Sexpr{aspp_df2$p5[which(aspp_df2$spp_name == "B. populifolia")]}, 
-\Sexpr{aspp_df2$p95[which(aspp_df2$spp_name == "B. populifolia")]} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
-\Sexpr{site_df2$mean[which(site_df2$site_name == "Dartmouth College (NH)")]}, UI:
-\Sexpr{site_df2$p5[which(site_df2$site_name == "Dartmouth College (NH)")]}, 
-\Sexpr{site_df2$p95[which(site_df2$site_name == "Dartmouth College (NH)")]} RW; Harvard Forest (MA): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[which(site_df2$site_name == "Harvard Forest (MA)")])}, UI:
-\Sexpr{site_df2$p5[which(site_df2$site_name == "Harvard Forest (MA)")]}, 
-\Sexpr{site_df2$p95[which(site_df2$site_name == "Harvard Forest (MA)")]} RW; St-Hippolyte (Qc): $\alpha =$
-\Sexpr{site_df2$mean[which(site_df2$site_name == "St-Hippolyte (Qc)")]}, UI:
-\Sexpr{site_df2$p5[which(site_df2$site_name == "St-Hippolyte (Qc)")]}, 
-\Sexpr{site_df2$p95[which(site_df2$site_name == "St-Hippolyte (Qc)")]} RW; White Mountains (NH): $\alpha =$
-\Sexpr{site_df2$mean[which(site_df2$site_name == "White Mountains (NH)")]}, UI:
-\Sexpr{site_df2$p5[which(site_df2$site_name == "White Mountains (NH)")]}, 
-\Sexpr{site_df2$p95[which(site_df2$site_name == "White Mountains (NH)")]} RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
-\Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_asite")]}, UI:
-\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_asite")]}, 
-\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_asite")]} RW) was similar to variation across individual trees ($\sigma =$ 
-\Sexpr{sigma_df2$mean[which(sigma_df2$sigma %in% "sigma_atreeid")]}, UI: 
-\Sexpr{sigma_df2$p5[which(sigma_df2$sigma %in% "sigma_atreeid")]}, 
-\Sexpr{sigma_df2$p95[which(sigma_df2$sigma %in% "sigma_atreeid")]} RW; Table \ref{tab:tab_all}).
+\Sexpr{fmt_stat(aspp_df2, "A. incana")} RW; {\Ball}: $\alpha =$
+\Sexpr{fmt_stat(aspp_df2, "B. alleghaniensis")} RW; {\Bpap}: $\alpha =$
+\Sexpr{fmt_stat(aspp_df2, "B. papyrifera")} RW; {\Bpop}: $\alpha =$
+\Sexpr{fmt_stat(aspp_df2, "B. populifolia")} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Dartmouth College (NH)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "Dartmouth College (NH)"])}, 
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Dartmouth College (NH)"])} RW; Harvard Forest (MA): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Harvard Forest (MA)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "Harvard Forest (MA)"])}, 
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Harvard Forest (MA)"])} RW; St-Hippolyte (Qc): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "St-Hippolyte (Qc)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "St-Hippolyte (Qc)"])}, 
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "St-Hippolyte (Qc)"])} RW; White Mountains (NH): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "White Mountains (NH)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "White Mountains (NH)"])}, 
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "White Mountains (NH)"])} RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
+\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_asite"])}, UI:
+\Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_asite"])}, 
+\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_asite"])} RW) was similar to variation across individual trees ($\sigma =$ 
+\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])}, UI: 
+\Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"])}, 
+\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])} RW; Table \ref{tab:tab_all}).
 
 
 % Figure mu across all species and climate predictors
