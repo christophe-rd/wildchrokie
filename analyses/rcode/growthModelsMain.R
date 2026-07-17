@@ -853,9 +853,33 @@ bspp2_per_eos <- data.frame(
 bspp2_per_sos$spp_name <- emp$latbi[match(bspp2_per_sos$spp, emp$spp_num)]
 bspp2_per_eos$spp_name <- emp$latbi[match(bspp2_per_eos$spp, emp$spp_num)]
 
+# Average across species
+meandfsos <- rowMeans(bspp_gdd_sosgain)
+bspp2_per_sos_mean <- data.frame(
+  spp = "all",
+  mean = mean(meandfsos),
+  p5 =   quantile(meandfsos, probs = 0.05),
+  p25 =  quantile(meandfsos, probs = 0.25),
+  p75 =  quantile(meandfsos, probs = 0.75),
+  p95 =  quantile(meandfsos, probs = 0.95)
+)
+
+meandfeos <- rowMeans(bspp_gdd_eosgain)
+
+bspp2_per_eos_mean <- data.frame(
+  spp = "all",
+  mean = mean(meandfeos),
+  p5 =   quantile(meandfeos, probs = 0.05),
+  p25 =  quantile(meandfeos, probs = 0.25),
+  p75 =  quantile(meandfeos, probs = 0.75),
+  p95 =  quantile(meandfeos, probs = 0.95)
+)
+
 # save csvs
-write.csv(bspp2_per_sos, "output/GM_GDD_sosgain.csv",   row.names = FALSE)
-write.csv(bspp2_per_eos, "output/GM_GSL_eosgain.csv",   row.names = FALSE)
+write.csv(bspp2_per_sos, "output/GM_GDD_sosgain.csv", row.names = FALSE)
+write.csv(bspp2_per_eos, "output/GM_GDD_eosgain.csv", row.names = FALSE)
+write.csv(bspp2_per_sos_mean, "output/GM_GDD_sosgain_mu.csv", row.names = FALSE)
+write.csv(bspp2_per_eos_mean, "output/GM_GDD_eosgain_mu.csv", row.names = FALSE)
 
 }
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
