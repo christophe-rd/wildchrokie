@@ -91,7 +91,7 @@ b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
 b_sos_per <- read.csv("output/GM_SOSparam_bspp_per.csv")
 b_eos_per <- read.csv("output/GM_EOSparam_bspp_per.csv")
 
-# growth gain by extending y days in spring vs fall
+# growth gain by extending y days in spring vs autumn
 b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
 b_eosgain <- read.csv("output/GM_GDD_eosgain.csv")
 # average across species
@@ -139,7 +139,7 @@ To understand the relationship between growing seasons and growth, we need to un
 % Conceptual figure
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig.pdf}
-\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). Here we show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red) using data local to our study. The arrows represent hypothetical shifts in spring (green) and fall (orange) phenology. With climate change, spring events have advanced and fall phenology has delayed, but to a much lesser extent---lengthening the calendar growing season. This concurrently changed the temperature trees experience early in their season, with cooler first days of growth (a) causing little accumulation of GDD (b). In contrast, weaker shifts in EOS and little temperature change (a) results in a relatively high GDD accumulation (b) due to warmer temperature at this time of the season. Alongside these SOS and EOS shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. }
+\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). Here we show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red) using data local to our study. The arrows represent hypothetical shifts in spring (green) and autumn (orange) phenology. With climate change, spring events have advanced and autumn phenology has delayed, but to a much lesser extent---lengthening the calendar growing season. This concurrently changed the temperature trees experience early in their season, with cooler first days of growth (a) causing little accumulation of GDD (b). In contrast, weaker shifts in EOS and little temperature change (a) results in a relatively high GDD accumulation (b) due to warmer temperature at this time of the season. Alongside these SOS and EOS shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. We used mean daily temperature data from the Boston Logan International Airport Climate station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}. }
 \label{fig:GSfig}
 \end{figure}
 
@@ -153,7 +153,7 @@ To understand the relationship between growing seasons and growth, we need to un
 % Common garden setup
 %-------------------------------------------------------------------------------
 \subsection*{Common garden setup and data collection}
-We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv}; Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted the seedlings outside at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the fall of 2020 \citep{buonaiuto_early_2026}. 
+We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:mapProv}; Table \ref{tab:provs}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted the seedlings outside at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the autumn of 2020 \citep{buonaiuto_early_2026}. 
 
 For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact frequency varied within and across years (for more details, see Figure \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe two phenological stages: leafout which we defined as: BBCH 15 and budset as BBCH 102; \citep{finn_general_2007,buonaiuto_early_2026}. We had a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations (which we refer to as the `full datasets'), but for some individual trees in certain years we did not have both events, thus our total of matched full growing season duration (which we refer to as the `restricted dataset') is \Sexpr{nrow(emp)} observations.  
 
@@ -257,7 +257,7 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
- Across species, extending the season by seven days in the fall increased growth by 
+Across species, extending the season by seven days in the autumn increased growth by 
 \Sexpr{fmt_stat(b_eosgain_mu, "all")} \% compared to 
 \Sexpr{fmt_stat(b_sosgain_mu, "all")} \% by extending it in the spring ({\Ainc}, 
 SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
@@ -268,11 +268,11 @@ SOS: \Sexpr{fmt_stat(b_sosgain, "B. papyrifera")} \% versus
 EOS: \Sexpr{fmt_stat(b_eosgain, "B. papyrifera")} \%; {\Bpop}, 
 SOS: \Sexpr{fmt_stat(b_sosgain, "B. populifolia")} \% versus
 EOS: \Sexpr{fmt_stat(b_eosgain, "B. populifolia")} \%).
-
+ 
 %-------------------------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------------------------
-Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than fall phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
 \Sexpr{fmt_stat(b_sos_per, "A. incana")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
 \Sexpr{fmt_stat(b_sos_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
 \Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
