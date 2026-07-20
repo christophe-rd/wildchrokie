@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -339,16 +339,17 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$latbi == spp_name, ]
   
   y_post <- t(spp_post_array[, , i])
+  y_post_mm <- exp(y_post)
   
   # summaries
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean <- apply(y_post_mm, 1, mean)
+  y_low  <- apply(y_post_mm, 1, quantile, 0.25)
+  y_high <- apply(y_post_mm, 1, quantile, 0.75)
   
   # species-specific ylim
-  ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
+  ylim_spp <- range(c(emp_spp$lengthMM, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGDD5, emp_spp$loglength,
+  plot(emp_spp$pgsGDD5, emp_spp$lengthMM,
        type = "n",
        ylim = ylimline,
        xlab = "Growing season growing degree days (GDD)",
@@ -374,7 +375,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGDD5,
-    emp_spp$loglength,
+    emp_spp$lengthMM,
     pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
@@ -508,12 +509,12 @@ for (i in seq_along(sppvecnum)) { # i = 1
   # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
   plot(emp_spp$pgsGSL, emp_spp$lengthMM,
-       type = "n",
+       type = "n", bty = "l",
        ylim = ylimline,
        xlab = "Growing season length (days)",
        ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_name))),
-       frame = FALSE)
+       frame = TRUE)
   
   # add panel letter 
   mtext(paste0("(", letters[i], ")"), 
@@ -540,7 +541,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
          legend = names(yrshapes),
          pch    = yrshapes,
          col    = line_col,
-         pt.cex = 1.5, bty = "n", cex = 1.2,
+         pt.cex = 1.5, bty = "n", cex = 1.2, 
          title  = "Year", title.font = 2)
   
 }
@@ -1246,9 +1247,9 @@ rasterImage(
 
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
-plot(emp$pgsGDD5, dgdd$y, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Growing season growing degree days (GDD)", ylab = "ring width (log(mm))",
+plot(emp$pgsGDD5, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Growing season growing degree days (GDD)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(e)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1256,10 +1257,11 @@ mtext("(e)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array[, , i])
+  y_post_mm <- exp(y_post)
   
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean <- apply(y_post_mm, 1, mean)
+  y_low  <- apply(y_post_mm, 1, quantile, 0.25)
+  y_high <- apply(y_post_mm, 1, quantile, 0.75)
   
   line_col <- wccolslatbi[spp_name]
   
@@ -1276,9 +1278,9 @@ for (i in seq_along(sppvecnum)) {
 
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
-plot(emp$pgsGSL, dgsl$y, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Growing season length (days)", ylab = "ring width (log(mm))",
+plot(emp$pgsGSL, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Growing season length (days)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(f)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1286,10 +1288,11 @@ mtext("(f)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_gsl[, , i])
+  y_post_mm <- exp(y_post)
   
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean <- apply(y_post_mm, 1, mean)
+  y_low  <- apply(y_post_mm, 1, quantile, 0.25)
+  y_high <- apply(y_post_mm, 1, quantile, 0.75)
   
   line_col <- wccolslatbi[spp_name]
   
@@ -1306,9 +1309,9 @@ for (i in seq_along(sppvecnum)) {
 
 # Row 3, Col 2, Slot 7 : SOS
 par(mar = custommar)
-plot(emp$leafout, dsos$y, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "Start of season (day of year)", ylab = "ring width (log(mm))",
+plot(emp$leafout, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "Start of season (day of year)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(g)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1316,10 +1319,11 @@ mtext("(g)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_sos[, , i])
+  y_post_mm <- exp(y_post)
   
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean <- apply(y_post_mm, 1, mean)
+  y_low  <- apply(y_post_mm, 1, quantile, 0.25)
+  y_high <- apply(y_post_mm, 1, quantile, 0.75)
   
   line_col <- wccolslatbi[spp_name]
   
@@ -1336,9 +1340,9 @@ for (i in seq_along(sppvecnum)) {
 
 # Row 4, Col 2, Slot 8 : EOS
 par(mar = custommar)
-plot(emp$budset, deos$y, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$loglength), max(emp$loglength)), 
-     xlab = "End of season (day of year)", ylab = "ring width (log(mm))",
+plot(emp$budset, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     xlab = "End of season (day of year)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 mtext("(h)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
@@ -1346,10 +1350,11 @@ mtext("(h)", side = 3, adj = 0, font = 2, cex = 1, line = 1)
 for (i in seq_along(sppvecnum)) {
   spp_name <- as.character(sppvecname[i])
   y_post <- t(spp_post_array_eos[, , i])
+  y_post_mm <- exp(y_post)
   
-  y_mean <- apply(y_post, 1, mean)
-  y_low  <- apply(y_post, 1, quantile, 0.25)
-  y_high <- apply(y_post, 1, quantile, 0.75)
+  y_mean <- apply(y_post_mm, 1, mean)
+  y_low  <- apply(y_post_mm, 1, quantile, 0.25)
+  y_high <- apply(y_post_mm, 1, quantile, 0.75)
   
   line_col <- wccolslatbi[spp_name]
   
