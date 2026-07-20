@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -329,9 +329,9 @@ spp_post_array <- extract(fitgdd, "spp_post")$spp_post
 # jpeg output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -402,7 +402,7 @@ jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSpp.jpeg",
   width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 
 # Layout: 2 rows × 2 columns per page
@@ -487,9 +487,9 @@ gslseq <- dgsl$gslseq
 # jpeg output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -577,9 +577,9 @@ sosseq <- dsos$sosseq
 # jpeg output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppFacetSOS.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -642,9 +642,9 @@ dev.off()
 # PDF output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetSOS.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 
 # Layout: 2 rows × 2 columns per page
@@ -717,9 +717,9 @@ eosseq <- deos$eosseq
 # jpeg output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppFacetEOS.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
@@ -784,9 +784,9 @@ dev.off()
 # PDF output
 jpeg(
   filename = "figures/growthModelsMain/growthModelSlopesperSppNoFacetEOS.jpeg",
-  width = 2400,      # wider image (pixels) → more horizontal room
+  width = 2400,      
   height = 2400,
-  res = 300          # good print-quality resolution
+  res = 300          
 )
 
 # Layout: 2 rows × 2 columns per page

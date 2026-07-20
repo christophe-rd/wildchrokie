@@ -79,7 +79,7 @@ fmt_stat <- function(df, spp) {
   if (nrow(row) != 1) {
     stop("Expected exactly 1 row for '", spp, "', got ", nrow(row))
   }
-  sprintf("%.2f, UI: %.2f, %.2f", row$mean, row$p5, row$p95)
+  sprintf("%.2f\\%%, (UI: %.2f, %.2f)", row$mean, row$p5, row$p95)
 }
 
 mean_rw_mm <- aggregate(lengthMM ~ spp_num, data = emp, FUN = mean)
@@ -254,20 +254,6 @@ Unlike its response to warmer thermal season, {\Ainc} grew more with longer cale
 \Sexpr{fmt_stat(b_gsl_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}).
 
-%-------------------------------------------------------------------------------
-% Comparison between GSL and GDD at both start and end of season
-%-------------------------------------------------------------------------------
-Across species, extending the season by seven days in the autumn increased growth by 
-\Sexpr{fmt_stat(b_eosgain_mu, "all")} \% compared to 
-\Sexpr{fmt_stat(b_sosgain_mu, "all")} \% by extending it in the spring ({\Ainc}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "A. incana")} \%; {\Ball}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. alleghaniensis")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. alleghaniensis")} \%; {\Bpap}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. papyrifera")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. papyrifera")} \%; {\Bpop}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. populifolia")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. populifolia")} \%).
  
 %-------------------------------------------------------------------------------
 % Question 2
@@ -282,6 +268,23 @@ Increased growth with longer seasons is often presumed to come from growth in th
 \Sexpr{nrow(empfullsos)} and EOS: $n =$
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n =$ 
 \Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a).
+
+%-------------------------------------------------------------------------------
+% Comparison between GSL and GDD at both start and end of season
+%-------------------------------------------------------------------------------
+These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this we found that the addition of 7 days near the end of season increased growth across all species by 
+\Sexpr{fmt_stat(b_eosgain_mu, "all")}\%,  compared to an increase of XX% from an earlier start of spring (estimated using our model of GDD shown in cite fig, tables, see methods for more details)
+Across species, extending the season by seven days in the autumn increased growth by 
+\Sexpr{fmt_stat(b_eosgain_mu, "all")} \% compared to 
+\Sexpr{fmt_stat(b_sosgain_mu, "all")} \% by extending it in the spring ({\Ainc}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "A. incana")} \%; {\Ball}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. alleghaniensis")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. alleghaniensis")} \%; {\Bpap}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. papyrifera")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. papyrifera")} \%; {\Bpop}, 
+SOS: \Sexpr{fmt_stat(b_sosgain, "B. populifolia")} \% versus
+EOS: \Sexpr{fmt_stat(b_eosgain, "B. populifolia")} \%).
 
 %-------------------------------------------------------------------------------
 % Question 3
@@ -653,14 +656,14 @@ print(xtable(binded,
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.pdf}
 \caption{Ring width (log(mm)) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg}
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf}
 \caption{Ring width trends (log(mm)) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
