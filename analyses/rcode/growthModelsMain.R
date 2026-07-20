@@ -808,53 +808,104 @@ logan <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotter
 
 logan <- subset(logan, year >= 2005)
 
-# 2 weeks before averaged leafout
-sublo <- subset(logan, doy <= mean(emp$leafout, na.rm = TRUE) &
-                  doy >= mean(emp$leafout, na.rm = TRUE) - 7)
-sublo2 <- aggregate(GDD_5 ~ doy, sublo, FUN = mean)
-sosgain <- max(sublo2$GDD_5) - min(sublo2$GDD_5)
+lomed <- aggregate(leafout ~ latbi, emp, FUN = median)
+bsmed <- aggregate(budset ~ latbi, emp, FUN = median)
 
-# 2 weeks after averaged budset
-subbs <- subset(logan, doy >= mean(emp$budset, na.rm = TRUE) &
-                  doy <= mean(emp$budset, na.rm = TRUE) + 7)
-subbs2 <- aggregate(GDD_5 ~ doy, subbs, FUN = mean)
-eosgain <- max(subbs2$GDD_5) - min(subbs2$GDD_5)
+spp_list <- unique(emp$latbi)
 
-# SOS
-bspp_gdd_sosgain <- bspp_df_gdd
-bspp_gdd_sosgain[colnames(bspp_gdd_sosgain)] <- 
-  lapply(bspp_gdd_sosgain[colnames(bspp_gdd_sosgain)], 
-         function(x) (exp((x * sosgain)/wcgddscale) -1) * 100)
+sos_list <- list()
+eos_list <- list()
 
-bspp2_per_sos <- data.frame(
-  spp = colnames(bspp_gdd_sosgain),
-  mean = apply(bspp_gdd_sosgain, 2, mean),
-  p5 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.05),
-  p25 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.25),
-  p75 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.75),
-  p95 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.95)
-)
+for (sp in spp_list) { # sp = "A. incana" 
+  
+  sp_leafout <- median(emp$leafout[emp$latbi == sp], na.rm = TRUE)
+  sp_budset  <- median(emp$budset[emp$latbi == sp], na.rm = TRUE)
+  
+  # 2 weeks before median leafout
+  sublo <- subset(logan, doy <= sp_leafout &
+                    doy >= sp_leafout - 7)
+  sublo2 <- aggregate(GDD_5 ~ doy, sublo, FUN = mean)
+  sosgain <- max(sublo2$GDD_5) - min(sublo2$GDD_5)
+  
+  # 2 weeks after median budset
+  subbs <- subset(logan, doy >= sp_budset &
+                    doy <= sp_budset + 7)
+  subbs2 <- aggregate(GDD_5 ~ doy, subbs, FUN = mean)
+  eosgain <- max(subbs2$GDD_5) - min(subbs2$GDD_5)
+  
+  spp_num <- unique(emp$spp_num[emp$latbi == sp])
+  
+  # SOS
+  bspp_gdd_sosgain <- bspp_df_gdd[, colnames(bspp_df_gdd) == spp_num, drop = FALSE]
+  
+  bspp_gdd_sosgain[colnames(bspp_gdd_sosgain)] <- 
+    lapply(bspp_gdd_sosgain[colnames(bspp_gdd_sosgain)], 
+           function(x) (exp((x * sosgain)/wcgddscale) - 1) * 100)
+  
+  sos_list[[sp]] <- data.frame(
+    spp = colnames(bspp_gdd_sosgain),
+    mean = apply(bspp_gdd_sosgain, 2, mean),
+    p5  = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.05),
+    p25 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.25),
+    p75 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.75),
+    p95 = apply(bspp_gdd_sosgain, 2, quantile, probs = 0.95)
+  )
+  
+  # EOS
+  bspp_gdd_eosgain <- bspp_df_gdd[, colnames(bspp_df_gdd) == spp_num, drop = FALSE]
+  bspp_gdd_eosgain[colnames(bspp_gdd_eosgain)] <- 
+    lapply(bspp_gdd_eosgain[colnames(bspp_gdd_eosgain)], 
+           function(x) (exp((x * eosgain)/wcgddscale) - 1) * 100)
+  
+  eos_list[[sp]] <- data.frame(
+    spp = colnames(bspp_gdd_eosgain),
+    mean = apply(bspp_gdd_eosgain, 2, mean),
+    p5  = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.05),
+    p25 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.25),
+    p75 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.75),
+    p95 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.95)
+  )
+}
 
-# EOS
-bspp_gdd_eosgain <- bspp_df_gdd
-bspp_gdd_eosgain[colnames(bspp_gdd_eosgain)] <- 
-  lapply(bspp_gdd_eosgain[colnames(bspp_gdd_eosgain)], 
-         function(x) (exp((x * eosgain)/wcgddscale) -1) * 100)
-
-bspp2_per_eos <- data.frame(
-  spp = colnames(bspp_gdd_eosgain),
-  mean = apply(bspp_gdd_eosgain, 2, mean),
-  p5 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.05),
-  p25 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.25),
-  p75 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.75),
-  p95 = apply(bspp_gdd_eosgain, 2, quantile, probs = 0.95)
-)
+bspp2_per_sos <- do.call(rbind, sos_list)
+bspp2_per_eos <- do.call(rbind, eos_list)
 
 bspp2_per_sos$spp_name <- emp$latbi[match(bspp2_per_sos$spp, emp$spp_num)]
 bspp2_per_eos$spp_name <- emp$latbi[match(bspp2_per_eos$spp, emp$spp_num)]
 
+# Build matrices with one column per species (rows = posterior draws)
+sos_mat <- do.call(cbind, lapply(spp_list, function(sp) {
+  spp_num <- unique(emp$spp_num[emp$latbi == sp])
+  bspp_df_gdd[, colnames(bspp_df_gdd) == spp_num, drop = FALSE][[1]]
+}))
+colnames(sos_mat) <- spp_list
+
+eos_mat <- do.call(cbind, lapply(spp_list, function(sp) {
+  spp_num <- unique(emp$spp_num[emp$latbi == sp])
+  bspp_df_gdd[, colnames(bspp_df_gdd) == spp_num, drop = FALSE][[1]]
+}))
+colnames(eos_mat) <- spp_list
+
+# Apply each species' own sos/eos gain, then average across species
+sos_gains <- sapply(spp_list, function(sp) {
+  sp_leafout <- median(emp$leafout[emp$latbi == sp], na.rm = TRUE)
+  sublo <- subset(logan, doy <= sp_leafout & doy >= sp_leafout - 7)
+  sublo2 <- aggregate(GDD_5 ~ doy, sublo, FUN = mean)
+  max(sublo2$GDD_5) - min(sublo2$GDD_5)
+})
+
+eos_gains <- sapply(spp_list, function(sp) {
+  sp_budset <- median(emp$budset[emp$latbi == sp], na.rm = TRUE)
+  subbs <- subset(logan, doy >= sp_budset & doy <= sp_budset + 7)
+  subbs2 <- aggregate(GDD_5 ~ doy, subbs, FUN = mean)
+  max(subbs2$GDD_5) - min(subbs2$GDD_5)
+})
+
+sos_pct_mat <- sweep(sos_mat, 2, sos_gains, function(x, g) (exp((x * g)/wcgddscale) - 1) * 100)
+eos_pct_mat <- sweep(eos_mat, 2, eos_gains, function(x, g) (exp((x * g)/wcgddscale) - 1) * 100)
+
 # Average across species
-meandfsos <- rowMeans(bspp_gdd_sosgain)
+meandfsos <- rowMeans(sos_pct_mat)
 bspp2_per_sos_mean <- data.frame(
   spp = "all",
   mean = mean(meandfsos),
@@ -864,8 +915,7 @@ bspp2_per_sos_mean <- data.frame(
   p95 =  quantile(meandfsos, probs = 0.95)
 )
 
-meandfeos <- rowMeans(bspp_gdd_eosgain)
-
+meandfeos <- rowMeans(eos_pct_mat)
 bspp2_per_eos_mean <- data.frame(
   spp = "all",
   mean = mean(meandfeos),
