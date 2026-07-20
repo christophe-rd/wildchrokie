@@ -59,6 +59,130 @@ years <- sort(unique(empir$year))
 years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 
+
+##### Climate overlap in 2020 #####
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
+# Start with years 2012 to 2020
+#from https://labs.arboretum.harvard.edu/weather/
+# Uncleaned weldhill climate
+
+weldhill_climate <- read.csv("weldhill.csv")
+
+# pull the years until 2019 --- see issue #8 for selecting until 2019 only
+weld_15to20 <- weldhill_climate[grepl("2020", weldhill_climate$Eastern.daylight.time), ]
+
+# make date and time separate cols
+weld_15to20$date <- substr(weld_15to20$Eastern.daylight.time,
+                           1, nchar(weld_15to20$Eastern.daylight.time) - 9)
+weld_15to20$time <- substr(weld_15to20$Eastern.daylight.time,
+                           nchar(weld_15to20$Eastern.daylight.time) - 8,
+                           nchar(weld_15to20$Eastern.daylight.time))
+weld_15to20$date <- as.Date(weld_15to20$date, format = "%m/%d/%Y")
+
+# convert far to celcius: https://www.metric-conversions.org/temperature/fahrenheit-to-celsius.htm
+weld_15to20$tempCelcius <- (weld_15to20$Temp..F - 32) / 1.8
+weld_15to20$pptMM <- weld_15to20$Rain.in * 25.4
+
+# summarize with min mean and max
+weld_15to20_temp <- aggregate(
+  tempCelcius ~ date,
+  data = weld_15to20,
+  FUN = function(x) c(max = max(x, na.rm = TRUE),
+                      mean = mean(x, na.rm = TRUE),
+                      min = min(x, na.rm = TRUE))
+)
+weld_15to20_daily <- data.frame(
+  date = weld_15to20_temp$date,
+  maxTempC = weld_15to20_temp$tempCelcius[, "max"],
+  meanTempC = weld_15to20_temp$tempCelcius[, "mean"],
+  minTempC = weld_15to20_temp$tempCelcius[, "min"]
+)
+
+# summarize for precipitation
+weld_15to20_ppt <- aggregate(
+  pptMM ~ date,
+  data = weld_15to20,
+  FUN = sum
+)
+weld_15to20_daily$pptMM <- weld_15to20_ppt$pptMM[match(weld_15to20_daily$date, weld_15to20_ppt$date)]
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
+# Then follow with years 2020 to 2024
+# From https://newa.cornell.edu/all-weather-data-query/
+# precipitation in inches
+newa_files <- list.files(pattern = "\\.csv$")[2:6] # 2 and 10 is wrong
+newa_list <- lapply(newa_files, read.csv, stringsAsFactors = FALSE)
+newa_20to25 <- do.call(rbind, newa_list)
+
+# select cols of interest
+newa_20to25_sub <- newa_20to25[, c("date",
+                                   "Avg.Air.Temp...F.",
+                                   "Max.Air.Temp...F.",
+                                   "Min.Air.Temp...F.",
+                                   "Total.Precipitation")]
+newa_20to25_daily <- data.frame(
+  date      = newa_20to25_sub$date,
+  maxTempC  = (newa_20to25_sub$Max.Air.Temp...F. - 32) * 5/9,
+  meanTempC = (newa_20to25_sub$Avg.Air.Temp...F. - 32) * 5/9,
+  minTempC  = (newa_20to25_sub$Min.Air.Temp...F. - 32) * 5/9,
+  pptMM     = newa_20to25_sub$Total.Precipitation * 25.4
+)
+newa_20to25_daily$date <- as.Date(newa_20to25_daily$date, format = "%m/%d/%Y")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
+# Bind both dfs together but first give them a unique id
+weld_15to20_daily$source <- "weldhillsite"
+newa_20to25_daily$source <- "newa"
+weldhill_comp <- rbind(weld_15to20_daily, newa_20to25_daily)
+
+# removing temp of -500
+weldhill_comp <- subset(weldhill_comp, minTempC > -50)
+weldhill_comp$year <- substr(weldhill_comp$date, 1,4)
+weldhill_comp$doy  <- as.numeric(format(weldhill_comp$date, "%j"))
+
+# make a quick and dirty plot to compare overlapping data for 2020
+y2020 <- subset(weldhill_comp, year == 2020)
+y2020 <- subset(y2020, doy < 240)
+
+src_levels <- unique(y2020$source)
+src_cols <- setNames(c("#FF0000", "#00A08A")[seq_along(src_levels)], src_levels)
+
+setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/")
+pdf("figures/climate/climateComparison2020.pdf", width = 8, height = 5)
+par(mar = c(2,4,4,4))
+plot(y2020$doy, y2020$meanTempC,
+     ylim = c(min(y2020$minTempC), max(y2020$maxTempC)),
+     xlim = c(0, 250),
+     type = "n",
+     xlab = "Day of year",
+     ylab = expression(paste("Temperature (", degree, "C)")),
+     frame = TRUE, bty = "l")
+
+for (s in src_levels) {
+  y2020_s <- y2020[y2020$source == s, ]
+  y2020_s <- y2020_s[order(y2020_s$doy), ]
+  
+  polygon(
+    c(y2020_s$doy, rev(y2020_s$doy)),
+    c(y2020_s$minTempC, rev(y2020_s$maxTempC)),
+    col = adjustcolor(src_cols[s], alpha.f = 0.2),
+    border = NA
+  )
+  
+  lines(y2020_s$doy, y2020_s$meanTempC, col = src_cols[s], lwd = 2)
+}
+
+legend("topleft",
+       legend = src_levels,
+       col = src_cols,
+       lwd = 2, bty = "n",
+       title = "Dataset")
+
+dev.off()
+
 # precipitation at leafout
 if (makeplots) {
 empir$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {

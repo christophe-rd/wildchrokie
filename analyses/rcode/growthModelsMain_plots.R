@@ -327,12 +327,8 @@ spp_post_array <- extract(fitgdd, "spp_post")$spp_post
 # dimensions: [n_draws, Ngddseq, Nspp]
 
 # jpeg output
-jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacet.jpeg",
-  width = 2400,      
-  height = 2400,
-  res = 300          
-)
+pdf("figures/growthModelsMain/growthModelSlopesperSppFacet.pdf",
+  width = 8, height = 8 )
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 
@@ -484,16 +480,13 @@ gslseq <- dgsl$gslseq
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### GSL: per Spp, facet #####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# jpeg output
-jpeg(
-  filename = "figures/growthModelsMain/growthModelSlopesperSppFacetGSL.jpeg",
-  width = 2400,      
-  height = 2400,
-  res = 300          
-)
+# pdf(
+pdf("figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf", 
+    width = 8, height = 8)
+
 # Layout: 2 rows × 2 columns per page
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
-
+ylimline <- c(0,10)
 # Loop over trees again to plot each tree individually
 for (i in seq_along(sppvecnum)) { # i = 1
   spp_name <- as.character(sppvecname[i])
@@ -504,20 +497,21 @@ for (i in seq_along(sppvecnum)) { # i = 1
   emp_spp <- emp[emp$latbi == spp_name, ]
   
   y_post_gsl <- t(spp_post_array_gsl[, , i])
+  y_post_gsl_mm <- exp(y_post_gsl)
   
   # summaries
-  y_mean_gsl <- apply(y_post_gsl, 1, mean)
-  y_low_gsl  <- apply(y_post_gsl, 1, quantile, 0.25)
-  y_high_gsl <- apply(y_post_gsl, 1, quantile, 0.75)
+  y_mean_gsl <- apply(y_post_gsl_mm, 1, mean)
+  y_low_gsl  <- apply(y_post_gsl_mm, 1, quantile, 0.25)
+  y_high_gsl <- apply(y_post_gsl_mm, 1, quantile, 0.75)
   
   # species-specific ylim
   # ylim_spp <- range(c(emp_spp$loglength, y_low, y_high), na.rm = TRUE)
   
-  plot(emp_spp$pgsGSL, emp_spp$loglength,
+  plot(emp_spp$pgsGSL, emp_spp$lengthMM,
        type = "n",
        ylim = ylimline,
        xlab = "Growing season length (days)",
-       ylab = "ring width (log(mm))",
+       ylab = "Ring width (mm)",
        main = bquote(italic(.(spp_name))),
        frame = FALSE)
   
@@ -536,7 +530,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   points(
     emp_spp$pgsGSL,
-    emp_spp$loglength,
+    emp_spp$lengthMM,
     pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
     col = line_col
@@ -548,7 +542,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
          col    = line_col,
          pt.cex = 1.5, bty = "n", cex = 1.2,
          title  = "Year", title.font = 2)
-
+  
 }
 
 dev.off()
