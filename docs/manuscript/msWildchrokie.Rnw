@@ -241,17 +241,17 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 % Question 1
 %-------------------------------------------------------------------------------
-Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in \% ---henceforth `\%/day'  or `\%/GDD,' with days and GDD being adjusted to represent more meaningful units, as described above (see `Data analyses' section in Methods for more details).
+Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in \% (see `Data analyses' section in Methods for more details).
 Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; $\beta =$
-\Sexpr{fmt_stat(b_gdd_per, "B. papyrifera")} \%/GDD), Grey birch (\textit{Betula populifolia}; $\beta =$
-\Sexpr{fmt_stat(b_gdd_per, "B. populifolia")} \%/GDD), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
-\Sexpr{fmt_stat(b_gdd_per, "B. alleghaniensis")} \%/GDD), grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
-\Sexpr{fmt_stat(b_gdd_per, "A. incana")} \%/GDD); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+\Sexpr{fmt_stat(b_gdd_per, "B. papyrifera")}), Grey birch (\textit{Betula populifolia}; $\beta =$
+\Sexpr{fmt_stat(b_gdd_per, "B. populifolia")}), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
+\Sexpr{fmt_stat(b_gdd_per, "B. alleghaniensis")}). Grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
+\Sexpr{fmt_stat(b_gdd_per, "A. incana")}); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
-\Sexpr{fmt_stat(b_gsl_per, "A. incana")} \%/day). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
-\Sexpr{fmt_stat(b_gsl_per, "B. papyrifera")} \%/day), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
-\Sexpr{fmt_stat(b_gsl_per, "B. alleghaniensis")} \%/day, and {\Bpop}: $\beta =$
-\Sexpr{fmt_stat(b_gsl_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+\Sexpr{fmt_stat(b_gsl_per, "A. incana")}). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
+\Sexpr{fmt_stat(b_gsl_per, "B. papyrifera")}), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
+\Sexpr{fmt_stat(b_gsl_per, "B. alleghaniensis")}, and {\Bpop}: $\beta =$
+\Sexpr{fmt_stat(b_gsl_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}).
 
  
@@ -259,12 +259,12 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
-\Sexpr{fmt_stat(b_sos_per, "A. incana")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
-\Sexpr{fmt_stat(b_sos_per, "B. populifolia")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
-\Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")} \%/day; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
-\Sexpr{fmt_stat(b_eos_per, "B. alleghaniensis")} \%/day). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
-\Sexpr{fmt_stat(b_eos_per, "B. populifolia")} \%/day, and {\Bpap}: $\beta =$
-\Sexpr{fmt_stat(b_eos_per, "B. papyrifera")} \%/day; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+\Sexpr{fmt_stat(b_sos_per, "A. incana")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
+\Sexpr{fmt_stat(b_eos_per, "B. alleghaniensis")}). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
+\Sexpr{fmt_stat(b_eos_per, "B. populifolia")}, and {\Bpap}: $\beta =$
+\Sexpr{fmt_stat(b_eos_per, "B. papyrifera")}; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
 \Sexpr{nrow(empfullsos)} and EOS: $n =$
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n =$ 
 \Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a).
@@ -272,11 +272,11 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
-These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this we found that the addition of 7 days near the end of season increased growth across all species by 
-\Sexpr{fmt_stat(b_eosgain_mu, "all")}\%,  compared to an increase of XX% from an earlier start of spring (estimated using our model of GDD shown in cite fig, tables, see methods for more details)
+These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this, we found that the addition of 7 days near the end of season increased growth across all species by 
+\Sexpr{fmt_stat(b_eosgain_mu, "all")},  compared to an increase of
+\Sexpr{fmt_stat(b_sosgain_mu, "all")} from an earlier start of spring (estimated using our model of GDD shown in cite fig, tables, see methods for more details)
 Across species, extending the season by seven days in the autumn increased growth by 
-\Sexpr{fmt_stat(b_eosgain_mu, "all")} \% compared to 
-\Sexpr{fmt_stat(b_sosgain_mu, "all")} \% by extending it in the spring ({\Ainc}, 
+({\Ainc}, 
 SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
 EOS: \Sexpr{fmt_stat(b_eosgain, "A. incana")} \%; {\Ball}, 
 SOS: \Sexpr{fmt_stat(b_sosgain, "B. alleghaniensis")} \% versus
@@ -478,40 +478,64 @@ print(tab,
 @
 
 <<Table provenance Wildchrokie, results='asis', echo = FALSE>>=
-site_df2$GDD <- sprintf("%.2f [%.2f, %.2f]", site_df2$mean, site_df2$p5, site_df2$p95)
-site_df2_gsl$GSL <- sprintf("%.2f [%.2f, %.2f]", site_df2_gsl$mean, site_df2_gsl$p5, site_df2_gsl$p95)
-site_df2_sos$SOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_sos$mean, site_df2_sos$p5, site_df2_sos$p95)
-site_df2_eos$EOS <- sprintf("%.2f [%.2f, %.2f]", site_df2_eos$mean, site_df2_eos$p5, site_df2_eos$p95)
+site_df2$GDD_mean <- sprintf("%.2f", site_df2$mean)
+site_df2$GDD_p5   <- sprintf("%.2f", site_df2$p5)
+site_df2$GDD_p95  <- sprintf("%.2f", site_df2$p95)
 
-gdd <- site_df2[, c("site_name", "GDD")]
-gsl <- site_df2_gsl[, c("site_name", "GSL")]
-sos <- site_df2_sos[, c("site_name", "SOS")]
-eos <- site_df2_eos[, c("site_name", "EOS")]
+site_df2_gsl$GSL_mean <- sprintf("%.2f", site_df2_gsl$mean)
+site_df2_gsl$GSL_p5   <- sprintf("%.2f", site_df2_gsl$p5)
+site_df2_gsl$GSL_p95  <- sprintf("%.2f", site_df2_gsl$p95)
+
+site_df2_sos$SOS_mean <- sprintf("%.2f", site_df2_sos$mean)
+site_df2_sos$SOS_p5   <- sprintf("%.2f", site_df2_sos$p5)
+site_df2_sos$SOS_p95  <- sprintf("%.2f", site_df2_sos$p95)
+
+site_df2_eos$EOS_mean <- sprintf("%.2f", site_df2_eos$mean)
+site_df2_eos$EOS_p5   <- sprintf("%.2f", site_df2_eos$p5)
+site_df2_eos$EOS_p95  <- sprintf("%.2f", site_df2_eos$p95)
+
+gdd <- site_df2[, c("site_name", "GDD_mean", "GDD_p5", "GDD_p95")]
+gsl <- site_df2_gsl[, c("site_name", "GSL_mean", "GSL_p5", "GSL_p95")]
+sos <- site_df2_sos[, c("site_name", "SOS_mean", "SOS_p5", "SOS_p95")]
+eos <- site_df2_eos[, c("site_name", "EOS_mean", "EOS_p5", "EOS_p95")]
 
 df_all_site <- Reduce(function(x, y) merge(x, y, by = "site_name", all = TRUE),
                       list(gdd, gsl, sos, eos))
 
-df_all_site$Lat.  <- emp$provenance.lat[match(df_all_site$site_name,  emp$site)]
+df_all_site$Lat. <- emp$provenance.lat[match(df_all_site$site_name,  emp$site)]
 df_all_site$Lon. <- emp$provenance.long[match(df_all_site$site_name, emp$site)]
-
 df_all_site <- df_all_site[order(df_all_site$Lat.), ]
 
 # remove lat long cols since we have them in methods
 df_all_site$Lat. <- NULL
 df_all_site$Lon. <- NULL
 
-colnames(df_all_site)[1] <- "Provenance"
+colnames(df_all_site) <- c("Provenance",
+                            "Mean", "5\\%", "95\\%",
+                            "Mean", "5\\%", "95\\%",
+                            "Mean", "5\\%", "95\\%",
+                            "Mean", "5\\%", "95\\%")
 
 tab <- xtable(df_all_site,
-              caption = "The effect of provenance on ring widths (log(mm)). We report these intercept estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).",
+              caption = "The effect of provenance on ring widths (log(mm)). We report these intercept estimates as mean and 90\\% uncertainty intervals across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).",
               label = "tab:wc_asite_table"
 )
+
+addtorow <- list()
+addtorow$pos <- list(-1)
+addtorow$command <- paste0(
+  "\\hline\n",
+  "& \\multicolumn{3}{c}{GDD} & \\multicolumn{3}{c}{GSL} & \\multicolumn{3}{c}{SOS} & \\multicolumn{3}{c}{EOS} \\\\\n"
+)
+
 print(tab,
       include.rownames = FALSE,
       sanitize.text.function = identity,
-      caption.placement = "top")
+      caption.placement = "top",
+      add.to.row = addtorow,
+      hline.after = c(-1, 0, nrow(df_all_site))
+)
 @
-
 <<Table combined all parameters and predictors Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
 
@@ -694,6 +718,13 @@ print(xtable(binded,
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
 \caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see data analyses section for more details) for each species. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (growing degree days, growing season length, start of season and end of season).}
 \label{fig:bsppZscored}
+\end{figure}
+
+% Climate data overlap
+\begin{figure}[!ht]
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/climateComparison2020.pdf}
+\caption{Climate data overlap in 2020 for the two climate stations we used in our dataset (see `Data analyses' section for more details). The lines represent the daily mean temperature of each climate station and the shaded area, the minimum and maximum daily temperatures.}
+\label{fig:climOverlap}
 \end{figure}
 
 \end{document}
