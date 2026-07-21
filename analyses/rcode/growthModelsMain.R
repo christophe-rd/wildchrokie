@@ -888,7 +888,7 @@ colnames(eos_mat) <- spp_list
 
 # Apply each species' own sos/eos gain, then average across species
 sos_gains <- sapply(spp_list, function(sp) {
-  sp_leafout <- median(emp$budset[emp$latbi == sp], na.rm = TRUE)
+  sp_leafout <- median(emp$leafout[emp$latbi == sp], na.rm = TRUE)
   sublo <- subset(logan, doy <= sp_leafout & doy >= sp_leafout - 7)
   sublo2 <- aggregate(GDD_5 ~ doy, sublo, FUN = mean)
   max(sublo2$GDD_5) - min(sublo2$GDD_5)
