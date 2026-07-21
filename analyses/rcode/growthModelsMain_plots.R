@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -1123,16 +1123,16 @@ par(mar = custommar)
 plot(bspp_df2_gdd$mean, y_pos,
      xlim = c(-0.15, 0.3), ylim = c(0.5, n_spp + 0.5),
      xlab = "ring width (log(mm)) change in mean GDD of 7 spring days", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
+     yaxt = "n", pch = 16, cex = 2.3, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_gdd$p5,  y_pos, bspp_df2_gdd$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
+         col = wccolslatbi, lwd = 1.8)
 segments(bspp_df2_gdd$p25, y_pos, bspp_df2_gdd$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
+         col = wccolslatbi, lwd = 3.3)
 text(x = bspp_df2_gdd$p5[1], y = y_pos,
      labels = parse(text = paste0("italic('", bspp_df2_gdd$spp_name, "')")),
-     col = wccolslatbi, adj = c(+1.1, 0.5), cex = 1.06, xpd = NA)
+     col = wccolslatbi, adj = c(+1.1, 0.5), cex = 1.1, xpd = NA)
 mtext("(a) Growing degree days", 
       side = 3, adj = 0.30, line = 1, font = 2, cex = 1)
 
@@ -1157,13 +1157,13 @@ par(mar = custommar)
 plot(bspp_df2_gsl$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "ring width (log(mm)) change per 7 days of GSL", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
+     yaxt = "n", pch = 16, cex = 2.3, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_gsl$p5,  y_pos, bspp_df2_gsl$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
+         col = wccolslatbi, lwd = 1.8)
 segments(bspp_df2_gsl$p25, y_pos, bspp_df2_gsl$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
+         col = wccolslatbi, lwd = 3.3)
 mtext("(b) Growing season length", 
       side = 3, adj = 0.32, line = 1, font = 2, cex = 1)
 
@@ -1188,13 +1188,13 @@ par(mar = custommar)
 plot(bspp_df2_sos$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "ring width (log(mm)) change per 7 days of leafout", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
+     yaxt = "n", pch = 16, cex = 2.3, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_sos$p5,  y_pos, bspp_df2_sos$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
+         col = wccolslatbi, lwd = 1.8)
 segments(bspp_df2_sos$p25, y_pos, bspp_df2_sos$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
+         col = wccolslatbi, lwd = 3.3)
 mtext("(c) Start of season",
       side = 3, adj = 0.22, line = 1, font = 2, cex = 1)
 
@@ -1219,13 +1219,13 @@ par(mar = custommar)
 plot(bspp_df2_eos$mean, y_pos,
      xlim = c(-0.2, 0.4), ylim = c(0.5, n_spp + 0.5),
      xlab = "ring width (log(mm)) change per 7 days of budset", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi, frame.plot = TRUE, 
+     yaxt = "n", pch = 16, cex = 2.3, col = wccolslatbi, frame.plot = TRUE, 
      panel.first = abline(v = 0, lty = 2, col = "black"),
      cex.axis = mysizeaxis, cex.lab = mysizelab)
 segments(bspp_df2_eos$p5,  y_pos, bspp_df2_eos$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
+         col = wccolslatbi, lwd = 1.8)
 segments(bspp_df2_eos$p25, y_pos, bspp_df2_eos$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
+         col = wccolslatbi, lwd = 3.3)
 mtext("(d) End of season", 
       side = 3, adj = 0.22, line = 1, font = 2, cex = 1)
 
@@ -1248,7 +1248,7 @@ rasterImage(
 # Row 1, Col 2, Slot 5 : GDD
 par(mar = custommar)
 plot(emp$pgsGDD5, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM)-3), 
      xlab = "Growing season growing degree days (GDD)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1279,7 +1279,7 @@ for (i in seq_along(sppvecnum)) {
 # Row 2, Col 2, Slot 6 : GSL
 par(mar = custommar)
 plot(emp$pgsGSL, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM) -3), 
      xlab = "Growing season length (days)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1310,7 +1310,7 @@ for (i in seq_along(sppvecnum)) {
 # Row 3, Col 2, Slot 7 : SOS
 par(mar = custommar)
 plot(emp$leafout, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM) -3), 
      xlab = "Start of season (day of year)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
@@ -1341,7 +1341,7 @@ for (i in seq_along(sppvecnum)) {
 # Row 4, Col 2, Slot 8 : EOS
 par(mar = custommar)
 plot(emp$budset, emp$lengthMM, type = "n", frame = TRUE, bty = "l",
-     ylim = range(min(emp$lengthMM), max(emp$lengthMM)), 
+     ylim = range(min(emp$lengthMM), max(emp$lengthMM) -3), 
      xlab = "End of season (day of year)", ylab = "Ring width (mm)",
      main = "",
      cex.axis = mysizeaxis, cex.lab = mysizelab)
