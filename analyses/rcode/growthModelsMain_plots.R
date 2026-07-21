@@ -351,11 +351,11 @@ for (i in seq_along(sppvecnum)) { # i = 1
   
   plot(emp_spp$pgsGDD5, emp_spp$lengthMM,
        type = "n",
-       ylim = ylimline,
+       ylim = c(min(emp_spp$lengthMM), max(emp_spp$lengthMM)+2),
        xlab = "Growing season growing degree days (GDD)",
        ylab = "ring width (log(mm))",
             main = bquote(italic(.(spp_name))),
-       frame = FALSE)
+       frame = TRUE, bty = "l")
   
   # add panel letter 
   mtext(paste0("(", letters[i], ")"), 
@@ -374,7 +374,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
   lines(gddseq, y_mean, col = line_col, lwd = 2)
   
   points(
-    emp_spp$pgsGDD5,
+    emp_spp$pgsGDD5, 
     emp_spp$lengthMM,
     pch = yrshapes[as.character(emp_spp$year)],
     cex = 1,
