@@ -312,8 +312,8 @@ rw$latbi <- emp$latbi[match(rw$spp, emp$spp)]
 
 set.seed(7)
 
-rw$newid <- paste0(rw$latbi, ": \n", rw$site, "_", rw$plot, "_", rw$replicate)
-emp$newid <- paste0(emp$latbi, ": \n", emp$site, "_", emp$plot, "_", emp$replicate)
+rw$newid <- paste0("atop(bolditalic('", rw$latbi, "'), bold('", rw$site, "_", rw$plot, "_", rw$replicate, "'))")
+emp$newid <- paste0("atop(bolditalic('", emp$latbi, "'), bold('", emp$site, "_", emp$plot, "_", emp$replicate, "'))")
 vec <- unique(emp$newid)
 suby <- subset(rw, newid %in% sample(vec, 20) & year > 2015 & year < 2024)
 nrow(suby)
@@ -322,24 +322,26 @@ ids <- unique(suby$newid)
 
 pdf("figures/empiricalData/rwXyearAll.pdf", width = 10, height = 8)
 par(mfrow = c(4,5),
-    mar = c(2, 3, 2, 0.5),
+    mar = c(2, 3, 3, 0.5),
     mgp = c(1.5, 0.5, 0))
 
 year <- as.integer(suby$year)
+
 for(i in ids) { # i = "BETPOP_HF4_P9"
   sub <- suby[suby$newid == i, ]
   if(nrow(sub) == 0) next
   plot(sub$year, sub$lengthCM,
-       # col = col_vals,
        pch = 16,
        cex = 1.5,
-       main = i,
+       main = "",
        xlab = "",
        xaxt = "n",
        ylab = "Ring width (mm)",
        tck = -0.02,
        bty = 'l',
        col = wccolslatbi[sub$latbi])
+  mtext(parse(text = paste0("bolditalic('", sub$latbi[1], "')")), side = 3, line = 1.2, cex = 1)
+  mtext(paste0(sub$site[1], "_", sub$plot[1], "_", sub$replicate[1]), side = 3, line = 0.2, cex = 0.9, font = 2)
   
   axis(1, at = seq(floor(min(sub$year)), floor(max(sub$year)), by = 1), tck = -0.02)
   # regression line per species
@@ -351,9 +353,7 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
 }
 dev.off()
 
-
-
- suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
+suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
 # suby <- subset(rw, treeid %in% sample(vec, 20))
 pdf("figures/empiricalData/rwXyearRestricted.pdf",
     width = 8, height = 10)
