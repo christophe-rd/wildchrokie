@@ -6,6 +6,7 @@
 \usepackage{gensymb}
 \usepackage{natbib}
 \usepackage{parskip}
+\usepackage{longtable}
 
 \setcounter{secnumdepth}{0} 
 
@@ -105,7 +106,10 @@ b_eosgain_mu$spp_name <- "all"
 % ABSTRACT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Abstract}
-Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models.
+Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees (three out of four species), with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. We further show that because of warmer temperature at the end of season, extending the thermal season by seven days in the spring increased growth by 
+\Sexpr{sprintf("%.0f", b_sosgain_mu$mean[b_sosgain_mu$spp == "all"])}\% compared to 
+\Sexpr{sprintf("%.0f", b_eosgain_mu$mean[b_eosgain_mu$spp == "all"])}\% by extending it in the autumn.
+This suggests that we should look beyond the start of season when studying growth responses to longer growing seasons. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in vegetation and related earth system models.
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
@@ -116,7 +120,7 @@ Anthropogenic climate change affects natural systems at the global scale. The mo
 The most frequently observed biological impact of climate change is shifts in phenology---the timing of recurring life history events \citep{parmesan_poleward_1999, menzel_european_2006, calvin_ipcc_2023}. Across many plant species, spring events have advanced \citep{wolfe_climate_2005,chmielewski_response_2001,fu_recent_2014}, while autumn events have delayed---but to a much lesser extent \citep{gallinat_autumn_2015,jeong_macroscale_2014}. Together, early springs and later autumns lengthen the growing season, which should increase growth for many species, including trees \citep{keenan_net_2014, stridbeck_partly_2022}. 
 
 % Paragraph 2
-How much trees increase growth with longer seasons is important given the major role of forests in carbon sequestration \citep{friedlingstein_global_2026}. Temperate forests account for roughly 40\% of the annual global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{gibbs_revised_2025}. With warming, research has repeatedly found a connection between longer seasons and increased carbon storage \citep{boisvenue_impacts_2006,gaoEarlierStartThermal2022,finziCarbonBudgetHarvard2020}. The future of this net carbon sink by temperate forests, however, relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. A shift in this relationship could impact the future of this critical carbon sink as well as to hinder current natural climate solutions that aim to mitigate climate change through, for example, the restoration and management of forests \citep{patton_mapping_2020}. A better understanding of how tree growth and its relation to climate works across species and biomes could better inform natural climate solutions and eventually target forests in specific biomes or ecosystems to optimize land carbon storage \citep{ruehr_evidence_2023,chang_global_2024}.
+How much trees increase growth with longer seasons is important given the major role of forests in carbon sequestration \citep{friedlingstein_global_2026}. Temperate forests account for roughly 40\% of the annual global carbon sink, diminishing the consequences of human-emitted greenhouse gas emissions on the climate \citep{gibbs_revised_2025}. With warming, research has repeatedly found a connection between longer seasons and increased carbon storage \citep{boisvenue_impacts_2006,gaoEarlierStartThermal2022,finziCarbonBudgetHarvard2020}. The future of this net carbon sink by temperate forests, however, relies on the assumption that longer and warmer seasons will keep increasing carbon storage by trees \citep{pan_enduring_2024}. A shift in this relationship could impact the future of this critical carbon sink as well as to hinder current natural climate solutions that aim to mitigate climate change through, for example, the restoration and management of forests \citep{cook-patton_mapping_2020}. A better understanding of the relationship between tree growth and climate across species and biomes could better inform natural climate solutions and eventually target forests in specific biomes or ecosystems to optimize land carbon storage \citep{ruehr_evidence_2023,chang_global_2024}.
 
 % Paragraph 3
 New studies suggest that longer growing season do not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}. Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in two temperate forest communities. Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where gross primary production and growth appeared decoupled. However, neither of these studies could clearly establish why they found no relationship while previous studies have. Understanding whether temperate forests will persist as a net carbon sink requires answering why trees do not grow more despite longer growing seasons. 
@@ -316,7 +320,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
-\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species: Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels on the left (a to d) represent the mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels on the right (e to h) show the estimated response of ring width as a function of each predictor, with the lines depicting the mean response at each predictor value, and the shaded area, the 50\% uncertainty intervals.}
+\caption{Estimates of ring width change (log(mm)) as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species: Grey alder (\textit{Alnus incana}), Yellow birch (\textit{Betula alleghaniensis}), Paper birch (\textit{Betula papyrifera}) and Grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels on the left (a to d) represent the mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). See Table \ref{tab:wc_slope_table} for parameter estimates. Panels on the right (e to h) show the estimated response of ring width (mm) as a function of each predictor, with the lines depicting the mean response at each predictor value, and the shaded area, the 50\% uncertainty intervals.}
 \label{fig:wcmuplotbspp}
 \end{figure}
 
@@ -345,7 +349,7 @@ Our focus on juvenile trees may suggest how forests regenerate and assemble with
 Our results also suggest assembly models may need less of a focus on population-level differences than previously suggested \citep{cavender-bares_diversification_2019}. While studies of large latitudinal gradients have found lower growth in tree species from poleward latitudes \citep{aitken_time_2016,soolanayakanahally_timing_2013}, we found no differences in growth across a latitudinal gradient of 3.5\degree. Thus, at least across this latitudinal range, local adaption on growth appears weak. Supporting this, we found no evidence of shifting EOS across provenances, despite decades of work finding that EOS events, such as budset, are usually more locally adapted than SOS events such as leafout \citep{soolanayakanahally_timing_2013,zeng_weak_2024}. Yet, a study of the same common garden including all tree and shrub species found EOS appeared to vary strongly by year and shift earlier with earlier SOS \citep{buonaiuto_early_2026}, suggesting EOS may be more variable than currently proposed \citep{alberto_potential_2013}. Taken together these results imply that our current understanding of budset being strongly locally adapted and thus varying little with temperature or SOS needs more study. 
 
 \subsection*{Implications for large-scale vegetation modeling}
-Using a rarely available dataset of tree growth coupled with leaf phenology SOS and EOS, we found an overall positive response from multiple tree species to longer seasons, which has important implications for models of future carbon storage. While juvenile trees store little carbon compared to their adult forms, they are crucial for forest regeneration capacity and range expansion \citep[as discussed above, and see][]{luu_importance_2024}, and generally predict adult tree responses qualitatively \citep{wolkovich_why_2025}. We found that SOS and EOS asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate predictions \citep{li_comparison_2022}. Land surface models currently have not extensively analyzed the SOS and EOS \citep{melaas_multiscale_2016,li_comparison_2022}. However, these models usually assume a highly temperature-sensitive SOS and a more photoperiod controlled, and thus less variable, EOS \citep{chen_comparison_2022,melaas_multiscale_2016}. This likely results in an over-simplified representation of plant phenology in these models on top of lack of representation of species differences \citep{melaas_multiscale_2016}. \cite{ruehr_evidence_2023} further suggests that any carbon gain from an extended growing season may be offset by increased respiration in the autumn, highlighting the need to better understand the mechanisms regulating tree growth at the end of season. Modelling EOS better will require more studies, especially on more species across a larger gradient. This could help tease out whether local adaptation of EOS depends on the species, latitudinal range (both distance and how far north provenances come from), or some combination of the two, which could then feed into improved models. 
+Using a rarely available dataset of tree growth coupled with leaf phenology SOS and EOS, we found an overall positive response from multiple tree species to longer seasons, which has important implications for models of future carbon storage. While juvenile trees store little carbon compared to their adult forms, they are crucial for forest regeneration capacity and range expansion \citep[as discussed above, and see][]{luu_importance_2024}, and generally predict adult tree responses qualitatively \citep{wolkovich_why_2025}. We found that SOS and EOS asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate predictions \citep{li_comparison_2022}. Land surface models currently have not yet exhaustively analyzed the SOS and EOS \citep{melaas_multiscale_2016,li_comparison_2022}. These models usually assume a highly temperature-sensitive SOS and a more photoperiod controlled, and thus less variable, EOS \citep{chen_comparison_2022,melaas_multiscale_2016}. This over-simplified representation of the drivers regulating tree phenology in these models, on top of lack of representation of species differences, is likely to misguide the relative effect of the SOS and EOS \citep{melaas_multiscale_2016}. \cite{ruehr_evidence_2023} further suggests that any carbon gain from an extended growing season may be offset by increased respiration in the autumn, highlighting the need to better understand the mechanisms regulating tree growth at the end of season, specifically. Modelling EOS better will require more studies, especially on more species across a larger gradient. This could help tease out whether local adaptation of EOS depends on the species, latitudinal range (both distance and how far north provenances come from), or some combination of the two, which could then feed into improved models. 
 
 Integrating our results into models will also require considering how environmental conditions beyond temperature shift across the season, especially soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. Trees in our common garden were regularly watered, likely relieving any major drought pressures though studies beyond ours have found a connection between later EOS and more growth, \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. For the four species we studied, there are currently no increases in drought occurrence within their ranges \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that their growth may increase with longer and warmer growing season \citep{cook_uncertainty_2011,agel_drought_2025}, as we found. However, the positive effect of a later EOS could be offset if soil moisture becomes inadequate for growth, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{chiang_evidence_2021,spinoni_will_2018}. Improved accuracy of future carbon sequestration models would consequently require integrating over more regions and growth drivers.
 
@@ -389,11 +393,11 @@ header <- list(
   pos = list(-1),
   command = paste0(
     "\\hline\n",
-    "Provenance & Longitude & Latitude & ",
-    "\\textit{A. incana} & ",
-    "\\textit{B. alleghaniensis} & ",
-    "\\textit{B. papyrifera} & ",
-    "\\textit{B. populifolia} \\\\\n",
+    "\\textbf{Provenance} & \\textbf{Longitude} & \\textbf{Latitude} & ",
+    "\\textbf{\\textit{A. incana}} & ",
+    "\\textbf{\\textit{B. alleghaniensis}} & ",
+    "\\textbf{\\textit{B. papyrifera}} & ",
+    "\\textbf{\\textit{B. populifolia}} \\\\\n",
     " & & & ",
     "$(n = ", n_ainc, ")$ & ",
     "$(n = ", n_ball, ")$ & ",
@@ -528,6 +532,7 @@ print(tab,
 
 <<Table combined all parameters and predictors Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
+options(digits = 2)
 
 a_df2_GDD      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a.csv")
 sigma_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
@@ -562,8 +567,6 @@ site_df2_GDD$site_name <- emp$site[match(site_df2_GDD$site, emp$site_num)]
 aspp_df2_GDD$spp_name  <- emp$latbi[match(aspp_df2_GDD$spp, emp$spp_num)]
 ayear_df2_GDD$year_name <- emp$year[match(ayear_df2_GDD$year, emp$year_num)]
 
-fmt <- function(df) sprintf("%.2f [%.2f, %.2f]", df$mean, df$p5, df$p95)
-
 param_labels <- c(
   "$\\alpha$",
   "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
@@ -573,19 +576,68 @@ param_labels <- c(
   paste0("$\\alpha_{species_{",  aspp_df2_GDD$spp_name,  "}}$")
 )
 
+fmt_split <- function(df) {
+  data.frame(
+    Mean = sprintf("%.2f", df$mean),
+    `5\\%` = sprintf("%.2f", df$p5),
+    `95\\%` = sprintf("%.2f", df$p95),
+    check.names = FALSE
+  )
+}
+
 combined <- data.frame(
   "Parameter" = param_labels,
-  "GDD" = c(fmt(a_df2_GDD), fmt(sigma_df2_GDD), fmt(bspp_df2_GDD), fmt(site_df2_GDD), fmt(ayear_df2_GDD), fmt(aspp_df2_GDD)),
-  "GSL" = c(fmt(a_df2_GSL), fmt(sigma_df2_GSL), fmt(bspp_df2_GSL), fmt(site_df2_GSL), fmt(ayear_df2_GSL), fmt(aspp_df2_GSL)),
-  "SOS" = c(fmt(a_df2_SOS), fmt(sigma_df2_SOS), fmt(bspp_df2_SOS), fmt(site_df2_SOS), fmt(ayear_df2_SOS), fmt(aspp_df2_SOS)),
-  "EOS" = c(fmt(a_df2_EOS), fmt(sigma_df2_EOS), fmt(bspp_df2_EOS), fmt(site_df2_EOS), fmt(ayear_df2_EOS), fmt(aspp_df2_EOS)),
+  rbind(
+    fmt_split(a_df2_GDD), fmt_split(sigma_df2_GDD), fmt_split(bspp_df2_GDD),
+    fmt_split(site_df2_GDD), fmt_split(ayear_df2_GDD), fmt_split(aspp_df2_GDD)
+  ),
+  rbind(
+    fmt_split(a_df2_GSL), fmt_split(sigma_df2_GSL), fmt_split(bspp_df2_GSL),
+    fmt_split(site_df2_GSL), fmt_split(ayear_df2_GSL), fmt_split(aspp_df2_GSL)
+  ),
+  rbind(
+    fmt_split(a_df2_SOS), fmt_split(sigma_df2_SOS), fmt_split(bspp_df2_SOS),
+    fmt_split(site_df2_SOS), fmt_split(ayear_df2_SOS), fmt_split(aspp_df2_SOS)
+  ),
+  rbind(
+    fmt_split(a_df2_EOS), fmt_split(sigma_df2_EOS), fmt_split(bspp_df2_EOS),
+    fmt_split(site_df2_EOS), fmt_split(ayear_df2_EOS), fmt_split(aspp_df2_EOS)
+  ),
   check.names = FALSE
 )
 
-print(xtable(combined,
-             caption = "Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.",
-             label = "tab:tab_all"),
-      include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
+colnames(combined) <- c("Parameter",
+                         "Mean", "5\\%", "95\\%",
+                         "Mean", "5\\%", "95\\%",
+                         "Mean", "5\\%", "95\\%",
+                         "Mean", "5\\%", "95\\%")
+
+tab <- xtable(combined,
+              caption = "Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_all")
+
+addtorow <- list()
+addtorow$pos <- list(-1, -1)
+addtorow$command <- c(
+  paste0(
+    "\\hline\n",
+    "& \\multicolumn{3}{c}{GDD} & \\multicolumn{3}{c}{GSL} & \\multicolumn{3}{c}{SOS} & \\multicolumn{3}{c}{EOS} \\\\\n"
+  ),
+  paste0(
+    "Parameter & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% \\\\\n"
+  )
+)
+
+print(tab,
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      add.to.row = addtorow,
+      hline.after = c(-1, 0, nrow(combined)),
+      # tabular.environment = "longtable",
+      floating = TRUE
+)
 @
 
 <<Table BAI Wildchrokie, results='asis', echo = FALSE>>=
@@ -705,14 +757,14 @@ print(xtable(binded,
 % XY facetted by species GDD
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.pdf}
-\caption{Ring width (log(mm)) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
+\caption{Ring width (mm) trends in response to thermal season (growing degree days). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf}
-\caption{Ring width trends (log(mm)) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
+\caption{Ring width trends (mm) in response to calendar season (growing season length). The plots are the reconstructed species estimates posterior distribution with error. The lines represent the mean of the posterior distribution and the shaded area, the 50\% UI at each predictor value. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}
 

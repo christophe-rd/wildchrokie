@@ -1,4 +1,4 @@
-\begin{thebibliography}{80}
+\begin{thebibliography}{86}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -128,12 +128,27 @@ Cavender‐Bares, J. (2019) Diversification, adaptation, and community assembly
   of the {American} oaks ( \textit{{Quercus}} ), a model clade for integrating
   ecology and evolution. \emph{New Phytologist} \textbf{221}, 669--692.
 
+\bibitem[{Chang \emph{et~al.}(2024)Chang, Erbaugh, Fajardo, Lu, Molnár, Papp,
+  Robinson, Austin, Castro, Cheng, Cook-Patton, Ellis, Garg, Hochard, Kroeger,
+  McDonald, Poor, Smart, Tilman, Welker, Wood \& Masuda}]{chang_global_2024}
+Chang, C.H., Erbaugh, J.T., Fajardo, P., Lu, L., Molnár, I., Papp, D.,
+  Robinson, B.E., Austin, K.G., Castro, M., Cheng, S.H., Cook-Patton, S.,
+  Ellis, P.W., Garg, T., Hochard, J.P., Kroeger, T., McDonald, R.I., Poor,
+  E.E., Smart, L.S., Tilman, A.R., Welker, P., Wood, S.A. \& Masuda, Y.J.
+  (2024) Global evidence of human well-being and biodiversity impacts of
+  natural climate solutions. \emph{Nature Sustainability} \textbf{8}, 75--85.
+
 \bibitem[{Charlet De~Sauvage \emph{et~al.}(2022)Charlet De~Sauvage, Vitasse,
   Meier, Delzon \& Bigler}]{charletdesauvage_temperature_2022}
 Charlet De~Sauvage, J., Vitasse, Y., Meier, M., Delzon, S. \& Bigler, C. (2022)
   Temperature rather than individual growing period length determines radial
   growth of sessile oak in the {Pyrenees}. \emph{Agricultural and Forest
   Meteorology} \textbf{317}, 108885.
+
+\bibitem[{Chen(2022)}]{chen_comparison_2022}
+Chen, B. (2022) Comparison of the {Two} {Most} {Common} {Phenology}
+  {Algorithms} {Imbedded} in {Land} {Surface} {Models}. \emph{Journal of
+  Geophysical Research: Atmospheres} \textbf{127}, e2022JD037167.
 
 \bibitem[{Chiang \emph{et~al.}(2021)Chiang, Mazdiyasni \&
   AghaKouchak}]{chiang_evidence_2021}
@@ -165,6 +180,20 @@ Cook, E.R. \& Pederson, N. (2011) Uncertainty, {Emergence}, and {Statistics} in
   {Dendrochronology}. \emph{Dendroclimatology} (eds. M.K. Hughes, T.W. Swetnam
   \& H.F. Diaz), vol.~11, pp. 77--112, Springer Netherlands, Dordrecht, series
   Title: Developments in Paleoenvironmental Research.
+
+\bibitem[{Cook-Patton \emph{et~al.}(2020)Cook-Patton, Leavitt, Gibbs, Harris,
+  Lister, Anderson-Teixeira, Briggs, Chazdon, Crowther, Ellis, Griscom,
+  Herrmann, Holl, Houghton, Larrosa, Lomax, Lucas, Madsen, Malhi, Paquette,
+  Parker, Paul, Routh, Roxburgh, Saatchi, Van Den~Hoogen, Walker, Wheeler,
+  Wood, Xu \& Griscom}]{cook-patton_mapping_2020}
+Cook-Patton, S.C., Leavitt, S.M., Gibbs, D., Harris, N.L., Lister, K.,
+  Anderson-Teixeira, K.J., Briggs, R.D., Chazdon, R.L., Crowther, T.W., Ellis,
+  P.W., Griscom, H.P., Herrmann, V., Holl, K.D., Houghton, R.A., Larrosa, C.,
+  Lomax, G., Lucas, R., Madsen, P., Malhi, Y., Paquette, A., Parker, J.D.,
+  Paul, K., Routh, D., Roxburgh, S., Saatchi, S., Van Den~Hoogen, J., Walker,
+  W.S., Wheeler, C.E., Wood, S.A., Xu, L. \& Griscom, B.W. (2020) Mapping
+  carbon accumulation potential from global natural forest regrowth.
+  \emph{Nature} \textbf{585}, 545--550.
 
 \bibitem[{Dow \emph{et~al.}(2022)Dow, Kim, D’Orangeville, Gonzalez-Akre,
   Helcoski, Herrmann, Harley, Maxwell, McGregor, McShea, McMahon, Pederson,
@@ -334,6 +363,14 @@ Keenan, T.F., Gray, J., Friedl, M.A., Toomey, M., Bohrer, G., Hollinger, D.Y.,
 Körner, C., Möhl, P. \& Hiltbrunner, E. (2023) Four ways to define the
   growing season. \emph{Ecology Letters} \textbf{26}, 1277--1292.
 
+\bibitem[{Li \emph{et~al.}(2022)Li, Melaas, Carrillo, Ault, Richardson,
+  Lawrence, Friedl, Seyednasrollah, Lawrence \& Young}]{li_comparison_2022}
+Li, X., Melaas, E., Carrillo, C.M., Ault, T., Richardson, A.D., Lawrence, P.,
+  Friedl, M.A., Seyednasrollah, B., Lawrence, D.M. \& Young, A.M. (2022) A
+  {Comparison} of {Land} {Surface} {Phenology} in the {Northern} {Hemisphere}
+  {Derived} from {Satellite} {Remote} {Sensing} and the {Community} {Land}
+  {Model}. \emph{Journal of Hydrometeorology} \textbf{23}, 859--873.
+
 \bibitem[{Li \emph{et~al.}(2023)Li, Zhang, Schwalm, Gentine, Smith, Ciais,
   Kimball, Gazol, Kannenberg, Chen, Piao, Liu, Chen \& Wu}]{li_widespread_2023}
 Li, Y., Zhang, W., Schwalm, C.R., Gentine, P., Smith, W.K., Ciais, P., Kimball,
@@ -371,6 +408,12 @@ Matula, R., Knířová, S., Vítámvás, J., Šrámek, M., Kníř, T.,
   growth dynamics drive a decline in productivity of temperate trees in
   {Central} {European} forest under warmer climate. \emph{Science of The Total
   Environment} \textbf{905}, 166906.
+
+\bibitem[{Melaas \emph{et~al.}(2016)Melaas, Friedl \&
+  Richardson}]{melaas_multiscale_2016}
+Melaas, E.K., Friedl, M.A. \& Richardson, A.D. (2016) Multiscale modeling of
+  spring phenology across {Deciduous} {Forests} in the {Eastern} {United}
+  {States}. \emph{Global Change Biology} \textbf{22}, 792--805.
 
 \bibitem[{Menzel \emph{et~al.}(2006)Menzel, Sparks, Estrella, Koch, Aasa, Ahas,
   Alm‐Kübler, Bissolli, Braslavská, Briede, Chmielewski, Crepinsek, Curnel,
@@ -445,6 +488,13 @@ Richardson, A.D., Anderson, R.S., Arain, M.A., Barr, A.G., Bohrer, G., Chen,
   need better representation of vegetation phenology: {Results} from the
   {North} {American} {Carbon} {Program} {Site} {Synthesis}. \emph{Global Change
   Biology} \textbf{18}, 566--584.
+
+\bibitem[{Ruehr \emph{et~al.}(2023)Ruehr, Keenan, Williams, Zhou, Lu, Bastos,
+  Canadell, Prentice, Sitch \& Terrer}]{ruehr_evidence_2023}
+Ruehr, S., Keenan, T.F., Williams, C., Zhou, Y., Lu, X., Bastos, A., Canadell,
+  J.G., Prentice, I.C., Sitch, S. \& Terrer, C. (2023) Evidence and attribution
+  of the enhanced land carbon sink. \emph{Nature Reviews Earth \& Environment}
+  \textbf{4}, 518--534.
 
 \bibitem[{Schneider \emph{et~al.}(2012)Schneider, Rasband \&
   Eliceiri}]{schneider_nih_2012}
