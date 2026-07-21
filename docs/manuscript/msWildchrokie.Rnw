@@ -105,7 +105,7 @@ b_eosgain_mu$spp_name <- "all"
 % ABSTRACT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Abstract}
-% Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models. 
+Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models.
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
@@ -177,7 +177,7 @@ We performed visual cross dating. This consists of assigning a calendar year to 
 \subsection*{Data analyses}
 To understand how growth shifted with season length we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (log(mm)) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero. 
 
-In addition, we compared the relative effect of an extension in the SOS versus EOS using our estimated effect of GDD. To do this, we averaged the GDD (mean daily GDD from 2005 to 2025) accumulated seven days before the median leafout (for SOS) and after the median budset (for EOS). Then with our estimated parameters, we report the effect of GDD on growth for seven autumn and spring days averaged across and for each species.
+In addition, we compared the relative effect of an extension in the SOS versus EOS using our estimated effect of GDD. To do this, we averaged the GDD (mean daily GDD from 2005 to 2025) accumulated seven days before the median leafout (for SOS) and after the median budset (for EOS) of each species across the . Then with our estimated parameters, we report the effect of GDD on growth for seven autumn and spring days averaged across and for each species.
 
 For daily climate data across all the years of phenological sampling (2018-2020) we combined two sources. For 2018 and 2019 we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used data from the weather station `Boston (Weld Hill)' of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across year at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
@@ -273,54 +273,46 @@ Increased growth with longer seasons is often presumed to come from growth in th
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
 These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this, we found that the addition of 7 days near the end of season increased growth across all species by 
-\Sexpr{fmt_stat(b_eosgain_mu, "all")},  compared to an increase of
-\Sexpr{fmt_stat(b_sosgain_mu, "all")} from an earlier start of spring (estimated using our model of GDD shown in cite fig, tables, see methods for more details)
-Across species, extending the season by seven days in the autumn increased growth by 
-({\Ainc}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "A. incana")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "A. incana")} \%; {\Ball}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. alleghaniensis")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. alleghaniensis")} \%; {\Bpap}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. papyrifera")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. papyrifera")} \%; {\Bpop}, 
-SOS: \Sexpr{fmt_stat(b_sosgain, "B. populifolia")} \% versus
-EOS: \Sexpr{fmt_stat(b_eosgain, "B. populifolia")} \%).
+\Sexpr{fmt_stat(b_eosgain_mu, "all")}, compared to an increase of
+\Sexpr{fmt_stat(b_sosgain_mu, "all")} from an earlier start of spring (estimated using our model estimates of GDD shown in Figure \ref{fig:wcmuplotbspp} cite fig, tables, see methods for more details)
+Differences in magnitude between an extension of SOS versus EOS were similar across species Table()
+
 
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
 We did not find any clear effect of year on growth (2018: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2018")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2018")])} (UI:
 \Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2018")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2018")])} RW; 2019: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2019")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2018")])}) RW; 2019: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2019")])} (UI:
 \Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2019")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2019")])} RW; 2020: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])}, UI:
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2019")])}) RW; 2020: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])} (UI:
 \Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2020")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])} RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])}) RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "A. incana")} RW; {\Ball}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "B. alleghaniensis")} RW; {\Bpap}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "B. papyrifera")} RW; {\Bpop}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "B. populifolia")} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Dartmouth College (NH)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Dartmouth College (NH)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "Dartmouth College (NH)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Dartmouth College (NH)"])} RW; Harvard Forest (MA): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Harvard Forest (MA)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Dartmouth College (NH)"])}) RW; Harvard Forest (MA): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Harvard Forest (MA)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "Harvard Forest (MA)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Harvard Forest (MA)"])} RW; St-Hippolyte (Qc): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "St-Hippolyte (Qc)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Harvard Forest (MA)"])}) RW; St-Hippolyte (Qc): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "St-Hippolyte (Qc)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "St-Hippolyte (Qc)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "St-Hippolyte (Qc)"])} RW; White Mountains (NH): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "White Mountains (NH)"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "St-Hippolyte (Qc)"])}) RW; White Mountains (NH): $\alpha =$
+\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "White Mountains (NH)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "White Mountains (NH)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "White Mountains (NH)"])} RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
-\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_asite"])}, UI:
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "White Mountains (NH)"])}) RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
+\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_asite"])} (UI:
 \Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_asite"])}, 
 \Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_asite"])} RW) was similar to variation across individual trees ($\sigma =$ 
-\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])}, UI: 
+\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])} (UI: 
 \Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"])}, 
-\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])} RW; Table \ref{tab:tab_all}).
+\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_all}).
 
 
 % Figure mu across all species and climate predictors
@@ -356,6 +348,9 @@ Our results also suggest assembly models may need less of a focus on population-
 
 \subsection*{Implications for large-scale vegetation modeling}
 Using a rarely available dataset of tree growth coupled with leaf phenology SOS and EOS, we found an overall positive response from multiple tree species to longer seasons, which has important implications for models of future carbon storage. While juvenile trees store little carbon compared to their adult forms, they are crucial for forest regeneration capacity and range expansion \citep[as discussed above, and see][]{luu_importance_2024}, and generally predict adult tree responses qualitatively \citep{wolkovich_why_2025}. We found that SOS and EOS asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate predictions. 
+
+While spring phenology trends received attention in the past decades, the timing of spring and autumn phenology in land surface models have not been still not well studied. These models usually assume a highly temperature sensitive SOS and a photoperiod controlled EOS [Melaas2016], which has been challenged by more recent studies suggesting that EOS correlated with the SOS [Keenan2015]. Ruehr further suggests that any carbon gain from an extended growing season may be offset by increased respiration in the autumn. Attemps to increase accuracy of these models by including species differences are a step forward, but we still need to increase our understanding of intra-annual growth dynamics across them.
+
 Modelling EOS better will require more studies, especially on more species across a larger gradient. This could help tease out whether local adaptation of EOS depends on the species, latitudinal range (both distance and how far north provenances come from), or some combination of the two, which could then feed into improved models. 
 
 Integrating our results into models will also require considering how environmental conditions beyond temperature shift across the season, especially soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. Trees in our common garden were regularly watered, likely relieving any major drought pressures though studies beyond ours have found a connection between later EOS and more growth, \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. For the four species we studied, there are currently no increases in drought occurrence within their ranges \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that their growth may increase with longer and warmer growing season \citep{cook_uncertainty_2011,agel_drought_2025}, as we found. However, the positive effect of a later EOS could be offset if soil moisture becomes inadequate for growth, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{chiang_evidence_2021,spinoni_will_2018}. Improved accuracy of future carbon sequestration models would consequently require integrating over more regions and growth drivers.
@@ -536,6 +531,7 @@ print(tab,
       hline.after = c(-1, 0, nrow(df_all_site))
 )
 @
+
 <<Table combined all parameters and predictors Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
 
@@ -614,61 +610,94 @@ aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_BAI$spp, emp$spp_num)]
 ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
 
 alpha <- data.frame(
-  "Parameter" = c("$\\alpha$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       a_df2_BAI$mean,
-                       a_df2_BAI$p5,
-                       a_df2_BAI$p95)
+  Parameter = c("$\\alpha$"),
+  Mean = sprintf("%.2f", a_df2_BAI$mean),
+  P5   = sprintf("%.2f", a_df2_BAI$p5),
+  P95  = sprintf("%.2f", a_df2_BAI$p95)
 )
-
 sigma <- data.frame(
-  "Parameter" = c("$\\sigma_{\\alpha_{treeid}}$",
-                  "$\\sigma_{\\alpha_{prov}}$",
-                  "$\\sigma_{y}$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       sigma_df2_BAI$mean,
-                       sigma_df2_BAI$p5,
-                       sigma_df2_BAI$p95)
+  Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
+                "$\\sigma_{\\alpha_{prov}}$",
+                "$\\sigma_{y}$"),
+  Mean = sprintf("%.2f", sigma_df2_BAI$mean),
+  P5   = sprintf("%.2f", sigma_df2_BAI$p5),
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95)
 )
-
 bspp <- data.frame(
-  "Parameter" = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       bspp_df2_BAI$mean,
-                       bspp_df2_BAI$p5,
-                       bspp_df2_BAI$p95)
+  Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", bspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", bspp_df2_BAI$p5),
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95)
 )
-
 aspp <- data.frame(
-  "Parameter" = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       aspp_df2_BAI$mean,
-                       aspp_df2_BAI$p5,
-                       aspp_df2_BAI$p95)
+  Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", aspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", aspp_df2_BAI$p5),
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95)
 )
-
 site <- data.frame(
-  "Parameter" = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       site_df2_BAI$mean,
-                       site_df2_BAI$p5,
-                       site_df2_BAI$p95)
+  Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
+  Mean = sprintf("%.2f", site_df2_BAI$mean),
+  P5   = sprintf("%.2f", site_df2_BAI$p5),
+  P95  = sprintf("%.2f", site_df2_BAI$p95)
 )
-
 ayear <- data.frame(
-  "Parameter" = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
-  "Estimate" = sprintf("%.2f [%.2f, %.2f]",
-                       ayear_df2_BAI$mean,
-                       ayear_df2_BAI$p5,
-                       ayear_df2_BAI$p95)
+  Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
+  Mean = sprintf("%.2f", ayear_df2_BAI$mean),
+  P5   = sprintf("%.2f", ayear_df2_BAI$p5),
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95)
 )
-
 binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 
 print(xtable(binded,
-             caption = "Summary output of each parameter from our four predictors, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.",
+             caption = "Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
              label = "tab:BAItab"),
-      include.rownames = FALSE, sanitize.text.function = identity, caption.placement = "top")
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      sanitize.colnames.function = function(x) paste0("\\textbf{", gsub("P5", "5\\\\%", gsub("P95", "95\\\\%", x)), "}"),
+      caption.placement = "top")
+@
+
+<<Table percentages SOS and EOS gain, results='asis', echo = FALSE>>=
+b_sosgain$spp_name <- emp$latbi[match(b_sosgain$spp, emp$spp_num)]
+b_eosgain$spp_name <- emp$latbi[match(b_eosgain$spp, emp$spp_num)]
+
+meansos <- data.frame(
+  "Parameter" = paste0("$\\beta_{SOS}$"),
+  "Mean" = sprintf("%.2f", b_sosgain_mu$mean),
+  "5\\%" = sprintf("%.2f", b_sosgain_mu$p5),
+  "95\\%" = sprintf("%.2f", b_sosgain_mu$p95)
+)
+
+meaneos <- data.frame(
+  "Parameter" = paste0("$\\beta_{EOS}$"),
+  "Mean" = sprintf("%.2f", b_eosgain_mu$mean),
+  "5\\%" = sprintf("%.2f", b_eosgain_mu$p5),
+  "95\\%" = sprintf("%.2f", b_eosgain_mu$p95)
+)
+
+sosgain <- data.frame(
+  "Parameter" = paste0("$\\beta_{SOS_{", b_sosgain$spp_name, "}}$"),
+  "Mean" = sprintf("%.2f", b_sosgain$mean),
+  "5\\%" = sprintf("%.2f", b_sosgain$p5),
+  "95\\%" = sprintf("%.2f", b_sosgain$p95)
+)
+
+eosgain <- data.frame(
+  "Parameter" = paste0("$\\beta_{EOS_{", b_eosgain$spp_name, "}}$"),
+  "Mean" = sprintf("%.2f", b_eosgain$mean),
+  "5\\%" = sprintf("%.2f", b_eosgain$p5),
+  "95\\%" = sprintf("%.2f", b_eosgain$p95)
+)
+
+binded <- rbind(meansos, meaneos, sosgain, eosgain)
+
+print(xtable(binded,
+             caption = "Summary output ($\\beta$) for SOS and EOS extension predictors by species and across species. Estimates are reported as posterior means with 90\\% uncertainty intervals.",
+             label = "tab:phenogain"),
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top")
 @
 
 % Full vs restricted data comparison for Wildchrokie

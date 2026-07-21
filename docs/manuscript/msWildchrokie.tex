@@ -87,7 +87,7 @@ $^5$Department of Plant Science and Landscape Architecture, University of Maryla
 % ABSTRACT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \section{Abstract}
-% Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models. 
+Anthropogenic climate change affects natural systems at the global scale. The most frequently observed biological impact of climate change---shifts in the timing of recurring life history events (phenology)---is likely to have additional effects. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with important effects on forest carbon sequestration dynamics. However, multiple recent studies have failed to find this relationship and suggested shifts in drought or competition may prevent increased growth. Here, we leverage a unique dataset of annual vegetative phenology and growth (via tree rings) data from a common garden of four species within the \textit{Betulaceae} family of juvenile trees. This study took place in an urban arboretum where drought and competition are limited. We found an overall positive response of longer and warmer seasons for our juvenile trees, with little effect of provenance. In addition, most species showed a stronger response to the end of season than the start of season. This suggests that we should look beyond the start of season when studying growth responses to longer growing season. Our findings suggest that longer seasons with climate change can benefit forest regeneration and range expansion. We further emphasize the importance of considering species differences in carbon sequestration models.
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
@@ -159,7 +159,7 @@ We performed visual cross dating. This consists of assigning a calendar year to 
 \subsection*{Data analyses}
 To understand how growth shifted with season length we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout as the start (SOS) and and budset end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change (log(mm)) as the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero. 
 
-In addition, we compared the relative effect of an extension in the SOS versus EOS using our estimated effect of GDD. To do this, we averaged the GDD (mean daily GDD from 2005 to 2025) accumulated seven days before the median leafout (for SOS) and after the median budset (for EOS). Then with our estimated parameters, we report the effect of GDD on growth for seven autumn and spring days averaged across and for each species.
+In addition, we compared the relative effect of an extension in the SOS versus EOS using our estimated effect of GDD. To do this, we averaged the GDD (mean daily GDD from 2005 to 2025) accumulated seven days before the median leafout (for SOS) and after the median budset (for EOS) of each species across the . Then with our estimated parameters, we report the effect of GDD on growth for seven autumn and spring days averaged across and for each species.
 
 For daily climate data across all the years of phenological sampling (2018-2020) we combined two sources. For 2018 and 2019 we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data was not available for that station after August 2020, we used data from the weather station `Boston (Weld Hill)' of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across year at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
@@ -225,15 +225,15 @@ The earliest leafout was
 %-------------------------------------------------------------------------------
 Longer growing seasons increased growth for all species, but varied depending on the metric used to measure it. We report estimates as means and 90\% uncertainty intervals (UI) that correspond to ring width change in \% (see `Data analyses' section in Methods for more details).
 Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrifera}; $\beta =$
-16.05\%, (UI: 6.37, 26.05)), Grey birch (\textit{Betula populifolia}; $\beta =$
-7.23\%, (UI: 2.33, 12.25)), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
-4.22\%, (UI: 0.45, 8.15)). Grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
-2.18\%, (UI: -1.10, 5.57)); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+16.08\%, (UI: 6.26, 26.42)), Grey birch (\textit{Betula populifolia}; $\beta =$
+7.23\%, (UI: 2.50, 12.22)), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
+4.27\%, (UI: 0.56, 8.08)). Grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
+2.20\%, (UI: -1.08, 5.55)); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
-5.27\%, (UI: 0.14, 10.66)). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
-20.70\%, (UI: 5.39, 37.14)), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
-3.39\%, (UI: -2.69, 9.74), and {\Bpop}: $\beta =$
-5.87\%, (UI: -1.91, 13.99); Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+5.22\%, (UI: 0.18, 10.39)). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
+20.67\%, (UI: 5.59, 36.64)), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
+3.35\%, (UI: -2.95, 9.73), and {\Bpop}: $\beta =$
+5.74\%, (UI: -1.96, 13.87); Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}).
 
  
@@ -241,12 +241,12 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
--7.07\%, (UI: -12.73, -1.14); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
-5.05\%, (UI: -6.93, 17.84); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
-10.65\%, (UI: 0.48, 21.60); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
-12.22\%, (UI: 5.00, 19.68)). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
-10.17\%, (UI: 2.65, 18.03), and {\Bpap}: $\beta =$
-23.58\%, (UI: 9.28, 39.01); Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+-7.00\%, (UI: -12.51, -1.16); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
+5.17\%, (UI: -6.55, 17.51); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+10.63\%, (UI: 0.34, 21.50); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
+12.22\%, (UI: 5.16, 19.41)). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
+10.03\%, (UI: 2.14, 18.09), and {\Bpap}: $\beta =$
+23.74\%, (UI: 9.37, 39.20); Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
 239 and EOS: $n =$
 230) or restricted datasets ($n =$ 
 227; Figure \ref{fig:wcSOSEOScomparison}a).
@@ -254,55 +254,47 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
-These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this we found that the addition of 7 days near the end of season increased growth across all species by 
-10.65\%, (UI: 6.19, 15.33)\%,  compared to an increase of XX% from an earlier start of spring (estimated using our model of GDD shown in cite fig, tables, see methods for more details)
-Across species, extending the season by seven days in the autumn increased growth by 
-10.65\%, (UI: 6.19, 15.33) \% compared to 
-7.13\%, (UI: 4.14, 10.24) \% by extending it in the spring ({\Ainc}, 
-SOS: 1.70\%, (UI: -0.86, 4.33) \% versus
-EOS: 2.99\%, (UI: -1.50, 7.65) \%; {\Ball}, 
-SOS: 4.44\%, (UI: 0.47, 8.57) \% versus
-EOS: 7.11\%, (UI: 0.74, 13.82) \%; {\Bpap}, 
-SOS: 16.08\%, (UI: 6.38, 26.10) \% versus
-EOS: 22.53\%, (UI: 8.76, 37.03) \%; {\Bpop}, 
-SOS: 6.30\%, (UI: 2.04, 10.66) \% versus
-EOS: 9.98\%, (UI: 3.18, 17.03) \%).
+These results suggest that later end of season contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this, we found that the addition of 7 days near the end of season increased growth across all species by 
+10.69\%, (UI: 6.11, 15.48), compared to an increase of
+7.16\%, (UI: 4.10, 10.31) from an earlier start of spring (estimated using our model estimates of GDD shown in Figure \ref{fig:wcmuplotbspp} cite fig, tables, see methods for more details)
+Differences in magnitude between an extension of SOS versus EOS were similar across species Table()
+
 
 %-------------------------------------------------------------------------------
 % Question 3
 %-------------------------------------------------------------------------------
 We did not find any clear effect of year on growth (2018: $\alpha =$
-0.19, UI:
+0.17 (UI:
 -0.77, 
-1.15 RW; 2019: $\alpha =$
-0.18, UI:
--0.79, 
-1.14 RW; 2020: $\alpha =$
--0.43, UI:
--1.40, 
-0.53 RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
-1.06\%, (UI: -3.19, 5.21) RW; {\Ball}: $\alpha =$
-0.21\%, (UI: -3.97, 4.34) RW; {\Bpap}: $\alpha =$
--4.00\%, (UI: -8.89, 0.75) RW; {\Bpop}: $\alpha =$
--0.66\%, (UI: -4.94, 3.63) RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
--0.03, UI:
+1.14) RW; 2019: $\alpha =$
+0.16 (UI:
+-0.78, 
+1.12) RW; 2020: $\alpha =$
+-0.45 (UI:
+-1.39, 
+0.51) RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
+1.01\%, (UI: -3.14, 5.18) RW; {\Ball}: $\alpha =$
+0.15\%, (UI: -4.04, 4.24) RW; {\Bpap}: $\alpha =$
+-4.04\%, (UI: -9.02, 0.89) RW; {\Bpop}: $\alpha =$
+-0.70\%, (UI: -5.04, 3.50) RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
+-0.03 (UI:
 -0.22, 
-0.14 RW; Harvard Forest (MA): $\alpha =$
--0.10, UI:
+0.15) RW; Harvard Forest (MA): $\alpha =$
+-0.10 (UI:
 -0.33, 
-0.07 RW; St-Hippolyte (Qc): $\alpha =$
-0.04, UI:
+0.07) RW; St-Hippolyte (Qc): $\alpha =$
+0.04 (UI:
 -0.14, 
-0.24 RW; White Mountains (NH): $\alpha =$
-0.08, UI:
--0.09, 
-0.29 RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
-0.17, UI:
+0.26) RW; White Mountains (NH): $\alpha =$
+0.08 (UI:
+-0.08, 
+0.30) RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
+0.18 (UI:
 0.02, 
-0.47 RW) was similar to variation across individual trees ($\sigma =$ 
-0.17, UI: 
+0.48 RW) was similar to variation across individual trees ($\sigma =$ 
+0.17 (UI: 
 0.05, 
-0.27 RW; Table \ref{tab:tab_all}).
+0.27) RW; Table \ref{tab:tab_all}).
 
 
 % Figure mu across all species and climate predictors
@@ -362,7 +354,7 @@ Integrating our results into models will also require considering how environmen
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jul 20 15:26:28 2026
+% Tue Jul 21 08:49:25 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance coordinates and count per species and provenances out of a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire(NH)) and Canada (in Quebec (Qc)).} 
@@ -397,7 +389,7 @@ Provenance & Longitude & Latitude & \textit{A. incana} & \textit{B. alleghaniens
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jul 20 15:26:28 2026
+% Tue Jul 21 08:49:25 2026
 \begin{table}[ht]
 \centering
 \caption{Species level slope parameters which represent ring width change (log(mm)), per adjusted predictor (see `Data analyses' in Methods for more details). We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different phenological predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
@@ -406,17 +398,17 @@ Provenance & Longitude & Latitude & \textit{A. incana} & \textit{B. alleghaniens
   \hline
 Species & GDD & GSL & SOS & EOS \\ 
   \hline
-\textit{A. incana} & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
-  \textit{B. alleghaniensis} & 0.04 [0.00, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.01, 0.20] & 0.12 [0.05, 0.18] \\ 
-  \textit{B. papyrifera} & 0.15 [0.06, 0.23] & 0.18 [0.05, 0.32] & 0.05 [-0.11, 0.21] & 0.21 [0.09, 0.33] \\ 
-  \textit{B. populifolia} & 0.07 [0.02, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.03, 0.17] \\ 
+\textit{A. incana} & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.13, -0.01] & -0.01 [-0.07, 0.04] \\ 
+  \textit{B. alleghaniensis} & 0.04 [0.01, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
+  \textit{B. papyrifera} & 0.15 [0.06, 0.23] & 0.18 [0.05, 0.31] & 0.05 [-0.12, 0.21] & 0.21 [0.09, 0.33] \\ 
+  \textit{B. populifolia} & 0.07 [0.03, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.02, 0.17] \\ 
    \hline
 \end{tabular}
 \end{table}
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jul 20 15:26:28 2026
+% Tue Jul 21 08:49:25 2026
 \begin{table}[ht]
 \centering
 \caption{The effect of provenance on ring widths (log(mm)). We report these intercept estimates as mean and 90\% uncertainty intervals across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season).} 
@@ -427,16 +419,17 @@ Species & GDD & GSL & SOS & EOS \\
  \hline
 Provenance & Mean & 5\% & 95\% & Mean & 5\% & 95\% & Mean & 5\% & 95\% & Mean & 5\% & 95\% \\ 
   \hline
-Harvard Forest (MA) & -0.10 & -0.33 & 0.07 & -0.08 & -0.32 & 0.09 & -0.05 & -0.25 & 0.12 & -0.09 & -0.33 & 0.08 \\ 
-  White Mountains (NH) & 0.08 & -0.09 & 0.29 & 0.08 & -0.08 & 0.31 & 0.09 & -0.07 & 0.30 & 0.08 & -0.09 & 0.29 \\ 
-  Dartmouth College (NH) & -0.03 & -0.22 & 0.14 & -0.04 & -0.23 & 0.14 & -0.06 & -0.26 & 0.10 & -0.03 & -0.23 & 0.15 \\ 
-  St-Hippolyte (Qc) & 0.04 & -0.14 & 0.24 & 0.04 & -0.14 & 0.26 & 0.02 & -0.15 & 0.22 & 0.04 & -0.14 & 0.26 \\ 
+Harvard Forest (MA) & -0.10 & -0.33 & 0.07 & -0.09 & -0.32 & 0.08 & -0.04 & -0.25 & 0.12 & -0.09 & -0.33 & 0.07 \\ 
+  White Mountains (NH) & 0.08 & -0.08 & 0.30 & 0.08 & -0.08 & 0.30 & 0.08 & -0.07 & 0.30 & 0.07 & -0.09 & 0.28 \\ 
+  Dartmouth College (NH) & -0.03 & -0.22 & 0.15 & -0.04 & -0.24 & 0.15 & -0.06 & -0.27 & 0.09 & -0.04 & -0.23 & 0.14 \\ 
+  St-Hippolyte (Qc) & 0.04 & -0.14 & 0.26 & 0.04 & -0.15 & 0.25 & 0.02 & -0.16 & 0.21 & 0.04 & -0.14 & 0.25 \\ 
    \hline
 \end{tabular}
 \end{table}
 
+
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jul 20 15:26:28 2026
+% Tue Jul 21 08:49:25 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.} 
@@ -445,59 +438,84 @@ Harvard Forest (MA) & -0.10 & -0.33 & 0.07 & -0.08 & -0.32 & 0.09 & -0.05 & -0.2
   \hline
 Parameter & GDD & GSL & SOS & EOS \\ 
   \hline
-$\alpha$ & -0.62 [-4.69, 3.53] & 0.04 [-3.90, 4.04] & 1.12 [-2.61, 4.85] & -1.33 [-5.48, 2.73] \\ 
-  $\sigma_{\alpha_{treeid}}$ & 0.17 [0.05, 0.27] & 0.17 [0.05, 0.28] & 0.21 [0.11, 0.30] & 0.18 [0.06, 0.28] \\ 
-  $\sigma_{\alpha_{prov}}$ & 0.17 [0.02, 0.47] & 0.17 [0.02, 0.48] & 0.17 [0.02, 0.46] & 0.18 [0.02, 0.49] \\ 
+$\alpha$ & -0.57 [-4.61, 3.57] & 0.17 [-3.84, 4.16] & 1.08 [-2.52, 4.77] & -1.40 [-5.52, 2.70] \\ 
+  $\sigma_{\alpha_{treeid}}$ & 0.17 [0.05, 0.27] & 0.18 [0.05, 0.28] & 0.21 [0.11, 0.30] & 0.19 [0.07, 0.28] \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.18 [0.02, 0.48] & 0.18 [0.02, 0.48] & 0.16 [0.01, 0.47] & 0.18 [0.02, 0.49] \\ 
   $\sigma_{y}$ & 0.48 [0.43, 0.53] & 0.48 [0.44, 0.53] & 0.47 [0.43, 0.52] & 0.47 [0.42, 0.52] \\ 
-  $\beta_{species_{A. incana}}$ & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.14, -0.01] & -0.01 [-0.07, 0.04] \\ 
-  $\beta_{species_{B. alleghaniensis}}$ & 0.04 [0.00, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.01, 0.20] & 0.12 [0.05, 0.18] \\ 
-  $\beta_{species_{B. papyrifera}}$ & 0.15 [0.06, 0.23] & 0.18 [0.05, 0.32] & 0.05 [-0.11, 0.21] & 0.21 [0.09, 0.33] \\ 
-  $\beta_{species_{B. populifolia}}$ & 0.07 [0.02, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.03, 0.17] \\ 
-  $\alpha_{prov_{Dartmouth College (NH)}}$ & -0.03 [-0.22, 0.14] & -0.04 [-0.23, 0.14] & -0.06 [-0.26, 0.10] & -0.03 [-0.23, 0.15] \\ 
-  $\alpha_{prov_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.07] & -0.08 [-0.32, 0.09] & -0.05 [-0.25, 0.12] & -0.09 [-0.33, 0.08] \\ 
-  $\alpha_{prov_{St-Hippolyte (Qc)}}$ & 0.04 [-0.14, 0.24] & 0.04 [-0.14, 0.26] & 0.02 [-0.15, 0.22] & 0.04 [-0.14, 0.26] \\ 
-  $\alpha_{prov_{White Mountains (NH)}}$ & 0.08 [-0.09, 0.29] & 0.08 [-0.08, 0.31] & 0.09 [-0.07, 0.30] & 0.08 [-0.09, 0.29] \\ 
-  $\alpha_{year_{2018}}$ & 0.19 [-0.77, 1.15] & 0.22 [-0.71, 1.19] & 0.21 [-0.73, 1.15] & 0.24 [-0.72, 1.17] \\ 
-  $\alpha_{year_{2019}}$ & 0.18 [-0.79, 1.14] & 0.09 [-0.85, 1.06] & 0.11 [-0.83, 1.05] & 0.12 [-0.84, 1.06] \\ 
-  $\alpha_{year_{2020}}$ & -0.43 [-1.40, 0.53] & -0.35 [-1.29, 0.61] & -0.38 [-1.32, 0.58] & -0.47 [-1.44, 0.47] \\ 
-  $\alpha_{species_{A. incana}}$ & 1.06 [-3.19, 5.21] & 0.20 [-3.87, 4.27] & 1.54 [-2.12, 5.13] & 3.08 [-1.30, 7.45] \\ 
-  $\alpha_{species_{B. alleghaniensis}}$ & 0.21 [-3.97, 4.34] & 0.44 [-3.65, 4.46] & -1.89 [-5.68, 1.93] & -1.81 [-6.32, 2.74] \\ 
-  $\alpha_{species_{B. papyrifera}}$ & -4.00 [-8.89, 0.75] & -2.60 [-7.15, 1.93] & -0.77 [-5.06, 3.47] & -5.54 [-11.15, 0.12] \\ 
-  $\alpha_{species_{B. populifolia}}$ & -0.66 [-4.94, 3.63] & 0.28 [-3.96, 4.44] & -0.48 [-4.35, 3.35] & -0.88 [-5.32, 3.75] \\ 
+  $\beta_{species_{A. incana}}$ & 0.02 [-0.01, 0.05] & 0.05 [0.00, 0.10] & -0.07 [-0.13, -0.01] & -0.01 [-0.07, 0.04] \\ 
+  $\beta_{species_{B. alleghaniensis}}$ & 0.04 [0.01, 0.08] & 0.03 [-0.03, 0.09] & 0.10 [0.00, 0.20] & 0.12 [0.05, 0.18] \\ 
+  $\beta_{species_{B. papyrifera}}$ & 0.15 [0.06, 0.23] & 0.18 [0.05, 0.31] & 0.05 [-0.12, 0.21] & 0.21 [0.09, 0.33] \\ 
+  $\beta_{species_{B. populifolia}}$ & 0.07 [0.03, 0.12] & 0.06 [-0.02, 0.13] & 0.05 [-0.07, 0.16] & 0.10 [0.02, 0.17] \\ 
+  $\alpha_{prov_{Dartmouth College (NH)}}$ & -0.03 [-0.22, 0.15] & -0.04 [-0.24, 0.15] & -0.06 [-0.27, 0.09] & -0.04 [-0.23, 0.14] \\ 
+  $\alpha_{prov_{Harvard Forest (MA)}}$ & -0.10 [-0.33, 0.07] & -0.09 [-0.32, 0.08] & -0.04 [-0.25, 0.12] & -0.09 [-0.33, 0.07] \\ 
+  $\alpha_{prov_{St-Hippolyte (Qc)}}$ & 0.04 [-0.14, 0.26] & 0.04 [-0.15, 0.25] & 0.02 [-0.16, 0.21] & 0.04 [-0.14, 0.25] \\ 
+  $\alpha_{prov_{White Mountains (NH)}}$ & 0.08 [-0.08, 0.30] & 0.08 [-0.08, 0.30] & 0.08 [-0.07, 0.30] & 0.07 [-0.09, 0.28] \\ 
+  $\alpha_{year_{2018}}$ & 0.17 [-0.77, 1.14] & 0.22 [-0.71, 1.16] & 0.21 [-0.75, 1.18] & 0.23 [-0.70, 1.17] \\ 
+  $\alpha_{year_{2019}}$ & 0.16 [-0.78, 1.12] & 0.09 [-0.86, 1.03] & 0.12 [-0.84, 1.08] & 0.11 [-0.82, 1.07] \\ 
+  $\alpha_{year_{2020}}$ & -0.45 [-1.39, 0.51] & -0.35 [-1.29, 0.58] & -0.37 [-1.34, 0.59] & -0.48 [-1.41, 0.47] \\ 
+  $\alpha_{species_{A. incana}}$ & 1.01 [-3.14, 5.18] & 0.09 [-3.97, 4.17] & 1.55 [-2.16, 5.10] & 3.18 [-1.27, 7.54] \\ 
+  $\alpha_{species_{B. alleghaniensis}}$ & 0.15 [-4.04, 4.24] & 0.33 [-3.79, 4.40] & -1.85 [-5.62, 1.90] & -1.74 [-6.24, 2.73] \\ 
+  $\alpha_{species_{B. papyrifera}}$ & -4.04 [-9.02, 0.89] & -2.71 [-7.18, 1.78] & -0.74 [-5.04, 3.48] & -5.50 [-11.08, 0.08] \\ 
+  $\alpha_{species_{B. populifolia}}$ & -0.70 [-5.04, 3.50] & 0.18 [-3.92, 4.33] & -0.47 [-4.33, 3.31] & -0.75 [-5.40, 3.84] \\ 
    \hline
 \end{tabular}
 \end{table}
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Mon Jul 20 15:26:28 2026
+% Tue Jul 21 08:49:25 2026
 \begin{table}[ht]
 \centering
-\caption{Summary output of each parameter from our four predictors, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% uncertainty intervals (in square brackets) across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See data analyses section for more details.} 
+\caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
 \label{tab:BAItab}
-\begin{tabular}{ll}
+\begin{tabular}{llll}
   \hline
-Parameter & Estimate \\ 
+\textbf{Parameter} & \textbf{Mean} & \textbf{5\%} & \textbf{95\%} \\ 
   \hline
-$\alpha$ & 0.62 [-4.52, 5.84] \\ 
-  $\sigma_{\alpha_{treeid}}$ & 0.52 [0.41, 0.64] \\ 
-  $\sigma_{\alpha_{prov}}$ & 0.27 [0.03, 0.73] \\ 
-  $\sigma_{y}$ & 0.63 [0.57, 0.70] \\ 
-  $\beta_{species_{A. incana}}$ & 0.11 [-0.03, 0.25] \\ 
-  $\beta_{species_{B. alleghaniensis}}$ & 0.20 [0.02, 0.36] \\ 
-  $\beta_{species_{B. papyrifera}}$ & 0.92 [0.49, 1.34] \\ 
-  $\beta_{species_{B. populifolia}}$ & 0.41 [0.20, 0.61] \\ 
-  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 [-0.47, 0.17] \\ 
-  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.09 [-0.45, 0.19] \\ 
-  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.06 [-0.23, 0.42] \\ 
-  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 [-0.11, 0.52] \\ 
-  $\alpha_{year_{2018}}$ & -0.36 [-1.32, 0.61] \\ 
-  $\alpha_{year_{2019}}$ & 0.33 [-0.65, 1.32] \\ 
-  $\alpha_{year_{2020}}$ & -0.04 [-1.01, 0.94] \\ 
-  $\alpha_{species_{A. incana}}$ & 3.23 [-2.25, 8.55] \\ 
-  $\alpha_{species_{B. alleghaniensis}}$ & 2.09 [-3.40, 7.54] \\ 
-  $\alpha_{species_{B. papyrifera}}$ & -7.59 [-14.84, -0.29] \\ 
-  $\alpha_{species_{B. populifolia}}$ & -0.07 [-5.98, 5.57] \\ 
+$\alpha$ & 0.62 & -4.52 & 5.84 \\ 
+  $\sigma_{\alpha_{treeid}}$ & 0.52 & 0.41 & 0.64 \\ 
+  $\sigma_{\alpha_{prov}}$ & 0.27 & 0.03 & 0.73 \\ 
+  $\sigma_{y}$ & 0.63 & 0.57 & 0.70 \\ 
+  $\beta_{species_{A. incana}}$ & 0.11 & -0.03 & 0.25 \\ 
+  $\beta_{species_{B. alleghaniensis}}$ & 0.20 & 0.02 & 0.36 \\ 
+  $\beta_{species_{B. papyrifera}}$ & 0.92 & 0.49 & 1.34 \\ 
+  $\beta_{species_{B. populifolia}}$ & 0.41 & 0.20 & 0.61 \\ 
+  $\alpha_{site_{Dartmouth College (NH)}}$ & -0.11 & -0.47 & 0.17 \\ 
+  $\alpha_{site_{Harvard Forest (MA)}}$ & -0.09 & -0.45 & 0.19 \\ 
+  $\alpha_{site_{St-Hippolyte (Qc)}}$ & 0.06 & -0.23 & 0.42 \\ 
+  $\alpha_{site_{White Mountains (NH)}}$ & 0.15 & -0.11 & 0.52 \\ 
+  $\alpha_{year_{2018}}$ & -0.36 & -1.32 & 0.61 \\ 
+  $\alpha_{year_{2019}}$ & 0.33 & -0.65 & 1.32 \\ 
+  $\alpha_{year_{2020}}$ & -0.04 & -1.01 & 0.94 \\ 
+  $\alpha_{species_{A. incana}}$ & 3.23 & -2.25 & 8.55 \\ 
+  $\alpha_{species_{B. alleghaniensis}}$ & 2.09 & -3.40 & 7.54 \\ 
+  $\alpha_{species_{B. papyrifera}}$ & -7.59 & -14.84 & -0.29 \\ 
+  $\alpha_{species_{B. populifolia}}$ & -0.07 & -5.98 & 5.57 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+% latex table generated in R 4.5.1 by xtable 1.8-4 package
+% Tue Jul 21 08:49:25 2026
+\begin{table}[ht]
+\centering
+\caption{Summary output ($\beta$) for SOS and EOS extension predictors by species and across species. Estimates are reported as posterior means with 90\% uncertainty intervals.} 
+\label{tab:phenogain}
+\begin{tabular}{llll}
+  \hline
+Parameter & Mean & X5.. & X95.. \\ 
+  \hline
+$\beta_{SOS}$ & 7.16 & 4.10 & 10.31 \\ 
+  $\beta_{EOS}$ & 10.69 & 6.11 & 15.48 \\ 
+  $\beta_{SOS_{A. incana}}$ & 1.72 & -0.84 & 4.32 \\ 
+  $\beta_{SOS_{B. alleghaniensis}}$ & 4.49 & 0.58 & 8.51 \\ 
+  $\beta_{SOS_{B. papyrifera}}$ & 16.11 & 6.27 & 26.47 \\ 
+  $\beta_{SOS_{B. populifolia}}$ & 6.31 & 2.19 & 10.63 \\ 
+  $\beta_{EOS_{A. incana}}$ & 3.02 & -1.46 & 7.63 \\ 
+  $\beta_{EOS_{B. alleghaniensis}}$ & 7.18 & 0.92 & 13.71 \\ 
+  $\beta_{EOS_{B. papyrifera}}$ & 22.58 & 8.61 & 37.58 \\ 
+  $\beta_{EOS_{B. populifolia}}$ & 9.99 & 3.42 & 16.99 \\ 
    \hline
 \end{tabular}
 \end{table}
