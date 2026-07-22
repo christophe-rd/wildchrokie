@@ -250,12 +250,12 @@ Warmer thermal seasons increased growth for Paper birch (\textit{Betula papyrife
 \Sexpr{fmt_stat(b_gdd_per, "B. papyrifera")}), Grey birch (\textit{Betula populifolia}; $\beta =$
 \Sexpr{fmt_stat(b_gdd_per, "B. populifolia")}), and Yellow birch (\textit{Betula alleghaniensis}; $\beta =$
 \Sexpr{fmt_stat(b_gdd_per, "B. alleghaniensis")}). Grey alder (\textit{Alnus incana}) trended in the same direction ($\beta =$ 
-\Sexpr{fmt_stat(b_gdd_per, "A. incana")}); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:wc_slope_table}).
+\Sexpr{fmt_stat(b_gdd_per, "A. incana")}); Figure \ref{fig:wcmuplotbspp}a and e; Table\ref{tab:tab_GDD}).
 Unlike its response to warmer thermal season, {\Ainc} grew more with longer calendar seasons ($\beta =$
 \Sexpr{fmt_stat(b_gsl_per, "A. incana")}). {\Bpap} also grew more with longer calendar seasons ($\beta =$ 
 \Sexpr{fmt_stat(b_gsl_per, "B. papyrifera")}), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
 \Sexpr{fmt_stat(b_gsl_per, "B. alleghaniensis")}, and {\Bpop}: $\beta =$
-\Sexpr{fmt_stat(b_gsl_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:wc_slope_table}). 
+\Sexpr{fmt_stat(b_gsl_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:tab_GSL}). 
 On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}).
 
  
@@ -263,12 +263,12 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. In contrast to this expectation, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species that a longer calendar season increased growth for: $\beta =$
-\Sexpr{fmt_stat(b_sos_per, "A. incana")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Bpop} trended in the opposite direction ($\beta =$
-\Sexpr{fmt_stat(b_sos_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
-\Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:wc_slope_table})---but more with a later end of season ($\beta =$ 
+\Sexpr{fmt_stat(b_sos_per, "A. incana")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_GSL}). {\Bpop} trended in the opposite direction ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_EOS}). {\Ball}, which did not grow more with longer calendar season, grew less with an earlier start of season ($\beta =$
+\Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_SOS})---but more with a later end of season ($\beta =$ 
 \Sexpr{fmt_stat(b_eos_per, "B. alleghaniensis")}). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
 \Sexpr{fmt_stat(b_eos_per, "B. populifolia")}, and {\Bpap}: $\beta =$
-\Sexpr{fmt_stat(b_eos_per, "B. papyrifera")}; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:wc_slope_table}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
+\Sexpr{fmt_stat(b_eos_per, "B. papyrifera")}; Figure \ref{fig:wcmuplotbspp}d and h; Table \ref{tab:tab_EOS}), with the latter being the only one of those three that also grew more with longer calendar season. The estimates were unchanged when using the full (SOS: $n =$
 \Sexpr{nrow(empfullsos)} and EOS: $n =$
 \Sexpr{nrow(empfulleos)}) or restricted datasets ($n =$ 
 \Sexpr{nrow(emp)}; Figure \ref{fig:wcSOSEOScomparison}a).
@@ -278,7 +278,7 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 These results suggest that a later EOS contributes more to growth than earlier start of season, which could be due to the warmer days at the end of the season. Supporting this, we found that the addition of 7 days near the end of season increased growth across all species by 
 \Sexpr{fmt_stat(b_eosgain_mu, "all")}, compared to an increase of
-\Sexpr{fmt_stat(b_sosgain_mu, "all")} from an earlier start of spring (estimated using our model estimates of GDD shown in Figure \ref{fig:wcmuplotbspp}, Table \ref{tab} see methods for more details). Differences in magnitude between an extension of SOS versus EOS were similar across species Table()
+\Sexpr{fmt_stat(b_sosgain_mu, "all")} from an earlier start of spring (estimated using our model estimates of GDD shown in Figure \ref{fig:wcmuplotbspp},  see `Data analyses' section in Methods for more details; Table \ref{tab:phenogain}). Differences in magnitude between an extension of SOS versus EOS were similar across species (Table \ref{tab:phenogain}).
 
 %-------------------------------------------------------------------------------
 % Question 3
@@ -292,11 +292,11 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2019")])}) RW; 2020: $\alpha =$
 \Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])} (UI:
 \Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2020")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])}) RW; Table \ref{tab:tab_all}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
+\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])}) RW; Table \ref{tab:tab_GDD}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "A. incana")} RW; {\Ball}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "B. alleghaniensis")} RW; {\Bpap}: $\alpha =$
 \Sexpr{fmt_stat(aspp_df2, "B. papyrifera")} RW; {\Bpop}: $\alpha =$
-\Sexpr{fmt_stat(aspp_df2, "B. populifolia")} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_all}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
+\Sexpr{fmt_stat(aspp_df2, "B. populifolia")} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_GDD}). In addition, growth did not vary with provenance (Dartmouth College (NH): $\alpha =$
 \Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Dartmouth College (NH)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "Dartmouth College (NH)"])}, 
 \Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "Dartmouth College (NH)"])}) RW; Harvard Forest (MA): $\alpha =$
@@ -308,13 +308,13 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "St-Hippolyte (Qc)"])}) RW; White Mountains (NH): $\alpha =$
 \Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "White Mountains (NH)"])} (UI:
 \Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name == "White Mountains (NH)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "White Mountains (NH)"])}) RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:wc_asite_table}). The limited variation between provenances ($\sigma = $
+\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name == "White Mountains (NH)"])}) RW; Figure \ref{fig:wcmuplotasite}; Table \ref{tab:tab_GDD}). The limited variation between provenances ($\sigma = $
 \Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_asite"])} (UI:
 \Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_asite"])}, 
 \Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_asite"])} RW) was similar to variation across individual trees ($\sigma =$ 
 \Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])} (UI: 
 \Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"])}, 
-\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_all}).
+\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_GDD}).
 
 
 % Figure mu across all species and climate predictors
@@ -393,11 +393,11 @@ header <- list(
   pos = list(-1),
   command = paste0(
     "\\hline\n",
-    "\\textbf{Provenance} & \\textbf{Longitude} & \\textbf{Latitude} & ",
-    "\\textbf{\\textit{A. incana}} & ",
-    "\\textbf{\\textit{B. alleghaniensis}} & ",
-    "\\textbf{\\textit{B. papyrifera}} & ",
-    "\\textbf{\\textit{B. populifolia}} \\\\\n",
+    "Provenance & Longitude & Latitude & ",
+    "\\textit{A. incana} & ",
+    "\\textit{B. alleghaniensis} & ",
+    "\\textit{B. papyrifera} & ",
+    "\\textit{B. populifolia} \\\\\n",
     " & & & ",
     "$(n = ", n_ainc, ")$ & ",
     "$(n = ", n_ball, ")$ & ",
@@ -436,51 +436,28 @@ print(tab,
 \label{fig:allom}
 \end{figure}
 
-
-<<Table combined all parameters and predictors Wildchrokie, results='asis', echo = FALSE>>=
-options(digits = 2)
+<<Table param GDD Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
 
-a_df2_GDD      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a.csv")
-sigma_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
-bspp_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp.csv")
-aspp_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp.csv")
-site_df2_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site.csv")
-ayear_df2_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear.csv")
+a_df_GDD      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a.csv")
+sigma_df_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
+bspp_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp.csv")
+aspp_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp.csv")
+site_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site.csv")
+ayear_df_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear.csv")
 
-a_df2_GSL      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_a.csv")
-sigma_df2_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma.csv")
-bspp_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp.csv")
-aspp_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp.csv")
-site_df2_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site.csv")
-ayear_df2_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear.csv")
+bspp_df_GDD$spp_name   <- emp$latbi[match(bspp_df_GDD$spp, emp$spp_num)]
+site_df_GDD$site_name  <- emp$site[match(site_df_GDD$site, emp$site_num)]
+aspp_df_GDD$spp_name   <- emp$latbi[match(aspp_df_GDD$spp, emp$spp_num)]
+ayear_df_GDD$year_name <- emp$year[match(ayear_df_GDD$year, emp$year_num)]
 
-a_df2_SOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_a.csv")
-sigma_df2_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_sigma.csv")
-bspp_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_bspp.csv")
-aspp_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_aspp.csv")
-site_df2_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_site.csv")
-ayear_df2_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_ayear.csv")
-
-a_df2_EOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_a.csv")
-sigma_df2_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_sigma.csv")
-bspp_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_bspp.csv")
-aspp_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_aspp.csv")
-site_df2_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_site.csv")
-ayear_df2_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_ayear.csv")
-
-bspp_df2_GDD$spp_name  <- emp$latbi[match(bspp_df2_GDD$spp, emp$spp_num)]
-site_df2_GDD$site_name <- emp$site[match(site_df2_GDD$site, emp$site_num)]
-aspp_df2_GDD$spp_name  <- emp$latbi[match(aspp_df2_GDD$spp, emp$spp_num)]
-ayear_df2_GDD$year_name <- emp$year[match(ayear_df2_GDD$year, emp$year_num)]
-
-param_labels <- c(
+param_labels_GDD <- c(
   "$\\alpha$",
   "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
-  paste0("$\\beta_{species_{",   bspp_df2_GDD$spp_name,  "}}$"),
-  paste0("$\\alpha_{prov_{", site_df2_GDD$site_name, "}}$"),
-  paste0("$\\alpha_{year_{", ayear_df2_GDD$year_name, "}}$"),
-  paste0("$\\alpha_{species_{",  aspp_df2_GDD$spp_name,  "}}$")
+  paste0("$\\beta_{species_{",   bspp_df_GDD$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_GDD$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_GDD$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_GDD$spp_name,  "}}$")
 )
 
 fmt_split <- function(df) {
@@ -492,60 +469,169 @@ fmt_split <- function(df) {
   )
 }
 
-combined <- data.frame(
-  "Parameter" = param_labels,
+combined_GDD <- data.frame(
+  "Parameter" = param_labels_GDD,
   rbind(
-    fmt_split(a_df2_GDD), fmt_split(sigma_df2_GDD), fmt_split(bspp_df2_GDD),
-    fmt_split(site_df2_GDD), fmt_split(ayear_df2_GDD), fmt_split(aspp_df2_GDD)
-  ),
-  rbind(
-    fmt_split(a_df2_GSL), fmt_split(sigma_df2_GSL), fmt_split(bspp_df2_GSL),
-    fmt_split(site_df2_GSL), fmt_split(ayear_df2_GSL), fmt_split(aspp_df2_GSL)
-  ),
-  rbind(
-    fmt_split(a_df2_SOS), fmt_split(sigma_df2_SOS), fmt_split(bspp_df2_SOS),
-    fmt_split(site_df2_SOS), fmt_split(ayear_df2_SOS), fmt_split(aspp_df2_SOS)
-  ),
-  rbind(
-    fmt_split(a_df2_EOS), fmt_split(sigma_df2_EOS), fmt_split(bspp_df2_EOS),
-    fmt_split(site_df2_EOS), fmt_split(ayear_df2_EOS), fmt_split(aspp_df2_EOS)
+    fmt_split(a_df_GDD), fmt_split(sigma_df_GDD), fmt_split(bspp_df_GDD),
+    fmt_split(site_df_GDD), fmt_split(ayear_df_GDD), fmt_split(aspp_df_GDD)
   ),
   check.names = FALSE
 )
 
-colnames(combined) <- c("Parameter",
-                         "Mean", "5\\%", "95\\%",
-                         "Mean", "5\\%", "95\\%",
-                         "Mean", "5\\%", "95\\%",
-                         "Mean", "5\\%", "95\\%")
+colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "95\\%")
 
-tab <- xtable(combined,
-              caption = "Summary output of each parameter from our four predictors, using ring width (log(mm)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals across our four different predictors (GDD: growing degree days, GSL: growing season length, SOS: start of season and EOS: end of season). See `Data analyses' in Methods section for more details.",
-              label = "tab:tab_all")
+tab_GDD <- xtable(combined_GDD,
+              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_GDD")
 
-addtorow <- list()
-addtorow$pos <- list(-1, -1)
-addtorow$command <- c(
-  paste0(
-    "\\hline\n",
-    "& \\multicolumn{3}{c}{GDD} & \\multicolumn{3}{c}{GSL} & \\multicolumn{3}{c}{SOS} & \\multicolumn{3}{c}{EOS} \\\\\n"
-  ),
-  paste0(
-    "Parameter & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% & Mean & 5\\% & 95\\% \\\\\n"
-  )
-)
-
-print(tab,
+print(tab_GDD,
       include.rownames = FALSE,
-      include.colnames = FALSE,
       sanitize.text.function = identity,
       caption.placement = "top",
-      add.to.row = addtorow,
-      hline.after = c(-1, 0, nrow(combined)),
-      # tabular.environment = "longtable",
+      hline.after = c(-1, 0, nrow(combined_GDD)),
       floating = TRUE
 )
 @
+
+
+<<Table param GSL Wildchrokie, results='asis', echo = FALSE>>=
+a_df_GSL      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_a.csv")
+sigma_df_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma.csv")
+bspp_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp.csv")
+aspp_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp.csv")
+site_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site.csv")
+ayear_df_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear.csv")
+
+bspp_df_GSL$spp_name   <- emp$latbi[match(bspp_df_GSL$spp, emp$spp_num)]
+site_df_GSL$site_name  <- emp$site[match(site_df_GSL$site, emp$site_num)]
+aspp_df_GSL$spp_name   <- emp$latbi[match(aspp_df_GSL$spp, emp$spp_num)]
+ayear_df_GSL$year_name <- emp$year[match(ayear_df_GSL$year, emp$year_num)]
+
+param_labels_GSL <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_GSL$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_GSL$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_GSL$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_GSL$spp_name,  "}}$")
+)
+
+combined_GSL <- data.frame(
+  "Parameter" = param_labels_GSL,
+  rbind(
+    fmt_split(a_df_GSL), fmt_split(sigma_df_GSL), fmt_split(bspp_df_GSL),
+    fmt_split(site_df_GSL), fmt_split(ayear_df_GSL), fmt_split(aspp_df_GSL)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "95\\%")
+
+tab_GSL <- xtable(combined_GSL,
+              caption = "Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_GSL")
+
+print(tab_GSL,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_GSL)),
+      floating = TRUE
+)
+@
+
+<<Table param SOS Wildchrokie, results='asis', echo = FALSE>>=
+a_df_SOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_a.csv")
+sigma_df_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_sigma.csv")
+bspp_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_bspp.csv")
+aspp_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_aspp.csv")
+site_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_site.csv")
+ayear_df_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_ayear.csv")
+
+bspp_df_SOS$spp_name   <- emp$latbi[match(bspp_df_SOS$spp, emp$spp_num)]
+site_df_SOS$site_name  <- emp$site[match(site_df_SOS$site, emp$site_num)]
+aspp_df_SOS$spp_name   <- emp$latbi[match(aspp_df_SOS$spp, emp$spp_num)]
+ayear_df_SOS$year_name <- emp$year[match(ayear_df_SOS$year, emp$year_num)]
+
+param_labels_SOS <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_SOS$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_SOS$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_SOS$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_SOS$spp_name,  "}}$")
+)
+
+combined_SOS <- data.frame(
+  "Parameter" = param_labels_SOS,
+  rbind(
+    fmt_split(a_df_SOS), fmt_split(sigma_df_SOS), fmt_split(bspp_df_SOS),
+    fmt_split(site_df_SOS), fmt_split(ayear_df_SOS), fmt_split(aspp_df_SOS)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "95\\%")
+
+tab_SOS <- xtable(combined_SOS,
+              caption = "Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_SOS")
+
+print(tab_SOS,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_SOS)),
+      floating = TRUE
+)
+@
+
+<<Table param EOS Wildchrokie, results='asis', echo = FALSE>>=
+a_df_EOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_a.csv")
+sigma_df_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_sigma.csv")
+bspp_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_bspp.csv")
+aspp_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_aspp.csv")
+site_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_site.csv")
+ayear_df_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_ayear.csv")
+
+bspp_df_EOS$spp_name   <- emp$latbi[match(bspp_df_EOS$spp, emp$spp_num)]
+site_df_EOS$site_name  <- emp$site[match(site_df_EOS$site, emp$site_num)]
+aspp_df_EOS$spp_name   <- emp$latbi[match(aspp_df_EOS$spp, emp$spp_num)]
+ayear_df_EOS$year_name <- emp$year[match(ayear_df_EOS$year, emp$year_num)]
+
+param_labels_EOS <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_EOS$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_EOS$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_EOS$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_EOS$spp_name,  "}}$")
+)
+
+combined_EOS <- data.frame(
+  "Parameter" = param_labels_EOS,
+  rbind(
+    fmt_split(a_df_EOS), fmt_split(sigma_df_EOS), fmt_split(bspp_df_EOS),
+    fmt_split(site_df_EOS), fmt_split(ayear_df_EOS), fmt_split(aspp_df_EOS)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "95\\%")
+
+tab_EOS <- xtable(combined_EOS,
+              caption = "Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_EOS")
+
+print(tab_EOS,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_EOS)),
+      floating = TRUE
+)
+@
+
 
 <<Table BAI Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
@@ -647,7 +733,7 @@ binded <- rbind(meansos, meaneos, sosgain, eosgain)
 colnames(binded) <- paste0("\\textbf{",c("Parameter", "Mean", "5\\%", "95\\%"),"}")
 
 print(xtable(binded,
-             caption = "Summary output ($\\beta$) of our GDD parameters, converted in \\% for a predicted extension in SOS and EOS across and for each species. We report estimates as posterior means with 90\\% uncertainty intervals.",
+             caption = "Summary output ($\\beta$) of our GDD parameters (see Table \\ref{tab:tab_GDD} for untransformed parameter estimates), converted in \\% for a predicted extension in SOS and EOS across and for each species. We report estimates as posterior means with 90\\% uncertainty intervals.",
              label = "tab:phenogain"),
       include.rownames = FALSE,
       sanitize.text.function = identity,
