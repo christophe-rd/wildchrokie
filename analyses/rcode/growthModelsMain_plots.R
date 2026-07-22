@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -899,7 +899,7 @@ gap <- 3
 # open device
 pdf("figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf",
     width = 8.2, height = 8.5)
-par(mar = c(4, 6, 4, 2))
+par(mar = c(4, 6, 5, 2))
 
 treeid_df4$spp_name  <- factor(treeid_df4$spp_name, levels = species_order)
 treeid_df4$site_num <- factor(treeid_df4$site_num, levels = site_order)
@@ -926,7 +926,7 @@ for(sp in species_order){ # sp = "Alnus incana"
 
 # Set up empty plot
 plot(NA, NA,
-     xlim = range(c(treeid_df4$p5-2, treeid_df4$p95 + 4)),
+     xlim = range(c(treeid_df4$p5-2, treeid_df4$p95 + 6)),
      ylim = c(0.5, max(treeid_df4$y_pos) + 0.5),
      xlab = "Tree id, provenance and species intercepts", ylab = "", yaxt = "n", bty = "l")
 
