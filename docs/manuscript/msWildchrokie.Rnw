@@ -464,6 +464,8 @@ fmt_split <- function(df) {
   data.frame(
     Mean = sprintf("%.2f", df$mean),
     `5\\%` = sprintf("%.2f", df$p5),
+    `25\\%` = sprintf("%.2f", df$p25),
+    `75\\%` = sprintf("%.2f", df$p75),
     `95\\%` = sprintf("%.2f", df$p95),
     check.names = FALSE
   )
@@ -478,10 +480,10 @@ combined_GDD <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "95\\%")
+colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
 
 tab_GDD <- xtable(combined_GDD,
-              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
               label = "tab:tab_GDD")
 
 print(tab_GDD,
@@ -525,10 +527,10 @@ combined_GSL <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "95\\%")
+colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
 
 tab_GSL <- xtable(combined_GSL,
-              caption = "Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              caption = "Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
               label = "tab:tab_GSL")
 
 print(tab_GSL,
@@ -571,10 +573,10 @@ combined_SOS <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "95\\%")
+colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
 
 tab_SOS <- xtable(combined_SOS,
-              caption = "Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              caption = "Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
               label = "tab:tab_SOS")
 
 print(tab_SOS,
@@ -617,10 +619,10 @@ combined_EOS <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "95\\%")
+colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
 
 tab_EOS <- xtable(combined_EOS,
-              caption = "Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              caption = "Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
               label = "tab:tab_EOS")
 
 print(tab_EOS,
@@ -631,7 +633,6 @@ print(tab_EOS,
       floating = TRUE
 )
 @
-
 
 <<Table BAI Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
@@ -652,6 +653,8 @@ alpha <- data.frame(
   Parameter = c("$\\alpha$"),
   Mean = sprintf("%.2f", a_df2_BAI$mean),
   P5   = sprintf("%.2f", a_df2_BAI$p5),
+  P25  = sprintf("%.2f", a_df2_BAI$p25),
+  P75  = sprintf("%.2f", a_df2_BAI$p75),
   P95  = sprintf("%.2f", a_df2_BAI$p95)
 )
 sigma <- data.frame(
@@ -660,40 +663,50 @@ sigma <- data.frame(
                 "$\\sigma_{y}$"),
   Mean = sprintf("%.2f", sigma_df2_BAI$mean),
   P5   = sprintf("%.2f", sigma_df2_BAI$p5),
+  P25  = sprintf("%.2f", sigma_df2_BAI$p25),
+  P75  = sprintf("%.2f", sigma_df2_BAI$p75),
   P95  = sprintf("%.2f", sigma_df2_BAI$p95)
 )
 bspp <- data.frame(
   Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
   Mean = sprintf("%.2f", bspp_df2_BAI$mean),
   P5   = sprintf("%.2f", bspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", bspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", bspp_df2_BAI$p75),
   P95  = sprintf("%.2f", bspp_df2_BAI$p95)
 )
 aspp <- data.frame(
   Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
   Mean = sprintf("%.2f", aspp_df2_BAI$mean),
   P5   = sprintf("%.2f", aspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", aspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", aspp_df2_BAI$p75),
   P95  = sprintf("%.2f", aspp_df2_BAI$p95)
 )
 site <- data.frame(
   Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
   Mean = sprintf("%.2f", site_df2_BAI$mean),
   P5   = sprintf("%.2f", site_df2_BAI$p5),
+  P25  = sprintf("%.2f", site_df2_BAI$p25),
+  P75  = sprintf("%.2f", site_df2_BAI$p75),
   P95  = sprintf("%.2f", site_df2_BAI$p95)
 )
 ayear <- data.frame(
   Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
   Mean = sprintf("%.2f", ayear_df2_BAI$mean),
   P5   = sprintf("%.2f", ayear_df2_BAI$p5),
+  P25  = sprintf("%.2f", ayear_df2_BAI$p25),
+  P75  = sprintf("%.2f", ayear_df2_BAI$p75),
   P95  = sprintf("%.2f", ayear_df2_BAI$p95)
 )
 binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 
 print(xtable(binded,
-             caption = "Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+             caption = "Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
              label = "tab:BAItab"),
       include.rownames = FALSE,
       sanitize.text.function = identity,
-      sanitize.colnames.function = function(x) paste0("\\textbf{", gsub("P5", "5\\\\%", gsub("P95", "95\\\\%", x)), "}"),
+      sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
       caption.placement = "top")
 @
 
@@ -705,6 +718,8 @@ meansos <- data.frame(
   "Parameter" = paste0("$\\beta_{SOS}$"),
   "Mean" = sprintf("%.2f", b_sosgain_mu$mean),
   "5\\%" = sprintf("%.2f", b_sosgain_mu$p5),
+  "25\\%" = sprintf("%.2f", b_sosgain_mu$p25),
+  "75\\%" = sprintf("%.2f", b_sosgain_mu$p75),
   "95\\%" = sprintf("%.2f", b_sosgain_mu$p95)
 )
 
@@ -712,6 +727,8 @@ meaneos <- data.frame(
   "Parameter" = paste0("$\\beta_{EOS}$"),
   "Mean" = sprintf("%.2f", b_eosgain_mu$mean),
   "5\\%" = sprintf("%.2f", b_eosgain_mu$p5),
+  "25\\%" = sprintf("%.2f", b_eosgain_mu$p25),
+  "75\\%" = sprintf("%.2f", b_eosgain_mu$p75),
   "95\\%" = sprintf("%.2f", b_eosgain_mu$p95)
 )
 
@@ -719,6 +736,8 @@ sosgain <- data.frame(
   "Parameter" = paste0("$\\beta_{SOS_{", b_sosgain$spp_name, "}}$"),
   "Mean" = sprintf("%.2f", b_sosgain$mean),
   "5\\%" = sprintf("%.2f", b_sosgain$p5),
+  "25\\%" = sprintf("%.2f", b_sosgain$p25),
+  "75\\%" = sprintf("%.2f", b_sosgain$p75),
   "95\\%" = sprintf("%.2f", b_sosgain$p95)
 )
 
@@ -726,14 +745,16 @@ eosgain <- data.frame(
   "Parameter" = paste0("$\\beta_{EOS_{", b_eosgain$spp_name, "}}$"),
   "Mean" = sprintf("%.2f", b_eosgain$mean),
   "5\\%" = sprintf("%.2f", b_eosgain$p5),
+  "25\\%" = sprintf("%.2f", b_eosgain$p25),
+  "75\\%" = sprintf("%.2f", b_eosgain$p75),
   "95\\%" = sprintf("%.2f", b_eosgain$p95)
 )
 
 binded <- rbind(meansos, meaneos, sosgain, eosgain)
-colnames(binded) <- paste0("\\textbf{",c("Parameter", "Mean", "5\\%", "95\\%"),"}")
+colnames(binded) <- paste0(c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%"))
 
 print(xtable(binded,
-             caption = "Summary output ($\\beta$) of our GDD parameters (see Table \\ref{tab:tab_GDD} for untransformed parameter estimates), converted in \\% for a predicted extension in SOS and EOS across and for each species. We report estimates as posterior means with 90\\% uncertainty intervals.",
+             caption = "Summary output ($\\beta$) of our GDD parameters (see Table \\ref{tab:tab_GDD} for untransformed parameter estimates), converted in \\% for a predicted extension in SOS and EOS across and for each species. We report estimates as posterior means with 90\\% and 50\\% uncertainty intervals.",
              label = "tab:phenogain"),
       include.rownames = FALSE,
       sanitize.text.function = identity,
