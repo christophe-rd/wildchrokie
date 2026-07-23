@@ -353,7 +353,7 @@ for (i in seq_along(sppvecnum)) { # i = 1
        type = "n",
        ylim = c(min(emp_spp$lengthMM), max(emp_spp$lengthMM)+2),
        xlab = "Growing season growing degree days (GDD)",
-       ylab = "ring width (log(mm))",
+       ylab = "Ring width (mm)",
             main = bquote(italic(.(spp_name))),
        frame = TRUE, bty = "l")
   
