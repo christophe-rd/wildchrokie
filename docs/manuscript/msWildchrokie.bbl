@@ -1,4 +1,4 @@
-\begin{thebibliography}{86}
+\begin{thebibliography}{88}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -110,6 +110,20 @@ Calvin, K., Dasgupta, D., Krinner, G., Mukherji, A., Thorne, P.W., Trisos, C.,
   {Writing} {Team}, {H}. {Lee} and {J}. {Romero} (eds.)]. {IPCC}, {Geneva},
   {Switzerland}. Tech. rep., Intergovernmental Panel on Climate Change (IPCC),
   edition: First.
+
+\bibitem[{Caron \emph{et~al.}(2021)Caron, Zellweger, Verheyen, Baeten, Hédl,
+  Bernhardt‐Römermann, Berki, Brunet, Decocq, Díaz, Dirnböck, Durak,
+  Heinken, Jaroszewicz, Kopecký, Lenoir, Macek, Malicki, Máliš, Nagel,
+  Perring, Petřík, Reczyńska, Pielech, Schmidt, Świerkosz, Teleki, Wulf \&
+  De~Frenne}]{caron_thermal_2021}
+Caron, M.M., Zellweger, F., Verheyen, K., Baeten, L., Hédl, R.,
+  Bernhardt‐Römermann, M., Berki, I., Brunet, J., Decocq, G., Díaz, S.,
+  Dirnböck, T., Durak, T., Heinken, T., Jaroszewicz, B., Kopecký, M., Lenoir,
+  J., Macek, M., Malicki, M., Máliš, F., Nagel, T.A., Perring, M.P.,
+  Petřík, P., Reczyńska, K., Pielech, R., Schmidt, W., Świerkosz, K.,
+  Teleki, B., Wulf, M. \& De~Frenne, P. (2021) Thermal differences between
+  juveniles and adults increased over time in {European} forest trees.
+  \emph{Journal of Ecology} \textbf{109}, 3944--3957.
 
 \bibitem[{Carpenter \emph{et~al.}(2017)Carpenter, Gelman, Hoffman, Lee,
   Goodrich, Betancourt, Brubaker, Guo, Li \& Riddell}]{carpenter_stan_2017}
@@ -343,6 +357,17 @@ Gunderson, C.A., Edwards, N.T., Walker, A.V., O'Hara, K.H., Campion, C.M. \&
   extension in relation to climatic provenance. \emph{Global Change Biology}
   \textbf{18}, 2008--2025, \_eprint:
   https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1365-2486.2011.02632.x.
+
+\bibitem[{Harrison \emph{et~al.}(2021)Harrison, Cramer, Franklin, Prentice,
+  Wang, Brännström, De~Boer, Dieckmann, Joshi, Keenan, Lavergne, Manzoni,
+  Mengoli, Morfopoulos, Peñuelas, Pietsch, Rebel, Ryu, Smith, Stocker \&
+  Wright}]{harrison_ecoevolutionary_2021}
+Harrison, S.P., Cramer, W., Franklin, O., Prentice, I.C., Wang, H.,
+  Brännström, A., De~Boer, H., Dieckmann, U., Joshi, J., Keenan, T.F.,
+  Lavergne, A., Manzoni, S., Mengoli, G., Morfopoulos, C., Peñuelas, J.,
+  Pietsch, S., Rebel, K.T., Ryu, Y., Smith, N.G., Stocker, B.D. \& Wright, I.J.
+  (2021) Eco‐evolutionary optimality as a means to improve vegetation and
+  land‐surface models. \emph{New Phytologist} \textbf{231}, 2125--2141.
 
 \bibitem[{Jeong \& Medvigy(2014)}]{jeong_macroscale_2014}
 Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
