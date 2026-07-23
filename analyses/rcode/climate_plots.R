@@ -61,6 +61,7 @@ firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 
 
 ##### Climate overlap in 2020 #####
+if (makeplots){
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --
@@ -182,6 +183,8 @@ legend("topleft",
        title = "Dataset")
 
 dev.off()
+}
+
 
 # precipitation at leafout
 if (makeplots) {
