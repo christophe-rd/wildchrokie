@@ -1,4 +1,4 @@
-\begin{thebibliography}{88}
+\begin{thebibliography}{91}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -369,6 +369,12 @@ Harrison, S.P., Cramer, W., Franklin, O., Prentice, I.C., Wang, H.,
   (2021) Eco‐evolutionary optimality as a means to improve vegetation and
   land‐surface models. \emph{New Phytologist} \textbf{231}, 2125--2141.
 
+\bibitem[{Howe \emph{et~al.}(1995)Howe, Hackett, Furnier \&
+  Klevorn}]{howe_photoperiodic_1995}
+Howe, G.T., Hackett, W.P., Furnier, G.R. \& Klevorn, R.E. (1995) Photoperiodic
+  responses of a northern and southern ecotype of black cottonwood.
+  \emph{Physiologia Plantarum} \textbf{93}, 695--708.
+
 \bibitem[{Jeong \& Medvigy(2014)}]{jeong_macroscale_2014}
 Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
   throughout the continental {United} {States}. \emph{Global Ecology and
@@ -452,6 +458,11 @@ Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
   (2006) European phenological response to climate change matches the warming
   pattern. \emph{Global Change Biology} \textbf{12}, 1969--1976.
 
+\bibitem[{Mimura \& Aitken(2007)}]{mimura_adaptive_2007}
+Mimura, M. \& Aitken, S.N. (2007) Adaptive gradients and isolation-by-distance
+  with postglacial migration in {Picea} sitchensis. \emph{Heredity}
+  \textbf{99}, 224--232.
+
 \bibitem[{{National Centers for Environmental Information
   (NCEI)}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
 {National Centers for Environmental Information (NCEI)} (2026) North {American}
@@ -462,6 +473,13 @@ Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
 {National Oceanic and Atmospheric Administration (NOAA)} (2026) Local
   {Climatological} {Data} {Station} {Details}: {Boston} {Logan} {Internal}
   {Airport}, {MA} {US}, {WBAN}:14739.
+
+\bibitem[{Oleksyn \emph{et~al.}(1992)Oleksyn, Tjoelker \&
+  Reich}]{oleksyn_growth_1992}
+Oleksyn, J., Tjoelker, M.G. \& Reich, P.B. (1992) Growth and biomass
+  partitioning of populations of {European} \textit{{Pinus} sylvestris} {L}.
+  under simulated 50° and 60° {N} daylengths: evidence for photoperiodic
+  ecotypes. \emph{New Phytologist} \textbf{120}, 561--574.
 
 \bibitem[{Pan \emph{et~al.}(2024)Pan, Birdsey, Phillips, Houghton, Fang,
   Kauppi, Keith, Kurz, Ito, Lewis, Nabuurs, Shvidenko, Hashimoto, Lerink,
