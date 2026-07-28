@@ -3517,3 +3517,32 @@ fiteos <- sampling(genericmodel, data = deosz,
                    warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored_largerPriors")
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Estimate site effect per species ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+model <- stan_model("stan/modelGrowthGDD_asitePerSpp.stan")
+
+fit <- sampling(model, data = dgdd,
+                   warmup = 1000, iter = 2000, chains=4)
+diagnostics <- util$extract_hmc_diagnostics(fit) 
+util$check_all_hmc_diagnostics(diagnostics)
+
+vec <- names(fit)[grepl("site", names(fit)) & !grepl("z|sigma", names(fit))]
+
+dfit <- as.data.frame(fit)
+dsite <- dfit[,vec]
+
+# summary
+asite_df2 <- data.frame(
+  prm = colnames(dsite),
+  mu  = sapply(dsite, mean),
+  p05 = sapply(dsite, quantile, probs = 0.05),
+  p25 = sapply(dsite, quantile, probs = 0.25),
+  p75 = sapply(dsite, quantile, probs = 0.75),
+  p95 = sapply(dsite, quantile, probs = 0.95),
+  row.names = NULL
+)
+
+asite_df2$spp <- substr(asite_df2$prm, 9, 9)
+asite_df2$site <- substr(asite_df2$prm, 7, 7)
