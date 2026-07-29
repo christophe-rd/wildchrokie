@@ -35,6 +35,9 @@ climatesummonth <- read.csv("output/climateSummariesByMonth.csv")
 gddyr <- read.csv("output/gddByYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
+# Day met data. From Wildhell garden repo. It's the climate data for each provenance
+climprov <- read.csv("input/_notcookies/dayMet.csv")
+
 # transform my groups to numeric values
 empir$site_num <- match(empir$site, unique(empir$site))
 empir$spp_num <- match(empir$spp, unique(empir$spp))
@@ -59,8 +62,40 @@ years <- sort(unique(empir$year))
 years      <- sort(unique(empir$year))
 firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Climate summaries ####
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
+# common objects across budset and leafout
+clim_vars  <- c("TempMeanMax", "TempMeanMean","TempMeanMin")
+
+emp_clim <- merge(empir, climatesum, by = "year", all.x = TRUE)
+
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
+colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
+
+emp_climlo <- emp_clim[!is.na(emp_clim$leafout),]
+emp_climbs <- emp_clim[!is.na(emp_clim$budset),]
+
+emp_climlo$anomleafout <- emp_climlo$leafout - mean(emp_climlo$leafout)
+emp_climbs$anombudset <- emp_climbs$budset - mean(emp_climbs$budset)
+
+nrow(emp_climlo)
+nrow(emp_climbs)
+nrow(emp_clim)
+
+
+# define plot objects and stuff
+species_order <- c(
+  "Alnus incana", 
+  "Betula alleghaniensis", 
+  "Betula papyrifera", 
+  "Betula populifolia")
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### Climate overlap in 2020 #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 if (makeplots){
 setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/")
 
@@ -186,341 +221,6 @@ dev.off()
 }
 
 
-# precipitation at leafout
-if (makeplots) {
-empir$winterPptLeafout <- mapply(function(leafout_doy, obs_year) {
-  # takes the previous year accumulation of ppt in december
-  sub <- weldhillclim[(weldhillclim$year == obs_year - 1 & weldhillclim$doy >= 335) |
-                        # then going into the current year condition
-                        (weldhillclim$year == obs_year & weldhillclim$doy <= leafout_doy), ]
-  sum(sub$pptMM, na.rm = TRUE) # sum the ppt over our period of interest
-  }, empir$leafout, empir$year) # apply the function to each of those 2 arguments
-
-plot(empir$winterPptLeafout, empir$leafout,
-     xlab = "precipitation accumulation (mm) at leafout", ylab = "leafout",
-     pch = 16, frame = FALSE,
-     col = yearcolors[match(empir$year, years)],
-     main = "leafout X precipitation accumulation (mm) at leafout")
-
-for (i in seq_along(years)) { # i = 2018
-  year_dat <- empir[empir$year == years[i], ]
-  
-  lm_fit <- lm(leafout ~ winterPptLeafout, data = year_dat)
-  x_seq  <- seq(min(year_dat$winterPptLeafout, na.rm = TRUE), 
-                max(year_dat$winterPptLeafout, na.rm = TRUE), length.out = 200)
-  pred   <- predict(lm_fit, newdata = data.frame(winterPptLeafout = x_seq))
-  
-  lines(x_seq, pred, 
-        col = yearcolors[i],
-        lwd = 2)
-  legend("bottomright",
-         legend = years, 
-         col= yearcolors, pch = 16, lty = 1, lwd = 2,
-         title  = "Year")
-}
-
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Climate summaries ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
-# common objects across budset and leafout
-clim_vars  <- c("TempMeanMax", "TempMeanMean","TempMeanMin")
-
-emp_clim <- merge(empir, climatesum, by = "year", all.x = TRUE)
-
-colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmax")] <- "TempMeanMax"
-colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmean")] <- "TempMeanMean"
-colnames(emp_clim)[which(colnames(emp_clim) %in% "tmeanmin")] <- "TempMeanMin"
-
-emp_climlo <- emp_clim[!is.na(emp_clim$leafout),]
-emp_climbs <- emp_clim[!is.na(emp_clim$budset),]
-
-emp_climlo$anomleafout <- emp_climlo$leafout - mean(emp_climlo$leafout)
-emp_climbs$anombudset <- emp_climbs$budset - mean(emp_climbs$budset)
-
-nrow(emp_climlo)
-nrow(emp_climbs)
-nrow(emp_clim)
-
-
-# define plot objects and stuff
-species_order <- c(
-  "Alnus incana", 
-  "Betula alleghaniensis", 
-  "Betula papyrifera", 
-  "Betula populifolia")
-
-years      <- sort(unique(empir$year))
-firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-climmodelts <- stan_model("stan/climatePredictors.stan")
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### Leafout ####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-if(makeplots){
-clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
-periods <- c("DJF", "MAM")
-
-jpeg(
-  filename = "figures/climate/climSumLeafout.jpeg", 
-  width = 2000, height = 3000, res = 300)
-
-layout(matrix(c(1,2,7,
-                3,4,7,
-                5,6,7), nrow = 3, byrow = TRUE),
-       widths = c(2, 2, 1))
-
-# set df to recover the parameters
-all_params <- data.frame()
-
-for (i in seq_along(clim_vars)) { # i = 2
-  for (j in seq_along(periods)) { # j = 1
-    
-    p   <- periods[j]
-    var <- clim_vars[i]
-    
-    dat <- emp_clim[emp_clim$period == p & !is.na(emp_clim[[var]]), ]
-    
-    # transform data in vectors for gsl
-    data <- list(
-      y = dat$anomleafout,
-      N = nrow(dat),
-      year = as.numeric(as.character(dat$year_num)),
-      species = as.numeric(as.character(dat$spp_num)),
-      site = as.numeric(as.character(dat$site_num)),
-      Nspp = length(unique(dat$spp_num)),
-      Nsite = length(unique(dat$site_num)),
-      Nyear = length(unique(dat$year_num)),
-      climpredictor = dat[[var]]
-    )
-    
-    # Fit models
-    fit <- sampling(climmodel, data = data, 
-                    warmup = 1000, iter = 2000, chains=4, refresh = 0)
-    
-    post_means <- summary(fit)$summary[, "mean"]
-    
-    # Extract full summary with quantiles
-    post_summary <- summary(fit, probs = c(0.05, 0.95))$summary
-    
-    # Build dataframe for all parameters of interest
-    param_indices <- c(
-      "a",
-      grep("^ayear(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^asite(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^aspp(?!.*_prior)",  rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^bsp(?!.*_prior)",   rownames(post_summary), value = TRUE, perl = TRUE)
-    )
-    param_df <- data.frame(
-      clim_var  = var,
-      period    = p,
-      parameter = param_indices,
-      mean      = post_summary[param_indices, "mean"],
-      q5        = post_summary[param_indices, "5%"],
-      q95       = post_summary[param_indices, "95%"],
-      row.names = NULL
-    )
-    
-    all_params <- rbind(all_params, param_df)
-    # pull what I need
-    a <- post_means["a"]
-    aspp <- post_means[grep("^aspp", names(post_means))]
-    asite <- post_means[grep("^asite", names(post_means))]
-    ayear <- post_means[grep("^ayear", names(post_means))]
-    bsp <- post_means[grep("^bsp",  names(post_means))]
-    
-    x_vals <- sort(unique(dat[[var]]))
-    
-    # Set up empty plot
-    x_range <- range(x_vals)
-    x_pad <- diff(x_range) * 0.08  # 8% padding on each side
-    
-    plot(NULL, 
-         xlim = c(x_range[1] - x_pad, x_range[2] + x_pad),
-         ylim = c(min(dat$anomleafout), max(dat$anomleafout)), 
-         xlab = var, ylab = "leafout", 
-         main = p, frame = FALSE)
-    abline(h = 0, lty = 2, col = "gray50")
-    
-    for (s in 1:data$Nspp) { # i = 2
-      intercept_s <- a + aspp[s]
-      slope_s <- bsp[s]
-      y_vals <- intercept_s + slope_s * x_vals
-      lines(x_vals, y_vals, col = wccolslatbi[s], lwd = 2)
-    }
-    
-    points(data$climpredictor, data$y,
-           col = wccolslatbi[data$species], pch = 16, cex = 0.8)
-    
-    # one year label per unique clim value, at top of each plot
-    text(x_vals, rep(max(dat$anomleafout), length(x_vals)),
-         labels = dat$year[match(x_vals, dat[[var]])],
-         cex = 1, col = "black")
-  }
-}
-par(mar = c(0, 0, 0, 0))
-plot(NULL, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
-legend("center", legend = species_order,
-       col = wccolslatbi[species_order], pch = 16, lwd = 2,
-       bty = "n", cex = 0.9, pt.cex = 1.5)
-
-
-dev.off()
-}
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# CoringTreespotters ####
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-empts <- read.csv("/Users/christophe_rouleau-desrochers/github/coringTreespotters/analyses/output/empiricalDataMAIN.csv")
-
-emp_climts <- merge(empts, climatesum, by = "year", all.y = TRUE)
-
-colnames(emp_climts)[which(colnames(emp_climts) %in% "pdsi")] <- "PDSI"
-colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmax")] <- "TempMeanMax"
-colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmean")] <- "TempMeanMean"
-colnames(emp_climts)[which(colnames(emp_climts) %in% "tmeanmin")] <- "TempMeanMin"
-colnames(emp_climts)[which(colnames(emp_climts) %in% "ppt")] <- "Precip"
-
-emp_climtslo <- emp_climts[!is.na(emp_climts$leafout),]
-emp_climtscl <- emp_climts[!is.na(emp_climts$coloredLeaves),]
-
-emp_climtslo$anomleafout <- emp_climtslo$leafout - mean(emp_climtslo$leafout)
-emp_climtscl$anomleafcolor <- emp_climtscl$coloredLeaves - mean(emp_climtscl$coloredLeaves)
-
-years <- sort(unique(empts$year))
-firststeps <- colorRampPalette(c("#9cc184", "#192813"))(length(years))
-
-clim_vars <- c("TempMeanMin", "TempMeanMean", "TempMeanMax")
-periods <- c("DJF", "MAM")
-
-emp_climtslo$spp_num <- match(emp_climtslo$latbi, unique(emp_climtslo$latbi))
-emp_climtslo$year_num <- match(emp_climtslo$id, unique(emp_climtslo$id))
-emp_climtslo$year_num <- match(emp_climtslo$year, unique(emp_climtslo$year))
-
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Fit Leafout with Stan #####
-# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-if(makeplots){
-jpeg(
-  filename = "figures/climate/climSumLeafout_TS.jpeg", 
-  width = 2500, height = 3000, res = 300)
-
-renoir <- c("#17154f", "#2f357c", "#6c5d9e", "#9d9cd5", "#b0799a", "#e48171", 
-            "#bf3729", "#e69b00", "#f5bb50", "#ada43b", "#355828")
-
-colslatbi <- c(
-  "Acer rubrum"           = renoir[1],
-  "Acer saccharum"        = renoir[2],
-  "Aesculus flava"        = renoir[3],
-  "Betula alleghaniensis" = renoir[4],
-  "Betula nigra"          = renoir[5],
-  "Carya glabra"          = renoir[6],
-  "Carya ovata"           = renoir[7],
-  "Populus deltoides"     = renoir[8],
-  "Quercus alba"          = renoir[9],
-  "Quercus rubra"         = renoir[10],
-  "Tilia americana"       = renoir[11]
-)
-species_orderts <- rev(unique(emp_climts$latbi))
-layout(matrix(c(1,2,7,
-                3,4,7,
-                5,6,7), nrow = 3, byrow = TRUE),
-       widths = c(2, 2, 1))
-
-# set df to recover the parameters
-all_params <- data.frame()
-
-for (i in seq_along(clim_vars)) { # i = 2
-  for (j in seq_along(periods)) { # j = 1
-    
-    p   <- periods[j]
-    var <- clim_vars[i]
-    
-    dat <- emp_climtslo[emp_climtslo$period == p & !is.na(emp_climtslo[[var]]), ]
-    
-    # transform data in vectors for gsl
-    data <- list(
-      y = dat$anomleafout,
-      N = nrow(dat),
-      year = as.numeric(as.character(dat$year_num)),
-      species = as.numeric(as.character(dat$spp_num)),
-      Nspp = length(unique(dat$spp_num)),
-      Nyear = length(unique(dat$year_num)),
-      climpredictor = dat[[var]]
-    )
-    
-    # Fit models
-    fit <- sampling(climmodelts, data = data, 
-                    warmup = 50, iter = 100, chains=4, refresh = 0)
-    
-    post_means <- summary(fit)$summary[, "mean"]
-    
-    # Extract full summary with quantiles
-    post_summary <- summary(fit, probs = c(0.05, 0.95))$summary
-    
-    # Build dataframe for all parameters of interest
-    param_indices <- c(
-      "a",
-      grep("^ayear(?!.*_prior)", rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^aspp(?!.*_prior)",  rownames(post_summary), value = TRUE, perl = TRUE),
-      grep("^bsp(?!.*_prior)",   rownames(post_summary), value = TRUE, perl = TRUE)
-    )
-    param_df <- data.frame(
-      clim_var  = var,
-      period    = p,
-      parameter = param_indices,
-      mean      = post_summary[param_indices, "mean"],
-      q5        = post_summary[param_indices, "5%"],
-      q95       = post_summary[param_indices, "95%"],
-      row.names = NULL
-    )
-    
-    all_params <- rbind(all_params, param_df)
-    # pull what I need
-    a <- post_means["a"]
-    aspp <- post_means[grep("^aspp", names(post_means))]
-    ayear <- post_means[grep("^ayear", names(post_means))]
-    bsp <- post_means[grep("^bsp",  names(post_means))]
-    
-    x_vals <- sort(unique(dat[[var]]))
-    
-    # Set up empty plot
-    x_range <- range(x_vals)
-    x_pad <- diff(x_range) * 0.08  # 8% padding on each side
-    
-    par(mar = c(5, 3, 3, 3))
-    
-    plot(NULL, 
-         xlim = c(x_range[1] - x_pad, x_range[2] + x_pad),
-         ylim = c(min(dat$anomleafout), max(dat$anomleafout)), 
-         xlab = var, ylab = "leafout", 
-         main = p, frame = FALSE)
-    abline(h = 0, lty = 2, col = "gray50")
-    
-    for (s in 1:data$Nspp) { # i = 2
-      intercept_s <- a + aspp[s]
-      slope_s <- bsp[s]
-      y_vals <- intercept_s + slope_s * x_vals
-      lines(x_vals, y_vals, col = colslatbi[s], lwd = 2)
-    }
-    
-    points(data$climpredictor, data$y,
-           col = colslatbi[data$species], pch = 16, cex = 0.8)
-    
-    # one year label per unique clim value, at top of each plot
-    text(x_vals, rep(max(dat$anomleafout), length(x_vals)),
-         labels = dat$year[match(x_vals, dat[[var]])],
-         cex = 0.8, col = "black", srt = 90)
-  }
-}
-par(mar = c(0, 0, 0, 0))
-plot(NULL, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "")
-legend("center", legend = species_orderts,
-       col = colslatbi[species_orderts], pch = 16, lwd = 2,
-       bty = "n", cex = 1, pt.cex = 1.5)
-dev.off()
-
-}
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Phenology ####
