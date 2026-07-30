@@ -3643,5 +3643,67 @@ axis(2,
 abline(v = 0, lty = 2)
 
 
+# try with stanlmer
+ainc <- subset(emp, spp_num == 1)
+ball <- subset(emp, spp_num == 2)
+bpap <- subset(emp, spp_num == 3)
+bpop <- subset(emp, spp_num == 4)
+library(rstanarm)
+
+spp1fit <- stan_lmer(pgsGDD5 ~ 1 + 1|site + treeid,
+                     data = ainc)
+
+aincfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
+                     data = ainc)
+ballfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
+                     data = ball)
+bpapfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
+                     data = bpap)
+bpopfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
+                     data = bpop)
+
+get_site_re <- function(fit){
+  s <- summary(fit, pars = "varying")
+  site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
+  s <- s[site_rows, ]
+  data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
+             mu = s[, "mean"], lo = s[, "10%"], hi = s[, "90%"])
+}
+
+ainc_re <- get_site_re(aincfit)
+ball_re <- get_site_re(ballfit)
+bpap_re <- get_site_re(bpapfit)
+bpop_re <- get_site_re(bpopfit)
+
+allx <- range(c(ainc_re$lo, ainc_re$hi, ball_re$lo, ball_re$hi,
+                bpap_re$lo, bpap_re$hi, bpop_re$lo, bpop_re$hi))
+
+par(mfrow = c(2, 2), mar = c(4, 6, 3, 1))
+
+plot(ainc_re$mu, 1:nrow(ainc_re), pch = 19, yaxt = "n",
+     xlab = "site intercept estimates", ylab = "", main = "A. incana", xlim = allx)
+axis(2, at = 1:nrow(ainc_re), labels = ainc_re$site, las = 2, cex.axis = 0.8)
+segments(ainc_re$lo, 1:nrow(ainc_re), ainc_re$hi, 1:nrow(ainc_re))
+abline(v = 0, lty = 2, col = "grey60")
+
+plot(ball_re$mu, 1:nrow(ball_re), pch = 19, yaxt = "n",
+     xlab = "site intercept estimates", ylab = "", main = "B. alleghaniensis", xlim = allx)
+axis(2, at = 1:nrow(ball_re), labels = ball_re$site, las = 2, cex.axis = 0.8)
+segments(ball_re$lo, 1:nrow(ball_re), ball_re$hi, 1:nrow(ball_re))
+abline(v = 0, lty = 2, col = "grey60")
+
+plot(bpap_re$mu, 1:nrow(bpap_re), pch = 19, yaxt = "n",
+     xlab = "site intercept estimates", ylab = "", main = "B. papyrifera", xlim = allx)
+axis(2, at = 1:nrow(bpap_re), labels = bpap_re$site, las = 2, cex.axis = 0.8)
+segments(bpap_re$lo, 1:nrow(bpap_re), bpap_re$hi, 1:nrow(bpap_re))
+abline(v = 0, lty = 2, col = "grey60")
+
+plot(bpop_re$mu, 1:nrow(bpop_re), pch = 19, yaxt = "n",
+     xlab = "site intercept estimates", ylab = "", main = "B. populifolia", xlim = allx)
+axis(2, at = 1:nrow(bpop_re), labels = bpop_re$site, las = 2, cex.axis = 0.8)
+segments(bpop_re$lo, 1:nrow(bpop_re), bpop_re$hi, 1:nrow(bpop_re))
+abline(v = 0, lty = 2, col = "grey60")
+
+par(mfrow = c(1, 1))
 }
 
