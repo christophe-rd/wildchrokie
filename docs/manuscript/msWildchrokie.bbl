@@ -1,4 +1,4 @@
-\begin{thebibliography}{91}
+\begin{thebibliography}{92}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -607,6 +607,13 @@ Sweeney, C.J., Butler, F. \& Wingler, A. (2024) Comparison of the timing of
 \bibitem[{Wang \& Engel(1998)}]{wang_simulation_1998}
 Wang, E. \& Engel, T. (1998) Simulation of phenological development of wheat
   crops. \emph{Agricultural Systems} \textbf{58}, 1--24.
+
+\bibitem[{Wang \emph{et~al.}(2016)Wang, Hamann, Spittlehouse \&
+  Carroll}]{wang_locally_2016}
+Wang, T., Hamann, A., Spittlehouse, D. \& Carroll, C. (2016) Locally
+  {Downscaled} and {Spatially} {Customizable} {Climate} {Data} for {Historical}
+  and {Future} {Periods} for {North} {America}. \emph{PLOS ONE} \textbf{11},
+  e0156720.
 
 \bibitem[{Wang \emph{et~al.}(2025)Wang, Qin, Zhang, Yang, Cabon, Wang, Zhou,
   Zhang, Fonti \& Huang}]{wang_seasonal_2025}

@@ -39,15 +39,20 @@ source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/g
 source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
 
 samples <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
+climna <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/climateNA.csv")
+climna$site_name <- c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)")
 
 options(digits = 2)
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", 
-                 "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
+  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
   Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
 )
+
+locations$MAT <- climna$MAT[match(locations$name, climna$site_name)]
+locations$MSP <- climna$MSP[match(locations$name, climna$site_name)]
+locations$FFP <- climna$FFP[match(locations$name, climna$site_name)]
 
 count <- aggregate(treeid ~ latbi + site, emp, 
                    FUN = function(x) length(unique(x)))
@@ -56,11 +61,14 @@ species <- unique(count$latbi)
 
 count_wide <- reshape(count, idvar = "site", timevar = "latbi", direction = "wide")
 locations <- merge(locations, count_wide, by.x = "name", by.y = "site", all.x = TRUE)
-colnames(locations) <- c("Provenance name", "Longitude", "Latitude", 
+colnames(locations) <- c("Provenance name", "Longitude", "Latitude",
+                         "MAT", "MSP", "FFP",
                          "A. incana",
                          "B. alleghaniensis",
                          "B. papyrifera",
                          "B. populifolia")
+
+locations <- locations[order(locations$Latitude),]
 
 # Species in italics
 wctablespp <- c("A. incana" = "\\textit{A. incana}", 
@@ -379,14 +387,11 @@ Integrating our results into models will also require considering how environmen
 <<Table count per spp per prov, results='asis', echo = FALSE>>=
 loctable <- data.frame(
   Provenance = locations$`Provenance name`,
-  Longitude  = locations$Longitude,
-  Latitude   = locations$Latitude,
   Ainc       = locations$`A. incana`,
   Ball       = locations$`B. alleghaniensis`,
   Bpap       = locations$`B. papyrifera`,
   Bpop       = locations$`B. populifolia`
 )
-loctable <- loctable[order(loctable$Latitude),]
 
 n_ainc <- sum(loctable$Ainc)
 n_ball <- sum(loctable$Ball)
@@ -397,12 +402,12 @@ header <- list(
   pos = list(-1),
   command = paste0(
     "\\hline\n",
-    "Provenance & Longitude & Latitude & ",
+    "Provenance & ",
     "\\textit{A. incana} & ",
     "\\textit{B. alleghaniensis} & ",
     "\\textit{B. papyrifera} & ",
     "\\textit{B. populifolia} \\\\\n",
-    " & & & ",
+    " & ",
     "$(n = ", n_ainc, ")$ & ",
     "$(n = ", n_ball, ")$ & ",
     "$(n = ", n_bpap, ")$ & ",
@@ -411,20 +416,41 @@ header <- list(
   )
 )
 
-tab <- xtable(loctable,
-              digits = c(0, 0, 1, 1, 0, 0, 0, 0),
-              caption = "Provenance coordinates and count per species and provenances out of a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire(NH)) and Canada (in Quebec (Qc)).",
-              label = "tab:provs"
+tab_species <- xtable(loctable,
+              digits = c(0, 0, 0, 0, 0, 0),
+              caption = "Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).",
+              label = "tab:tab_species"
 )
 
-print(tab,
+print(tab_species,
+      add.to.row = header,
       include.rownames = FALSE,
       include.colnames = FALSE,
-      add.to.row = header,
-      hline.after = c(-1, nrow(loctable)),
-      sanitize.text.function = identity,
-      caption.placement = "top")
+      caption.placement = "top",
+      sanitize.text.function = identity)
 @
+
+<<Table prov climate, results='asis', echo = FALSE>>=
+climtable <- data.frame(
+  Provenance = locations$`Provenance name`,
+  Latitude   = locations$Latitude,
+  Longitude  = locations$Longitude,
+  MAT        = locations$MAT,
+  MSP        = locations$MSP,
+  FFP        = locations$FFP
+)
+
+tab_climate <- xtable(climtable,
+              digits = c(0, 0, 1, 1, 1, 0, 0),
+              caption = "Provenance coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \\degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted the climate variables at each provenance from \\citep{wang_locally_2016}",
+              label = "tab:climate"
+)
+
+print(tab_climate,
+      include.rownames = FALSE,
+      caption.placement = "top",
+      sanitize.text.function = identity)
+@ 
 
 % Phenology observations time series
 \begin{figure}[!ht]
