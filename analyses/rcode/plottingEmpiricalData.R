@@ -259,7 +259,14 @@ meanbb <- aggregate(budburst ~ year, emp, FUN = mean)
 maxbb <- aggregate(budburst ~ year, emp, FUN = max)
 bb <- merge(minbb, meanbb, by = "year")
 bb <- merge(bb, maxbb, by = "year")
-colnames(bb) <- c("year", "First", "Average", "Last")
+
+minbs <- aggregate(budset ~ year, emp, FUN = min)
+meanbs <- aggregate(budset ~ year, emp, FUN = mean)
+maxbs <- aggregate(budset ~ year, emp, FUN = max)
+bs <- merge(minbs, meanbs, by = "year")
+bs <- merge(bs, maxbs, by = "year")
+
+colnames(bs) <- c("year", "First", "Average", "Last")
 
 axissize <- 1.2
 labsize <- 1.5
@@ -283,10 +290,15 @@ for (yr in sort(unique(comb2$year))) { # i =1
        cex.axis = axissize)
   
   bbx <- bb[bb$year == yr,]
+  bsx <- bs[bs$year == yr,]
   
   segments(x0 = bbx$First,   y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "#247d3f")
   segments(x0 = bbx$Average, y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "black")
   segments(x0 = bbx$Last,    y0 = 0, y1 = 5, lwd = 2.4, lty = 1, col = "#da7901")
+  
+  segments(x0 = bsx$First,   y0 = 0, y1 = 5, lwd = 2.4, lty = 2, col = "#247d3f")
+  segments(x0 = bsx$Average, y0 = 0, y1 = 5, lwd = 2.4, lty = 2, col = "black")
+  segments(x0 = bsx$Last,    y0 = 0, y1 = 5, lwd = 2.4, lty = 2, col = "#da7901")
   
   if(yr == min(unique(comb2$year))) {
     legend("topright", legend = c("First", "Average", "Last"),
@@ -309,16 +321,22 @@ emp$latbi[which(emp$latbi %in% "Betula populifolia")] <- "B. populifolia"
 rw$latbi <- emp$latbi[match(rw$spp, emp$spp)]
 
 
-
-set.seed(7)
-
 rw$newid <- paste0("atop(bolditalic('", rw$latbi, "'), bold('", rw$site, "_", rw$plot, "_", rw$replicate, "'))")
 emp$newid <- paste0("atop(bolditalic('", emp$latbi, "'), bold('", emp$site, "_", emp$plot, "_", emp$replicate, "'))")
+
 vec <- unique(emp$newid)
-suby <- subset(rw, newid %in% sample(vec, 20) & year > 2015 & year < 2024)
-nrow(suby)
+# one row per individual, with species attached
+treeInfo <- unique(emp[, c("newid", "latbi")])
+
+# 1 individual per species
+oneEach <- tapply(treeInfo$newid, treeInfo$latbi, function(x) sample(x, 5))
+
+suby <- subset(rw, newid %in% unlist(oneEach))
 suby <- suby[!duplicated(paste(suby$newid, suby$year)),]
+
 ids <- unique(suby$newid)
+ids <- ids[order(ids)]
+set.seed(7)
 
 pdf("figures/empiricalData/rwXyearAll.pdf", width = 10, height = 8)
 par(mfrow = c(4,5),
@@ -353,7 +371,8 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
 }
 dev.off()
 
-suby <- subset(rw, treeid %in% sample(vec, 20) & year > 2017 & year < 2021)
+suby <- subset(rw, newid %in% ids & year > 2017 & year < 2021)
+
 # suby <- subset(rw, treeid %in% sample(vec, 20))
 pdf("figures/empiricalData/rwXyearRestricted.pdf",
     width = 8, height = 10)
