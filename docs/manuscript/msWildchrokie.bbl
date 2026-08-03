@@ -1,4 +1,4 @@
-\begin{thebibliography}{92}
+\begin{thebibliography}{93}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -510,6 +510,10 @@ Piao, S., Liu, Q., Chen, A., Janssens, I.A., Fu, Y., Dai, J., Liu, L., Lian,
 Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
   plants: from trees to ecosystems. \emph{New Phytologist} \textbf{191},
   926--941.
+
+\bibitem[{{R Core Team}(2021)}]{rcoreteam_language_2021}
+{R Core Team} (2021) R: {A} {Language} and {Environment} for {Statistical}
+  {Computing}.
 
 \bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
   Kahle}]{radenPotentialIntraannualDensity2020a}
