@@ -385,7 +385,6 @@ Integrating our results into models will also require considering how environmen
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % SUPPLEMENT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-%DlAug1: some of the captions need updating to 90% UI as well; Fig S2 & S10 are missing x-axis labels
 
 \clearpage
 
@@ -828,7 +827,7 @@ print(xtable(binded,
 % Figure mu atreeid full
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
-\caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 and 90\% uncertainty intervals.}
+\caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
@@ -849,7 +848,8 @@ print(xtable(binded,
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
-\caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see 'Data analyses' section in Methods for more details) for each species. We report estimates as mean and 90\% uncertainty intervals across our four different predictors (growing degree days, growing season length, start of season and end of season).}
+\caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see 'Data analyses' section in Methods for more details) for each species. We report mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor (growing degree days, growing season length, start of season and end of season).)
+}
 \label{fig:bsppZscored}
 \end{figure}
 
