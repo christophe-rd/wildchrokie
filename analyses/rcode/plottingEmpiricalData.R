@@ -259,6 +259,7 @@ meanbb <- aggregate(budburst ~ year, emp, FUN = mean)
 maxbb <- aggregate(budburst ~ year, emp, FUN = max)
 bb <- merge(minbb, meanbb, by = "year")
 bb <- merge(bb, maxbb, by = "year")
+colnames(bb) <- c("year", "First", "Average", "Last")
 
 minbs <- aggregate(budset ~ year, emp, FUN = min)
 meanbs <- aggregate(budset ~ year, emp, FUN = mean)
@@ -340,7 +341,7 @@ set.seed(7)
 
 pdf("figures/empiricalData/rwXyearAll.pdf", width = 10, height = 8)
 par(mfrow = c(4,5),
-    mar = c(2, 3, 3, 0.5),
+    mar = c(4, 3, 3, 0.5),
     mgp = c(1.5, 0.5, 0))
 
 year <- as.integer(suby$year)
@@ -352,7 +353,7 @@ for(i in ids) { # i = "BETPOP_HF4_P9"
        pch = 16,
        cex = 1.5,
        main = "",
-       xlab = "",
+       xlab = "Year",
        xaxt = "n",
        ylab = "Ring width (mm)",
        tck = -0.02,
