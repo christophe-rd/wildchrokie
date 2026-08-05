@@ -40,14 +40,14 @@ source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/c
 
 samples <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
 climna <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/climateNA.csv")
-climna$site_name <- c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)")
+climna$site_name <- c("Arnold Arboretum (MA, USA)", "Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Dartmouth College (NH, USA)", "St-Hippolyte (Qc, Canada)")
 
 options(digits = 2)
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
-  Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
-  Latitude   = c( 42.55,  44.11,  44.92,  45.98)
+  name       = c("Arnold Arboretum (MA, USA)", "Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Dartmouth College (NH, USA)", "St-Hippolyte (Qc, Canada)"),
+  Longitude  = c(-71.13, -72.20,  -71.00, -70.66, -74.01),
+  Latitude   = c(42.296, 42.55,  44.11,  44.92,  45.98)
 )
 
 locations$MAT <- climna$MAT[match(locations$name, climna$site_name)]
@@ -60,7 +60,8 @@ count <- aggregate(treeid ~ latbi + site, emp,
 species <- unique(count$latbi)
 
 count_wide <- reshape(count, idvar = "site", timevar = "latbi", direction = "wide")
-locations <- merge(locations, count_wide, by.x = "name", by.y = "site", all.x = TRUE)
+
+locations <- merge(locations[2:5,], count_wide, by.x = "name", by.y = "site", all.x = TRUE)
 colnames(locations) <- c("Provenance name", "Longitude", "Latitude",
                          "MAT", "MSP", "FFP",
                          "A. incana",
@@ -363,12 +364,12 @@ Studies including an even wider span of growth strategies across species may fin
 % However, our results may have implications beyond how mature forests function. 
 %DlAug1: It is not clear what you are trying to say in this last sentence, I think it could either be cut or expanded on.
 
-Our focus on juvenile trees may suggest how forests regenerate and assemble with the longer and warmer seasons of anthropogenic climate change. Plant phenology research suggested that earlier seasons with warming favor species that shift earlier the most, with many studies focused on invasive species appearing to support this \citep{wolkovich_temperaturedependent_2013,zettlemoyer_phenology_2019}. Yet, these studies are often on herbaceous species, and our results, along with other recent work \citep{zani_increased_2020,zohner_effect_2023}, suggest mid- and later-season effects may have underappreciated performance implications in woody species. Thus, more studies of how later season events correlate with invasions, and forest assembly more generally, could help understand how warming will impact forest regeneration.
+Our focus on juvenile trees may suggest how forests regenerate and assemble with the longer and warmer seasons of anthropogenic climate change. Plant phenology research suggested that earlier seasons with warming favor species that shift earlier the most, with many studies focused on invasive species appearing to support this \citep{wolkovich_temperaturedependent_2013,zettlemoyer_phenology_2019}. Yet, these studies are often on herbaceous species, and our results, along with other recent work \citep{zani_increased_2020,zohner_effect_2023}, suggest mid- and later-season effects may have underappreciated performance implications in woody species. Thus, more studies of how later season events correlate with invasions, and forest assembly more generally, could help understand how warming will impact forest regeneration and range expansion.
 
 Our results also suggest assembly models may need less of a focus on population-level differences than previously suggested \citep{cavender-bares_diversification_2019}. While studies of large latitudinal gradients have found lower growth in trees sourced from poleward latitudes \citep{aitken_time_2016,soolanayakanahally_timing_2013}, we found that growth did not change across a latitudinal gradient of 3.5\degree. Thus, at least across this latitudinal range, local adaptation on growth appears weak. Supporting this, we found no evidence of a shifting end of season across provenances, despite decades of work finding that end of season events, such as budset, are usually more locally adapted than start of season events such as leafout \citep{oleksyn_growth_1992,howe_photoperiodic_1995,mimura_adaptive_2007,soolanayakanahally_timing_2013,zeng_weak_2024}. Further, a study of the same common garden including all tree and shrub species found that the end of season appeared to vary strongly by year and shift earlier with earlier start of season \citep{buonaiuto_early_2026}, suggesting that the end of season may vary more than currently proposed \citep{alberto_potential_2013}. Taken together, these results imply that our current understanding of budset being strongly locally adapted, and thus varying little with temperature or the start of season, needs more study. 
 
 \subsection*{Implications for large-scale vegetation modeling}
-Leveraging a rarely available dataset of tree growth coupled with leaf phenology for the start and end of season across provenances, we found an overall positive response from multiple tree species to warmer seasons, which has important implications for carbon models. While juvenile trees store little carbon compared to their adult forms, they are crucial for forest regeneration \citep[as discussed above, and see][]{luu_importance_2024}. In addition to their ecological role, juvenile trees generally predict adult tree responses qualitatively \citep{augspurger_differences_2003,wolkovich_why_2025}, despite certain ontogenic differences in stress residence and mortality rate across life stages \citep{caron_thermal_2021}. Thus our results on young trees can likely inform how their adult counterparts will respond to changing growing season conditions.
+Leveraging a rarely available dataset of tree growth coupled with leaf phenology for the start and end of season across provenances, we found an overall positive response from multiple tree species to warmer seasons, which has important implications for carbon models. While juvenile trees store little carbon compared to their adult forms, they are crucial for forest regeneration and range expansion \citep[as discussed above, and see][]{luu_importance_2024}. In addition to their ecological role, juvenile trees generally predict adult tree responses qualitatively \citep{augspurger_differences_2003,wolkovich_why_2025}, despite certain ontogenic differences in stress residence and mortality rate across life stages \citep{caron_thermal_2021}. Thus our results on young trees can likely inform how their adult counterparts will respond to changing growing season conditions.
 
 We also found that the start and end of season asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate carbon dynamic predictions \citep{li_comparison_2022}. Such models usually assume a temperature-sensitive start of season and a photoperiod-controlled, and thus less variable, end of season \citep{chen_comparison_2022,melaas_multiscale_2016}. This results in a disproportionate influence of the start compared to the end of season on tree growth, unlike what our results suggest. Such a representation of what drives the temporal boundaries of the growing season may feed into over-simplified explanations of the processes regulating tree growth with future climate change. 
 

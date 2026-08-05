@@ -27,10 +27,10 @@ climatesum <- read.csv("output/climateSummariesYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
 # Full site names
-emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH)"
-emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA)"
-emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc)"
-emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH)"
+emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH, USA)"
+emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA, USA)"
+emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc, Canada)"
+emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH, USA)"
   
 # Load parameter summaries generated in growthModelsMain.R ####
 sigma_df2     <- read.csv("output/GM_GDDparam_sigma.csv")
@@ -198,7 +198,7 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA)", "White Mountains (NH)", "Dartmouth College (NH)", "St-Hippolyte (Qc)"),
+  name       = c("Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Dartmouth College (NH, USA)", "St-Hippolyte (Qc, Canada)"),
   shortnames = c("HF", "WM", "GR", "SH"),   
   Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
@@ -208,8 +208,8 @@ site_order <- locations$name[order(locations$Latitude)]
 y_pos_site <- match(site_df2$site_name, site_order)
 
 # shapes for sites
-my_shapes <- c("Harvard Forest (MA)" = 19, "White Mountains (NH)" = 18, 
-               "Dartmouth College (NH)" = 15, "St-Hippolyte (Qc)" = 17)
+my_shapes <- c("Harvard Forest (MA, USA)" = 19, "White Mountains (NH, USA)" = 18, 
+               "Dartmouth College (NH, USA)" = 15, "St-Hippolyte (Qc, Canada)" = 17)
 
 yrshapes <- c("2018" = 15, "2019" = 16, "2020" = 17)
 
@@ -989,7 +989,6 @@ site_legend_order <- c("St-Hippolyte (Qc)", "Dartmouth College (NH)",
                        "White Mountains (NH)", "Harvard Forest (MA)")
 
 # site_num legen
-locations
 legend(x = max(treeid_df4$p95),
        y = max(treeid_df4$y_pos) - 15,
        legend = site_legend_order,
@@ -1467,10 +1466,10 @@ widths = c(0.7, 0.4))
 site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
 sitecolors <- site_color_map[site_df2$site_name]
 
-site_df2$lat <- locations$lat[match(site_df2$site_name, locations$names)]
-site_df2_gsl$lat <- locations$lat[match(site_df2_gsl$site_name, locations$names)]
-site_df2_sos$lat <- locations$lat[match(site_df2_sos$site_name, locations$names)]
-site_df2_eos$lat <- locations$lat[match(site_df2_eos$site_name, locations$names)]
+site_df2$lat <- locations$Latitude[match(site_df2$site_name, locations$names)]
+site_df2_gsl$lat <- locations$Latitude[match(site_df2_gsl$site_name, locations$names)]
+site_df2_sos$lat <- locations$Latitude[match(site_df2_sos$site_name, locations$names)]
+site_df2_eos$lat <- locations$Latitude[match(site_df2_eos$site_name, locations$names)]
 
 lat_labels <- locations$lat[match(site_order,  locations$name)]
 
@@ -1556,8 +1555,8 @@ sitecolors  <- site_color_map[site_df2$site_name]
 lat_labels <- locations$Latitude[match(site_order, locations$name)]
 
 # mu plot for site
-pdf(file = "figures/growthModelsMain/muasite.pdf", width = 7, height = 4)
-par(mar = c(4, 10, 1, 7))
+pdf(file = "figures/growthModelsMain/muasite.pdf", width = 8, height = 4)
+par(mar = c(4, 13, 1, 7))
 plot(site_df2$mean, y_pos_site,
      xlim = c(-0.5, 0.5), ylim = c(0.5, n_site + 0.5),
      xlab = "Provenance effect", ylab = "",
