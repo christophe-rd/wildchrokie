@@ -252,7 +252,7 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 % Question 2
 %-------------------------------------------------------------------------------
 Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. Yet, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species for which a longer calendar season increased growth: $\beta =$ %DlAug1: to avoid confusion, you could clarify why this value is negative
--7.00\% (UI: -12.51, -1.16); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_GSL}). {\Bpop} trended in the opposite direction ($\beta =$
+-7.00\% (UI: -12.51, -1.16); more growth with an earlier start of season is represented as a negative slope; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_GSL}). {\Bpop} trended in the opposite direction ($\beta =$
 5.17\% (UI: -6.55, 17.51); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_EOS}). {\Ball}, which did not grow more with a longer calendar season, grew less with an earlier start of season ($\beta =$
 10.63\% (UI: 0.34, 21.50); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_SOS})---but more with a later end of season ($\beta =$ 
 12.22\% (UI: 5.16, 19.41)). Alongside {\Ball}, two other species grew more with a later end of season ({\Bpop}: $\beta =$
@@ -371,7 +371,7 @@ Integrating our results into models will also require considering how environmen
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).} 
@@ -383,26 +383,27 @@ Provenance & \textit{A. incana} & \textit{B. alleghaniensis} & \textit{B. papyri
 \hline
  \hline
   \hline
-Harvard Forest (MA, USA) & 7 & 0 & 4 & 7 \\ 
-  White Mountains (NH, USA) & 6 & 7 & 0 & 9 \\ 
-  Dartmouth College (NH, USA) & 8 & 7 & 2 & 9 \\ 
+Dartmouth College (NH, USA) & 8 & 7 & 2 & 9 \\ 
+  Harvard Forest (MA, USA) & 7 & 0 & 4 & 7 \\ 
   St-Hippolyte (Qc, Canada) & 8 & 6 & 1 & 0 \\ 
+  White Mountains (NH, USA) & 6 & 7 & 0 & 9 \\ 
    \hline
 \end{tabular}
 \end{table}
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
-\caption{Provenance coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted the climate variables at each provenance from \citep{wang_locally_2016}} 
+\caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted the climate variables at each provenance from \citep{wang_locally_2016}} 
 \label{tab:climate}
 \begin{tabular}{lrrrrr}
   \hline
 Provenance & Latitude & Longitude & MAT & MSP & FFP \\ 
   \hline
-Harvard Forest (MA, USA) & 42.5 & -72.2 & 6.8 & 434 & 128 \\ 
+Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 7.4 & 450 & 133 \\ 
+  Harvard Forest (MA, USA) & 42.5 & -72.2 & 6.8 & 434 & 128 \\ 
   White Mountains (NH, USA) & 44.1 & -71.0 & 3.2 & 490 & 110 \\ 
   Dartmouth College (NH, USA) & 44.9 & -70.7 & 3.4 & 472 & 121 \\ 
   St-Hippolyte (Qc, Canada) & 46.0 & -74.0 & 9.8 & 420 & 162 \\ 
@@ -426,7 +427,7 @@ Harvard Forest (MA, USA) & 42.5 & -72.2 & 6.8 & 434 & 128 \\
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -461,7 +462,7 @@ $\alpha$ & -0.57 & -4.61 & -2.30 & 1.14 & 3.57 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -495,7 +496,7 @@ $\alpha$ & 0.17 & -3.84 & -1.48 & 1.83 & 4.16 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -529,7 +530,7 @@ $\alpha$ & 1.08 & -2.52 & -0.44 & 2.56 & 4.77 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -563,7 +564,7 @@ $\alpha$ & -1.40 & -5.52 & -3.10 & 0.32 & 2.70 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -597,7 +598,7 @@ $\alpha$ & 0.62 & -4.52 & -1.50 & 2.77 & 5.84 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 14:43:31 2026
+% Wed Aug  5 17:31:03 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output ($\beta$) of our GDD parameters (see Table \ref{tab:tab_GDD} for untransformed parameter estimates), converted in \% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\% and 50\% uncertainty intervals.} 
