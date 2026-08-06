@@ -3602,7 +3602,7 @@ bpop_re <- bpop_re[order(bpop_re$lat),]
 p50wd <- 3
 p90wd <- 1.5
 
-pdf(file = "figures/growthModelsMain/muProvPerSpp.pdf", width = 7, height = 5)
+jpeg("figures/growthModelsMain/muProvPerSpp.jpeg", width = 12, height = 12, res = 400)
 par(mfrow = c(2, 2), mar = c(4, 10, 3, 1))
 
 plot(ainc_re$mu, 1:nrow(ainc_re), pch = 19, yaxt = "n", col = wccolslatbi["A. incana"],
