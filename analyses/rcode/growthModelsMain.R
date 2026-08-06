@@ -3531,9 +3531,6 @@ bpap <- subset(emp, spp_num == 3)
 bpop <- subset(emp, spp_num == 4)
 library(rstanarm)
 
-spp1fit <- stan_lmer(pgsGDD5 ~ 1 + 1|site + treeid,
-                     data = ainc)
-
 aincfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
                      data = ainc)
 ballfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
@@ -3543,48 +3540,78 @@ bpapfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
 bpopfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
                      data = bpop)
 
-get_site_re <- function(fit){
-  s <- summary(fit, pars = "varying")
-  site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
-  s <- s[site_rows, ]
-  data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
-             mu = s[, "mean"], lo = s[, "10%"], hi = s[, "90%"])
-}
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+##### Recover parameters #####
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+# thanks to claude for helping me recover the following
+s <- summary(aincfit, pars = "varying")
+site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
+s <- s[site_rows, ]
+ainc_re <- data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
+                      mu = s[, "mean"], p10 = s[, "10%"], p90 = s[, "90%"])
+ainc_re$site <- substr(ainc_re$site, 1,2)
 
-ainc_re <- get_site_re(aincfit)
-ball_re <- get_site_re(ballfit)
-bpap_re <- get_site_re(bpapfit)
-bpop_re <- get_site_re(bpopfit)
+s <- summary(ballfit, pars = "varying")
+site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
+s <- s[site_rows, ]
+ball_re <- data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
+                      mu = s[, "mean"], p10 = s[, "10%"], p90 = s[, "90%"])
+ball_re$site <- substr(ball_re$site, 1,2)
 
-allx <- range(c(ainc_re$lo, ainc_re$hi, ball_re$lo, ball_re$hi,
-                bpap_re$lo, bpap_re$hi, bpop_re$lo, bpop_re$hi))
+s <- summary(bpapfit, pars = "varying")
+site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
+s <- s[site_rows, ]
+bpap_re <- data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
+                      mu = s[, "mean"], p10 = s[, "10%"], p90 = s[, "90%"])
+bpap_re$site <- substr(bpap_re$site, 1,2)
 
-par(mfrow = c(2, 2), mar = c(4, 6, 3, 1))
+s <- summary(bpopfit, pars = "varying")
+site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
+s <- s[site_rows, ]
+bpop_re <- data.frame(site = sub("^b\\[\\(Intercept\\) site:|\\]$", "", site_rows),
+                      mu = s[, "mean"], p10 = s[, "10%"], p90 = s[, "90%"])
+bpop_re$site <- substr(bpop_re$site, 1,2)
 
-plot(ainc_re$mu, 1:nrow(ainc_re), pch = 19, yaxt = "n",
-     xlab = "site intercept estimates", ylab = "", main = "A. incana", xlim = allx)
-axis(2, at = 1:nrow(ainc_re), labels = ainc_re$site, las = 2, cex.axis = 0.8)
-segments(ainc_re$lo, 1:nrow(ainc_re), ainc_re$hi, 1:nrow(ainc_re))
+allx <- range(c(ainc_re$p10, ainc_re$p90, ball_re$p10, ball_re$p90,
+                bpap_re$p10, bpap_re$p90, bpop_re$p10, bpop_re$p90))
+
+emp$site_name <- NA
+emp$site_name[which(emp$site %in% "GR")] <- "Dartmouth College (NH, USA)"
+emp$site_name[which(emp$site %in% "HF")] <- "Harvard Forest (MA, USA)"
+emp$site_name[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc, Canada)"
+emp$site_name[which(emp$site %in% "WM")] <- "White Mountains (NH, USA)"
+
+ainc_re$site_name <- emp$site_name[match(ainc_re$site, emp$site)]
+ball_re$site_name <- emp$site_name[match(ball_re$site, emp$site)]
+bpap_re$site_name <- emp$site_name[match(bpap_re$site, emp$site)]
+bpop_re$site_name <- emp$site_name[match(bpop_re$site, emp$site)]
+
+pdf(file = "figures/growthModelsMain/muProvPerSpp.pdf", width = 7, height = 5)
+par(mfrow = c(2, 2), mar = c(4, 12, 3, 1))
+plot(ainc_re$mu, 1:nrow(ainc_re), pch = 19, yaxt = "n", col = wccolslatbi["A. incana"],
+     xlab = "Provenance effect", ylab = "", main = expression(italic("A. incana")), xlim = allx)
+axis(2, at = 1:nrow(ainc_re), labels = ainc_re$site_name, las = 2, cex.axis = 0.8)
+segments(ainc_re$p10, 1:nrow(ainc_re), ainc_re$p90, 1:nrow(ainc_re), col = wccolslatbi["A. incana"])
 abline(v = 0, lty = 2, col = "grey60")
 
-plot(ball_re$mu, 1:nrow(ball_re), pch = 19, yaxt = "n",
-     xlab = "site intercept estimates", ylab = "", main = "B. alleghaniensis", xlim = allx)
-axis(2, at = 1:nrow(ball_re), labels = ball_re$site, las = 2, cex.axis = 0.8)
-segments(ball_re$lo, 1:nrow(ball_re), ball_re$hi, 1:nrow(ball_re))
+plot(ball_re$mu, 1:nrow(ball_re), pch = 19, yaxt = "n", col = wccolslatbi["B. alleghaniensis"],
+     xlab = "Provenance effect", ylab = "", main = expression(italic("B. alleghaniensis")), xlim = allx)
+axis(2, at = 1:nrow(ball_re), labels = ball_re$site_name, las = 2, cex.axis = 0.8)
+segments(ball_re$p10, 1:nrow(ball_re), ball_re$p90, 1:nrow(ball_re), col = wccolslatbi["B. alleghaniensis"])
 abline(v = 0, lty = 2, col = "grey60")
 
-plot(bpap_re$mu, 1:nrow(bpap_re), pch = 19, yaxt = "n",
-     xlab = "site intercept estimates", ylab = "", main = "B. papyrifera", xlim = allx)
-axis(2, at = 1:nrow(bpap_re), labels = bpap_re$site, las = 2, cex.axis = 0.8)
-segments(bpap_re$lo, 1:nrow(bpap_re), bpap_re$hi, 1:nrow(bpap_re))
+plot(bpap_re$mu, 1:nrow(bpap_re), pch = 19, yaxt = "n", col = wccolslatbi["B. papyrifera"],
+     xlab = "Provenance effect", ylab = "", main = expression(italic("B. papyrifera")), xlim = allx)
+axis(2, at = 1:nrow(bpap_re), labels = bpap_re$site_name, las = 2, cex.axis = 0.8)
+segments(bpap_re$p10, 1:nrow(bpap_re), bpap_re$p90, 1:nrow(bpap_re), col = wccolslatbi["B. papyrifera"])
 abline(v = 0, lty = 2, col = "grey60")
 
-plot(bpop_re$mu, 1:nrow(bpop_re), pch = 19, yaxt = "n",
-     xlab = "site intercept estimates", ylab = "", main = "B. populifolia", xlim = allx)
-axis(2, at = 1:nrow(bpop_re), labels = bpop_re$site, las = 2, cex.axis = 0.8)
-segments(bpop_re$lo, 1:nrow(bpop_re), bpop_re$hi, 1:nrow(bpop_re))
+plot(bpop_re$mu, 1:nrow(bpop_re), pch = 19, yaxt = "n", col = wccolslatbi["B. populifolia"],
+     xlab = "Provenance effect", ylab = "", main = expression(italic("B. populifolia")), xlim = allx)
+axis(2, at = 1:nrow(bpop_re), labels = bpop_re$site_name, las = 2, cex.axis = 0.8)
+segments(bpop_re$p10, 1:nrow(bpop_re), bpop_re$p90, 1:nrow(bpop_re), col = wccolslatbi["B. populifolia"])
 abline(v = 0, lty = 2, col = "grey60")
 
-par(mfrow = c(1, 1))
+dev.off()
 }
 
