@@ -168,12 +168,12 @@ We mounted cores on wooden mounts and sanded both the cores and cross-sections u
 We performed visual cross dating. This consists of assigning a calendar year to each ring and comparing the year-to-year growth variation and anomalies across replicates of the same species \citep{cook_methods_1990}. We did not perform statistical crossdating or detrending because our chronologies (number of years of data) were extremely short \citep{radenPotentialIntraannualDensity2020a} and showed no evidence of consistent allometric trends (Figure \ref{fig:allom}). We controlled for effects of different years by including `year' in our models (see equation \ref{eq:mainMdl} in `Data analyses' below).
 
 \subsection*{Data analyses}
-To understand how growth shifted with season length, we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout for the start of season (SOS) and budset for the end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change in \% with the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change in \% per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero.
+To understand how growth shifted with season length, we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length, measured in four different ways: GDD, GSL, SOS and EOS. We calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout for the start of season (SOS) and budset for the end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change in \% with the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change in \% per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero \citep{gelman_regression_2020}.
 
 For daily climate data across all the years of phenological sampling (2018-2020), we combined two sources. For 2018 and 2019, we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data were not available for that station after August 2020, we used data from the `Boston (Weld Hill)' weather station of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across years at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
 For each predictor, we estimated its effect on observed ring width ($i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
-%DlAug1: I am no expert, but why only define alpha prov and alpha treeid, and not alpha, alpah prov, and beta, with the "..." to denote the repetitive lines?
+
 \begin{equation}
 \begin{aligned} 
 ln(ringwidth)_i &\sim Normal(\mu, \sigma_y) \\
@@ -198,38 +198,6 @@ Because ring widths decrease with age---particularly with young trees (CITES)---
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % \clearpage
 \section{Results}
-%-------------------------------------------------------------------------------
-% Info
-%-------------------------------------------------------------------------------
-Our dataset comprises four deciduous tree species from four sites with leaf phenology data spanning three years (2018 to 2020) for a total of 
-239 leafout and 
-230 budset observations, yielding 
-227 complete growing seasons for 
-81 individuals. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest 
-(22.38$^\circ$C), 2020 the hottest 
-(23.07$^\circ$C), and 2018 in between %DlAug1: Should this be reported in table S2 for easy comparision?
-(22.85$^\circ$C). There was no drought for those three years, except in 2020, when a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
-The calendar and thermal seasons ranged from 
-90 days and 
-1465.1 GDD ({\Ball} in 
-2018) to 
-173 days and 
-2513.6 GDD ({\Ainc} in 
-2018; Figure \ref{fig:wcboxplotPred}a and b). 
-The earliest leafout was 
-22-Apr ({\Ainc} in
-2019) and the latest,
-05-Jun (also {\Ainc}, but in
-2020; Figure \ref{fig:wcboxplotPred}c). The earliest budset was 
-13-Aug ({\Ball} in
-2018) and the latest, 
-24-Oct ({\Ainc} in
-2018; Figure \ref{fig:wcboxplotPred}d. Finally, annual ring widths across years varied from 
-0.39 mm ({\Ball} in 
-2020) to 
-13.55 mm ({\Bpop} in 
-2018; Figure \ref{fig:wcboxplotRW}).  
-
 
 %-------------------------------------------------------------------------------
 % Question 1
@@ -251,7 +219,7 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 %-------------------------------------------------------------------------------
 % Question 2
 %-------------------------------------------------------------------------------
-Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. Yet, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species for which a longer calendar season increased growth: $\beta =$ %DlAug1: to avoid confusion, you could clarify why this value is negative
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. Yet, we found most species grew more with a later end of season, and only one species grew more with an earlier start of season ({\Ainc} (one of the two species for which a longer calendar season increased growth: $\beta =$
 -7.00\% (UI: -12.51, -1.16); more growth with an earlier start of season is represented as a negative slope; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_GSL}). {\Bpop} trended in the opposite direction ($\beta =$
 5.17\% (UI: -6.55, 17.51); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_EOS}). {\Ball}, which did not grow more with a longer calendar season, grew less with an earlier start of season ($\beta =$
 10.63\% (UI: 0.34, 21.50); Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_SOS})---but more with a later end of season ($\beta =$ 
@@ -265,8 +233,7 @@ Increased growth with longer seasons is often presumed to come from growth in th
 %-------------------------------------------------------------------------------
 % Comparison between GSL and GDD at both start and end of season
 %-------------------------------------------------------------------------------
-%DlAug1: This first sentence does not read like results, but I think could be easily revised or shortened and merged with the next sentence.
-These results suggest that a later EOS contributes more to growth than an earlier start of season, which could be due to the warmer days at the end of the season. Supporting this, we found that the addition of an estimated 7 days at the EOS increased growth across all species by 
+More growth with a later EOS could be due to the warmer days at the end of the season. Supporting this, we found that the addition of an estimated 7 days at the EOS increased growth across all species by 
 10.69\% (UI: 6.11, 15.48), compared to an increase of
 7.16\% (UI: 4.10, 10.31) from an earlier SOS (estimated using our model of GDD shown in Figure \ref{fig:wcmuplotbspp},  see `Data analyses' section in Methods for more details; Table \ref{tab:phenogain}). Differences in magnitude between an extension of SOS versus EOS were similar across species (Table \ref{tab:phenogain}).
 
@@ -330,8 +297,7 @@ Here we used 81 juvenile trees of four species from four provenances to study ho
 
 Our results support the idea that the thermal season is a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}. By accounting for differences in daily temperatures, the thermal season may be more closely aligned to when and how fast plants can grow each day compared to the calendar season, which assumes a stable influence of each day on growth \citep{korner_four_2023}. Thus, the short and cool spring days early in the season count for less in the thermal season than the calendar season \citep{buonaiuto_early_2026}. Further supporting this, when we disentangled the calendar season by using the start and end of season separately, we found a larger response of growth to the end of season, with little effect of the start of season. The finding that the end of season appears more related to growth than the start of season is aligned with increasing work suggesting that the start and end of season together may dynamically determine growth \citep{zohner_effect_2023}. This implies that research focusing solely on the start of season \citep{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016} could miss when longer seasons lead to more growth. Phenology research that strongly focuses on the start of season also implies that we may ignore an important part of the season for growth. While studies have long called for more research on the end of season \citep{gallinat_autumn_2015,gunderson_forest_2012,piao_plant_2019,richardson_terrestrial_2012}, our results suggest we may especially need more work that monitors how growth and phenology shift across the season \citep{zani_increased_2020,zohner_effect_2023}. More studies using data with a finer temporal scale (e.g., daily or weekly data through dendrometers and/or xylogenesis) could confirm if most growth occurs closer to the end versus the start of season. To date, these studies showed strong species differences in when most growth happens during the season. However, most of these studies were done on a small number of European and/or conifer species \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}, highlighting that we need more data across species spanning a wider range of life history strategies.
 
-Our results suggest different growth strategies between species may yield different responses to longer seasons. %DlAug1: I am not sure all readers will be familiar with the term ruderal, maybe add some more context "ruderal or pioneer..."
-Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
+Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
 
 Studies including an even wider span of growth strategies across species may find further differences. Our four study species are all relatively fast-growing, which should allow them to track changing conditions better than their slower-growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used slower-growing, more conservative species \citep[such as \textit{Quercus};][]{burns_silvics_1990}. Additionally, we used juvenile trees, which tend to react more and could in part explain why they grew more with warmer seasons \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. If these trees grew in a mature forest, they would have been below the canopy, competing for light and other resources and thus might not have responded as much as we observed in our competition-limited conditions \citep{polgar_leafout_2011}. We grew our trees in a common garden setting with potentially more space between trees (spacing was between 1.5 and 3 m), without any shade cloth. While other studies on mature trees have found the same response, our results may have been more muted if the trees were grown in a forest setting. 
 % However, our results may have implications beyond how mature forests function. 
@@ -371,7 +337,7 @@ Integrating our results into models will also require considering how environmen
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).} 
@@ -393,10 +359,10 @@ Dartmouth College (NH, USA) & 8 & 7 & 2 & 9 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
-\caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted the climate variables at each provenance from \citep{wang_locally_2016}} 
+\caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (22.4 \degree C), 2020 the hottest (23.1 \degree C), and 2018 in between (22.9 \degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.} 
 \label{tab:climate}
 \begin{tabular}{lrrrrr}
   \hline
@@ -411,6 +377,11 @@ Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 7.4 & 450 & 133 \\
 \end{tabular}
 \end{table}
 
+
+% We extracted these climate variables at each provenance from \\citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest 
+% (\wcjja$tmeanmean[wcjja$year == 2019]$^\circ$C), 2020 the hottest 
+% (\wcjja$tmeanmean[wcjja$year == 2020]$^\circ$C), and 2018 in between 
+% (\wcjja$tmeanmean[wcjja$year == 2018]$^\circ$C). There was no drought for those three years, except in 2020, when a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}
 
 % Phenology observations time series
 \begin{figure}[!ht]
@@ -427,10 +398,10 @@ Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 7.4 & 450 & 133 \\
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
-\caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
+\caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details. } 
 \label{tab:tab_GDD}
 \begin{tabular}{llllll}
   \hline
@@ -462,7 +433,7 @@ $\alpha$ & -0.57 & -4.61 & -2.30 & 1.14 & 3.57 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -496,7 +467,7 @@ $\alpha$ & 0.17 & -3.84 & -1.48 & 1.83 & 4.16 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -530,7 +501,7 @@ $\alpha$ & 1.08 & -2.52 & -0.44 & 2.56 & 4.77 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -564,7 +535,7 @@ $\alpha$ & -1.40 & -5.52 & -3.10 & 0.32 & 2.70 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -598,7 +569,7 @@ $\alpha$ & 0.62 & -4.52 & -1.50 & 2.77 & 5.84 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug  5 17:31:03 2026
+% Thu Aug  6 10:26:14 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output ($\beta$) of our GDD parameters (see Table \ref{tab:tab_GDD} for untransformed parameter estimates), converted in \% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\% and 50\% uncertainty intervals.} 

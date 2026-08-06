@@ -412,6 +412,11 @@ print(tab_species,
 @
 
 <<Table prov climate, results='asis', echo = FALSE>>=
+
+t2019 <- wcjja$tmeanmean[wcjja$year == 2019]
+t2020 <- wcjja$tmeanmean[wcjja$year == 2020]
+t2018 <- wcjja$tmeanmean[wcjja$year == 2018]
+
 climtable <- data.frame(
   Provenance = locations$`Provenance name`,
   Latitude   = locations$Latitude,
@@ -421,17 +426,29 @@ climtable <- data.frame(
   FFP        = locations$FFP
 )
 
-tab_climate <- xtable(climtable,
-              digits = c(0, 0, 1, 1, 1, 0, 0),
-              caption = "Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \\degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \\citep{wang_locally_2016}.",
-              label = "tab:climate"
+# Than
+caption_text <- sprintf(
+  "Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \\degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \\citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (%.1f \\degree C), 2020 the hottest (%.1f \\degree C), and 2018 in between (%.1f \\degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \\citep{nationalcentersforenvironmentalinformationncei_north_2026}.",
+  t2019, t2020, t2018
+)
+
+
+tab_climate <- xtable(
+  climtable,
+  digits = c(0,0,1,1,1,0,0),
+  caption = caption_text,
+  label = "tab:climate"
 )
 
 print(tab_climate,
       include.rownames = FALSE,
-      caption.placement = "top",
-      sanitize.text.function = identity)
+      caption.placement = "top")
 @ 
+
+% We extracted these climate variables at each provenance from \\citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest 
+% (\\Sexpr{wcjja$tmeanmean[wcjja$year == 2019]}$^\circ$C), 2020 the hottest 
+% (\\Sexpr{wcjja$tmeanmean[wcjja$year == 2020]}$^\circ$C), and 2018 in between 
+% (\\Sexpr{wcjja$tmeanmean[wcjja$year == 2018]}$^\circ$C). There was no drought for those three years, except in 2020, when a moderate summer drought (June-August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}
 
 % Phenology observations time series
 \begin{figure}[!ht]
