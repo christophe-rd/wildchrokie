@@ -1,4 +1,4 @@
-\begin{thebibliography}{93}
+\begin{thebibliography}{90}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -337,13 +337,6 @@ Gibbs, D.A., Rose, M., Grassi, G., Melo, J., Rossi, S., Heinrich, V. \& Harris,
   N.L. (2025) Revised and updated geospatial monitoring of 21st century forest
   carbon fluxes. \emph{Earth System Science Data} \textbf{17}, 1217--1243.
 
-\bibitem[{González-González \emph{et~al.}(2013)González-González,
-  García-González \& Vázquez-Ruiz}]{gonzalez-gonzalez_comparative_2013}
-González-González, B.D., García-González, I. \& Vázquez-Ruiz, R.A. (2013)
-  Comparative cambial dynamics and phenology of {Quercus} robur {L}. and {Q}.
-  pyrenaica {Willd}. in an {Atlantic} forest of the northwestern {Iberian}
-  {Peninsula}. \emph{Trees} \textbf{27}, 1571--1585.
-
 \bibitem[{Grime(1977)}]{grime_evidence_1977}
 Grime, J.P. (1977) Evidence for the {Existence} of {Three} {Primary}
   {Strategies} in {Plants} and {Its} {Relevance} to {Ecological} and
@@ -358,6 +351,10 @@ Gunderson, C.A., Edwards, N.T., Walker, A.V., O'Hara, K.H., Campion, C.M. \&
   \textbf{18}, 2008--2025, \_eprint:
   https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1365-2486.2011.02632.x.
 
+\bibitem[{Habjørg(1978)}]{habjorg_photoperiodic_1978}
+Habjørg, A. (1978) Photoperiodic ecotypes in {Scandinavian} trees and shrubs.
+  .
+
 \bibitem[{Harrison \emph{et~al.}(2021)Harrison, Cramer, Franklin, Prentice,
   Wang, Brännström, De~Boer, Dieckmann, Joshi, Keenan, Lavergne, Manzoni,
   Mengoli, Morfopoulos, Peñuelas, Pietsch, Rebel, Ryu, Smith, Stocker \&
@@ -368,12 +365,6 @@ Harrison, S.P., Cramer, W., Franklin, O., Prentice, I.C., Wang, H.,
   Pietsch, S., Rebel, K.T., Ryu, Y., Smith, N.G., Stocker, B.D. \& Wright, I.J.
   (2021) Eco‐evolutionary optimality as a means to improve vegetation and
   land‐surface models. \emph{New Phytologist} \textbf{231}, 2125--2141.
-
-\bibitem[{Howe \emph{et~al.}(1995)Howe, Hackett, Furnier \&
-  Klevorn}]{howe_photoperiodic_1995}
-Howe, G.T., Hackett, W.P., Furnier, G.R. \& Klevorn, R.E. (1995) Photoperiodic
-  responses of a northern and southern ecotype of black cottonwood.
-  \emph{Physiologia Plantarum} \textbf{93}, 695--708.
 
 \bibitem[{Jeong \& Medvigy(2014)}]{jeong_macroscale_2014}
 Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
@@ -409,14 +400,6 @@ Li, Y., Zhang, W., Schwalm, C.R., Gentine, P., Smith, W.K., Ciais, P., Kimball,
   Wu, X. (2023) Widespread spring phenology effects on drought recovery of
   {Northern} {Hemisphere} ecosystems. \emph{Nature Climate Change} \textbf{13},
   182--188.
-
-\bibitem[{Loughnan \emph{et~al.}(2025)Loughnan, Jones, Legault, Buonaiuto,
-  Chamberlain, Ettinger, Garner, Morales‐Castilla, Sodhi \&
-  Wolkovich}]{loughnan_budburst_2025}
-Loughnan, D., Jones, F.A.M., Legault, G., Buonaiuto, D., Chamberlain, C.,
-  Ettinger, A., Garner, M., Morales‐Castilla, I., Sodhi, D. \& Wolkovich,
-  E.M. (2025) Budburst timing within a functional trait framework.
-  \emph{Journal of Ecology} \textbf{113}, 3787--3798.
 
 \bibitem[{Luu \emph{et~al.}(2024)Luu, Ris~Lambers, Lutz, Metz \&
   Snell}]{luu_importance_2024}
@@ -458,11 +441,6 @@ Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
   (2006) European phenological response to climate change matches the warming
   pattern. \emph{Global Change Biology} \textbf{12}, 1969--1976.
 
-\bibitem[{Mimura \& Aitken(2007)}]{mimura_adaptive_2007}
-Mimura, M. \& Aitken, S.N. (2007) Adaptive gradients and isolation-by-distance
-  with postglacial migration in {Picea} sitchensis. \emph{Heredity}
-  \textbf{99}, 224--232.
-
 \bibitem[{{National Centers for Environmental Information
   (NCEI)}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
 {National Centers for Environmental Information (NCEI)} (2026) North {American}
@@ -473,13 +451,6 @@ Mimura, M. \& Aitken, S.N. (2007) Adaptive gradients and isolation-by-distance
 {National Oceanic and Atmospheric Administration (NOAA)} (2026) Local
   {Climatological} {Data} {Station} {Details}: {Boston} {Logan} {Internal}
   {Airport}, {MA} {US}, {WBAN}:14739.
-
-\bibitem[{Oleksyn \emph{et~al.}(1992)Oleksyn, Tjoelker \&
-  Reich}]{oleksyn_growth_1992}
-Oleksyn, J., Tjoelker, M.G. \& Reich, P.B. (1992) Growth and biomass
-  partitioning of populations of {European} \textit{{Pinus} sylvestris} {L}.
-  under simulated 50° and 60° {N} daylengths: evidence for photoperiodic
-  ecotypes. \emph{New Phytologist} \textbf{120}, 561--574.
 
 \bibitem[{Pan \emph{et~al.}(2024)Pan, Birdsey, Phillips, Houghton, Fang,
   Kauppi, Keith, Kurz, Ito, Lewis, Nabuurs, Shvidenko, Hashimoto, Lerink,
@@ -647,6 +618,14 @@ Wolfe, D.W., Schwartz, M.D., Lakso, A.N., Otsuki, Y., Pool, R.M. \& Shaulis,
   N.J. (2005) Climate change and shifts in spring phenology of three
   horticultural woody perennials in northeastern {USA}. \emph{International
   Journal of Biometeorology} \textbf{49}, 303--309.
+
+\bibitem[{Wolkovich \emph{et~al.}(2014)Wolkovich, Cook \&
+  Davies}]{wolkovich_progress_2014}
+Wolkovich, E.M., Cook, B.I. \& Davies, T.J. (2014) Progress towards an
+  interdisciplinary science of plant phenology: building predictions across
+  space, time and species diversity. \emph{New Phytologist} \textbf{201},
+  1156--1162, \_eprint:
+  https://onlinelibrary.wiley.com/doi/pdf/10.1111/nph.12599.
 
 \bibitem[{Wolkovich \emph{et~al.}(2013)Wolkovich, Davies, Schaefer, Cleland,
   Cook, Travers, Willis \& Davis}]{wolkovich_temperaturedependent_2013}
