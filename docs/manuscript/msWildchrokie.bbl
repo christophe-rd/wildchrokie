@@ -1,4 +1,4 @@
-\begin{thebibliography}{90}
+\begin{thebibliography}{94}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -314,6 +314,11 @@ Fu, Y.H., Piao, S., Op~De~Beeck, M., Cong, N., Zhao, H., Zhang, Y., Menzel, A.
 \bibitem[{Furlow(1997)}]{furlow_alnus_1997}
 Furlow, J.J. (1997) Flora of {North} {America} {North} of {Mexico}.
 
+\bibitem[{Gabry \& Goodrich(2016)}]{gabryRstanarmBayesianApplied2016}
+Gabry, J. \& Goodrich, B. (2016) rstanarm: {Bayesian} {Applied} {Regression}
+  {Modeling} via {Stan}. Institution: Comprehensive R Archive Network Pages:
+  2.32.1.
+
 \bibitem[{Gallinat \emph{et~al.}(2015)Gallinat, Primack \&
   Wagner}]{gallinat_autumn_2015}
 Gallinat, A.S., Primack, R.B. \& Wagner, D.L. (2015) Autumn, the neglected
@@ -330,6 +335,11 @@ Gao, S., Liang, E., Liu, R., Babst, F., Camarero, J.J., Fu, Y.H., Piao, S.,
 \bibitem[{Gelman \& Hill(2006)}]{gelman_data_2006}
 Gelman, A. \& Hill, J. (2006) \emph{Data {Analysis} {Using} {Regression} and
   {Multilevel}/{Hierarchical} {Models}}. Cambridge University Press, 1 edn.
+
+\bibitem[{Gelman \emph{et~al.}(2020)Gelman, Hill \&
+  Vehtari}]{gelman_regression_2020}
+Gelman, A., Hill, J. \& Vehtari, A. (2020) \emph{Regression and {Other}
+  {Stories}}. Cambridge University Press, 1 edn.
 
 \bibitem[{Gibbs \emph{et~al.}(2025)Gibbs, Rose, Grassi, Melo, Rossi, Heinrich
   \& Harris}]{gibbs_revised_2025}
@@ -379,6 +389,18 @@ Keenan, T.F., Gray, J., Friedl, M.A., Toomey, M., Bohrer, G., Hollinger, D.Y.,
   Richardson, A.D. (2014) Net carbon uptake has increased through
   warming-induced changes in temperate forest phenology. \emph{Nature Climate
   Change} \textbf{4}, 598--604.
+
+\bibitem[{Keller \emph{et~al.}(2011)Keller, Soolanayakanahally, Guy, Silim,
+  Olson \& Tiffin}]{keller_climatedriven_2011}
+Keller, S.R., Soolanayakanahally, R.Y., Guy, R.D., Silim, S.N., Olson, M.S. \&
+  Tiffin, P. (2011) Climate‐driven local adaptation of ecophysiology and
+  phenology in balsam poplar, \textit{{Populus} balsamifera} {L}.
+  ({Salicaceae}). \emph{American Journal of Botany} \textbf{98}, 99--108.
+
+\bibitem[{Kramer(1936)}]{kramer_effect_1936}
+Kramer, P.J. (1936) {EFFECT} {OF} {VARIATION} {IN} {LENGTH} {OF} {DAY} {ON}
+  {GROWTH} {AND} {DORMANCY} {OF} {TREES}. \emph{Plant Physiology} \textbf{11},
+  127--137.
 
 \bibitem[{Körner \emph{et~al.}(2023)Körner, Möhl \&
   Hiltbrunner}]{korner_four_2023}
@@ -441,16 +463,16 @@ Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
   (2006) European phenological response to climate change matches the warming
   pattern. \emph{Global Change Biology} \textbf{12}, 1969--1976.
 
-\bibitem[{{National Centers for Environmental Information
-  (NCEI)}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
-{National Centers for Environmental Information (NCEI)} (2026) North {American}
+\bibitem[{{National Centers for Environmental
+  Information}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
+{National Centers for Environmental Information} (2026) North {American}
   {Drought} {Monitor}. Shortauthor: NCEI Accessed: 2026-04-22.
 
-\bibitem[{{National Oceanic and Atmospheric Administration
-  (NOAA)}(2026)}]{nationaloceanicandatmosphericadministration_local_2026}
-{National Oceanic and Atmospheric Administration (NOAA)} (2026) Local
-  {Climatological} {Data} {Station} {Details}: {Boston} {Logan} {Internal}
-  {Airport}, {MA} {US}, {WBAN}:14739.
+\bibitem[{{National Oceanic and Atmospheric
+  Administration}(2026)}]{nationaloceanicandatmosphericadministration_local_2026}
+{National Oceanic and Atmospheric Administration} (2026) Local {Climatological}
+  {Data} {Station} {Details}: {Boston} {Logan} {Internal} {Airport}, {MA} {US},
+  {WBAN}:14739.
 
 \bibitem[{Pan \emph{et~al.}(2024)Pan, Birdsey, Phillips, Houghton, Fang,
   Kauppi, Keith, Kurz, Ito, Lewis, Nabuurs, Shvidenko, Hashimoto, Lerink,
@@ -482,8 +504,8 @@ Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
   plants: from trees to ecosystems. \emph{New Phytologist} \textbf{191},
   926--941.
 
-\bibitem[{{R Core Team}(2021)}]{rcoreteam_language_2021}
-{R Core Team} (2021) R: {A} {Language} and {Environment} for {Statistical}
+\bibitem[{{R Core Team}(2025)}]{rcoreteam_language_2021}
+{R Core Team} (2025) R: {A} {Language} and {Environment} for {Statistical}
   {Computing}.
 
 \bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
