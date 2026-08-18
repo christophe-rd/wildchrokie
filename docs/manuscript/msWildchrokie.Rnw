@@ -250,7 +250,7 @@ Unlike its response to warmer thermal season, {\Ainc} grew more with longer cale
 \Sexpr{fmt_stat(b_gsl_per, "B. papyrifera")}), while the other two \textit{Betula} did not, though they trended in the same way ({\Ball}: $\beta =$
 \Sexpr{fmt_stat(b_gsl_per, "B. alleghaniensis")}, and {\Bpop}: $\beta =$
 \Sexpr{fmt_stat(b_gsl_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}b and f; Table \ref{tab:tab_GSL}). 
-On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD model were similar to ring width (see Table \ref{tab:BAItab}). % vvdm15aug: it was not similar for the GSL model?
+On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal and calendar season were similarly predictive (Figure \ref{fig:bsppZscored}). Results with basal area increment (BAI) for the GDD and GSL model were similar to ring width (see Table \ref{tab:BAItab} for GDD, and Table \ref{tab:BAItab_gsl} for GSL).
 
 %-------------------------------------------------------------------------------
 \subsection*{Growth at the start versus the end of the growing season}
@@ -668,7 +668,7 @@ print(tab_EOS,
 )
 @
 
-<<Table BAI Wildchrokie, results='asis', echo = FALSE>>=
+<<Table BAI for GDD Wildchrokie, results='asis', echo = FALSE>>=
 options(digits = 2)
 a_df2_BAI      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a_BAI.csv")
 sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma_BAI.csv")
@@ -738,6 +738,82 @@ binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 print(xtable(binded,
              caption = "Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
              label = "tab:BAItab"),
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
+      caption.placement = "top")
+@
+
+<<Table BAI for GSL Wildchrokie, results='asis', echo = FALSE>>=
+options(digits = 2)
+a_df2_BAI      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_a_BAI.csv")
+sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma_BAI.csv")
+bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp_BAI.csv")
+treeid_df2_BAI <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_treeid_BAI.csv")
+aspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp_BAI.csv")
+site_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site_BAI.csv")
+ayear_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear_BAI.csv")
+
+bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_BAI$spp, emp$spp_num)]
+site_df2_BAI$site_name <- emp$site[match(site_df2_BAI$site, emp$site_num)]
+aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_BAI$spp, emp$spp_num)]
+ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
+
+alpha <- data.frame(
+  Parameter = c("$\\alpha$"),
+  Mean = sprintf("%.2f", a_df2_BAI$mean),
+  P5   = sprintf("%.2f", a_df2_BAI$p5),
+  P25  = sprintf("%.2f", a_df2_BAI$p25),
+  P75  = sprintf("%.2f", a_df2_BAI$p75),
+  P95  = sprintf("%.2f", a_df2_BAI$p95)
+)
+sigma <- data.frame(
+  Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
+                "$\\sigma_{\\alpha_{prov}}$",
+                "$\\sigma_{y}$"),
+  Mean = sprintf("%.2f", sigma_df2_BAI$mean),
+  P5   = sprintf("%.2f", sigma_df2_BAI$p5),
+  P25  = sprintf("%.2f", sigma_df2_BAI$p25),
+  P75  = sprintf("%.2f", sigma_df2_BAI$p75),
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95)
+)
+bspp <- data.frame(
+  Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", bspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", bspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", bspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", bspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95)
+)
+aspp <- data.frame(
+  Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", aspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", aspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", aspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", aspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95)
+)
+site <- data.frame(
+  Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
+  Mean = sprintf("%.2f", site_df2_BAI$mean),
+  P5   = sprintf("%.2f", site_df2_BAI$p5),
+  P25  = sprintf("%.2f", site_df2_BAI$p25),
+  P75  = sprintf("%.2f", site_df2_BAI$p75),
+  P95  = sprintf("%.2f", site_df2_BAI$p95)
+)
+ayear <- data.frame(
+  Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
+  Mean = sprintf("%.2f", ayear_df2_BAI$mean),
+  P5   = sprintf("%.2f", ayear_df2_BAI$p5),
+  P25  = sprintf("%.2f", ayear_df2_BAI$p25),
+  P75  = sprintf("%.2f", ayear_df2_BAI$p75),
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95)
+)
+binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
+
+print(xtable(binded,
+             caption = "Summary output of each parameter from our GSL (growing season length) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+             label = "tab:BAItab_gsl"),
       include.rownames = FALSE,
       sanitize.text.function = identity,
       sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
