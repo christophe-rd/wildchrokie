@@ -23,7 +23,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 source("rcode/tools.R")
 
 # flags
-makeplots <- FALSE
+makeplots <- T
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 climatesum <- read.csv("output/climateSummariesYear.csv")
@@ -340,19 +340,20 @@ Arrows(x0 = cceos - 10, y0 = 5, x1 = cceos - 2, y1 = 5,
 text(x = ccsos + 30, y = 7, "Earlier SOS", col = colspring, cex = mylargetxt)
 text(x = cceos - 20, y = 7, "Later EOS",     col = colfall,   cex = mylargetxt)
 
-# legend(x = ccsos - 80, y = 25, 
-#        legend = c("Pre climate change",
-#                   "Post climate change"),
-#        bty = "o", lwd = 3, cex = 1.2,
-#        col = c(colpre, colcc),
-#        title = "Curves")
+legend(x = ccsos - 80, y = 25,
+       legend = c("Pre climate change",
+                  "Post climate change"),
+       bty = "o", lwd = 3, cex = 1.2,
+       col = c(colpre, colcc)
+       # title = "Curves"
+       )
 
-text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_pre) -9,
-     "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
-     cex = mysmalltxt)
-text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_cc) + -1,
-     "Post climate change", col = colcc, 
-     cex = mysmalltxt)
+# text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_pre) -9,
+#      "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
+#      cex = mysmalltxt)
+# text(x = mean(mean_pre_gdd$doy) - 30 , y = max(smooth_cc) + -1,
+#      "Post climate change", col = colcc, 
+#      cex = mysmalltxt)
 
 # Panel 3: GDD curves --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 par(mar = p2)
@@ -478,13 +479,13 @@ rasterImage(img_thermom,
             x_arrow + 65 + img_w/norm, 
             y_end - 300 + img_h/norm)
 
-text(x = mean(mean_pre_gdd$doy) - 30 , 
-     y = 200,
-     "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
-     cex = mysmalltxt, adj = 0)
-text(x = mean(mean_pre_gdd$doy) - 30, 
-     y = 1250,
-     "Post climate change", col = colcc, cex = mysmalltxt, adj = 0)
+# text(x = mean(mean_pre_gdd$doy) - 30 , 
+#      y = 200,
+#      "Pre climate change", col = adjustcolor(colpre, alpha.f = 1), 
+#      cex = mysmalltxt, adj = 0)
+# text(x = mean(mean_pre_gdd$doy) - 30, 
+#      y = 1250,
+#      "Post climate change", col = colcc, cex = mysmalltxt, adj = 0)
 
 dev.off()
 
