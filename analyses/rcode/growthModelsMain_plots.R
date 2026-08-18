@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -1572,6 +1572,141 @@ segments(site_df2$p25, y_pos_site, site_df2$p75, y_pos_site,
          col = sitecolors, lwd = 3)
 dev.off()
 
+
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+##### asite with map ##### 
+# --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
+
+# my thanks to claude for helping with this over complicated figure
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(cowplot)
+
+site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
+
+# order same as figure
+locations2 <- locations[order(locations$Latitude), ]              
+locations2$col <- wes_palette("Darjeeling1")[1:4]     
+
+# site map 
+sitecolors <- site_color_map[site_df2$site_name]
+lat_labels <- locations$Latitude[match(site_order, locations$name)]
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+lat_min <- 41.5; lat_max <- 47
+lon_min <- -76; lon_max <- -65 
+
+special_point <- data.frame(
+  name = "Arnold Arboretum of\nHarvard University (MA)",
+  Longitude  = -71.13358611669867,
+  Latitude  =  42.29601035316377
+)
+
+special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
+points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
+
+
+map_plot <- ggplot(data = world) +
+  geom_sf(fill = "white", color = "gray60") +
+  geom_sf(data = points_sf, color = locations2$col, size = 4) +
+  geom_text(data = locations2,
+            aes(x = Longitude, y = Latitude, label = name),
+            nudge_y = 0.35, nudge_x = 0.9, size = 4.5, fontface = "bold") +
+  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
+  theme_minimal() +
+  theme(
+    strip.text        = element_blank(),
+    legend.key.height = unit(1.5, "lines"),
+    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
+  )
+
+north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
+
+# Combine using cowplot
+final_map <- ggdraw(map_plot)
+
+
+# mu plot for asite
+forest_plot <- ggplot(site_df2, aes(x = mean, y = y_pos_site)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  geom_segment(aes(x = p5, xend = p95, y = y_pos_site, yend = y_pos_site),
+               color = sitecolors, linewidth = 0.75) +
+  geom_segment(aes(x = p25, xend = p75, y = y_pos_site, yend = y_pos_site),
+               color = sitecolors, linewidth = 1.5) +
+  geom_point(size = 4, color = sitecolors) +
+  scale_x_continuous(limits = c(-0.5, 0.5)) +
+  scale_y_continuous(breaks = 1:n_site, labels = lat_labels,
+                     limits = c(0.5, n_site + 0.5)) +
+  labs(x = "Provenance intercepts", y = "Latitude") +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    axis.text.y = element_text(angle = 0),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.title.y = element_text(
+      margin = margin(r = 15)
+    ),
+    axis.text.y = element_text(
+      margin = margin(r = 10)
+    )
+  )
+
+library(gtable)
+library(grid)
+
+g1 <- ggplotGrob(map_plot)
+g2 <- ggplotGrob(forest_plot)
+
+g1$heights <- g2$heights <- unit.pmax(g1$heights, g2$heights)
+
+combined <- plot_grid(g1, g2, ncol = 2, rel_widths = c(0.6, 0.4))
+
+# Inset: North America overview
+bbox_poly <- st_as_sfc(st_bbox(c(
+  xmin = lon_min, xmax = lon_max,
+  ymin = lat_min, ymax = lat_max
+), crs = 4326))
+
+north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
+
+inset_map <- ggplot(data = north_america) +
+  geom_sf(fill = "white", color = "gray60", linewidth = 0.1) +
+  geom_sf(data = bbox_poly, 
+          # fill = NULL, 
+          color = "black", alpha = 0, linewidth = 0.7) +
+  coord_sf(xlim = c(-170, -50), ylim = c(15, 75), expand = FALSE) +
+  theme_void() +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    panel.background = element_rect(fill = "aliceblue")
+  )
+
+combined_with_margin <- plot_grid(
+  NULL, combined,
+  ncol = 1,
+  rel_heights = c(0.12, 0.88)  # 12% empty space at top for labels/inset
+)
+
+combined_labeled <- ggdraw(combined_with_margin) +
+  draw_plot_label(
+    label    = c("(a) Provenance map", "(b) Provenance effect"),
+    x        = c(-0.02, 0.55),
+    y        = c(0.92, 0.92),
+    size     = 14,
+    fontface = "bold"
+  )
+
+final_map <- combined_labeled +
+  draw_plot(
+    inset_map,
+    x = 0.45, y = 0.80,   # now sits in the reserved top margin
+    width = 0.2, height = 0.18
+  )
+final_map
+ggsave("figures/growthModelsMain/asiteMap.pdf", final_map, width = 10, height = 6)
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -1676,9 +1811,7 @@ par(mfrow = c(3, 1), mar = c(4, 4, 3, 1))
 n_spp <- nrow(b_gsl_per)
 y_pos <- n_spp:1
 
-# -------------------------------
 # (a) Growing season length
-# -------------------------------
 plot(b_gsl_per$mean, y_pos,
      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
      xlab = "Growing season length change (%)", ylab = "",
@@ -1695,9 +1828,7 @@ axis(2, at = y_pos, labels = b_gsl_per$spp_name, las = 1)
 mtext("(a) Growing season length", adj = 0, side = 3,
       line = 1, font = 2, cex = 0.9)
 
-# -------------------------------
 # (b) SOS gain
-# -------------------------------
 plot(b_sosgain$mean, y_pos,
      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
      xlab = "SOS gain (%)", ylab = "",
@@ -1714,10 +1845,7 @@ axis(2, at = y_pos, labels = b_sosgain$spp_name, las = 1)
 mtext("(b) Start of season gain", adj = 0, side = 3,
       line = 1, font = 2, cex = 0.9)
 
-
-# -------------------------------
 # (c) EOS gain
-# -------------------------------
 plot(b_eosgain$mean, y_pos,
      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
      xlab = "EOS gain (%)", ylab = "",
