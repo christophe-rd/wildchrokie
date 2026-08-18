@@ -23,7 +23,7 @@ if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
 source("rcode/tools.R")
 
 # flags
-makeplots <- T
+makeplots <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 climatesum <- read.csv("output/climateSummariesYear.csv")
