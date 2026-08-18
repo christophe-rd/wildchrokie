@@ -1,4 +1,4 @@
-\begin{thebibliography}{94}
+\begin{thebibliography}{95}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -303,6 +303,11 @@ Friedlingstein, P., O'Sullivan, M., Jones, M.W., Andrew, R.M., Bakker, D.C.E.,
   Van Der~Werf, G.R., Van De~Velde, S.J., Walker, A.P., Wanninkhof, R., Yang,
   X., Yuan, W., Yue, X. \& Zeng, J. (2026) Global {Carbon} {Budget} 2025.
   \emph{Earth System Science Data} \textbf{18}, 3211--3288.
+
+\bibitem[{Fritts \& Swetnam(1989)}]{fritts_dendroecology_1989}
+Fritts, H. \& Swetnam, T. (1989) Dendroecology: {A} {Tool} for {Evaluating}
+  {Variations} in {Past} and {Present} {Forest} {Environments}. \emph{Advances
+  in {Ecological} {Research}}, vol.~19, pp. 111--188, Elsevier.
 
 \bibitem[{Fu \emph{et~al.}(2014)Fu, Piao, Op~De~Beeck, Cong, Zhao, Zhang,
   Menzel \& Janssens}]{fu_recent_2014}
