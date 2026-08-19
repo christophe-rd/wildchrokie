@@ -57,16 +57,12 @@
 \usepackage{natbib}
 \usepackage{parskip}
 \usepackage{longtable}
-\usepackage{lineno}
 
 \setcounter{secnumdepth}{0} 
 
 \setlength{\parindent}{0pt}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-\linenumbers
-\linespread{1.25}
-
 % \SweaveOpts{concordance=TRUE}
 
 \begin{center}
@@ -325,7 +321,7 @@ Integrating our results into models will also require considering how environmen
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).} 
@@ -347,7 +343,7 @@ Dartmouth College (NH, USA) & 8 & 7 & 2 & 9 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (22.4\degree C), 2020 the hottest (23.1\degree C), and 2018 in between (22.9\degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.} 
@@ -381,7 +377,7 @@ Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 35 & 9.8 & 420 & 162 \\
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details. } 
@@ -416,7 +412,7 @@ $\alpha$ & -0.57 & -4.61 & -2.30 & 1.14 & 3.57 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -450,7 +446,7 @@ $\alpha$ & 0.17 & -3.84 & -1.48 & 1.83 & 4.16 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -484,7 +480,7 @@ $\alpha$ & 1.08 & -2.52 & -0.44 & 2.56 & 4.77 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -518,7 +514,7 @@ $\alpha$ & -1.40 & -5.52 & -3.10 & 0.32 & 2.70 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -552,7 +548,7 @@ $\alpha$ & 0.62 & -4.52 & -1.50 & 2.77 & 5.84 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GSL (growing season length) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -586,7 +582,7 @@ $\alpha$ & 1.86 & -2.27 & 0.11 & 3.62 & 6.03 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Aug 19 15:52:34 2026
+% Tue Aug 18 15:30:09 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output ($\beta$) of our GDD parameters (see Table \ref{tab:tab_GDD} for untransformed parameter estimates), converted in \% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\% and 50\% uncertainty intervals.} 

@@ -7,25 +7,29 @@
 \usepackage{natbib}
 \usepackage{parskip}
 \usepackage{longtable}
+\usepackage{lineno}
 
 \setcounter{secnumdepth}{0} 
 
 \setlength{\parindent}{0pt}
 
 \begin{document}
+\linenumbers
+\linespread{1.25}
+
 % \SweaveOpts{concordance=TRUE}
 
 \begin{center}
 {\sc} {\Large Warmer and longer growing seasons increase growth for juvenile trees in a common garden} \\
 \vspace{5ex}
-{\sc} Christophe Rouleau-Desrochers$^1$, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson, \& E.M. Wolkovich$^{1,2,3}$
+{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson, \& E.M. Wolkovich$^{1,2,3}$
 \end{center}
 $^1$Forest \& Conservation Sciences, Faculty of Forestry \& Environmental Stewardship, University of British Columbia, Vancouver, British Columbia, Canada\\
 $^2$Arnold Arboretum of Harvard University, Boston, Massachusetts, USA\\
 $^3$Department of Organismic and Evolutionary Biology, Harvard University, Cambridge, Massachusetts, USA\\
-$^4$The Nature Conservancy, USA\\
+$^4$The Nature Conservancy, Durham, North Carolina, USA\\
 $^5$Department of Plant Science and Landscape Architecture, University of Maryland, College Park, Maryland, USA
-
+*christophe.rouleaudesrochers@ubc.ca
 % Set Wildchrokie species shortcut
 \newcommand{\Ainc}{\textit{A. incana}}
 \newcommand{\Ball}{\textit{B. alleghaniensis}}
@@ -118,6 +122,7 @@ b_eosgain_mu$spp_name <- "all"
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % ABSTRACT
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% need to transform this abstract to a 200-word summary
 \section{Abstract}
 Anthropogenic climate change affects natural systems at the global scale, with the most frequently observed biological impact of climate change being shifts in phenology---the timing of recurring life history events. These shifts will cause other cascading effects that are likely to feedback to future consequences on the climate. For trees, shifted phenology has extended the vegetative growing season, which is widely expected to increase tree growth, with impacts on forest carbon sequestration. While decades of work has assumed longer seasons increase tree growth, multiple recent studies have found no connections.
 % DLAug1: Leverage the dataset to do what? I would amend this sentence to more explicitly reflect what is being tested
@@ -126,6 +131,7 @@ Anthropogenic climate change affects natural systems at the global scale, with t
 % Alternative sentence:
 Here, we used juvenile tree data to test the relationships between four different season metrics and growth in a common garden located in Boston (MA, USA). Across species within the \textit{Betulaceae} family sourced from four provenances we found increased tree growth with warmer seasons (three out of four species), and with longer seasons, but for fewer species (two out of four species). Our results suggest growing conditions may be more important than season length alone. Further, we found little effect of provenance on growth or phenology, including end of season events---though end of season phenology was more connected to growth responses than start of season. Taken together, our results suggest thermal conditions across the season may predict growth responses and vary considerably across species, but not provenance. Our work has implications for forest regeneration, especially given our focus on juvenile trees, and could help improve vegetation models. 
 
+% need to add 5-8 keywords here
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
