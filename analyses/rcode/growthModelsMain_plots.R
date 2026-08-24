@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -27,7 +27,7 @@ climatesum <- read.csv("output/climateSummariesYear.csv")
 weldhillclim <- read.csv("output/weldhillClimateCleaned.csv")
 
 # Full site names
-emp$site[which(emp$site %in% "GR")] <- "Dartmouth College (NH, USA)"
+emp$site[which(emp$site %in% "GR")] <- "Second College Grant (NH, USA)"
 emp$site[which(emp$site %in% "HF")] <- "Harvard Forest (MA, USA)"
 emp$site[which(emp$site %in% "SH")] <- "St-Hippolyte (Qc, Canada)"
 emp$site[which(emp$site %in% "WM")] <- "White Mountains (NH, USA)"
@@ -198,7 +198,8 @@ colnames(ayear_df) <- 1:ncol(ayear_df)
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 locations <- data.frame(
-  name       = c("Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Dartmouth College (NH, USA)", "St-Hippolyte (Qc, Canada)"),
+  name       = c("Harvard Forest (MA, USA)", "White Mountains (NH, USA)", 
+                 "Second College Grant (NH, USA)", "St-Hippolyte (Qc, Canada)"),
   shortnames = c("HF", "WM", "GR", "SH"),   
   Longitude  = c(-72.20,  -71.00, -70.66, -74.01),
   Latitude   = c( 42.55,  44.11,  44.92,  45.98)
@@ -209,7 +210,7 @@ y_pos_site <- match(site_df2$site_name, site_order)
 
 # shapes for sites
 my_shapes <- c("Harvard Forest (MA, USA)" = 19, "White Mountains (NH, USA)" = 18, 
-               "Dartmouth College (NH, USA)" = 15, "St-Hippolyte (Qc, Canada)" = 17)
+               "Second College Grant (NH, USA)" = 15, "St-Hippolyte (Qc, Canada)" = 17)
 
 yrshapes <- c("2018" = 15, "2019" = 16, "2020" = 17)
 
@@ -985,7 +986,7 @@ legend(x = max(treeid_df4$p95),
        pch = 16, pt.cex = 1, cex = 0.8,
        title = "Species", bty = "n")
 
-site_legend_order <- c("St-Hippolyte (Qc)", "Dartmouth College (NH)", 
+site_legend_order <- c("St-Hippolyte (Qc)", "Second College Grant (NH)", 
                        "White Mountains (NH)", "Harvard Forest (MA)")
 
 # site_num legen
@@ -1466,10 +1467,10 @@ widths = c(0.7, 0.4))
 site_color_map <- setNames(c(wes_palette("Darjeeling1"))[1:4], site_order)
 sitecolors <- site_color_map[site_df2$site_name]
 
-site_df2$lat <- locations$Latitude[match(site_df2$site_name, locations$names)]
-site_df2_gsl$lat <- locations$Latitude[match(site_df2_gsl$site_name, locations$names)]
-site_df2_sos$lat <- locations$Latitude[match(site_df2_sos$site_name, locations$names)]
-site_df2_eos$lat <- locations$Latitude[match(site_df2_eos$site_name, locations$names)]
+site_df2$lat <- locations$Latitude[match(site_df2$site_name, locations$name)]
+site_df2_gsl$lat <- locations$Latitude[match(site_df2_gsl$site_name, locations$name)]
+site_df2_sos$lat <- locations$Latitude[match(site_df2_sos$site_name, locations$name)]
+site_df2_eos$lat <- locations$Latitude[match(site_df2_eos$site_name, locations$name)]
 
 lat_labels <- locations$lat[match(site_order,  locations$name)]
 
@@ -1642,15 +1643,10 @@ forest_plot <- ggplot(site_df2, aes(x = mean, y = y_pos_site)) +
   theme_minimal() +
   theme(
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    axis.text.y = element_text(angle = 0),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.title.y = element_text(
-      margin = margin(r = 15)
-    ),
-    axis.text.y = element_text(
-      margin = margin(r = 10)
-    )
+    axis.title.y = element_text(margin = margin(r = 15)),
+    axis.text.y = element_text(angle = 0, margin = margin(r = 10))
   )
 
 library(gtable)
