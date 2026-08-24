@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- T
+makeplots <- F
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
