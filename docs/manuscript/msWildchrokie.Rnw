@@ -176,7 +176,7 @@ To understand the relationship between growing seasons and growth, we need to un
 % Common garden setup
 %-------------------------------------------------------------------------------
 \subsection*{Common garden setup and data collection}
-We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:wcmuplotasite}a; Table \ref{tab:tab_species}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted the seedlings outside at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the autumn of 2020 \citep{buonaiuto_early_2026}. 
+We collected seeds from 18 species of deciduous trees and shrubs from four provenances across a 3.5$^{\circ}$ latitudinal gradient (Figure \ref{fig:wcmuplotasite}a; Table \ref{tab:tab_species} and \ref{tab:climate}) in 2014-2015, germinated them following standard germination protocols and grew them to seedlings \citep{baskin_seeds_2014}. In the spring of 2017, we planted the seedlings outside at the Weld Hill Research Building at the Arnold Arboretum in Boston MA (42.30\degree N, 71.13\degree W). Plots were regularly weeded and watered throughout the duration of the study and were pruned in the autumn of 2020 \citep{buonaiuto_early_2026}. 
 
 For the years 2018-2020, we monitored leaf phenology for all individuals in the common garden once or twice per week from February to December; the exact frequency varied within and across years (for more details, see Figure \ref{fig:phenoTimeSeries}). For this, we used a modified BBCH scale to observe two phenological stages: leafout which we defined as BBCH 15 and budset as BBCH 102 \citep[for more details, see:][]{finn_general_2007,buonaiuto_early_2026}. We had a total of \Sexpr{nrow(empfullsos)} leafout and \Sexpr{nrow(empfulleos)} budset observations (which we refer to as the `full datasets'), but for some individual trees in certain years we did not have data for both events; thus our total of matched full growing season duration (which we refer to as the `restricted dataset') is \Sexpr{nrow(emp)} observations.  
 
@@ -248,7 +248,7 @@ On a scaled axis \citep[through $z$-scoring,][]{gelman_data_2006}, the thermal a
 %-------------------------------------------------------------------------------
 \subsection*{Growth at the start versus the end of the growing season}
 %-------------------------------------------------------------------------------
-Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. Yet, only one species grew more with an earlier start of season ({\Ainc} (one of the two species for which a longer calendar season increased growth: $\beta =$
+Increased growth with longer seasons is often presumed to come from growth in the spring, since spring phenology has shifted much more than autumn phenology. Yet, only one species grew more with an earlier start of season, ({\Ainc} (one of the two species for which a longer calendar season increased growth: $\beta =$
 \Sexpr{fmt_stat(b_sos_per, "A. incana")}; more growth with an earlier start of season is represented as a negative slope; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_GSL}). {\Bpop} trended in the opposite direction ($\beta =$
 \Sexpr{fmt_stat(b_sos_per, "B. populifolia")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_EOS}), and {\Ball}, which did not grow more with a longer calendar season, grew less with an earlier start of season ($\beta =$
 \Sexpr{fmt_stat(b_sos_per, "B. alleghaniensis")}; Figure \ref{fig:wcmuplotbspp}c and g; Table \ref{tab:tab_SOS}). In contrast, we found most species grew more with a later end of season ({\Ball}: $\beta =$ 
@@ -300,7 +300,7 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 \Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_asite"])} RW) was similar to variation across individual trees ($\sigma =$ 
 \Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])} (UI: 
 \Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"])}, 
-\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_GDD}).
+\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_GDD}; Figure \ref{fig:fig:wcmuplotatreeid}).
 
 
 % Figure mu across all species and climate predictors
@@ -314,32 +314,29 @@ We did not find any clear effect of year on growth (2018: $\alpha =$
 % DISCUSSION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
-\section{Discussion} %emwAug23 -- tons of edits here to try to fix flow and tighten it up. 
-% Here we used 81 juvenile trees of four species from four provenances to study how longer growing seasons affect tree growth (using annual growth via tree rings and leaf phenology as a proxy for the start and end of season). 
-We found that longer growing seasons increased growth for all species, but varied depending on the metric used to measure season length, with the thermal growing season more often relating to growth than the calendar season. Our results support the hypothesis that the thermal season is a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}, and suggest that the short and cool spring days early in the season may be less useful for growth than additional days later, when conditions are warmer \citep{buonaiuto_early_2026}. Further supporting this, when we disentangled the calendar season by using the start and end of season separately, we found a larger response of growth to the end of season, with little effect of the start of season.
+\section{Discussion} 
+We found that longer growing seasons increased growth for all four species, but varied depending on the metric used to measure season length, with the thermal growing season more often relating to growth than the calendar season. Thus, our results support the hypothesis that the thermal season is a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}, and suggest that the short and cool spring days early in the season may be less useful for growth than additional days later, when conditions are warmer \citep{buonaiuto_early_2026}. Further supporting this, when we disentangled the calendar season by using the start and end of season separately, we found a larger response of growth to the end of season, with little effect of the start of season.
 
 The finding that the end of season appears more related to growth than the start of season is aligned with increasing work suggesting that the start and end of season together may dynamically determine growth \citep{zohner_effect_2023}. This implies that research focusing solely on the start of season \citep{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016} could miss when longer seasons lead to more growth. While studies have long called for more research on the end of season \citep{gallinat_autumn_2015,gunderson_forest_2012,piao_plant_2019,richardson_terrestrial_2012}, our results suggest we may especially need more work that monitors how growth and phenology shift across the season \citep{zani_increased_2020,zohner_effect_2023}. 
 
 By accounting for differences in daily temperatures, the thermal season may align more closely to when and how fast plants can grow each day compared to the calendar season, which assumes a stable influence of each day on growth \citep{korner_four_2023}. Our results suggest significant growth occurs towards the end of the season, but would require data with a finer temporal scale (e.g., daily or weekly data through dendrometers and/or xylogenesis) to confirm this. To date, these studies showed strong species differences in when most growth happens during the season, though most studies are on mature trees \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}. % However, most of these studies were done on a small number of European and/or conifer species \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}, highlighting that we need more data across species spanning a wider range of life history strategies.
 
-Our focus on juvenile trees may have contributed to our finding of increases in growth with longer seasons  \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. Younger trees are generally more flexible than their adult forms \citep{augspurger_differences_2003,way_photoperiod_2015}, allowing them to take advantage of light early in the season or in response to forest gaps. If our juvenile trees grew in a mature forest, they would have been positioned below the canopy, thus competing for light and other resources. Under these more constrained conditions, they might have not responded as much as we observed in our competition-limited conditions \citep{cleland_effects_2024,augspurger_differences_2003,sweeneyComparisonTimingSpring2024,polgar_leafout_2011}. In addition, we grew our trees in a common garden with potentially more space between trees than in a natural setting (spacing was between 1.5 and 3 m), without any shade cloth. While other studies on mature trees have found the same response CITES, our results may have been more muted if the trees were grown in a forest setting. 
+Our focus on juvenile trees may have contributed to our finding of increases in growth with longer seasons \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. Younger trees are generally more flexible than their adult forms \citep{augspurger_differences_2003,way_photoperiod_2015}, allowing them to take advantage of light early in the season or in response to forest gaps. If our juvenile trees grew in a mature forest, they would have been positioned below the canopy, thus competing for light and other resources. Under these more constrained conditions, they might have not responded as much as we observed in our competition-limited conditions \citep{cleland_effects_2024,augspurger_differences_2003,sweeneyComparisonTimingSpring2024,polgar_leafout_2011}. In addition, we grew our trees in a common garden with potentially more space between trees than in a natural setting (spacing was between 1.5 and 3 m), without any shade cloth. While other studies on mature trees have found the same response \citep{finziCarbonBudgetHarvard2020}, our results may have been more muted if the trees were grown in a forest setting. 
 
 Understanding how juvenile trees respond to longer warmer season is critical for predicting how forests will regenerate and expand with the longer and warmer seasons of anthropogenic climate change. Plant phenology research has suggested that earlier seasons with warming favor species that shift earlier the most, with many studies that focused on invasive species appearing to support this \citep{wolkovich_temperaturedependent_2013,zettlemoyer_phenology_2019}. Yet, these studies are often on herbaceous species, and our results, along with other recent work \citep{zani_increased_2020,zohner_effect_2023}, suggest mid- and later-season effects may under-appreciate the performance implications in woody species in the absence of drought. Thus, more studies of how later season events correlate with invasions, and forest assembly more generally, could help understand how warming will impact forest regeneration and range expansion.
 
 \subsection*{Species-level differences}
-
-Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{bowmanEcology2023,furlow_alnus_1997,grime_evidence_1977}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
+Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{grime_evidence_1977,furlow_alnus_1997,bowmanEcology2023}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
 
 Studies including an even wider span of growth strategies across species may find further differences. Our four study species all grow relatively fast, which should allow them to track changing conditions better than their slower-growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used slower-growing, more conservative species \citep[such as \textit{Quercus};][]{burns_silvics_1990}. Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages \citep{dox_wood_2022}. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait which varies substantially across years with different climates, tree age and also across species. Within a single community leafout can vary across species by over a month \citep{wolkovich_progress_2014}. How flexible growth is in response to changing growing season length and conditions varies between species---and populations. 
 
-Studies of large latitudinal gradients have found lower growth in trees sourced from poleward latitudes \citep{aitken_time_2016,soolanayakanahally_timing_2013}, yet we found little difference in growth across a latitudinal gradient of 3.5\degree. Thus, at least across this latitudinal range, local adaptation on growth appears weak. Supporting this, we found no evidence of a shifting end of season across provenances in these species, on average, despite decades of work finding that end of season events, such as budset, are usually more locally adapted than start of season events such as leafout \citep{kramer_effect_1936,habjorg_photoperiodic_1978,soolanayakanahally_timing_2013,aitken_time_2016,zeng_weak_2024}. In contrast to strong constraints on budset that should drive it to be timed similarly across years, a study of the same common garden including all tree and shrub species found that the end of season appeared to vary strongly by year and shift earlier with earlier start of season \citep{buonaiuto_early_2026}. % This suggesting that the end of season may vary more than currently proposed \citep{alberto_potential_2013}. 
-Thus our results suggest that our current understanding of budset being strongly locally adapted, and thus varying little with temperature or the start of season, needs more study and at a wider geographical scale.
+Studies of large latitudinal gradients have found lower growth in trees sourced from poleward latitudes \citep{aitken_time_2016,soolanayakanahally_timing_2013}, yet we found little difference in growth across a latitudinal gradient of 3.5\degree. Thus, at least across this latitudinal range, local adaptation on growth appears weak. Supporting this, we found no evidence of a shifting end of season across provenances in these species, on average, despite decades of work finding that end of season events, such as budset, are usually more locally adapted than start of season events such as leafout \citep{kramer_effect_1936,habjorg_photoperiodic_1978,soolanayakanahally_timing_2013,aitken_time_2016,zeng_weak_2024}. In contrast to strong constraints on budset that should drive it to be timed similarly across years, a study of the same common garden including all tree and shrub species found that the end of season appeared to vary strongly by year and shift earlier with earlier start of season \citep{buonaiuto_early_2026}. Thus our results suggest that our current understanding of budset being strongly locally adapted, and thus varying little with temperature or the start of season, needs more study and at a wider geographical scale.
 
+% should potentially be moved to supplement?
 Taken together our results suggest important species differences (even across our closely related species) that could have major impacts on large-scale models of tree growth \citep{melaas_multiscale_2016}. Most land-surface models still do not distinguish species and usually pool them together \citep{melaas_multiscale_2016,harrison_ecoevolutionary_2021}. This oversimplification could also mislead which species to target for reforestation, and forest types for conservation \citep{ruehr_evidence_2023,chang_global_2024}. Thus, better modelling approaches of the start and end of season will require more studies, on more species across a larger latitudinal gradient. Alongside improving land surface models, such studies could help tease out whether local adaptation of the end of season depends on the species, latitudinal range (both distance and how far north provenances come from), or some combination of the two. 
 
 \subsection*{Implications for forest conservation and modeling}
-
-Integrating our results into forest and larger-scale (e.g., land-surface) models requires considering how environmental conditions beyond temperature, shift across the season, especially for soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. While trees may have a longer period to grow, water availability may become insufficient to support continuous growth throughout the growing season \citep{wang_seasonal_2025}. We regularly watered the trees in our common garden, likely relieving any major drought pressures, though studies beyond ours connected a later end of season and more growth \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. In the range of our four species, drought occurrence has not yet increased \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that trees may grow more with longer and warmer growing seasons \citep{cook_uncertainty_2011,agel_drought_2025}, as we found. The positive effect of a later end of season, however, could diminish if soil moisture becomes inadequate for growth, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{chiang_evidence_2021,spinoni_will_2018}, but we suggest our results here may be accurate for temperature northeastern North American forests. %Improved accuracy of future carbon sequestration models would consequently require integrating over more regions, growth drivers and species.
+Integrating our results into forest and larger-scale (e.g., land-surface) models requires considering how environmental conditions beyond temperature, shift across the season, especially for soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. While trees may have a longer period to grow, water availability may become insufficient to support continuous growth throughout the growing season \citep{wang_seasonal_2025}. We regularly watered the trees in our common garden, likely relieving any major drought pressures, though studies beyond ours connected a later end of season and more growth \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. In the range of our four species, drought occurrence has not yet increased \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that trees may grow more with longer and warmer growing seasons \citep{cook_uncertainty_2011,agel_drought_2025}, as we found. The positive effect of a later end of season, however, could diminish if soil moisture becomes inadequate for growth, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{chiang_evidence_2021,spinoni_will_2018}, but we suggest our results here may be accurate for temperature northeastern North American forests.
 
 The overall positive response we observed across multiple tree species to warmer seasons has important implications for carbon models, and related natural climate solutions . While juvenile trees store less carbon than their adult forms, they are crucial for forest regeneration and range expansion \citep[as discussed above, and see][]{luu_importance_2024}. In addition to their ecological role, juvenile trees generally predict adult tree responses qualitatively \citep{augspurger_differences_2003,wolkovich_why_2025}, despite certain ontogenic differences in stress residence and mortality rate across life stages \citep{caron_thermal_2021}. Thus our results on young trees can likely inform how their adult counterparts will respond to changing growing season conditions.
 
@@ -500,6 +497,8 @@ fmt_split <- function(df) {
     `25\\%` = sprintf("%.2f", df$p25),
     `75\\%` = sprintf("%.2f", df$p75),
     `95\\%` = sprintf("%.2f", df$p95),
+    `\\^R` = sprintf("%.2f", df$Rhat),
+    `ESS` = sprintf("%.0f", df$n_eff),
     check.names = FALSE
   )
 }
@@ -513,10 +512,11 @@ combined_GDD <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
+colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
 
 tab_GDD <- xtable(combined_GDD,
-              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details. ",
+              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean, 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details. ",
               label = "tab:tab_GDD")
 
 print(tab_GDD,
@@ -560,7 +560,8 @@ combined_GSL <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
+colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
 
 tab_GSL <- xtable(combined_GSL,
               caption = "Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
@@ -606,7 +607,8 @@ combined_SOS <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
+colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
 
 tab_SOS <- xtable(combined_SOS,
               caption = "Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
@@ -652,8 +654,8 @@ combined_EOS <- data.frame(
   check.names = FALSE
 )
 
-colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%")
-
+colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
 tab_EOS <- xtable(combined_EOS,
               caption = "Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
               label = "tab:tab_EOS")
@@ -903,20 +905,6 @@ print(xtable(binded,
 \includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
 \caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
 \label{fig:wcmuplotatreeid}
-\end{figure}
-
-% Wildchrokie boxplot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotRingWidth.jpeg}
-\caption{Boxplots representing the empirical data of our ring widths (mm) separated by species. The dots represent the raw data, the line is the mean and the box depicts the 50\% uncertainty intervals.}
-\label{fig:wcboxplotRW}
-\end{figure}
-
-% Wildchrokie boxplot
-\begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/boxplotPredictorsAll.pdf}  
-\caption{Boxplots representing the empirical data of all our predictors clustered by species, and for each year. The dots represent the raw data, the line is the mean and the box depicts the 50\% uncertainty intervals.}
-\label{fig:wcboxplotPred}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
