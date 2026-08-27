@@ -346,7 +346,6 @@ The overall positive response we observed across multiple tree species to warmer
 We also found that the start and end of season asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate carbon dynamic predictions \citep{li_comparison_2022}. Such models usually assume a temperature-sensitive start of season and a photoperiod-controlled, and thus less variable, end of season \citep{chen_comparison_2022,melaas_multiscale_2016}. This results in a disproportionate influence of the start compared to the end of season on tree growth, unlike what our results suggest. Such a representation of what drives the temporal boundaries of the growing season may feed into oversimplified explanations of the processes regulating tree growth with future climate change. 
 
 
-
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
