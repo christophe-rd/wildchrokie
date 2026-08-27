@@ -72,7 +72,8 @@ gddyr <- read.csv("output/gddByYear.csv")
 nrow(empfullsos)
 nrow(empfulleos)
 
-lineplotseqlength <- 75
+lineplotseqlength <- 25
+
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Most restricted amount of data ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
