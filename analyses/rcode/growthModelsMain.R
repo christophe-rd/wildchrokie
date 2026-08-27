@@ -243,7 +243,6 @@ fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
 
 ##### Recover parameters #####
 df_fitgdd <- as.data.frame(fitgdd)
-
 # full posterior
 columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
 sigma_df_gdd <- df_fitgdd[, columns[grepl("sigma", columns)]]
@@ -254,14 +253,12 @@ aspp_df_gdd <- df_fitgdd[, columns[grepl("aspp", columns)]]
 site_df_gdd <- df_fitgdd[, grepl("site", columns) & 
                            !grepl("z|sigma|slope|full", columns)]
 ayear_df_gdd <- df_fitgdd[, columns[grepl("ayear", columns)]]
-
 # change colnames
 colnames(bspp_df_gdd) <- 1:ncol(bspp_df_gdd)
 colnames(treeid_df_gdd) <- 1:ncol(treeid_df_gdd)
 colnames(aspp_df_gdd) <- 1:ncol(aspp_df_gdd)
 colnames(site_df_gdd) <- 1:ncol(site_df_gdd)
 colnames(ayear_df_gdd) <- 1:ncol(ayear_df_gdd)
-
 # posterior summaries
 sigma_df2  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
 bspp_df2   <- extract_params(df_fitgdd, "bsp", "fit_bspp", 
@@ -281,6 +278,42 @@ a_df2  <- extract_params(df_fitgdd, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
+##### Recover Rhat and ESS #####
+# thanks to claude for these diagnostic recovery
+fit_summary_gdd <- as.data.frame(rstan::summary(fitgdd)$summary)
+fit_summary_gdd$param_full <- rownames(fit_summary_gdd)
+rownames(fit_summary_gdd) <- NULL
+fit_summary_gdd <- fit_summary_gdd[, c("param_full", "n_eff", "Rhat")]
+
+get_diag <- function(summary_df, id_col, id_regex) {
+  out <- summary_df[grepl(paste0("^", id_regex, "$"), summary_df$param_full), ]
+  out[[id_col]] <- gsub(id_regex, "\\1", out$param_full)
+  out$param_full <- NULL
+  out
+}
+# sigmas
+sigma_diag <- fit_summary_gdd[fit_summary_gdd$param_full %in% sigma_df2$sigma, ]
+sigma_diag <- sigma_diag[, c("param_full", "n_eff", "Rhat")]
+
+bspp_diag   <- get_diag(fit_summary_gdd, "spp",    "bsp\\[(\\d+)\\]")
+treeid_diag <- get_diag(fit_summary_gdd, "treeid", "atreeid\\[(\\d+)\\]")
+aspp_diag   <- get_diag(fit_summary_gdd, "spp",    "aspp\\[(\\d+)\\]")
+site_diag   <- get_diag(fit_summary_gdd, "site",   "asite\\[(\\d+)\\]")
+ayear_diag  <- get_diag(fit_summary_gdd, "year",   "ayear\\[(\\d+)\\]")
+
+# a 
+a_diag <- fit_summary_gdd[fit_summary_gdd$param_full %in% a_df2$grandmean, ]
+a_diag <- a_diag[, c("param_full", "n_eff", "Rhat")]
+
+# merge diagnostics into each summary df
+sigma_df2  <- merge(sigma_df2,  sigma_diag,  by.x = "sigma",     by.y = "param_full")
+bspp_df2   <- merge(bspp_df2,   bspp_diag,   by = "spp")
+treeid_df2 <- merge(treeid_df2, treeid_diag, by = "treeid")
+aspp_df2   <- merge(aspp_df2,   aspp_diag,   by = "spp")
+site_df2   <- merge(site_df2,   site_diag,   by = "site")
+ayear_df2  <- merge(ayear_df2,  ayear_diag,  by = "year")
+a_df2      <- merge(a_df2,      a_diag,      by.x = "grandmean", by.y = "param_full")
+
 # save csvs
 write.csv(sigma_df2,  "output/GM_GDDparam_sigma.csv",  row.names = FALSE)
 write.csv(bspp_df2,   "output/GM_GDDparam_bspp.csv",   row.names = FALSE)
@@ -289,6 +322,7 @@ write.csv(aspp_df2,   "output/GM_GDDparam_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GDDparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GDDparam_ayear.csv",  row.names = FALSE)
 write.csv(a_df2,      "output/GM_GDDparam_a.csv",      row.names = FALSE)
+
 
 ##### Plot posterior vs priors for gdd fit #####
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
@@ -378,7 +412,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Recover parameters #####
 df_fitgsl <- as.data.frame(fitgsl)
-
 # full posterior
 columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
 sigma_df_gsl <- df_fitgsl[, columns[grepl("sigma", columns)]]
@@ -389,14 +422,12 @@ aspp_df_gsl <- df_fitgsl[, columns[grepl("aspp", columns)]]
 site_df_gsl <- df_fitgsl[, grepl("asite", columns) & 
                            !grepl("z|sigma", columns)]
 ayear_df_gsl <- df_fitgsl[, columns[grepl("ayear", columns)]]
-
 # change colnames
 colnames(bspp_df_gsl) <- 1:ncol(bspp_df_gsl)
 colnames(treeid_df_gsl) <- 1:ncol(treeid_df_gsl)
 colnames(aspp_df_gsl) <- 1:ncol(aspp_df_gsl)
 colnames(site_df_gsl) <- 1:ncol(site_df_gsl)
 colnames(ayear_df_gsl) <- 1:ncol(ayear_df_gsl)
-
 # posterior summaries
 sigma_df2  <- extract_params(df_fitgsl, "sigma", "mean", "sigma")
 bspp_df2   <- extract_params(df_fitgsl, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
@@ -411,6 +442,35 @@ ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
 a_df2  <- extract_params(df_fitgsl, "a", "fit_a", 
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
+
+##### Recover Rhat and ESS #####
+fit_summary_gsl <- as.data.frame(rstan::summary(fitgsl)$summary)
+fit_summary_gsl$param_full <- rownames(fit_summary_gsl)
+rownames(fit_summary_gsl) <- NULL
+fit_summary_gsl <- fit_summary_gsl[, c("param_full", "n_eff", "Rhat")]
+
+# sigma has multiple literal names - direct match
+sigma_diag <- fit_summary_gsl[fit_summary_gsl$param_full %in% sigma_df2$sigma, ]
+sigma_diag <- sigma_diag[, c("param_full", "n_eff", "Rhat")]
+
+bspp_diag   <- get_diag(fit_summary_gsl, "spp",    "bsp\\[(\\d+)\\]")
+treeid_diag <- get_diag(fit_summary_gsl, "treeid", "atreeid\\[(\\d+)\\]")
+aspp_diag   <- get_diag(fit_summary_gsl, "spp",    "aspp\\[(\\d+)\\]")
+site_diag   <- get_diag(fit_summary_gsl, "site",   "asite\\[(\\d+)\\]")
+ayear_diag  <- get_diag(fit_summary_gsl, "year",   "ayear\\[(\\d+)\\]")
+
+# a is a single literal name "a" - direct match, same as sigma
+a_diag <- fit_summary_gsl[fit_summary_gsl$param_full %in% a_df2$grandmean, ]
+a_diag <- a_diag[, c("param_full", "n_eff", "Rhat")]
+
+# merge diagnostics into each summary df
+sigma_df2  <- merge(sigma_df2,  sigma_diag,  by.x = "sigma",     by.y = "param_full")
+bspp_df2   <- merge(bspp_df2,   bspp_diag,   by = "spp")
+treeid_df2 <- merge(treeid_df2, treeid_diag, by = "treeid")
+aspp_df2   <- merge(aspp_df2,   aspp_diag,   by = "spp")
+site_df2   <- merge(site_df2,   site_diag,   by = "site")
+ayear_df2  <- merge(ayear_df2,  ayear_diag,  by = "year")
+a_df2      <- merge(a_df2,      a_diag,      by.x = "grandmean", by.y = "param_full")
 
 # save csvs
 write.csv(sigma_df2,  "output/GM_GSLparam_sigma.csv",  row.names = FALSE)
@@ -509,7 +569,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Recover parameters #####
 df_fitsos <- as.data.frame(fitsos)
-
 # full posterior
 columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
 sigma_df_sos <- df_fitsos[, columns[grepl("sigma", columns)]]
@@ -520,14 +579,12 @@ aspp_df_sos <- df_fitsos[, columns[grepl("aspp", columns)]]
 asite_df_sos <- df_fitsos[, grepl("site", columns) & 
                             !grepl("z|sigma", columns)]
 ayear_df_sos <- df_fitsos[, columns[grepl("ayear", columns)]]
-
 # change colnames
 colnames(bspp_df_sos) <- 1:ncol(bspp_df_sos)
 colnames(treeid_df_sos) <- 1:ncol(treeid_df_sos)
 colnames(aspp_df_sos) <- 1:ncol(aspp_df_sos)
 colnames(asite_df_sos) <- 1:ncol(asite_df_sos)
 colnames(ayear_df_sos) <- 1:ncol(ayear_df_sos)
-
 # posterior summaries
 sigma_df2_sos  <- extract_params(df_fitsos, "sigma", "mean", "sigma")
 bspp_df2_sos   <- extract_params(df_fitsos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
@@ -542,6 +599,35 @@ ayear_df2_sos <- subset(ayear_df2_sos, !grepl("mean", year))
 a_df2  <- extract_params(df_fitsos, "a", "fit_a", 
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
+
+##### Recover Rhat and ESS #####
+fit_summary_sos <- as.data.frame(rstan::summary(fitsos)$summary)
+fit_summary_sos$param_full <- rownames(fit_summary_sos)
+rownames(fit_summary_sos) <- NULL
+fit_summary_sos <- fit_summary_sos[, c("param_full", "n_eff", "Rhat")]
+
+# sigma has multiple literal names - direct match
+sigma_diag_sos <- fit_summary_sos[fit_summary_sos$param_full %in% sigma_df2_sos$sigma, ]
+sigma_diag_sos <- sigma_diag_sos[, c("param_full", "n_eff", "Rhat")]
+
+bspp_diag_sos   <- get_diag(fit_summary_sos, "spp",    "bsp\\[(\\d+)\\]")
+treeid_diag_sos <- get_diag(fit_summary_sos, "treeid", "atreeid\\[(\\d+)\\]")
+aspp_diag_sos   <- get_diag(fit_summary_sos, "spp",    "aspp\\[(\\d+)\\]")
+site_diag_sos   <- get_diag(fit_summary_sos, "site",   "asite\\[(\\d+)\\]")
+ayear_diag_sos  <- get_diag(fit_summary_sos, "year",   "ayear\\[(\\d+)\\]")
+
+# a is a single literal name "a" - direct match, same as sigma
+a_diag <- fit_summary_sos[fit_summary_sos$param_full %in% a_df2$grandmean, ]
+a_diag <- a_diag[, c("param_full", "n_eff", "Rhat")]
+
+# merge diagnostics into each summary df
+sigma_df2_sos  <- merge(sigma_df2_sos,  sigma_diag_sos,  by.x = "sigma",     by.y = "param_full")
+bspp_df2_sos   <- merge(bspp_df2_sos,   bspp_diag_sos,   by = "spp")
+treeid_df2_sos <- merge(treeid_df2_sos, treeid_diag_sos, by = "treeid")
+aspp_df2_sos   <- merge(aspp_df2_sos,   aspp_diag_sos,   by = "spp")
+site_df2_sos   <- merge(site_df2_sos,   site_diag_sos,   by = "site")
+ayear_df2_sos  <- merge(ayear_df2_sos,  ayear_diag_sos,  by = "year")
+a_df2          <- merge(a_df2,          a_diag,          by.x = "grandmean", by.y = "param_full")
 
 # save csvs
 write.csv(sigma_df2_sos,  "output/GM_SOSparam_sigma.csv",  row.names = FALSE)
@@ -640,7 +726,6 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ##### Recover parameters #####
 df_fiteos <- as.data.frame(fiteos)
-
 # full posterior
 columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
 sigma_df_eos <- df_fiteos[, columns[grepl("sigma", columns)]]
@@ -651,14 +736,12 @@ aspp_df_eos <- df_fiteos[, columns[grepl("aspp", columns)]]
 site_df_eos <- df_fiteos[, grepl("site", columns) & 
                            !grepl("z|sigma", columns)]
 ayear_df_eos <- df_fiteos[, columns[grepl("ayear", columns)]]
-
 # change colnames
 colnames(bspp_df_eos) <- 1:ncol(bspp_df_eos)
 colnames(treeid_df_eos) <- 1:ncol(treeid_df_eos)
 colnames(aspp_df_eos) <- 1:ncol(aspp_df_eos)
 colnames(site_df_eos) <- 1:ncol(site_df_eos)
 colnames(ayear_df_eos) <- 1:ncol(ayear_df_eos)
-
 # posterior summaries
 sigma_df2_eos  <- extract_params(df_fiteos, "sigma", "mean", "sigma")
 bspp_df2_eos   <- extract_params(df_fiteos, "bsp", "fit_bspp", "spp", "bsp\\[(\\d+)\\]")
@@ -673,6 +756,36 @@ ayear_df2_eos <- subset(ayear_df2_eos, !grepl("mean", year))
 a_df2  <- extract_params(df_fiteos, "a", "fit_a", 
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
+
+##### Recover Rhat and ESS #####
+fit_summary_eos <- as.data.frame(rstan::summary(fiteos)$summary)
+fit_summary_eos$param_full <- rownames(fit_summary_eos)
+rownames(fit_summary_eos) <- NULL
+fit_summary_eos <- fit_summary_eos[, c("param_full", "n_eff", "Rhat")]
+
+
+# sigma has multiple literal names - direct match
+sigma_diag_eos <- fit_summary_eos[fit_summary_eos$param_full %in% sigma_df2_eos$sigma, ]
+sigma_diag_eos <- sigma_diag_eos[, c("param_full", "n_eff", "Rhat")]
+
+bspp_diag_eos   <- get_diag(fit_summary_eos, "spp",    "bsp\\[(\\d+)\\]")
+treeid_diag_eos <- get_diag(fit_summary_eos, "treeid", "atreeid\\[(\\d+)\\]")
+aspp_diag_eos   <- get_diag(fit_summary_eos, "spp",    "aspp\\[(\\d+)\\]")
+site_diag_eos   <- get_diag(fit_summary_eos, "site",   "asite\\[(\\d+)\\]")
+ayear_diag_eos  <- get_diag(fit_summary_eos, "year",   "ayear\\[(\\d+)\\]")
+
+# a is a single literal name "a" - direct match, same as sigma
+a_diag <- fit_summary_eos[fit_summary_eos$param_full %in% a_df2$grandmean, ]
+a_diag <- a_diag[, c("param_full", "n_eff", "Rhat")]
+
+# merge diagnostics into each summary df
+sigma_df2_eos  <- merge(sigma_df2_eos,  sigma_diag_eos,  by.x = "sigma",     by.y = "param_full")
+bspp_df2_eos   <- merge(bspp_df2_eos,   bspp_diag_eos,   by = "spp")
+treeid_df2_eos <- merge(treeid_df2_eos, treeid_diag_eos, by = "treeid")
+aspp_df2_eos   <- merge(aspp_df2_eos,   aspp_diag_eos,   by = "spp")
+site_df2_eos   <- merge(site_df2_eos,   site_diag_eos,   by = "site")
+ayear_df2_eos  <- merge(ayear_df2_eos,  ayear_diag_eos,  by = "year")
+a_df2          <- merge(a_df2,          a_diag,          by.x = "grandmean", by.y = "param_full")
 
 # save csvs
 write.csv(sigma_df2_eos,  "output/GM_EOSparam_sigma.csv",  row.names = FALSE)
