@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -1579,34 +1579,35 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
 # my thanks to claude for helping with this over complicated figure
+
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(sf)
-library(cowplot)
+library(patchwork)
 
-site_color_map <- setNames(wes_palette("Darjeeling1")[1:4], site_order)
+lat_min <- 41.5; lat_max <- 47
+lon_min <- -76; lon_max <- -65
 
-# order same as figure
-locations2 <- locations[order(locations$Latitude), ]              
-locations2$col <- wes_palette("Darjeeling1")[1:4]     
+locations2 <- locations[order(locations$Latitude), ]
+locations2$col <- wes_palette("Darjeeling1")[1:4]
 
-# site map 
-sitecolors <- site_color_map[site_df2$site_name]
-lat_labels <- locations$Latitude[match(site_order, locations$name)]
+points_sf <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
+
+site_df2$Latitude <- setNames(locations2$Latitude, locations2$name)[site_df2$site_name]
+sitecolors <- setNames(locations2$col, locations2$name)[site_df2$site_name]
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
-lat_min <- 41.5; lat_max <- 47
-lon_min <- -76; lon_max <- -65 
 
-special_point <- data.frame(
-  name = "Arnold Arboretum of\nHarvard University (MA)",
-  Longitude  = -71.13358611669867,
-  Latitude  =  42.29601035316377
-)
+# aspect ratio math: coord_sf locks panel proportions to true geography
+mid_lat  <- mean(c(lat_min, lat_max))
+lon_span <- lon_max - lon_min
+lat_span <- lat_max - lat_min
+aspect_ratio <- lat_span / (lon_span * cos(mid_lat * pi / 180))
 
-special_sf <- st_as_sf(special_point, coords = c("Longitude", "Latitude"), crs = 4326)
-points_sf  <- st_as_sf(locations2, coords = c("Longitude", "Latitude"), crs = 4326)
-
+map_widths   <- c(0.6, 0.4)
+width_ratio  <- map_widths[2] / map_widths[1]
+map_aspect    <- aspect_ratio
+forest_aspect <- aspect_ratio / width_ratio
 
 map_plot <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
@@ -1614,64 +1615,47 @@ map_plot <- ggplot(data = world) +
   geom_text(data = locations2,
             aes(x = Longitude, y = Latitude, label = name),
             nudge_y = 0.35, nudge_x = 0.9, size = 4.5, fontface = "bold") +
-  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
+  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max),
+           expand = FALSE, datum = NA) +
   theme_minimal() +
   theme(
-    strip.text        = element_blank(),
-    legend.key.height = unit(1.5, "lines"),
-    panel.border      = element_rect(color = "black", fill = NA, linewidth = 0.8)
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    aspect.ratio = map_aspect
   )
 
-north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
-
-# Combine using cowplot
-final_map <- ggdraw(map_plot)
-
-
-# mu plot for asite
-forest_plot <- ggplot(site_df2, aes(x = mean, y = y_pos_site)) +
+forest_plot <- ggplot(site_df2, aes(x = mean, y = Latitude)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  geom_segment(aes(x = p5, xend = p95, y = y_pos_site, yend = y_pos_site),
+  geom_segment(aes(x = p5, xend = p95, y = Latitude, yend = Latitude),
                color = sitecolors, linewidth = 0.75) +
-  geom_segment(aes(x = p25, xend = p75, y = y_pos_site, yend = y_pos_site),
+  geom_segment(aes(x = p25, xend = p75, y = Latitude, yend = Latitude),
                color = sitecolors, linewidth = 1.5) +
   geom_point(size = 4, color = sitecolors) +
   scale_x_continuous(limits = c(-0.5, 0.5)) +
-  scale_y_continuous(breaks = 1:n_site, labels = lat_labels,
-                     limits = c(0.5, n_site + 0.5)) +
-  labs(x = "Provenance intercepts", y = "Latitude") +
+  scale_y_continuous(limits = c(lat_min, lat_max),
+                     breaks = locations2$Latitude,
+                     labels = locations2$name,
+                     expand = c(0, 0)) +
+  labs(x = "Provenance intercepts", y = NULL) +
   theme_minimal() +
   theme(
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.title.y = element_text(margin = margin(r = 15)),
-    axis.text.y = element_text(angle = 0, margin = margin(r = 10))
+    axis.text.y = element_text(angle = 0, margin = margin(r = 10)),
+    aspect.ratio = forest_aspect
   )
 
-library(gtable)
-library(grid)
-
-g1 <- ggplotGrob(map_plot)
-g2 <- ggplotGrob(forest_plot)
-
-g1$heights <- g2$heights <- unit.pmax(g1$heights, g2$heights)
-
-combined <- plot_grid(g1, g2, ncol = 2, rel_widths = c(0.6, 0.4))
-
-# Inset: North America overview
+# inset: North America overview with bounding box
 bbox_poly <- st_as_sfc(st_bbox(c(
   xmin = lon_min, xmax = lon_max,
   ymin = lat_min, ymax = lat_max
 ), crs = 4326))
 
-north_america <- ne_countries(scale = "medium", continent = c("North America"), returnclass = "sf")
+north_america <- ne_countries(scale = "medium", continent = "North America", returnclass = "sf")
 
 inset_map <- ggplot(data = north_america) +
   geom_sf(fill = "white", color = "gray60", linewidth = 0.1) +
-  geom_sf(data = bbox_poly, 
-          # fill = NULL, 
-          color = "black", alpha = 0, linewidth = 0.7) +
+  geom_sf(data = bbox_poly, color = "black", alpha = 0, linewidth = 0.7) +
   coord_sf(xlim = c(-170, -50), ylim = c(15, 75), expand = FALSE) +
   theme_void() +
   theme(
@@ -1679,28 +1663,18 @@ inset_map <- ggplot(data = north_america) +
     panel.background = element_rect(fill = "aliceblue")
   )
 
-combined_with_margin <- plot_grid(
-  NULL, combined,
-  ncol = 1,
-  rel_heights = c(0.12, 0.88)  # 12% empty space at top for labels/inset
-)
+combined <- map_plot + forest_plot +
+  plot_layout(ncol = 2, widths = map_widths)
 
-combined_labeled <- ggdraw(combined_with_margin) +
-  draw_plot_label(
-    label    = c("(a) Provenance map", "(b) Provenance effect"),
-    x        = c(-0.02, 0.55),
-    y        = c(0.92, 0.92),
-    size     = 14,
-    fontface = "bold"
-  )
+final_map <- combined +
+  inset_element(inset_map, left = 0.68, bottom = 0.68, right = 0.98, top = 0.98,
+                align_to = "full") +
+  plot_annotation(tag_levels = list(c("(a) Provenance map", "(b) Provenance effect"))) &
+  theme(plot.tag = element_text(size = 14, face = "bold"),
+        plot.tag.position = c(0, 1))
 
-final_map <- combined_labeled +
-  draw_plot(
-    inset_map,
-    x = 0.45, y = 0.80,   # now sits in the reserved top margin
-    width = 0.2, height = 0.18
-  )
 final_map
+
 ggsave("figures/growthModelsMain/asiteMap.pdf", final_map, width = 10, height = 6)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
