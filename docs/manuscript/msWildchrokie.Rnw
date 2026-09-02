@@ -186,7 +186,7 @@ In the spring of 2023, we collected tree ring samples from four species in the \
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap}
-\caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively). We also performed a separate analyses, fitting the provenances per species, individually (see Figure \ref{fig:wcmuplotasitePerSpp})}
+\caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively; see also Figure \ref{fig:wcmuplotasitePerSpp} for a separate analyses, fitting the provenances per species)}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -203,7 +203,7 @@ To understand how growth shifted with season length, we used Bayesian hierarchic
 
 For daily climate data across all the years of phenological sampling (2018-2020), we combined two sources. For 2018 and 2019, we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data were not available for that station after August 2020, we used data from the `Boston (Weld Hill)' weather station of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep[see Figure \ref{fig:climOverlap} for the climate overlap between the two stations in 2020;][]{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across years at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
-For each predictor, we estimated its effect on observed ring width ($\text{rw}_i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
+For each predictor, we estimated its effect on observed ring width ($\text{rw}$, with $i$ denoting each observation) for each tree ($treeid$) in each year ($year$) as:
 
 \begin{equation}
 \begin{aligned}

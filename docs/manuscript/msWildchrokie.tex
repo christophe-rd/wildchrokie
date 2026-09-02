@@ -155,7 +155,7 @@ In the spring of 2023, we collected tree ring samples from four species in the \
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
 \includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap}
-\caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The common garden location is where the study took place at the Weld Research Building (Boston, MA). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively). We also performed a separate analyses, fitting the provenances per species, individually (see Figure \ref{fig:wcmuplotasitePerSpp})}
+\caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively; see also Figure \ref{fig:wcmuplotasitePerSpp} for a separate analyses, fitting the provenances per species)}
 \label{fig:wcmuplotasite}
 \end{figure}
 
@@ -172,7 +172,7 @@ To understand how growth shifted with season length, we used Bayesian hierarchic
 
 For daily climate data across all the years of phenological sampling (2018-2020), we combined two sources. For 2018 and 2019, we used data from the climate station located at Weld Hill research station \citep{arnoldarboretum_weather_2026}. Because the data were not available for that station after August 2020, we used data from the `Boston (Weld Hill)' weather station of the Network for Environment and Weather Applications (NEWA) for the whole year in 2020 \citep[see Figure \ref{fig:climOverlap} for the climate overlap between the two stations in 2020;][]{carroll_network_2026}. We used the North American Drought Monitor Maps to determine drought occurrence across years at our study location and used the proposed drought intensity index to qualify the presence of moderate, severe or extreme droughts \citep{nationalcentersforenvironmentalinformationncei_north_2026}. 
 
-For each predictor, we estimated its effect on observed ring width ($\text{rw}_i$, denoting each observation) for each tree ($treeid$) in each year ($year$) as:
+For each predictor, we estimated its effect on observed ring width ($\text{rw}$, with $i$ denoting each observation) for each tree ($treeid$) in each year ($year$) as:
 
 \begin{equation}
 \begin{aligned}
@@ -314,7 +314,7 @@ The text of this article was written without any GenAi, nor was it used for any 
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).} 
@@ -336,7 +336,7 @@ Harvard Forest (MA, USA) & 7 & 4 & 7 & 0 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (22.4\degree C), 2020 the hottest (23.1\degree C), and 2018 in between (22.9\degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.} 
@@ -370,7 +370,7 @@ Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 35 & 9.8 & 420 & 162 \\
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean, 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details. } 
@@ -405,7 +405,7 @@ $\alpha$ & -0.53 & -4.58 & -2.16 & 1.17 & 3.46 & 1.00 & 2344 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -439,7 +439,7 @@ $\alpha$ & 0.15 & -3.88 & -1.52 & 1.81 & 4.11 & 1.00 & 3258 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -473,7 +473,7 @@ $\alpha$ & 0.62 & -4.52 & -1.50 & 2.77 & 5.84 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GSL (growing season length) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -507,7 +507,7 @@ $\alpha$ & 1.86 & -2.27 & 0.11 & 3.62 & 6.03 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -543,7 +543,7 @@ $\alpha$ & -1.33 & -5.39 & -3.04 & 0.39 & 2.75 & 1.00 & 4526 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -577,7 +577,7 @@ $\alpha$ & 1.06 & -2.59 & -0.45 & 2.51 & 4.78 & 1.00 & 3336 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Wed Sep  2 11:52:36 2026
+% Wed Sep  2 12:27:51 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output ($\beta$) of our GDD parameters (see Table \ref{tab:tab_GDD} for untransformed parameter estimates), converted in \% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\% and 50\% uncertainty intervals.} 
