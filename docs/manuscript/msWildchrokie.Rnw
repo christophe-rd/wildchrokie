@@ -185,7 +185,7 @@ In the spring of 2023, we collected tree ring samples from four species in the \
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap}
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap_AI.pdf}
 \caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively; see also Figure \ref{fig:wcmuplotasitePerSpp} for a separate analyses, fitting the provenances per species)}
 \label{fig:wcmuplotasite}
 \end{figure}
