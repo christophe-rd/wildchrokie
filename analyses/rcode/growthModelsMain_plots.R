@@ -17,7 +17,7 @@ source("rcode/growthModelsMain.R")
 library(ggplot2)
 
 # flags
-makeplots <- F
+makeplots <- T
 runzscore <- F
 
 # === === === === === === === === === === === === === === === === 
@@ -1636,12 +1636,15 @@ inset_xmax <- lon_min + 0.98 * lon_span
 inset_ymin <- lat_min + 0.68 * lat_span
 inset_ymax <- lat_min + 0.98 * lat_span
 
+names(locations2)[3] <- "Longitude (°W)"
+names(locations2)[4] <- "Latitude (°N)"
+
 # --- main map panel ---
 map_plot <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
   geom_text(data = locations2,
-            aes(x = Longitude, y = Latitude, label = name),
+            aes(x = `Longitude (°W)`, y = `Latitude (°N)`, label = name),
             nudge_y = 0.35, nudge_x = 0.9, size = 4.5, fontface = "bold") +
   annotation_custom(inset_grob,
                     xmin = inset_xmin, xmax = inset_xmax,
@@ -1672,11 +1675,11 @@ forest_plot <- ggplot(site_df2, aes(x = mean, y = Latitude)) +
                      labels = locations2$name,
                      expand = c(0, 0)) +
   labs(
-    title = "(b) Provenance effects on growth",
-    x = "Provenance intercepts",
+    title = "(b) Provenance effect",
+    x = "Provenance effect on growth (log(mm))",
     y = NULL
   ) +
-  labs(x = "Provenance intercepts", y = NULL) +
+  labs(x = "Provenance effect on growth (log(mm))", y = NULL) +
   theme_minimal() +
   theme(
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
@@ -1690,7 +1693,7 @@ forest_plot <- ggplot(site_df2, aes(x = mean, y = Latitude)) +
 combined <- map_plot + forest_plot +
   plot_layout(ncol = 2, widths = map_widths)
 
-combined
+
 ggsave("figures/growthModelsMain/asiteMap.pdf", combined, width = 12, height = 7)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
@@ -1785,68 +1788,68 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### SOS VS EOS GAIN VS GSL#####
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-# Read data
-b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
-b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
-b_eosgain <- read.csv("output/GM_GSL_eosgain.csv")
-
-# Set layout: 3 rows, 1 column
-par(mfrow = c(3, 1), mar = c(4, 4, 3, 1))
-
-# Common y positions
-n_spp <- nrow(b_gsl_per)
-y_pos <- n_spp:1
-
-# (a) Growing season length
-plot(b_gsl_per$mean, y_pos,
-     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
-     xlab = "Growing season length change (%)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
-     frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"))
-
-segments(b_gsl_per$p5, y_pos, b_gsl_per$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
-segments(b_gsl_per$p25, y_pos, b_gsl_per$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
-
-axis(2, at = y_pos, labels = b_gsl_per$spp_name, las = 1)
-mtext("(a) Growing season length", adj = 0, side = 3,
-      line = 1, font = 2, cex = 0.9)
-
-# (b) SOS gain
-plot(b_sosgain$mean, y_pos,
-     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
-     xlab = "SOS gain (%)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
-     frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"))
-
-segments(b_sosgain$p5, y_pos, b_sosgain$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
-segments(b_sosgain$p25, y_pos, b_sosgain$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
-
-axis(2, at = y_pos, labels = b_sosgain$spp_name, las = 1)
-mtext("(b) Start of season gain", adj = 0, side = 3,
-      line = 1, font = 2, cex = 0.9)
-
-# (c) EOS gain
-plot(b_eosgain$mean, y_pos,
-     xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
-     xlab = "EOS gain (%)", ylab = "",
-     yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
-     frame.plot = TRUE,
-     panel.first = abline(v = 0, lty = 2, col = "black"))
-
-segments(b_eosgain$p5, y_pos, b_eosgain$p95, y_pos,
-         col = wccolslatbi, lwd = 1.5)
-segments(b_eosgain$p25, y_pos, b_eosgain$p75, y_pos,
-         col = wccolslatbi, lwd = 3)
-
-axis(2, at = y_pos, labels = b_eosgain$spp_name, las = 1)
-mtext("(c) End of season gain", adj = 0, side = 3,
-      line = 1, font = 2, cex = 0.9)
+# # Read data
+# b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
+# b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
+# b_eosgain <- read.csv("output/GM_GSL_eosgain.csv")
+# 
+# # Set layout: 3 rows, 1 column
+# par(mfrow = c(3, 1), mar = c(4, 4, 3, 1))
+# 
+# # Common y positions
+# n_spp <- nrow(b_gsl_per)
+# y_pos <- n_spp:1
+# 
+# # (a) Growing season length
+# plot(b_gsl_per$mean, y_pos,
+#      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+#      xlab = "Growing season length change (%)", ylab = "",
+#      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+#      frame.plot = TRUE,
+#      panel.first = abline(v = 0, lty = 2, col = "black"))
+# 
+# segments(b_gsl_per$p5, y_pos, b_gsl_per$p95, y_pos,
+#          col = wccolslatbi, lwd = 1.5)
+# segments(b_gsl_per$p25, y_pos, b_gsl_per$p75, y_pos,
+#          col = wccolslatbi, lwd = 3)
+# 
+# axis(2, at = y_pos, labels = b_gsl_per$spp_name, las = 1)
+# mtext("(a) Growing season length", adj = 0, side = 3,
+#       line = 1, font = 2, cex = 0.9)
+# 
+# # (b) SOS gain
+# plot(b_sosgain$mean, y_pos,
+#      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+#      xlab = "SOS gain (%)", ylab = "",
+#      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+#      frame.plot = TRUE,
+#      panel.first = abline(v = 0, lty = 2, col = "black"))
+# 
+# segments(b_sosgain$p5, y_pos, b_sosgain$p95, y_pos,
+#          col = wccolslatbi, lwd = 1.5)
+# segments(b_sosgain$p25, y_pos, b_sosgain$p75, y_pos,
+#          col = wccolslatbi, lwd = 3)
+# 
+# axis(2, at = y_pos, labels = b_sosgain$spp_name, las = 1)
+# mtext("(b) Start of season gain", adj = 0, side = 3,
+#       line = 1, font = 2, cex = 0.9)
+# 
+# # (c) EOS gain
+# plot(b_eosgain$mean, y_pos,
+#      xlim = c(-2, 40), ylim = c(0.5, n_spp + 0.5),
+#      xlab = "EOS gain (%)", ylab = "",
+#      yaxt = "n", pch = 16, cex = 2, col = wccolslatbi,
+#      frame.plot = TRUE,
+#      panel.first = abline(v = 0, lty = 2, col = "black"))
+# 
+# segments(b_eosgain$p5, y_pos, b_eosgain$p95, y_pos,
+#          col = wccolslatbi, lwd = 1.5)
+# segments(b_eosgain$p25, y_pos, b_eosgain$p75, y_pos,
+#          col = wccolslatbi, lwd = 3)
+# 
+# axis(2, at = y_pos, labels = b_eosgain$spp_name, las = 1)
+# mtext("(c) End of season gain", adj = 0, side = 3,
+#       line = 1, font = 2, cex = 0.9)
 
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
