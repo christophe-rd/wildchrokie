@@ -1579,11 +1579,11 @@ dev.off()
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 
 # my thanks to claude for helping with this over complicated figure
-
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(sf)
 library(patchwork)
+library(grid)
 
 lat_min <- 41.5; lat_max <- 47
 lon_min <- -76; lon_max <- -65
@@ -1598,7 +1598,6 @@ sitecolors <- setNames(locations2$col, locations2$name)[site_df2$site_name]
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
-# aspect ratio math: coord_sf locks panel proportions to true geography
 mid_lat  <- mean(c(lat_min, lat_max))
 lon_span <- lon_max - lon_min
 lat_span <- lat_max - lat_min
@@ -1609,43 +1608,7 @@ width_ratio  <- map_widths[2] / map_widths[1]
 map_aspect    <- aspect_ratio
 forest_aspect <- aspect_ratio / width_ratio
 
-map_plot <- ggplot(data = world) +
-  geom_sf(fill = "white", color = "gray60") +
-  geom_sf(data = points_sf, color = locations2$col, size = 4) +
-  geom_text(data = locations2,
-            aes(x = Longitude, y = Latitude, label = name),
-            nudge_y = 0.35, nudge_x = 0.9, size = 4.5, fontface = "bold") +
-  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max),
-           expand = FALSE, datum = NA) +
-  theme_minimal() +
-  theme(
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    aspect.ratio = map_aspect
-  )
-
-forest_plot <- ggplot(site_df2, aes(x = mean, y = Latitude)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  geom_segment(aes(x = p5, xend = p95, y = Latitude, yend = Latitude),
-               color = sitecolors, linewidth = 0.75) +
-  geom_segment(aes(x = p25, xend = p75, y = Latitude, yend = Latitude),
-               color = sitecolors, linewidth = 1.5) +
-  geom_point(size = 4, color = sitecolors) +
-  scale_x_continuous(limits = c(-0.5, 0.5)) +
-  scale_y_continuous(limits = c(lat_min, lat_max),
-                     breaks = locations2$Latitude,
-                     labels = locations2$name,
-                     expand = c(0, 0)) +
-  labs(x = "Provenance intercepts", y = NULL) +
-  theme_minimal() +
-  theme(
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text.y = element_text(angle = 0, margin = margin(r = 10)),
-    aspect.ratio = forest_aspect
-  )
-
-# inset: North America overview with bounding box
+# --- inset map ---
 bbox_poly <- st_as_sfc(st_bbox(c(
   xmin = lon_min, xmax = lon_max,
   ymin = lat_min, ymax = lat_max
@@ -1660,22 +1623,75 @@ inset_map <- ggplot(data = north_america) +
   theme_void() +
   theme(
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    panel.background = element_rect(fill = "aliceblue")
+    panel.background = element_rect(fill = "aliceblue"),
+    plot.background = element_blank()
+  )
+
+inset_grob <- ggplotGrob(inset_map)
+
+# position: fractions (0-1) of the map panel's own lon/lat extent
+# adjust these four to move/resize the inset
+inset_xmin <- lon_min + 0.68 * lon_span
+inset_xmax <- lon_min + 0.98 * lon_span
+inset_ymin <- lat_min + 0.68 * lat_span
+inset_ymax <- lat_min + 0.98 * lat_span
+
+# --- main map panel ---
+map_plot <- ggplot(data = world) +
+  geom_sf(fill = "white", color = "gray60") +
+  geom_sf(data = points_sf, color = locations2$col, size = 4) +
+  geom_text(data = locations2,
+            aes(x = Longitude, y = Latitude, label = name),
+            nudge_y = 0.35, nudge_x = 0.9, size = 4.5, fontface = "bold") +
+  annotation_custom(inset_grob,
+                    xmin = inset_xmin, xmax = inset_xmax,
+                    ymin = inset_ymin, ymax = inset_ymax) +
+  labs(title = "(a) Provenance map") +
+  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max),
+           expand = FALSE) +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    aspect.ratio = map_aspect,
+    axis.text = element_text(size = 9),
+    axis.title = element_text(size = 10,),
+    plot.title = element_text(size = 14, face = "bold", hjust = 0)
+  )
+
+# --- forest / mu plot ---
+forest_plot <- ggplot(site_df2, aes(x = mean, y = Latitude)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  geom_segment(aes(x = p5, xend = p95, y = Latitude, yend = Latitude),
+               color = sitecolors, linewidth = 0.75) +
+  geom_segment(aes(x = p25, xend = p75, y = Latitude, yend = Latitude),
+               color = sitecolors, linewidth = 1.5) +
+  geom_point(size = 4, color = sitecolors) +
+  scale_x_continuous(limits = c(-0.5, 0.5)) +
+  scale_y_continuous(limits = c(lat_min, lat_max),
+                     breaks = locations2$Latitude,
+                     labels = locations2$name,
+                     expand = c(0, 0)) +
+  labs(
+    title = "(b) Provenance effects on growth",
+    x = "Provenance intercepts",
+    y = NULL
+  ) +
+  labs(x = "Provenance intercepts", y = NULL) +
+  theme_minimal() +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(angle = 0, margin = margin(r = 10)),
+    aspect.ratio = forest_aspect,
+    plot.title = element_text(size = 14, face = "bold", hjust = 0)
   )
 
 combined <- map_plot + forest_plot +
   plot_layout(ncol = 2, widths = map_widths)
 
-final_map <- combined +
-  inset_element(inset_map, left = 0.68, bottom = 0.68, right = 0.98, top = 0.98,
-                align_to = "full") +
-  plot_annotation(tag_levels = list(c("(a) Provenance map", "(b) Provenance effect"))) &
-  theme(plot.tag = element_text(size = 14, face = "bold"),
-        plot.tag.position = c(0, 1))
-
-final_map
-
-ggsave("figures/growthModelsMain/asiteMap.pdf", final_map, width = 10, height = 6)
+combined
+ggsave("figures/growthModelsMain/asiteMap.pdf", combined, width = 12, height = 7)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 ##### ayear ##### 
