@@ -269,38 +269,13 @@ More growth with a later EOS could be due to the warmer days at the end of the s
 %-------------------------------------------------------------------------------
 \subsection*{Year and provenance level effects on growth}
 %-------------------------------------------------------------------------------
-We did not find any clear effect of year on growth (2018: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2018")])} (UI:
-\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2018")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2018")])}) ring width (log(mm); henceforth `RW'); 2019: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2019")])} (UI:
-\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2019")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2019")])}) RW; 2020: $\alpha =$
-\Sexpr{sprintf("%.2f", ayear_df2$mean[which(ayear_df2$year_name %in% "2020")])} (UI:
-\Sexpr{sprintf("%.2f", ayear_df2$p5[which(ayear_df2$year_name %in% "2020")])}, 
-\Sexpr{sprintf("%.2f", ayear_df2$p95[which(ayear_df2$year_name %in% "2020")])}) RW; Table \ref{tab:tab_GDD}), and there were no apparent differences in baseline growth between species ({\Ainc}: $\alpha =$ 
-\Sexpr{fmt_stat(aspp_df2, "A. incana")} RW; {\Ball}: $\alpha =$
-\Sexpr{fmt_stat(aspp_df2, "B. alleghaniensis")} RW; {\Bpap}: $\alpha =$
-\Sexpr{fmt_stat(aspp_df2, "B. papyrifera")} RW; {\Bpop}: $\alpha =$
-\Sexpr{fmt_stat(aspp_df2, "B. populifolia")} RW; Figure \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL}; Table \ref{tab:tab_GDD}). In addition, growth did not vary with provenance (Second College Grant (NH): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Second College Grant (NH, USA)"])} (UI:
-\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name   == "Second College Grant (NH, USA)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name  == "Second College Grant (NH, USA)"])}) RW; Harvard Forest (MA): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "Harvard Forest (MA, USA)"])} (UI:
-\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name   == "Harvard Forest (MA, USA)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name  == "Harvard Forest (MA, USA)"])}) RW; St-Hippolyte (Qc): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "St-Hippolyte (Qc, Canada)"])} (UI:
-\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name   == "St-Hippolyte (Qc, Canada)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name  == "St-Hippolyte (Qc, Canada)"])}) RW; White Mountains (NH): $\alpha =$
-\Sexpr{sprintf("%.2f", site_df2$mean[site_df2$site_name == "White Mountains (NH, USA)"])} (UI:
-\Sexpr{sprintf("%.2f", site_df2$p5[site_df2$site_name   == "White Mountains (NH, USA)"])}, 
-\Sexpr{sprintf("%.2f", site_df2$p95[site_df2$site_name  == "White Mountains (NH, USA)"])}) RW; Figure \ref{fig:wcmuplotasite}b; Table \ref{tab:tab_GDD}). The limited variation between provenances ($\sigma = $
-\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_asite"])} (UI:
-\Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_asite"])}, 
-\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_asite"])} RW) was similar to variation across individual trees ($\sigma =$ 
-\Sexpr{sprintf("%.2f", sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"])} (UI: 
-\Sexpr{sprintf("%.2f", sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"])}, 
-\Sexpr{sprintf("%.2f", sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"])}) RW; Table \ref{tab:tab_GDD}; Figure \ref{fig:fig:wcmuplotatreeid}).
+We did not find any clear effect of year on growth (Table \ref{tab:tab_GDD}), and there were no apparent differences in baseline growth between species (Figure \ref{fig:wcmuplotasite}b; Table \ref{tab:tab_GDD}). The limited variation between provenances ($\sigma = $
+\Sexpr{sprintf("%.2f", exp(sigma_df2$mean[sigma_df2$sigma == "sigma_asite"]))} ring width (mm; UI:
+\Sexpr{sprintf("%.2f", exp(sigma_df2$p5[sigma_df2$sigma == "sigma_asite"]))}, 
+\Sexpr{sprintf("%.2f", exp(sigma_df2$p95[sigma_df2$sigma == "sigma_asite"]))}) was similar to variation across individual trees ($\sigma =$ 
+\Sexpr{sprintf("%.2f", exp(sigma_df2$mean[sigma_df2$sigma == "sigma_atreeid"]))} ring width (mm; UI: 
+\Sexpr{sprintf("%.2f", exp(sigma_df2$p5[sigma_df2$sigma == "sigma_atreeid"]))}, 
+\Sexpr{sprintf("%.2f", exp(sigma_df2$p95[sigma_df2$sigma == "sigma_atreeid"]))}); Table \ref{tab:tab_GDD}; Figure \ref{fig:wcmuplotatreeid}).
 
 
 % Figure mu across all species and climate predictors
@@ -319,9 +294,8 @@ We found that longer growing seasons increased growth for all four species, but 
 
 Our finding that the end of season appears more related to growth than the start of season is aligned with increasing work suggesting that both season events together may dynamically determine growth \citep{zohner_effect_2023}. This implies that research focusing solely on the start of season \citep{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016} could miss when longer seasons lead to more growth. While studies have long called for more research on the end of season \citep{gallinat_autumn_2015,gunderson_forest_2012,piao_plant_2019,richardson_terrestrial_2012}, our results suggest we may especially need more work that monitors how growth and phenology shift across the season \citep{zani_increased_2020,zohner_effect_2023}. 
 
-By accounting for differences in daily temperatures, the thermal season may align more closely to when and how fast plants can grow each day compared to the calendar season, which assumes a stable influence of each day on growth \citep{korner_four_2023}. Our results suggest significant growth occurs towards the end of the season, but would require data with a finer temporal scale (e.g., daily or weekly data through dendrometers and/or xylogenesis) to confirm this. To date, these studies showed strong species differences in when most growth happens during the season, though most studies are on mature trees \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}. % However, most of these studies were done on a small number of European and/or conifer species \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}, highlighting that we need more data across species spanning a wider range of life history strategies.
+By accounting for differences in daily temperatures, the thermal season may align more closely to when and how fast plants can grow each day compared to the calendar season, which assumes a stable influence of each day on growth \citep{korner_four_2023}. Our results suggest significant growth occurs towards the end of the season, but would require data with a finer temporal scale (e.g., daily or weekly data through dendrometers and/or xylogenesis) to confirm this. To date, these studies showed strong species differences in when most growth happens during the season, though most studies are on mature trees \citep[e.g.][]{zweifel_are_2016,etzold_number_2022,balducci_stem_2019}. 
 
- % vvdm1sept: I changed the first sentence slightly, and try to reformulate a sentence after
 Our focus on juvenile trees may partly explain why we found increased growth with longer seasons \citep{augspurger_differences_2003,sweeneyComparisonTimingSpring2024}. Younger trees are generally more plastic than their adult forms \citep{augspurger_differences_2003,way_photoperiod_2015}, allowing them to take advantage of light early in the season or in response to forest gaps. If our juvenile trees grew in a mature forest, they would have been positioned below the canopy and exposed to stronger competition for light and other resources. Their growth response to longer seasons could therefore have been weaker than what we observed
 \citep{cleland_effects_2024,augspurger_differences_2003,sweeneyComparisonTimingSpring2024,polgar_leafout_2011}. In addition, we grew our trees in a common garden with potentially more space between trees than in a natural setting (spacing was between 1.5 and 3 m), without any shade cloth. While other studies on mature trees have found the same response \citep{finziCarbonBudgetHarvard2020}, our results may have been more muted if the trees were grown in a forest setting. 
 
@@ -878,32 +852,11 @@ print(xtable(binded,
 \label{fig:wcmuplotasitePerSpp}
 \end{figure}
 
-% Full vs restricted data comparison for Wildchrokie
+% Climate data overlap
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
-\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see `Data analyses' section in Methods for more details).} 
-\label{fig:wcSOSEOScomparison}
-\end{figure}
-
-% XY facetted by species GDD
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.pdf}
-\caption{Ring width (mm) trends in response to thermal season (growing degree days). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
-\label{fig:wcxyGDD}
-\end{figure}
-
-% XY facetted by species GSL
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf}
-\caption{Ring width trends (mm) in response to calendar season (growing season length). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
-\label{fig:wcxyGSL}
-\end{figure}
-
-% Figure mu atreeid full
-\begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
-\caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
-\label{fig:wcmuplotatreeid}
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/climateComparison2020.pdf}
+\caption{Climate data overlap in 2020 for the two climate stations we used in our dataset (see `Data analyses' section for more details). The lines represent the daily mean temperature of each climate station and the shaded area, the minimum and maximum daily temperatures.}
+\label{fig:climOverlap}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
@@ -914,11 +867,18 @@ print(xtable(binded,
 \label{fig:bsppZscored}
 \end{figure}
 
-% Climate data overlap
+% Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/climateComparison2020.pdf}
-\caption{Climate data overlap in 2020 for the two climate stations we used in our dataset (see `Data analyses' section for more details). The lines represent the daily mean temperature of each climate station and the shaded area, the minimum and maximum daily temperatures.}
-\label{fig:climOverlap}
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
+\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see `Data analyses' section in Methods for more details).} 
+\label{fig:wcSOSEOScomparison}
+\end{figure}
+
+% Figure mu atreeid full
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
+\caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
+\label{fig:wcmuplotatreeid}
 \end{figure}
 
 \end{document}
