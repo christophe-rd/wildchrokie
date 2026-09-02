@@ -1640,6 +1640,12 @@ names(locations2)[3] <- "Longitude (°W)"
 names(locations2)[4] <- "Latitude (°N)"
 
 # --- main map panel ---
+special_point <- data.frame(
+  name = "Common garden location",
+  lon = -71.13358611669867,
+  lat = 42.29601035316377
+)
+
 map_plot <- ggplot(data = world) +
   geom_sf(fill = "white", color = "gray60") +
   geom_sf(data = points_sf, color = locations2$col, size = 4) +
@@ -1652,6 +1658,21 @@ map_plot <- ggplot(data = world) +
   labs(title = "(a) Provenance map") +
   coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max),
            expand = FALSE) +
+  geom_point(
+    data = special_point,
+    aes(x = lon, y = lat),
+    shape = 18,
+    size = 5,
+    color = "black"
+  ) +
+  geom_text(
+    data = special_point,
+    aes(x = lon, y = lat, label = name),
+    nudge_y = 0,
+    nudge_x = 3.2,
+    size = 6,
+    fontface = "bold"
+  ) +
   theme_minimal() +
   theme(
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
