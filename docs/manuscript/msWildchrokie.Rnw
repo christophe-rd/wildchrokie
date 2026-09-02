@@ -315,6 +315,14 @@ The overall positive response we observed across multiple tree species to warmer
 
 We also found that the start and end of season asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate carbon dynamic predictions \citep{li_comparison_2022}. Such models usually assume a temperature-sensitive start of season and a photoperiod-controlled, and thus less variable, end of season \citep{chen_comparison_2022,melaas_multiscale_2016}. This results in a disproportionate influence of the start compared to the end of season on tree growth, unlike what our results suggest. Such a representation of what drives the temporal boundaries of the growing season may feed into oversimplified explanations of the processes regulating tree growth with future climate change. 
 
+\section*{Acknowledgements}
+Thanks to Sally Aitken and reviewers for comments that helped improved the manuscript. Charlotte Capistran-Champoux helped with figure design and visual improvements. NSERC Canada Graduate Research Scholarship – Master’s (CGS-M) and \textit{*Lizzie research chair} provided funding.
+
+\section*{Author contribution}
+E.M.W proposed the original research idea. C.R-D. conducted the analyses with V.V.d.M. and E.M.W. help throughout. D.M.B, C.C collected the phenology data and C.R-D collected and processed the tree ring samples that were collected by N.P., D.M.B, DL and E.M.W. C.R-D and E.M.W. wrote the initial draft and all authors reviewed and approved the manuscript.
+
+\section*{Gen-Ai statement}
+The text of this article was written without any GenAi, nor was it used for any creative or idea generation process. C.R-D used Claude and ChatGPT for performing simple repetitive coding tasks, including help with the figure coding, data cleaning and improving coding workflow efficiency. All other co-authors did not use GenAi for their contribution to the paper.
 
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
