@@ -1,4 +1,4 @@
-\begin{thebibliography}{90}
+\begin{thebibliography}{92}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -40,11 +40,6 @@ Baumgarten, F., Aitken, S., Vitasse, Y., Guy, R.D. \& Wolkovich, E. (2026)
 Boisvenue, C. \& Running, S.W. (2006) Impacts of climate change on natural
   forest productivity – evidence since the middle of the 20th century.
   \emph{Global Change Biology} \textbf{12}, 862--882.
-
-\bibitem[{Bowman \& Hacker(2023)}]{bowmanEcology2023}
-Bowman, W. \& Hacker, S. (2023) \emph{Ecology}. Oxford University Press,
-  Oxford, New York, sixth edition, new to this edition:, sixth edition, new to
-  this edition: edn.
 
 \bibitem[{Buonaiuto \emph{et~al.}(2026)Buonaiuto, Chamberlain, Loughnan \&
   Wolkovich}]{buonaiuto_early_2026}
@@ -140,12 +135,6 @@ Chen, B. (2022) Comparison of the {Two} {Most} {Common} {Phenology}
   {Algorithms} {Imbedded} in {Land} {Surface} {Models}. \emph{Journal of
   Geophysical Research: Atmospheres} \textbf{127}, e2022JD037167.
 
-\bibitem[{Chiang \emph{et~al.}(2021)Chiang, Mazdiyasni \&
-  AghaKouchak}]{chiang_evidence_2021}
-Chiang, F., Mazdiyasni, O. \& AghaKouchak, A. (2021) Evidence of anthropogenic
-  impacts on global drought frequency, duration, and intensity. \emph{Nature
-  Communications} \textbf{12}, 2754.
-
 \bibitem[{Chmielewski \& Rötzer(2001)}]{chmielewski_response_2001}
 Chmielewski, F.M. \& Rötzer, T. (2001) Response of tree phenology to climate
   change across {Europe}. \emph{Agricultural and Forest Meteorology}
@@ -202,6 +191,12 @@ Dox, I., Mariën, B., Zuccarini, P., Marchand, L.J., Prislan, P., Gričar, J.,
   (2022) Wood growth phenology and its relationship with leaf phenology in
   deciduous forest trees of the temperate zone of {Western} {Europe}.
   \emph{Agricultural and Forest Meteorology} \textbf{327}, 109229.
+
+\bibitem[{D’Orangeville \emph{et~al.}(2018)D’Orangeville, Houle, Duchesne,
+  Phillips, Bergeron \& Kneeshaw}]{dorangeville_beneficial_2018}
+D’Orangeville, L., Houle, D., Duchesne, L., Phillips, R.P., Bergeron, Y. \&
+  Kneeshaw, D. (2018) Beneficial effects of climate warming on boreal tree
+  growth may be transitory. \emph{Nature Communications} \textbf{9}, 3213.
 
 \bibitem[{Etzold \emph{et~al.}(2022)Etzold, Sterck, Bose, Braun, Buchmann,
   Eugster, Gessler, Kahmen, Peters, Vitasse, Walthert, Ziemińska \&
@@ -351,6 +346,12 @@ Jeong, S. \& Medvigy, D. (2014) Macroscale prediction of autumn leaf coloration
   throughout the continental {United} {States}. \emph{Global Ecology and
   Biogeography} \textbf{23}, 1245--1254.
 
+\bibitem[{Jurado \& Matthes(2025)}]{jurado_increasing_2025}
+Jurado, S. \& Matthes, J. (2025) Increasing {Large} {Precipitation} {Events}
+  and {Low} {Available} {Water} {Holding} {Capacity} {Create} the {Conditions}
+  for {Dry} {Land}‐{Atmosphere} {Feedbacks} in the {Northeastern} {United}
+  {States}. \emph{Water Resources Research} \textbf{61}, e2024WR038600.
+
 \bibitem[{Keenan \emph{et~al.}(2014)Keenan, Gray, Friedl, Toomey, Bohrer,
   Hollinger, Munger, O’Keefe, Schmid, Wing, Yang \&
   Richardson}]{keenan_net_2014}
@@ -370,13 +371,13 @@ Kramer, P.J. (1936) {EFFECT} {OF} {VARIATION} {IN} {LENGTH} {OF} {DAY} {ON}
 Körner, C., Möhl, P. \& Hiltbrunner, E. (2023) Four ways to define the
   growing season. \emph{Ecology Letters} \textbf{26}, 1277--1292.
 
-\bibitem[{Lempereur \emph{et~al.}(2015)Lempereur, Martin-StPaul, Damesin,
-  Joffre, Ourcival, Rocheteau \& Rambal}]{Lempereur2015}
-Lempereur, M., Martin-StPaul, N.K., Damesin, C., Joffre, R., Ourcival, J.M.,
+\bibitem[{Lempereur \emph{et~al.}(2015)Lempereur, Martin‐StPaul, Damesin,
+  Joffre, Ourcival, Rocheteau \& Rambal}]{lempereur_growth_2015}
+Lempereur, M., Martin‐StPaul, N.K., Damesin, C., Joffre, R., Ourcival, J.,
   Rocheteau, A. \& Rambal, S. (2015) Growth duration is a better predictor of
-  stem increment than carbon supply in a mediterranean oak forest: implications
-  for assessing forest productivity under climate change. \emph{New
-  Phytologist} \textbf{207}, 579--590.
+  stem increment than carbon supply in a {Mediterranean} oak forest:
+  implications for assessing forest productivity under climate change.
+  \emph{New Phytologist} \textbf{207}, 579--590.
 
 \bibitem[{Li \emph{et~al.}(2022)Li, Melaas, Carrillo, Ault, Richardson,
   Lawrence, Friedl, Seyednasrollah, Lawrence \& Young}]{li_comparison_2022}
@@ -543,6 +544,9 @@ Spinoni, J., Vogt, J.V., Naumann, G., Barbosa, P. \& Dosio, A. (2018) Will
 \bibitem[{{Stan Development Team}(2025)}]{standevelopmentteam_rstan_2025}
 {Stan Development Team} (2025) {RStan}: the {R} interface to {Stan}.
 
+\bibitem[{Stokes \& Smiley(1996)}]{stokes_introduction_1996}
+Stokes, M. \& Smiley, T.L. (1996) An {Introduction} to {Tree}-{Ring} {Dating}.
+
 \bibitem[{Stridbeck \emph{et~al.}(2022)Stridbeck, Björklund, Fuentes,
   Gunnarson, Jönsson, Linderholm, Ljungqvist, Olsson, Rayner, Rocha, Zhang \&
   Seftigen}]{stridbeck_partly_2022}
@@ -643,6 +647,13 @@ Zeng, Z.A. \& Wolkovich, E.M. (2024) Weak evidence of provenance effects in
 Zettlemoyer, M.A., Schultheis, E.H. \& Lau, J.A. (2019) Phenology in a warming
   world: differences between native and non‐native plant species.
   \emph{Ecology Letters} \textbf{22}, 1253--1263.
+
+\bibitem[{Zhang \emph{et~al.}(2021)Zhang, Gou, Alexander, Xia, Wang, Zhang, Man
+  \& Pederson}]{zhang_drought_2021}
+Zhang, J., Gou, X., Alexander, M.R., Xia, J., Wang, F., Zhang, F., Man, Z. \&
+  Pederson, N. (2021) Drought limits wood production of {Juniperus} przewalskii
+  even as growing seasons lengthens in a cold and arid environment.
+  \emph{CATENA} \textbf{196}, 104936.
 
 \bibitem[{Zohner \emph{et~al.}(2023)Zohner, Mirzagholi, Renner, Mo, Rebindaine,
   Bucher, Palouš, Vitasse, Fu, Stocker \& Crowther}]{zohner_effect_2023}

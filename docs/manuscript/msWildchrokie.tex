@@ -132,7 +132,7 @@ To understand the relationship between growing seasons and growth, we need to un
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig_AdobeI.pdf}
 % double check below legend
-\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). With climate change, spring and autumn events phenology has shifted, lengthening the calendar growing season. These longer seasons also changed the temperature trees experience early in their season, with cooler first days of growth (a) leading to little accumulation of GDD (b), and weaker shifts in days at the end of season (a) resulting in a higher GDD accumulation (b) due to warmer temperature during this period. Alongside these start and end of season shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. The arrows represent hypothetical shifts in spring (green) and autumn (orange) phenology. We show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red) using mean daily temperature data from the Boston Logan International Airport Climate Station for the smoothed temperature and GDD curves \citep{nationaloceanicandatmosphericadministration_local_2026}.}
+\caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). With climate change, spring and autumn events have shifted, lengthening the calendar growing season. These longer seasons also changed the temperature trees experience early in their season, with cooler first days of growth (a) leading to little accumulation of GDD (b), and weaker shifts in days at the end of season (a) resulting in a higher GDD accumulation (b) due to warmer temperature during this period. Alongside these start and end of season shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. The arrows represent hypothetical shifts in spring (green) and autumn (orange) phenology. We show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red), using mean daily temperature data from the Boston Logan International Airport Climate Station \citep{nationaloceanicandatmosphericadministration_local_2026}.}
 \label{fig:GSfig}
 \end{figure}
 
@@ -165,7 +165,7 @@ In the spring of 2023, we collected tree ring samples from four species in the \
 \subsection*{Sample processing, imaging and measuring}
 We mounted cores on wooden mounts and sanded both the cores and cross-sections using progressively finer sandpaper grits (150, 300, 400, 600, 800, 1000), then scanned the cores and cross-sections at a resolution of 6250 dpi with a high-resolution tree ring scanner \citep{fong_tim_2026}. Using the digitized images, we measured ring widths with ImageJ \citep{schneider_nih_2012} at three standard locations for each cross-section (at {120\degree} from each other, averaging the three measurements to yield one ring width per year, per individual), and one ring width for each core. When we had cross-sections ($n = 78$) and cores ($n = 43$) for an individual, we used only the measurement from the cross-section ($n = 81 $). 
 
-We performed visual cross dating. This consists of assigning a calendar year to each ring and comparing the year-to-year growth variation and anomalies across replicates of the same species \citep{cook_methods_1990}. We did not perform statistical crossdating or detrending because our chronologies (number of years of data) were extremely short \citep{radenPotentialIntraannualDensity2020a} and showed no evidence of consistent allometric trends (Figure \ref{fig:allom}). We controlled for effects of different years by including `year' in our models (see equation \ref{eq:mainMdl} in `Data analyses' below).
+We performed visual cross dating. This consists of assigning a calendar year to each ring and comparing the year-to-year growth variation and anomalies across replicates of the same species \citep{stokes_introduction_1996}. We did not perform statistical crossdating or detrending because our chronologies (number of years of data) were extremely short \citep{radenPotentialIntraannualDensity2020a} and showed no evidence of consistent allometric trends (Figure \ref{fig:allom}). We controlled for effects of different years by including `year' in our models (see equation \ref{eq:mainMdl} in `Data analyses' below).
 
 \subsection*{Data analyses}
 To understand how growth shifted with season length, we used Bayesian hierarchical models, estimating how growth, measured as ring width, covaried with season length. We measured the season length in four different ways: GDD, GSL, SOS and EOS. Leaf phenology and growth are often closely synchronized in diffuse-porous species \citep[e.g., \textit{Betula;}][]{cufar_treering_2008} making leaf phenology a good proxy for setting the start and end of the growing season in these species \citep{marchand_timing_2021,silvestro_roots_2025,suzuki_phenological_1996}. Thus, we calculated the thermal season using growing degree days (GDD; mean daily temperature above 5\degree C) accumulated between leafout and budset, and the calendar season (or growing season length; GSL) as the number of days between leafout and budset. Finally, we used leafout for the start of season (SOS) and budset for the end of the season (EOS) as separate predictors that represent the boundaries of the growing season. For interpretability, we report ring width change in \% with the number of GDDs accumulated in an average week (seven days) in May (day of year 121 to 150 from 2018 to 2020), for the thermal season, and ring width change in \% per week of season length, leafout and budset for GSL, SOS and EOS, respectively. We report effects when the 90\% UI do not overlap with zero and consider a trend if the 50\% UI do not overlap with zero \citep{gelman_regression_2020}.
@@ -259,7 +259,7 @@ We did not find any clear effect of year on growth, and there were no apparent d
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \clearpage
 \section{Discussion} 
-We found that longer growing seasons increased growth for all four species, but the strength of this relationship varied depending on the metric used to measure season length. In particular, the thermal growing season was more often related to growth than the calendar season. Thus, our results support the hypothesis that the thermal season is a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}. They may also suggest that the short and cool spring days early in the season contribute less to growth than additional days later in the season, when conditions are warmer \citep{buonaiuto_early_2026}. Further supporting this, we found a larger response of growth to the end of season than to its start, when considering each date separately.
+We found that longer growing seasons increased growth for all four species, but the strength of this relationship varied depending on the metric used to measure season length. In particular, the thermal growing season was more often related to growth than the calendar season. Thus, our results support the hypothesis that the thermal season is a better predictor for growth \citep{chuine_processbased_2017,wang_simulation_1998}. They may also suggest that the short and cool spring days early in the season contribute less to growth than additional days later in the season, when conditions are warmer \citep{buonaiuto_early_2026}. Further supporting this, we found a larger response of growth to the end of season than to its start, when considering each date separately \citep{zhang_drought_2021}.
 
 Our finding that the end of season appears more related to growth than the start of season is aligned with increasing work suggesting that both season events together may dynamically determine growth \citep{zohner_effect_2023}. This implies that research focusing solely on the start of season \citep{dow_warm_2022,gaoEarlierStartThermal2022,wheeler_snow_2016} could miss when longer seasons lead to more growth. While studies have long called for more research on the end of season \citep{gallinat_autumn_2015,gunderson_forest_2012,piao_plant_2019,richardson_terrestrial_2012}, our results suggest we may especially need more work that monitors how growth and phenology shift across the season \citep{zani_increased_2020,zohner_effect_2023}. 
 
@@ -271,27 +271,27 @@ Our focus on juvenile trees may partly explain why we found increased growth wit
 Understanding how juvenile trees respond to longer warmer season is critical for predicting how forests will regenerate and expand with the longer and warmer seasons of anthropogenic climate change. Plant phenology research has suggested that earlier seasons with warming favor species that shift earlier the most, with many studies that focused on invasive species appearing to support this \citep{wolkovich_temperaturedependent_2013,zettlemoyer_phenology_2019}. Yet, these studies are often on herbaceous species, and our results, along with other recent work \citep{zani_increased_2020,zohner_effect_2023}, suggest mid- and later-season effects may under-appreciate the performance implications in woody species in the absence of drought. Thus, more studies of how later season events correlate with invasions, and forest assembly more generally, could help understand how warming will impact forest regeneration and range expansion.
 
 \subsection*{Species-level differences}
-Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{grime_evidence_1977,furlow_alnus_1997,bowmanEcology2023}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
+Our results suggest different growth strategies between species may yield different responses to longer seasons. Our most ruderal species, {\Ainc} was the only species to grow more with a longer calendar season and an earlier start of season. This suggests that species with more ruderal, flexible life history strategies may actually take advantage of growing more in the spring despite cooler, shorter days \citep{grime_evidence_1977,furlow_alnus_1997}. In contrast, growth of {\Bpap} and {\Bpop}, which are fast-growing but more conservative than {\Ainc}, were both more driven by the end of season, suggesting that they may be able to exploit these late-season days characterized by warmer temperatures \citep{burns_silvics_1990}. Lastly, our slowest growing, longest-living species, {\Ball}, responded to both the start and end of season. This points towards a possible `neutralizing' response where an early start of season decreases growth, but a later end of season increases it, offsetting this species' response to a longer calendar season. 
 
-Studies including an even wider span of growth strategies across species may find further differences. Our four study species all grow relatively fast, which should allow them to track changing conditions better than their slower-growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used slower-growing, more conservative species \citep[such as \textit{Quercus};][]{burns_silvics_1990}. Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages \citep{dox_wood_2022}. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait which varies substantially across years with different climates, tree age and also across species. Within a single community leafout can vary across species by over a month \citep{wolkovich_progress_2014}. How flexible growth is in response to changing growing season length and conditions varies between species---and populations. 
+Studies including an even wider span of growth strategies across species may find further differences. Our four study species all grow relatively fast, which should allow them to track changing conditions better than their slower-growing counterparts. While we found an overall positive trend of warmer seasons on growth, this might have changed if we used slower-growing, more conservative species \citep[such as \textit{Quercus};][]{burns_silvics_1990}. Current research suggests that leaf and wood phenology differ in their plasticity in response to changing environmental conditions across species and life stages \citep{dox_wood_2022}. Leaf phenology (e.g. leafout) in the spring is a highly plastic trait which varies substantially across years with different climates, tree age and also across species. Within a single community leafout can vary across species by over a month \citep{wolkovich_progress_2014}. How flexible growth is in response to changing growing season length and conditions thus appears to vary between species---and populations. 
 
 Studies of large latitudinal gradients have found lower growth in trees sourced from poleward latitudes \citep{aitken_time_2016,soolanayakanahally_timing_2013}, yet we found little difference in growth across a latitudinal gradient of 3.5\degree. Thus, at least across this latitudinal range, local adaptation on growth appears weak. Supporting this, we found no evidence of a shifting end of season across provenances in these species, on average, despite decades of work finding that end of season events, such as budset, are usually more locally adapted than start of season events such as leafout \citep{kramer_effect_1936,habjorg_photoperiodic_1978,soolanayakanahally_timing_2013,aitken_time_2016,zeng_weak_2024}. In contrast to strong constraints on budset that should drive it to be timed similarly across years, a study of the same common garden including all tree and shrub species found that the end of season appeared to vary strongly by year and shift earlier with earlier start of season \citep{buonaiuto_early_2026}. Thus our results suggest that our current understanding of budset being strongly locally adapted, and thus varying little with temperature or the start of season, needs more study and at a wider geographical scale.
 
 \subsection*{Implications for forest conservation and modeling}
-Integrating our results into forest and larger-scale (e.g., land-surface) models requires considering how environmental conditions beyond temperature shift across the season, especially for soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. While trees may have a longer period to grow, water availability may become insufficient to support continuous growth throughout the growing season \citep{Lempereur2015, wang_seasonal_2025}. We regularly watered the trees in our common garden, likely relieving any major drought pressures, though studies beyond ours connected a later end of season and more growth \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. In the range of our four species, drought occurrence has not yet increased \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that trees may grow more with longer and warmer growing seasons \citep{cook_uncertainty_2011,agel_drought_2025}, as we found. The positive effect of a later end of season, however, could diminish if soil moisture becomes inadequate for growth, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{chiang_evidence_2021,spinoni_will_2018}, but we suggest our results here may be accurate for temperature northeastern North American forests.
+Integrating our results into forest and larger-scale (e.g., land-surface) models requires considering how environmental conditions beyond temperature shift across the season, especially for soil moisture \citep{gaoEarlierStartThermal2022,li_widespread_2023}. While trees may have a longer period to grow, water availability may become insufficient to support continuous growth throughout the growing season \citep{lempereur_growth_2015, wang_seasonal_2025}. We regularly watered the trees in our common garden, likely relieving any major drought pressures, though studies beyond ours connected a later end of season and more growth \citep[see:][]{gaoEarlierStartThermal2022,wang_seasonal_2025}. In the range of our four species, drought occurrence has not yet increased \citep{nationalcentersforenvironmentalinformationncei_north_2026,agel_drought_2025}, suggesting that trees in the absence of water constraints may grow more with longer and warmer growing seasons \citep{cook_uncertainty_2011,agel_drought_2025,dorangeville_beneficial_2018}, as we found. The positive effect of a later end of season, however, could diminish if soil moisture becomes inadequate for growth \citep[as recently shown in our region by][]{jurado_increasing_2025}, and other temperate regions with decreased soil moisture have reported declines in tree growth \citep[e.g.,][]{spinoni_will_2018,zhang_drought_2021}, but we suggest our results here may be accurate for temperate northeastern North American forests.
 
-The overall positive response we observed across multiple tree species to warmer seasons has important implications for carbon models, and related natural climate solutions . While juvenile trees store less carbon than their adult forms, they are crucial for forest regeneration and range expansion \citep[as discussed above, and see][]{luu_importance_2024}. In addition to their ecological role, juvenile trees generally predict adult tree responses qualitatively \citep{augspurger_differences_2003,wolkovich_why_2025}, despite certain ontogenic differences in stress residence and mortality rate across life stages \citep{caron_thermal_2021}. Thus our results on young trees can likely inform how their adult counterparts will respond to changing growing season conditions.
+The overall positive response we observed across multiple tree species to warmer seasons has important implications for carbon models, and related natural climate solutions. While juvenile trees store less carbon than their adult forms, they are crucial for forest regeneration and range expansion \citep[as discussed above, and see][]{luu_importance_2024}. In addition to their ecological role, juvenile trees generally predict adult tree responses qualitatively \citep{augspurger_differences_2003,wolkovich_why_2025}, despite certain ontogenic differences in stress residence and mortality rate across life stages \citep{caron_thermal_2021}. Thus our results on young trees can likely inform how their adult counterparts will respond to changing growing season conditions.
 
 We also found that the start and end of season asymmetrically matter to growth, which means that how we model these phenological events in vegetation and related earth system models may be critical for accurate carbon dynamic predictions \citep{li_comparison_2022}. Such models usually assume a temperature-sensitive start of season and a photoperiod-controlled, and thus less variable, end of season \citep{chen_comparison_2022,melaas_multiscale_2016}. This results in a disproportionate influence of the start compared to the end of season on tree growth, unlike what our results suggest. Such a representation of what drives the temporal boundaries of the growing season may feed into oversimplified explanations of the processes regulating tree growth with future climate change. 
 
 \section*{Acknowledgements}
-Thanks to Sally Aitken and reviewers for comments that helped improved the manuscript. Charlotte Capistran-Champoux helped with figure design and visual improvements. NSERC Canada Graduate Research Scholarship – Master’s (CGS-M) and \textit{*Lizzie research chair} provided funding.
+We thank to Sally Aitken and reviewers for comments that helped improved the manuscript and Charlotte Capistran-Champoux for her help with figure design and visual improvements. This work was supported by NSERC Canada Graduate Research Scholarship – Master’s (CGS-M) to C.R-D. and NSERC Discovery to E.M.W. The text of this article was written without any GenAi, nor was it used for any creative or idea generation process. C.R-D used Claude Sonnet 5 (and prior versions) for performing simple repetitive coding tasks, including help with the figure coding, data cleaning and improving coding workflow efficiency. All other co-authors did not use GenAi for their contribution to the paper.
+
 
 \section*{Author contribution}
-E.M.W proposed the original research idea. C.R-D. conducted the analyses with V.V.d.M. and E.M.W. help throughout. D.M.B, C.C collected the phenology data and C.R-D collected and processed the tree ring samples that were collected by N.P., D.M.B, DL and E.M.W. C.R-D and E.M.W. wrote the initial draft and all authors reviewed and approved the manuscript.
+E.M.W. proposed the original research idea. C.R-D. conducted the analyses with V.V.d.M. and E.M.W. help throughout. D.M.B, C.C collected the phenology data and C.R-D processed the tree ring samples that were collected by N.P., D.M.B, D.L. and E.M.W. C.R-D and E.M.W. wrote the initial draft and all authors reviewed and approved the manuscript.
 
 \section*{Gen-Ai statement}
-The text of this article was written without any GenAi, nor was it used for any creative or idea generation process. C.R-D used Claude and ChatGPT for performing simple repetitive coding tasks, including help with the figure coding, data cleaning and improving coding workflow efficiency. All other co-authors did not use GenAi for their contribution to the paper.
 
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % REFERENCES %
@@ -314,7 +314,7 @@ The text of this article was written without any GenAi, nor was it used for any 
 
 \setlength{\tabcolsep}{3pt}
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).} 
@@ -336,7 +336,7 @@ Harvard Forest (MA, USA) & 7 & 4 & 7 & 0 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (22.4\degree C), 2020 the hottest (23.1\degree C), and 2018 in between (22.9\degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \citep{nationalcentersforenvironmentalinformationncei_north_2026}.} 
@@ -370,7 +370,7 @@ Arnold Arboretum (MA, USA) & 42.3 & -71.1 & 35 & 9.8 & 420 & 162 \\
 \end{figure}
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean, 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details. } 
@@ -405,7 +405,7 @@ $\alpha$ & -0.53 & -4.58 & -2.16 & 1.17 & 3.46 & 1.00 & 2344 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -439,7 +439,7 @@ $\alpha$ & 0.15 & -3.88 & -1.52 & 1.81 & 4.11 & 1.00 & 3258 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -473,7 +473,7 @@ $\alpha$ & 0.62 & -4.52 & -1.50 & 2.77 & 5.84 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter from our GSL (growing season length) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -507,7 +507,7 @@ $\alpha$ & 1.86 & -2.27 & 0.11 & 3.62 & 6.03 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -543,7 +543,7 @@ $\alpha$ & -1.33 & -5.39 & -3.04 & 0.39 & 2.75 & 1.00 & 4526 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\% and 50\% uncertainty intervals. See `Data analyses' in Methods section for more details.} 
@@ -577,7 +577,7 @@ $\alpha$ & 1.06 & -2.59 & -0.45 & 2.51 & 4.78 & 1.00 & 3336 \\
 
 
 % latex table generated in R 4.5.1 by xtable 1.8-4 package
-% Thu Sep  3 10:30:17 2026
+% Fri Sep  4 20:35:22 2026
 \begin{table}[ht]
 \centering
 \caption{Summary output ($\beta$) of our GDD parameters (see Table \ref{tab:tab_GDD} for untransformed parameter estimates), converted in \% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\% and 50\% uncertainty intervals.} 
