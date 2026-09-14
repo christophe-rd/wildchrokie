@@ -126,7 +126,7 @@ To understand the relationship between growing seasons and growth, we need to un
 
 % Conceptual figure
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig_AdobeI.pdf}
+\includegraphics[width=0.9\textwidth]{gsconceptualfig_AdobeI.pdf}
 \caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). With climate change, spring and autumn events have shifted, lengthening the calendar growing season. These longer seasons also changed the temperature trees experience early in their season, with cooler first days of growth (a) leading to little accumulation of GDD (b), and weaker shifts in days at the end of season (a) resulting in a higher GDD accumulation (b) due to warmer temperature during this period. Alongside these start and end of season shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. The arrows represent hypothetical shifts in spring (green) and autumn (orange) phenology. We show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red), using mean daily temperature data from the Boston Logan International Airport Climate Station \citep{nationaloceanicandatmosphericadministration_local_2026}.}
 \label{fig:GSfig}
 \end{figure}
@@ -149,7 +149,7 @@ For the years 2018-2020, we monitored leaf phenology for all individuals in the 
 
 % Wildchrokie provenances mu plot
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/asiteMap_AI.pdf}
+\includegraphics[width=1\textwidth]{asiteMap_AI.pdf}
 \caption{No effect of provenance on growth across a latitudinal gradient. Provenance where the seeds were sourced from is depicted as circles, while the diamond denotes the location of the common garden (a). The colors of the dots match the model estimates of (b), in which we show the ring width (log(mm); see Table \ref{tab:tab_GDD} for provenance parameter estimates) for each provenance with growing degree days as the predictor (effects were similar for the other predictors, see Tables \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS}). The dots represent the estimated mean of each provenance, with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively; see also Figure \ref{fig:wcmuplotasitePerSpp} for a separate analyses, fitting the provenances per species)}
 \label{fig:wcmuplotasite}
 \end{figure}
@@ -244,7 +244,7 @@ We did not find any clear effect of year on growth, and there were no apparent d
 
 % Figure mu across all species and climate predictors
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muALLbsppWlines.pdf}
+\includegraphics[width=0.8\textwidth]{muALLbsppWlines.pdf}
 \caption{Estimates of ring width change as a function of four different phenological predictors: growing degree days of the growing season (mean daily temperature above 5\degree C); growing season length, start of season, and end of season across four species: grey alder (\textit{Alnus incana}), yellow birch (\textit{Betula alleghaniensis}), paper birch (\textit{Betula papyrifera}) and grey birch (\textit{Betula populifolia}; species colors are the same across the panels). Panels on the left (a to d) represent the mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor, which we represent through ring width change in mm on the log scale per adjusted predictor (see `Data analyses' section in Methods for more details on predictor adjustment). Panels on the right (e to h) show the same estimated response of ring width (mm) as a function of each predictor, with the lines depicting the mean response at each predictor value, and the shaded area, the 50\% uncertainty intervals. See Tables \ref{tab:tab_GDD}, \ref{tab:tab_GSL}, \ref{tab:tab_SOS}, \ref{tab:tab_EOS} for parameter estimates, and Figures \ref{fig:wcxyGDD} and \ref{fig:wcxyGSL} for versions of these figures with empirical data.}
 \label{fig:wcmuplotbspp}
 \end{figure}
@@ -292,7 +292,7 @@ We will publish the data on KNB at the time of publication.
 % REFERENCES %
 %<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 \bibliography{ExportedItems}
-\bibliographystyle{besjournals} 
+\bibliographystyle{gcb} 
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % SUPPLEMENT
@@ -598,21 +598,21 @@ $\beta_{SOS}$ & 7.12 & 4.04 & 5.85 & 8.36 & 10.27 \\
 
 % Wildchrokie provenances mu plot per species
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muProvPerSpp.pdf}
+\includegraphics[width=0.8\textwidth]{muProvPerSpp.pdf}
 \caption{The effect of provenance on growth across a latitudinal gradient estimated per species. We show the ring width (log(mm)) for each provenance estimated from the following intercept-only model: $log(ringwidth) \sim Normal(\alpha_{provenance} + \alpha_{treeid}, \sigma) $, using the package rstanarm version 2.32.1 \citep{gabryRstanarmBayesianApplied2016}. The dots represent the estimated mean of each provenance (ordered by latitude), with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively).}
 \label{fig:wcmuplotasitePerSpp}
 \end{figure}
 
 % Climate data overlap
 \begin{figure}[!ht]
-\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/climateComparison2020.pdf}
+\includegraphics[width=0.9\textwidth]{climateComparison2020.pdf}
 \caption{Climate data overlap in 2020 for the two climate stations we used in our dataset (see `Data analyses' section for more details). The lines represent the daily mean temperature of each climate station and the shaded area, the minimum and maximum daily temperatures.}
 \label{fig:climOverlap}
 \end{figure}
 
 % Z-scored slope results Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
+\includegraphics[width=0.8\textwidth]{muALLbsppZ.pdf}
 \caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see `Data analyses' section in Methods for more details) for each species. We report mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor (growing degree days, growing season length, start of season and end of season).
 }
 \label{fig:bsppZscored}
@@ -620,28 +620,28 @@ $\beta_{SOS}$ & 7.12 & 4.04 & 5.85 & 8.36 & 10.27 \\
 
 % Full vs restricted data comparison for Wildchrokie
 \begin{figure}[!ht]
-\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
+\includegraphics[width=1\textwidth]{FullVSRestricted.pdf} 
 \caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see `Data analyses' section in Methods for more details).} 
 \label{fig:wcSOSEOScomparison}
 \end{figure}
 
 % Figure mu atreeid full
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
+\includegraphics[width=0.8\textwidth]{meanPlotGrowthGDD_treeidBYspp.pdf}
 \caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
 \label{fig:wcmuplotatreeid}
 \end{figure}
 
 % XY facetted by species GDD
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.pdf}
+\includegraphics[width=0.8\textwidth]{growthModelSlopesperSppFacet.pdf}
 \caption{Ring width (mm) trends in response to thermal season (growing degree days). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGDD}
 \end{figure}
 
 % XY facetted by species GSL
 \begin{figure}[!ht]
-\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf}
+\includegraphics[width=0.8\textwidth]{growthModelSlopesperSppFacetGSL.pdf}
 \caption{Ring width trends (mm) in response to calendar season (growing season length). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
 \label{fig:wcxyGSL}
 \end{figure}

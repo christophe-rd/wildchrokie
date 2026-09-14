@@ -20,11 +20,6 @@
 \linenumbers
 \setstretch{2}
 
-%emwAug23 -- overall, it looks pretty good but the discussion is still rough. I made a BUNCH of suggestions you'll want to work on then try to get a co-author to help review again before I see it hopefully one last time. I also flagged sentences as 'cover letter' (CL) -- this means they are good points to make in the cover letter; I usually toss all these sentences all in the cover letter before I start working on it. Speaking of your cover letter! That's the place to say how AMAZING your stuff is ... I think you could maybe make claims that you are one of the few/first to do one or more of the following
-% Study thermal vs GSL well 
-% ... that is using a better EOS event
-% looking at species and provenance together? You might be the only one to do that? I am not sure, but you should know. 
-
 \begin{center}
 {\sc} {\Large Warmer and longer growing seasons increase growth for juvenile trees in a common garden} \\
 \vspace{5ex}
@@ -132,9 +127,10 @@ b_eosgain_mu$spp_name <- "all"
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % need to transform this abstract to a 200-word summary
 \section{Abstract}
-Anthropogenic climate change affects natural systems at the global scale, with shifts in spring leafout and flowering being observed in most regions. Such shifts can have cascading effects for global carbon sequestration. For trees, shifted leafout has extended the vegetative growing season, which is widely expected to increase tree growth, with impacts on forest carbon dynamics. While decades of work have assumed longer seasons increase tree growth, multiple recent studies have found no connections. Yet these studies often focus on earlier leafout, when thermal conditions are poor for photosynthesis and growth. Recent research, however, suggests later season shifts may be more pronounced and important than previously suggested. Here we leveraged data on the start and end of the vegetative season to test how growth responds to both the length and thermal sum of the growing season. Working across four juvenile tree species within the \textit{Betulaceae} family, sourced from four provenances, we found increased tree growth with warmer seasons for three out of four species, and with longer seasons, for two out of four species. Supporting recent work on the importance of the end of season to growth, we found that end of season phenology had a stronger influence on growth responses than start of season. We found little effect of provenance on growth or phenology, including end of season events, suggesting these results may be applicable across species ranges. Taken together, our results suggest thermal conditions across the season may predict growth responses and vary considerably across species, but not provenance. Our work has implications for forest regeneration and range expansion these processes rely on sustained juvenile tree growth and survival under warmer conditions and more unpredictable weather. \\ % emw11Sep -- something wrong in last sentence, I am also not sure what we mean enough to fix it (why start talking about survival and unpredictable weather here?)...  You could just try: Our work has implications for forest regeneration and range expansion, predicting potentially increased growth under warmer conditions.??
+Anthropogenic climate change affects natural systems at the global scale, with shifts in spring leafout and flowering being observed in most regions. Such shifts can have cascading effects for global carbon sequestration. For trees, shifted leafout has extended the vegetative growing season, which is widely expected to increase tree growth, with impacts on forest carbon dynamics. While decades of work have assumed longer seasons increase tree growth, multiple recent studies have found no connections. Yet these studies often focus on earlier leafout, when thermal conditions are poor for photosynthesis and growth. Recent research, however, suggests later season shifts may be more pronounced and important than previously suggested. Here we leveraged data on the start and end of the vegetative season to test how growth responds to both the length and thermal sum of the growing season. Working across four juvenile tree species within the \textit{Betulaceae} family, sourced from four provenances, we found increased tree growth with warmer seasons for three out of four species, and with longer seasons, for two out of four species. Supporting recent work on the importance of the end of season to growth, we found that end of season phenology had a stronger influence on growth responses than start of season. We found little effect of provenance on growth or phenology, including end of season events, suggesting these results may be applicable across species ranges. Taken together, our results suggest thermal conditions across the season may predict growth responses and vary considerably across species, but not provenance. Our work has implications for forest regeneration and range expansion, predicting potentially increased juvenile tree growth under warmer conditions.
 
 \textbf{Keywords:} forest ecology, climate change, community ecology, dendrochronology, phenology, common garden, forestry.
+
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % INTRODUCTION
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -148,8 +144,7 @@ How much trees increase growth with longer seasons is important given the major 
 
 
 % Paragraph 4
-While the long-standing assumption is that tree growth should increase with growing season length, new studies suggest that longer growing seasons may not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}. Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in two temperate forest communities. Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where gross primary production and growth appeared decoupled. However, neither of these studies could clearly establish why they found no relationship.
-Major hypotheses include water and nutrient limitation, and a discrepancy in temperature sensitivity between photosynthesis and wood growth \citep{cabon_crossbiome_2022,dow_warm_2022}.
+While the long-standing assumption is that tree growth should increase with growing season length, new studies suggest that longer growing seasons may not always increase growth \citep{dow_warm_2022,silvestro_longer_2023,matula_shifts_2023,charletdesauvage_temperature_2022,cabon_crossbiome_2022}. Recently, \cite{dow_warm_2022} found that warmer springs lengthened the growing season, but did not increase the peak growth rate or total annual growth in two temperate forest communities. Working across biomes, \cite{cabon_crossbiome_2022} found a similar trend, where gross primary production and growth appeared decoupled. However, neither of these studies could clearly establish why they found no relationship. Major hypotheses include water and nutrient limitation, and a discrepancy in temperature sensitivity between photosynthesis and wood growth \citep{cabon_crossbiome_2022,dow_warm_2022}.
 
 % Paragraph 5
 One possible explanation is that an increase in growing season length may not mean more favorable thermal conditions for growth. The well-documented advance of spring phenology elongates the growing season \citep{keenan_net_2014}, but when spring events occur earlier, days are short and usually cool (Figure \ref{fig:GSfig}a). Therefore, this advance may contribute little to a tree's annual growing degree days (GDD) accumulation (Figure \ref{fig:GSfig}b). In contrast, even small shifts in the timing of end of season events can lead to larger changes in annual GDD; since more GDD accumulates per day during this period, any extra days at the end of season may be more important than additional days at the start of the season \citep{buonaiuto_early_2026}.  
@@ -163,7 +158,6 @@ To understand the relationship between growing seasons and growth, we need to un
 % Conceptual figure
 \begin{figure}[!ht]
 \includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/gsconceptualfig_AdobeI.pdf}
-% double check below legend
 \caption{Shifting growing season lengths with climate change affect both the temperature trees experience throughout the growing season (a), and how many growing degree days (GDD) they accumulate (b). With climate change, spring and autumn events have shifted, lengthening the calendar growing season. These longer seasons also changed the temperature trees experience early in their season, with cooler first days of growth (a) leading to little accumulation of GDD (b), and weaker shifts in days at the end of season (a) resulting in a higher GDD accumulation (b) due to warmer temperature during this period. Alongside these start and end of season shifts, warmer summer temperatures increased GDD accumulation, further warming their thermal seasons. The arrows represent hypothetical shifts in spring (green) and autumn (orange) phenology. We show changes in daily (smoothed) and accumulated temperatures before (1945-1965, in blue) and significant anthropogenic climate warming (2005-2025, in red), using mean daily temperature data from the Boston Logan International Airport Climate Station \citep{nationaloceanicandatmosphericadministration_local_2026}.}
 \label{fig:GSfig}
 \end{figure}
@@ -567,11 +561,14 @@ ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
 
 alpha <- data.frame(
   Parameter = c("$\\alpha$"),
-  Mean = sprintf("%.2f", a_df2_BAI$mean),
-  P5   = sprintf("%.2f", a_df2_BAI$p5),
-  P25  = sprintf("%.2f", a_df2_BAI$p25),
-  P75  = sprintf("%.2f", a_df2_BAI$p75),
-  P95  = sprintf("%.2f", a_df2_BAI$p95)
+  Mean   = sprintf("%.2f", a_df2_BAI$mean),
+  P5     = sprintf("%.2f", a_df2_BAI$p5),
+  P25    = sprintf("%.2f", a_df2_BAI$p25),
+  P75    = sprintf("%.2f", a_df2_BAI$p75),
+  P95    = sprintf("%.2f", a_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", a_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", a_df2_BAI$n_eff),
+  check.names = FALSE
 )
 sigma <- data.frame(
   Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
@@ -581,7 +578,10 @@ sigma <- data.frame(
   P5   = sprintf("%.2f", sigma_df2_BAI$p5),
   P25  = sprintf("%.2f", sigma_df2_BAI$p25),
   P75  = sprintf("%.2f", sigma_df2_BAI$p75),
-  P95  = sprintf("%.2f", sigma_df2_BAI$p95)
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", sigma_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", sigma_df2_BAI$n_eff),
+  check.names = FALSE
 )
 bspp <- data.frame(
   Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
@@ -589,7 +589,10 @@ bspp <- data.frame(
   P5   = sprintf("%.2f", bspp_df2_BAI$p5),
   P25  = sprintf("%.2f", bspp_df2_BAI$p25),
   P75  = sprintf("%.2f", bspp_df2_BAI$p75),
-  P95  = sprintf("%.2f", bspp_df2_BAI$p95)
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", bspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", bspp_df2_BAI$n_eff),
+  check.names = FALSE
 )
 aspp <- data.frame(
   Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
@@ -597,7 +600,10 @@ aspp <- data.frame(
   P5   = sprintf("%.2f", aspp_df2_BAI$p5),
   P25  = sprintf("%.2f", aspp_df2_BAI$p25),
   P75  = sprintf("%.2f", aspp_df2_BAI$p75),
-  P95  = sprintf("%.2f", aspp_df2_BAI$p95)
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", aspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", aspp_df2_BAI$n_eff),
+  check.names = FALSE
 )
 site <- data.frame(
   Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
@@ -605,7 +611,10 @@ site <- data.frame(
   P5   = sprintf("%.2f", site_df2_BAI$p5),
   P25  = sprintf("%.2f", site_df2_BAI$p25),
   P75  = sprintf("%.2f", site_df2_BAI$p75),
-  P95  = sprintf("%.2f", site_df2_BAI$p95)
+  P95  = sprintf("%.2f", site_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", site_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", site_df2_BAI$n_eff),
+  check.names = FALSE
 )
 ayear <- data.frame(
   Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
@@ -613,7 +622,10 @@ ayear <- data.frame(
   P5   = sprintf("%.2f", ayear_df2_BAI$p5),
   P25  = sprintf("%.2f", ayear_df2_BAI$p25),
   P75  = sprintf("%.2f", ayear_df2_BAI$p75),
-  P95  = sprintf("%.2f", ayear_df2_BAI$p95)
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", ayear_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", ayear_df2_BAI$n_eff),
+  check.names = FALSE
 )
 binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 
@@ -624,6 +636,7 @@ print(xtable(binded,
       sanitize.text.function = identity,
       sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
       caption.placement = "top")
+
 @
 
 <<Table BAI for GSL Wildchrokie, results='asis', echo = FALSE>>=
@@ -647,7 +660,10 @@ alpha <- data.frame(
   P5   = sprintf("%.2f", a_df2_BAI$p5),
   P25  = sprintf("%.2f", a_df2_BAI$p25),
   P75  = sprintf("%.2f", a_df2_BAI$p75),
-  P95  = sprintf("%.2f", a_df2_BAI$p95)
+  P95  = sprintf("%.2f", a_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", a_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", a_df2_BAI$n_eff),
+  check.names = FALSE
 )
 sigma <- data.frame(
   Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
@@ -657,7 +673,10 @@ sigma <- data.frame(
   P5   = sprintf("%.2f", sigma_df2_BAI$p5),
   P25  = sprintf("%.2f", sigma_df2_BAI$p25),
   P75  = sprintf("%.2f", sigma_df2_BAI$p75),
-  P95  = sprintf("%.2f", sigma_df2_BAI$p95)
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", sigma_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", sigma_df2_BAI$n_eff),
+  check.names = FALSE
 )
 bspp <- data.frame(
   Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
@@ -665,7 +684,10 @@ bspp <- data.frame(
   P5   = sprintf("%.2f", bspp_df2_BAI$p5),
   P25  = sprintf("%.2f", bspp_df2_BAI$p25),
   P75  = sprintf("%.2f", bspp_df2_BAI$p75),
-  P95  = sprintf("%.2f", bspp_df2_BAI$p95)
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", bspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", bspp_df2_BAI$n_eff),
+  check.names = FALSE
 )
 aspp <- data.frame(
   Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
@@ -673,7 +695,10 @@ aspp <- data.frame(
   P5   = sprintf("%.2f", aspp_df2_BAI$p5),
   P25  = sprintf("%.2f", aspp_df2_BAI$p25),
   P75  = sprintf("%.2f", aspp_df2_BAI$p75),
-  P95  = sprintf("%.2f", aspp_df2_BAI$p95)
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", aspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", aspp_df2_BAI$n_eff),
+  check.names = FALSE
 )
 site <- data.frame(
   Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
@@ -681,7 +706,10 @@ site <- data.frame(
   P5   = sprintf("%.2f", site_df2_BAI$p5),
   P25  = sprintf("%.2f", site_df2_BAI$p25),
   P75  = sprintf("%.2f", site_df2_BAI$p75),
-  P95  = sprintf("%.2f", site_df2_BAI$p95)
+  P95  = sprintf("%.2f", site_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", site_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", site_df2_BAI$n_eff),
+  check.names = FALSE
 )
 ayear <- data.frame(
   Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
@@ -689,7 +717,10 @@ ayear <- data.frame(
   P5   = sprintf("%.2f", ayear_df2_BAI$p5),
   P25  = sprintf("%.2f", ayear_df2_BAI$p25),
   P75  = sprintf("%.2f", ayear_df2_BAI$p75),
-  P95  = sprintf("%.2f", ayear_df2_BAI$p95)
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", ayear_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", ayear_df2_BAI$n_eff),
+  check.names = FALSE
 )
 binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
 
