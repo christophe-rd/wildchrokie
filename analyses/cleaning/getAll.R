@@ -58,6 +58,48 @@ temp4$latbi[which(temp4$spp == "BETALL")] <- "Betula alleghaniensis"
 # write csv
 write_csv(temp4, "output/empiricalDataMAIN.csv")
 
+# write csv with things that are unessential for publication:
+temp4_pub <- temp4
+
+# Convert sample types
+temp4_pub$sampleType <- ifelse(
+  temp4_pub$sampleType %in% c("cookies", "cookiesUnconfident"),
+  "cookie",
+  ifelse(
+    temp4_pub$sampleType %in% c("coresWithoutCookies", "coresUnconfident"),
+    "core",
+    NA
+  )
+)
+
+# Reorganize columns and exclude unwanted variables
+temp4_pub <- temp4_pub[, c(
+  "treeid",
+  "year",
+  "latbi",
+  "site",
+  "plot",
+  "replicate",
+  "provenance.lat",
+  "provenance.long",
+  "sampleType",
+  "lengthCM",
+  "BAI",
+  "budburst",
+  "flowers",
+  "leafout",
+  "flobuds",
+  "flobudburst",
+  "fruit",
+  "ripefruit",
+  "budset",
+  "leafcolor",
+  "pgsGDD5",
+  "pgsGSL"
+)]
+
+write_csv(temp4_pub, "output/empiricalData_pub.csv")
+
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
 # Now without tree rings!
 obsdataWithGDD$siteplot <- sub("^[^_]*_(.*?)_.*$", "\\1", obsdataWithGDD$treeid)
