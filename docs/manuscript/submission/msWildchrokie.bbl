@@ -1,4 +1,4 @@
-\begin{thebibliography}{92}
+\begin{thebibliography}{90}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -290,13 +290,6 @@ Fu YH, Piao S, Op~De~Beeck M, \emph{et~al.} (2014) Recent spring phenology
 Furlow JJ (1997) Flora of {North} {America} {North} of {Mexico}.
 \newblock
   \urlprefix\url{http://floranorthamerica.org/Alnus_incana_subsp._rugosa}.
-
-\bibitem[{Gabry \& Goodrich(2016)}]{gabryRstanarmBayesianApplied2016}
-Gabry J, Goodrich B (2016) rstanarm: {Bayesian} {Applied} {Regression}
-  {Modeling} via {Stan}.
-\newblock \doi{10.32614/CRAN.package.rstanarm}.
-\newblock \urlprefix\url{https://CRAN.R-project.org/package=rstanarm}.
-\newblock Institution: Comprehensive R Archive Network Pages: 2.32.1.
 
 \bibitem[{Gallinat \emph{et~al.}(2015)Gallinat, Primack, \&
   Wagner}]{gallinat_autumn_2015}
@@ -650,15 +643,6 @@ Wang E, Engel T (1998) Simulation of phenological development of wheat crops.
 \newblock \doi{10.1016/S0308-521X(98)00028-6}.
 \newblock
   \urlprefix\url{https://linkinghub.elsevier.com/retrieve/pii/S0308521X98000286}.
-
-\bibitem[{Wang \emph{et~al.}(2016)Wang, Hamann, Spittlehouse, \&
-  Carroll}]{wang_locally_2016}
-Wang T, Hamann A, Spittlehouse D, Carroll C (2016) Locally {Downscaled} and
-  {Spatially} {Customizable} {Climate} {Data} for {Historical} and {Future}
-  {Periods} for {North} {America}.
-\newblock \emph{PLOS ONE}, \textbf{11}, e0156720.
-\newblock \doi{10.1371/journal.pone.0156720}.
-\newblock \urlprefix\url{https://dx.plos.org/10.1371/journal.pone.0156720}.
 
 \bibitem[{Wang \emph{et~al.}(2025)Wang, Qin, Zhang
   \emph{et~al.}}]{wang_seasonal_2025}

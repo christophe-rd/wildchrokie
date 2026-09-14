@@ -1,0 +1,734 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\usepackage{natbib}
+\usepackage{parskip}
+\usepackage{longtable}
+\usepackage{lineno}
+\usepackage{makecell}
+\usepackage{setspace}
+
+\setcounter{secnumdepth}{0} 
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+\linenumbers
+\setstretch{2}
+
+\begin{center}
+{\sc} {\Large Supplementary Material} \\
+\vspace{5ex}
+{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson$^6$, \& E.M. Wolkovich$^{1,2,3}$
+\end{center}
+$^1$Forest \& Conservation Sciences, Faculty of Forestry \& Environmental Stewardship, University of British Columbia, Vancouver, British Columbia, Canada\\
+$^2$Arnold Arboretum of Harvard University, Boston, Massachusetts, USA\\
+$^3$Department of Organismic and Evolutionary Biology, Harvard University, Cambridge, Massachusetts, USA\\
+$^4$The Nature Conservancy, Durham, North Carolina, USA\\
+$^5$Department of Plant Science and Landscape Architecture, University of Maryland, College Park, Maryland, USA \\
+$^6$Highstead Foundation, Redding, Connecticut, USA \\
+*crouleau@alum.ubc.ca
+
+% Set Wildchrokie species shortcut
+\newcommand{\Ainc}{\textit{A. incana}}
+\newcommand{\Ball}{\textit{B. alleghaniensis}}
+\newcommand{\Bpap}{\textit{B. papyrifera}}
+\newcommand{\Bpop}{\textit{B. populifolia}}
+
+<<Setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(xtable)
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/GSfigure.R")
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/growthModelsMain_plots.R")
+source("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/rcode/climate_plots.R")
+
+samples <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/nSamplesCookieCore.csv")
+climna <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/input/_notcookies/climateNA.csv")
+climna$site_name <- c("Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Second College Grant (NH, USA)", "St-Hippolyte (Qc, Canada)", "Arnold Arboretum (MA, USA)")
+
+options(digits = 2)
+
+locations <- data.frame(
+  name       = c("Harvard Forest (MA, USA)", "White Mountains (NH, USA)", "Second College Grant (NH, USA)", "St-Hippolyte (Qc, Canada)", "Arnold Arboretum (MA, USA)"),
+  Longitude  = c(-72.20,  -71.00, -71.15, -74.01, -71.13),
+  Latitude   = c(42.55,  44.49,  44.79,  45.98, 42.296)
+)
+locations$Altitude <- climna$Altitude_taken[match(locations$name,  climna$site_name)]
+
+locations$MAT <- climna$MAT[match(locations$name, climna$site_name)]
+locations$MSP <- climna$MSP[match(locations$name, climna$site_name)]
+locations$FFP <- climna$FFP[match(locations$name, climna$site_name)]
+
+count <- aggregate(treeid ~ latbi + site, emp, 
+                   FUN = function(x) length(unique(x)))
+
+species <- unique(count$latbi)
+
+count_wide <- reshape(count, idvar = "site", timevar = "latbi", direction = "wide")
+
+locations <- locations[order(locations$Latitude),]
+
+locations2 <- merge(locations[2:5,], count_wide, by.x = "name", by.y = "site", all.x = TRUE)
+colnames(locations2) <- c("Provenance name", 
+                          "Longitude", "Latitude", "Altitude",
+                         "MAT", "MSP", "FFP",
+                         "A. incana",
+                         "B. alleghaniensis",
+                         "B. papyrifera",
+                         "B. populifolia")
+
+colnames(locations)[1] <- "Provenance name"
+
+# Species in italics
+wctablespp <- c("A. incana" = "\\textit{A. incana}", 
+                "B. alleghaniensis" = "\\textit{B. alleghaniensis}",
+                "B. papyrifera" = "\\textit{B. papyrifera}",
+                "B. populifolia" = "\\textit{B. populifolia}")
+
+
+# change NAs to 0
+for (i in 4: ncol(locations2)) {
+  locations2[[i]][is.na(locations2[[i]])] <- 0
+}
+
+# Helper function to report results more efficiently:
+fmt_stat <- function(df, spp) {
+  row <- df[df$spp_name == spp, ]
+  if (nrow(row) != 1) {
+    stop("Expected exactly 1 row for '", spp, "', got ", nrow(row))
+  }
+  sprintf("%.2f\\%% (UI: %.2f, %.2f)", row$mean, row$p5, row$p95)
+}
+
+mean_rw_mm <- aggregate(lengthMM ~ spp_num, data = emp, FUN = mean)
+names(mean_rw_mm)[2] <- "mean_rw_mm"
+
+# read csvs in per
+b_gdd_per <- read.csv("output/GM_GDDparam_bspp_per.csv")
+b_gsl_per <- read.csv("output/GM_GSLparam_bspp_per.csv")
+b_sos_per <- read.csv("output/GM_SOSparam_bspp_per.csv")
+b_eos_per <- read.csv("output/GM_EOSparam_bspp_per.csv")
+
+# growth gain by extending y days in spring vs autumn
+b_sosgain <- read.csv("output/GM_GDD_sosgain.csv")
+b_eosgain <- read.csv("output/GM_GDD_eosgain.csv")
+# average across species
+b_sosgain_mu <- read.csv("output/GM_GDD_sosgain_mu.csv")
+b_eosgain_mu <- read.csv("output/GM_GDD_eosgain_mu.csv")
+b_sosgain_mu$spp_name <- "all"
+b_eosgain_mu$spp_name <- "all"
+@
+
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% SUPPLEMENT
+% <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\setlength{\tabcolsep}{3pt}
+<<Table count per spp per prov, results='asis', echo = FALSE>>=
+loctable <- data.frame(
+  Provenance = locations2$`Provenance name`,
+  Ainc       = locations2$`A. incana`,
+  Ball       = locations2$`B. alleghaniensis`,
+  Bpap       = locations2$`B. papyrifera`,
+  Bpop       = locations2$`B. populifolia`
+)
+
+n_ainc <- sum(loctable$Ainc)
+n_ball <- sum(loctable$Ball)
+n_bpap <- sum(loctable$Bpap)
+n_bpop <- sum(loctable$Bpop)
+
+header <- list(
+  pos = list(-1),
+  command = paste0(
+    "\\hline\n",
+    "Provenance & ",
+    "\\textit{A. incana} & ",
+    "\\textit{B. alleghaniensis} & ",
+    "\\textit{B. papyrifera} & ",
+    "\\textit{B. populifolia} \\\\\n",
+    " & ",
+    "$(n = ", n_ainc, ")$ & ",
+    "$(n = ", n_ball, ")$ & ",
+    "$(n = ", n_bpap, ")$ & ",
+    "$(n = ", n_bpop, ")$ \\\\\n",
+    "\\hline\n"
+  )
+)
+
+tab_species <- xtable(loctable,
+              digits = c(0, 0, 0, 0, 0, 0),
+              caption = "Number of individuals sampled per species and per provenance for a total of 81 individual trees sampled from the United States of America (in Massachusetts (MA) and New Hampshire (NH)) and Canada (in Quebec (Qc)).",
+              label = "tab:tab_species"
+)
+
+print(tab_species,
+      add.to.row = header,
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      caption.placement = "top",
+      sanitize.text.function = identity)
+@
+
+<<Table prov climate, results='asis', echo = FALSE>>=
+
+t2019 <- wcjja$tmeanmean[wcjja$year == 2019]
+t2020 <- wcjja$tmeanmean[wcjja$year == 2020]
+t2018 <- wcjja$tmeanmean[wcjja$year == 2018]
+
+climtable <- data.frame(
+  Provenance = locations$`Provenance name`,
+  Latitude   = locations$Latitude,
+  Longitude  = locations$Longitude,
+  Altitude   = locations$Altitude,
+  MAT        = locations$MAT,
+  MSP        = locations$MSP,
+  FFP        = locations$FFP
+)
+
+# Than
+caption_text <- sprintf(
+  "Provenance and common garden location (Arnold Arboretum) coordinates and 1951--1980 climate normals: mean annual temperature (MAT; \\degree C), mean summer precipitation (MSP; mm), and frost-free period (FFP; days). We extracted these climate variables at each provenance from \\citep{wang_locally_2016}. At the common garden location, the mean summer temperature was similar across years, with 2019 being the coolest (%.1f\\degree C), 2020 the hottest (%.1f\\degree C), and 2018 in between (%.1f\\degree C). There was no drought for those three years, except in 2020, when a moderate summer drought (June--August) ramped up to a severe drought in September \\citep{nationalcentersforenvironmentalinformationncei_north_2026}.",
+  t2019, t2020, t2018
+)
+
+
+tab_climate <- xtable(
+  climtable,
+  digits = c(0,0,1,1,1,1,0,0),
+  caption = caption_text,
+  label = "tab:climate"
+)
+
+print(tab_climate,
+      include.rownames = FALSE,
+      caption.placement = "top")
+@ 
+
+% Phenology observations time series
+\begin{figure}[!ht]
+\includegraphics[width=0.6\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/phenoTimeseries.pdf}
+\caption{Leaf phenology monitoring frequency across years. We monitored leaf phenology once or twice per week for three years, though the frequency varied within and across years. Each histogram bin represents the number of observations that were made during a period of 14 days and the solid lines represent the earliest (in green), the average (in black) and last (in orange) recorded budburst observations; the dashed lines depict the budset observations. This demonstrates that across the different frequencies of observation, distances between early spring phenophases were similar across years.}
+\label{fig:phenoTimeSeries}
+\end{figure}
+
+% Rw per year for allometry
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/figures/empiricalData/rwXyearAll.pdf}
+\caption{We show the potential allometry patterns across all years we had ring width for. For this, we randomly sampled 20 trees from our dataset and represent their ring width (mm) for each year.}
+\label{fig:allom}
+\end{figure}
+
+<<Table param GDD Wildchrokie, results='asis', echo = FALSE>>=
+options(digits = 2)
+
+a_df_GDD      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a.csv")
+sigma_df_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma.csv")
+bspp_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp.csv")
+aspp_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp.csv")
+site_df_GDD   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site.csv")
+ayear_df_GDD  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear.csv")
+
+bspp_df_GDD$spp_name   <- emp$latbi[match(bspp_df_GDD$spp, emp$spp_num)]
+site_df_GDD$site_name  <- emp$site[match(site_df_GDD$site, emp$site_num)]
+aspp_df_GDD$spp_name   <- emp$latbi[match(aspp_df_GDD$spp, emp$spp_num)]
+ayear_df_GDD$year_name <- emp$year[match(ayear_df_GDD$year, emp$year_num)]
+
+param_labels_GDD <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_GDD$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_GDD$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_GDD$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_GDD$spp_name,  "}}$")
+)
+
+fmt_split <- function(df) {
+  data.frame(
+    Mean = sprintf("%.2f", df$mean),
+    `5\\%` = sprintf("%.2f", df$p5),
+    `25\\%` = sprintf("%.2f", df$p25),
+    `75\\%` = sprintf("%.2f", df$p75),
+    `95\\%` = sprintf("%.2f", df$p95),
+    `\\^R` = sprintf("%.2f", df$Rhat),
+    `ESS` = sprintf("%.0f", df$n_eff),
+    check.names = FALSE
+  )
+}
+
+combined_GDD <- data.frame(
+  "Parameter" = param_labels_GDD,
+  rbind(
+    fmt_split(a_df_GDD), fmt_split(sigma_df_GDD), fmt_split(bspp_df_GDD),
+    fmt_split(site_df_GDD), fmt_split(ayear_df_GDD), fmt_split(aspp_df_GDD)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_GDD) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
+
+tab_GDD <- xtable(combined_GDD,
+              caption = "Summary output of each parameter for the growing degree days (GDD) predictor of ring width (log(mm)). We report estimates as mean, 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details. ",
+              label = "tab:tab_GDD")
+
+print(tab_GDD,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_GDD)),
+      floating = TRUE
+)
+@
+
+
+<<Table param GSL Wildchrokie, results='asis', echo = FALSE>>=
+a_df_GSL      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_a.csv")
+sigma_df_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma.csv")
+bspp_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp.csv")
+aspp_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp.csv")
+site_df_GSL   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site.csv")
+ayear_df_GSL  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear.csv")
+
+bspp_df_GSL$spp_name   <- emp$latbi[match(bspp_df_GSL$spp, emp$spp_num)]
+site_df_GSL$site_name  <- emp$site[match(site_df_GSL$site, emp$site_num)]
+aspp_df_GSL$spp_name   <- emp$latbi[match(aspp_df_GSL$spp, emp$spp_num)]
+ayear_df_GSL$year_name <- emp$year[match(ayear_df_GSL$year, emp$year_num)]
+
+param_labels_GSL <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_GSL$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_GSL$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_GSL$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_GSL$spp_name,  "}}$")
+)
+
+combined_GSL <- data.frame(
+  "Parameter" = param_labels_GSL,
+  rbind(
+    fmt_split(a_df_GSL), fmt_split(sigma_df_GSL), fmt_split(bspp_df_GSL),
+    fmt_split(site_df_GSL), fmt_split(ayear_df_GSL), fmt_split(aspp_df_GSL)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_GSL) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
+
+tab_GSL <- xtable(combined_GSL,
+              caption = "Summary output of each parameter for the growing season length (GSL) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_GSL")
+
+print(tab_GSL,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_GSL)),
+      floating = TRUE
+)
+@
+
+<<Table BAI for GDD Wildchrokie, results='asis', echo = FALSE>>=
+options(digits = 2)
+a_df2_BAI      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_a_BAI.csv")
+sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_sigma_BAI.csv")
+bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_bspp_BAI.csv")
+treeid_df2_BAI <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_treeid_BAI.csv")
+aspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_aspp_BAI.csv")
+site_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_site_BAI.csv")
+ayear_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GDDparam_ayear_BAI.csv")
+
+bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_BAI$spp, emp$spp_num)]
+site_df2_BAI$site_name <- emp$site[match(site_df2_BAI$site, emp$site_num)]
+aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_BAI$spp, emp$spp_num)]
+ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
+
+alpha <- data.frame(
+  Parameter = c("$\\alpha$"),
+  Mean   = sprintf("%.2f", a_df2_BAI$mean),
+  P5     = sprintf("%.2f", a_df2_BAI$p5),
+  P25    = sprintf("%.2f", a_df2_BAI$p25),
+  P75    = sprintf("%.2f", a_df2_BAI$p75),
+  P95    = sprintf("%.2f", a_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", a_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", a_df2_BAI$n_eff),
+  check.names = FALSE
+)
+sigma <- data.frame(
+  Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
+                "$\\sigma_{\\alpha_{prov}}$",
+                "$\\sigma_{y}$"),
+  Mean = sprintf("%.2f", sigma_df2_BAI$mean),
+  P5   = sprintf("%.2f", sigma_df2_BAI$p5),
+  P25  = sprintf("%.2f", sigma_df2_BAI$p25),
+  P75  = sprintf("%.2f", sigma_df2_BAI$p75),
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", sigma_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", sigma_df2_BAI$n_eff),
+  check.names = FALSE
+)
+bspp <- data.frame(
+  Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", bspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", bspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", bspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", bspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", bspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", bspp_df2_BAI$n_eff),
+  check.names = FALSE
+)
+aspp <- data.frame(
+  Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", aspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", aspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", aspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", aspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", aspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", aspp_df2_BAI$n_eff),
+  check.names = FALSE
+)
+site <- data.frame(
+  Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
+  Mean = sprintf("%.2f", site_df2_BAI$mean),
+  P5   = sprintf("%.2f", site_df2_BAI$p5),
+  P25  = sprintf("%.2f", site_df2_BAI$p25),
+  P75  = sprintf("%.2f", site_df2_BAI$p75),
+  P95  = sprintf("%.2f", site_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", site_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", site_df2_BAI$n_eff),
+  check.names = FALSE
+)
+ayear <- data.frame(
+  Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
+  Mean = sprintf("%.2f", ayear_df2_BAI$mean),
+  P5   = sprintf("%.2f", ayear_df2_BAI$p5),
+  P25  = sprintf("%.2f", ayear_df2_BAI$p25),
+  P75  = sprintf("%.2f", ayear_df2_BAI$p75),
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", ayear_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", ayear_df2_BAI$n_eff),
+  check.names = FALSE
+)
+binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
+
+print(xtable(binded,
+             caption = "Summary output of each parameter from our GDD (growing degree days) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+             label = "tab:BAItab"),
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
+      caption.placement = "top")
+
+@
+
+<<Table BAI for GSL Wildchrokie, results='asis', echo = FALSE>>=
+options(digits = 2)
+a_df2_BAI      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_a_BAI.csv")
+sigma_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_sigma_BAI.csv")
+bspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_bspp_BAI.csv")
+treeid_df2_BAI <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_treeid_BAI.csv")
+aspp_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_aspp_BAI.csv")
+site_df2_BAI   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_site_BAI.csv")
+ayear_df2_BAI  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_GSLparam_ayear_BAI.csv")
+
+bspp_df2_BAI$spp_name <- emp$latbi[match(bspp_df2_BAI$spp, emp$spp_num)]
+site_df2_BAI$site_name <- emp$site[match(site_df2_BAI$site, emp$site_num)]
+aspp_df2_BAI$spp_name <- emp$latbi[match(aspp_df2_BAI$spp, emp$spp_num)]
+ayear_df2_BAI$year_name <- emp$year[match(ayear_df2_BAI$year, emp$year_num)]
+
+alpha <- data.frame(
+  Parameter = c("$\\alpha$"),
+  Mean = sprintf("%.2f", a_df2_BAI$mean),
+  P5   = sprintf("%.2f", a_df2_BAI$p5),
+  P25  = sprintf("%.2f", a_df2_BAI$p25),
+  P75  = sprintf("%.2f", a_df2_BAI$p75),
+  P95  = sprintf("%.2f", a_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", a_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", a_df2_BAI$n_eff),
+  check.names = FALSE
+)
+sigma <- data.frame(
+  Parameter = c("$\\sigma_{\\alpha_{treeid}}$",
+                "$\\sigma_{\\alpha_{prov}}$",
+                "$\\sigma_{y}$"),
+  Mean = sprintf("%.2f", sigma_df2_BAI$mean),
+  P5   = sprintf("%.2f", sigma_df2_BAI$p5),
+  P25  = sprintf("%.2f", sigma_df2_BAI$p25),
+  P75  = sprintf("%.2f", sigma_df2_BAI$p75),
+  P95  = sprintf("%.2f", sigma_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", sigma_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", sigma_df2_BAI$n_eff),
+  check.names = FALSE
+)
+bspp <- data.frame(
+  Parameter = paste0("$\\beta_{species_{", bspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", bspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", bspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", bspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", bspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", bspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", bspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", bspp_df2_BAI$n_eff),
+  check.names = FALSE
+)
+aspp <- data.frame(
+  Parameter = paste0("$\\alpha_{species_{", aspp_df2_BAI$spp_name, "}}$"),
+  Mean = sprintf("%.2f", aspp_df2_BAI$mean),
+  P5   = sprintf("%.2f", aspp_df2_BAI$p5),
+  P25  = sprintf("%.2f", aspp_df2_BAI$p25),
+  P75  = sprintf("%.2f", aspp_df2_BAI$p75),
+  P95  = sprintf("%.2f", aspp_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", aspp_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", aspp_df2_BAI$n_eff),
+  check.names = FALSE
+)
+site <- data.frame(
+  Parameter = paste0("$\\alpha_{site_{", site_df2_BAI$site_name, "}}$"),
+  Mean = sprintf("%.2f", site_df2_BAI$mean),
+  P5   = sprintf("%.2f", site_df2_BAI$p5),
+  P25  = sprintf("%.2f", site_df2_BAI$p25),
+  P75  = sprintf("%.2f", site_df2_BAI$p75),
+  P95  = sprintf("%.2f", site_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", site_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", site_df2_BAI$n_eff),
+  check.names = FALSE
+)
+ayear <- data.frame(
+  Parameter = paste0("$\\alpha_{year_{", ayear_df2_BAI$year_name, "}}$"),
+  Mean = sprintf("%.2f", ayear_df2_BAI$mean),
+  P5   = sprintf("%.2f", ayear_df2_BAI$p5),
+  P25  = sprintf("%.2f", ayear_df2_BAI$p25),
+  P75  = sprintf("%.2f", ayear_df2_BAI$p75),
+  P95  = sprintf("%.2f", ayear_df2_BAI$p95),
+  `\\^R` = sprintf("%.2f", ayear_df2_BAI$Rhat),
+  `ESS`  = sprintf("%.0f", ayear_df2_BAI$n_eff),
+  check.names = FALSE
+)
+binded <- rbind(alpha, sigma, bspp, site, ayear, aspp)
+
+print(xtable(binded,
+             caption = "Summary output of each parameter from our GSL (growing season length) model, using basal area increment (log($mm^2$)) as the response variable. We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+             label = "tab:BAItab_gsl"),
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      sanitize.colnames.function = function(x) paste0(gsub("P5$", "5\\\\%", gsub("P95", "95\\\\%", gsub("P25", "25\\\\%", gsub("P75", "75\\\\%", x))))),
+      caption.placement = "top")
+@
+
+<<Table param EOS Wildchrokie, results='asis', echo = FALSE>>=
+a_df_EOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_a.csv")
+sigma_df_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_sigma.csv")
+bspp_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_bspp.csv")
+aspp_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_aspp.csv")
+site_df_EOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_site.csv")
+ayear_df_EOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_EOSparam_ayear.csv")
+
+bspp_df_EOS$spp_name   <- emp$latbi[match(bspp_df_EOS$spp, emp$spp_num)]
+site_df_EOS$site_name  <- emp$site[match(site_df_EOS$site, emp$site_num)]
+aspp_df_EOS$spp_name   <- emp$latbi[match(aspp_df_EOS$spp, emp$spp_num)]
+ayear_df_EOS$year_name <- emp$year[match(ayear_df_EOS$year, emp$year_num)]
+
+param_labels_EOS <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_EOS$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_EOS$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_EOS$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_EOS$spp_name,  "}}$")
+)
+
+combined_EOS <- data.frame(
+  "Parameter" = param_labels_EOS,
+  rbind(
+    fmt_split(a_df_EOS), fmt_split(sigma_df_EOS), fmt_split(bspp_df_EOS),
+    fmt_split(site_df_EOS), fmt_split(ayear_df_EOS), fmt_split(aspp_df_EOS)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_EOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
+tab_EOS <- xtable(combined_EOS,
+              caption = "Summary output of each parameter for the end of season (EOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_EOS")
+
+print(tab_EOS,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_EOS)),
+      floating = TRUE
+)
+@
+
+
+
+<<Table param SOS Wildchrokie, results='asis', echo = FALSE>>=
+a_df_SOS      <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_a.csv")
+sigma_df_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_sigma.csv")
+bspp_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_bspp.csv")
+aspp_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_aspp.csv")
+site_df_SOS   <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_site.csv")
+ayear_df_SOS  <- read.csv("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses/output/GM_SOSparam_ayear.csv")
+
+bspp_df_SOS$spp_name   <- emp$latbi[match(bspp_df_SOS$spp, emp$spp_num)]
+site_df_SOS$site_name  <- emp$site[match(site_df_SOS$site, emp$site_num)]
+aspp_df_SOS$spp_name   <- emp$latbi[match(aspp_df_SOS$spp, emp$spp_num)]
+ayear_df_SOS$year_name <- emp$year[match(ayear_df_SOS$year, emp$year_num)]
+
+param_labels_SOS <- c(
+  "$\\alpha$",
+  "$\\sigma_{\\alpha_{treeid}}$", "$\\sigma_{\\alpha_{prov}}$", "$\\sigma_{y}$",
+  paste0("$\\beta_{species_{",   bspp_df_SOS$spp_name,  "}}$"),
+  paste0("$\\alpha_{prov_{", site_df_SOS$site_name, "}}$"),
+  paste0("$\\alpha_{year_{", ayear_df_SOS$year_name, "}}$"),
+  paste0("$\\alpha_{species_{",  aspp_df_SOS$spp_name,  "}}$")
+)
+
+combined_SOS <- data.frame(
+  "Parameter" = param_labels_SOS,
+  rbind(
+    fmt_split(a_df_SOS), fmt_split(sigma_df_SOS), fmt_split(bspp_df_SOS),
+    fmt_split(site_df_SOS), fmt_split(ayear_df_SOS), fmt_split(aspp_df_SOS)
+  ),
+  check.names = FALSE
+)
+
+colnames(combined_SOS) <- c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%",
+                            "\\^R", "ESS")
+
+tab_SOS <- xtable(combined_SOS,
+              caption = "Summary output of each parameter for the start of season (SOS) predictor of ring width (log(mm)). We report estimates as mean and 90\\% and 50\\% uncertainty intervals. See `Data analyses' in Methods section for more details.",
+              label = "tab:tab_SOS")
+
+print(tab_SOS,
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top",
+      hline.after = c(-1, 0, nrow(combined_SOS)),
+      floating = TRUE
+)
+@
+
+<<Table percentages SOS and EOS gain, results='asis', echo = FALSE>>=
+b_sosgain$spp_name <- emp$latbi[match(b_sosgain$spp, emp$spp_num)]
+b_eosgain$spp_name <- emp$latbi[match(b_eosgain$spp, emp$spp_num)]
+
+meansos <- data.frame(
+  "Parameter" = paste0("$\\beta_{SOS}$"),
+  "Mean" = sprintf("%.2f", b_sosgain_mu$mean),
+  "5\\%" = sprintf("%.2f", b_sosgain_mu$p5),
+  "25\\%" = sprintf("%.2f", b_sosgain_mu$p25),
+  "75\\%" = sprintf("%.2f", b_sosgain_mu$p75),
+  "95\\%" = sprintf("%.2f", b_sosgain_mu$p95)
+)
+
+meaneos <- data.frame(
+  "Parameter" = paste0("$\\beta_{EOS}$"),
+  "Mean" = sprintf("%.2f", b_eosgain_mu$mean),
+  "5\\%" = sprintf("%.2f", b_eosgain_mu$p5),
+  "25\\%" = sprintf("%.2f", b_eosgain_mu$p25),
+  "75\\%" = sprintf("%.2f", b_eosgain_mu$p75),
+  "95\\%" = sprintf("%.2f", b_eosgain_mu$p95)
+)
+
+sosgain <- data.frame(
+  "Parameter" = paste0("$\\beta_{SOS_{", b_sosgain$spp_name, "}}$"),
+  "Mean" = sprintf("%.2f", b_sosgain$mean),
+  "5\\%" = sprintf("%.2f", b_sosgain$p5),
+  "25\\%" = sprintf("%.2f", b_sosgain$p25),
+  "75\\%" = sprintf("%.2f", b_sosgain$p75),
+  "95\\%" = sprintf("%.2f", b_sosgain$p95)
+)
+
+eosgain <- data.frame(
+  "Parameter" = paste0("$\\beta_{EOS_{", b_eosgain$spp_name, "}}$"),
+  "Mean" = sprintf("%.2f", b_eosgain$mean),
+  "5\\%" = sprintf("%.2f", b_eosgain$p5),
+  "25\\%" = sprintf("%.2f", b_eosgain$p25),
+  "75\\%" = sprintf("%.2f", b_eosgain$p75),
+  "95\\%" = sprintf("%.2f", b_eosgain$p95)
+)
+
+binded <- rbind(meansos, meaneos, sosgain, eosgain)
+colnames(binded) <- paste0(c("Parameter", "Mean", "5\\%", "25\\%", "75\\%", "95\\%"))
+
+print(xtable(binded,
+             caption = "Summary output ($\\beta$) of our GDD parameters (see Table \\ref{tab:tab_GDD} for untransformed parameter estimates), converted in \\% for a predicted extension in the start and end of season across, and for each species. We report estimates as posterior means with 90\\% and 50\\% uncertainty intervals.",
+             label = "tab:phenogain"),
+      include.rownames = FALSE,
+      sanitize.text.function = identity,
+      caption.placement = "top")
+@
+
+% Wildchrokie provenances mu plot per species
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/muProvPerSpp.pdf}
+\caption{The effect of provenance on growth across a latitudinal gradient estimated per species. We show the ring width (log(mm)) for each provenance estimated from the following intercept-only model: $log(ringwidth) \sim Normal(\alpha_{provenance} + \alpha_{treeid}, \sigma) $, using the package rstanarm version 2.32.1 \citep{gabryRstanarmBayesianApplied2016}. The dots represent the estimated mean of each provenance (ordered by latitude), with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively).}
+\label{fig:wcmuplotasitePerSpp}
+\end{figure}
+
+% Climate data overlap
+\begin{figure}[!ht]
+\includegraphics[width=0.9\textwidth]{../../analyses/figures/climate/climateComparison2020.pdf}
+\caption{Climate data overlap in 2020 for the two climate stations we used in our dataset (see `Data analyses' section for more details). The lines represent the daily mean temperature of each climate station and the shaded area, the minimum and maximum daily temperatures.}
+\label{fig:climOverlap}
+\end{figure}
+
+% Z-scored slope results Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/zscored/muALLbsppZ.pdf}
+\caption{Effect size of each predictor across our four species. We depict ring width (log(mm)) change per adjusted predictor ($z$-scored; see `Data analyses' section in Methods for more details) for each species. We report mean model slope estimates for each species (dots) with 50\% and 90\% uncertainty intervals (thicker and thinner lines, respectively), for each predictor (growing degree days, growing season length, start of season and end of season).
+}
+\label{fig:bsppZscored}
+\end{figure}
+
+% Full vs restricted data comparison for Wildchrokie
+\begin{figure}[!ht]
+\includegraphics[width=1\textwidth]{../../analyses/figures/growthModelsMain/FullVSRestricted.pdf} 
+\caption{Full vs most restricted datasets for the model with start of season (a-d) and end of season (d-h) as the predictor. Each panel represent the different parameters used to fit the models. $\sigma$ (a, e), $\alpha_{species}$ (c, g) and $\alpha_{year}$ (d,h) represent the ring width (log(mm)) for species and year, respectively. $\beta_{species}$ (b, f) represent the change in ring width (log(mm))/adjusted predictor, for each species (see `Data analyses' section in Methods for more details).} 
+\label{fig:wcSOSEOScomparison}
+\end{figure}
+
+% Figure mu atreeid full
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/meanPlotGrowthGDD_treeidBYspp.pdf}
+\caption{Ring width (log(mm)) deviations from the grand mean for grouping factor of the GDD model. The different tree id values represent the combined intercepts of tree id, provenance, species and averaged year intercepts. The larger dots and lines represent the species intercepts which are the species level estimates averaged across all of their tree ids. The dots are the mean of the posterior distribution and the thick and thin lines, the 50 \% and 90\% uncertainty intervals.}
+\label{fig:wcmuplotatreeid}
+\end{figure}
+
+% XY facetted by species GDD
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacet.pdf}
+\caption{Ring width (mm) trends in response to thermal season (growing degree days). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
+\label{fig:wcxyGDD}
+\end{figure}
+
+% XY facetted by species GSL
+\begin{figure}[!ht]
+\includegraphics[width=0.8\textwidth]{../../analyses/figures/growthModelsMain/growthModelSlopesperSppFacetGSL.pdf}
+\caption{Ring width trends (mm) in response to calendar season (growing season length). The lines represent the mean of the posterior distribution and the shaded area, the 50\% uncertainty intervals at each predictor value back-converted from the model which uses ring width in log(mm) as the response variable. The dots are the empirical data shaped by year.}
+\label{fig:wcxyGSL}
+\end{figure}
+
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+% REFERENCES %
+%<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+\clearpage 
+
+\bibliography{ExportedItems}
+\bibliographystyle{besjournals} 
+
+
+\end{document}
