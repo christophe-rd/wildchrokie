@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: supplement.aux
+The style file: besjournals.bst
+Database file #1: ExportedItems.bib
+Reallocated buffer (elt_size=1) to 40000 items from 20000.
+Reallocated sv_buffer (elt_size=1) to 40000 items from 20000.
+Reallocated ex_buf (elt_size=1) to 40000 items from 20000.
+Reallocated out_buf (elt_size=1) to 40000 items from 20000.
+Reallocated name_tok (elt_size=4) to 40000 items from 20000.
+Reallocated name_sep_char (elt_size=1) to 40000 items from 20000.
+You've used 3 entries,
+            2805 wiz_defined-function locations,
+            1059 strings with 12434 characters,
+and the built_in function-call counts, 1494 in all, are:
+= -- 131
+> -- 62
+< -- 2
++ -- 24
+- -- 22
+* -- 112
+:= -- 256
+add.period$ -- 6
+call.type$ -- 3
+change.case$ -- 24
+chr.to.int$ -- 4
+cite$ -- 3
+duplicate$ -- 103
+empty$ -- 97
+format.name$ -- 30
+if$ -- 283
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 21
+newline$ -- 13
+num.names$ -- 12
+pop$ -- 42
+preamble$ -- 1
+purify$ -- 19
+quote$ -- 0
+skip$ -- 40
+stack$ -- 0
+substring$ -- 61
+swap$ -- 50
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 27
+warning$ -- 0
+while$ -- 10
+width$ -- 0
+write$ -- 34

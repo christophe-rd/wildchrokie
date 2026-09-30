@@ -1,7 +1,6 @@
 *.DS_Store
 *.RData
 *.tiff
-*.aux
 *.log
 *.gz
 *.xml
