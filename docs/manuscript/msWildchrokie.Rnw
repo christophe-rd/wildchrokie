@@ -26,7 +26,7 @@
 \begin{center}
 {\sc} {\Large Warmer and longer growing seasons increase growth for juvenile trees in a common garden} \\
 \vspace{5ex}
-{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson$^6$, \& E.M. Wolkovich$^{1,2,3}$
+{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson$^6$ \& E.M. Wolkovich$^{1,2,3}$
 \end{center}
 $^1$Forest \& Conservation Sciences, Faculty of Forestry \& Environmental Stewardship, University of British Columbia, Vancouver, British Columbia, Canada\\
 $^2$Arnold Arboretum of Harvard University, Boston, Massachusetts, USA\\
@@ -130,7 +130,17 @@ b_eosgain_mu$spp_name <- "all"
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 % need to transform this abstract to a 200-word summary
 \section{Abstract}
-Anthropogenic climate change affects natural systems at the global scale, with shifts in spring leafout and flowering being observed in most regions. Such shifts can have cascading effects for global carbon sequestration. For trees, shifted leafout has extended the vegetative growing season, which is widely expected to increase tree growth, with impacts on forest carbon dynamics. While decades of work have assumed longer seasons increase tree growth, multiple recent studies have found no connections. Yet these studies often focus on earlier leafout, when thermal conditions are poor for photosynthesis and growth. Recent research, however, suggests later season shifts may be more pronounced and important than previously suggested. Here we leveraged data on the start and end of the vegetative season to test how growth responds to both the length and thermal sum of the growing season. Working across four juvenile tree species within the \textit{Betulaceae} family, sourced from four provenances, we found increased tree growth with warmer seasons for three out of four species, and with longer seasons, for two out of four species. Supporting recent work on the importance of the end of season to growth, we found that end of season phenology had a stronger influence on growth responses than start of season. We found little effect of provenance on growth or phenology, including end of season events, suggesting these results may be applicable across species ranges. Taken together, our results suggest thermal conditions across the season may predict growth responses and vary considerably across species, but not provenance. Our work has implications for forest regeneration and range expansion, predicting potentially increased juvenile tree growth under warmer conditions.
+Shifts in spring leafout and flowering with anthropogenic climate change can have cascading effects for tree growth with implications for global carbon sequestration. Earlier leafout has extended the vegetative growing season in many forests. While these longer growing seasons are expected to increase tree growth, multiple recent studies have failed to find this relationship. Earlier leafout, however, only extends the early season, when thermal conditions are poor for photosynthesis and growth; thus growing season length may not be the best predictor. % Further, recent research suggests later season shifts may be more pronounced and important than previously suggested. 
+% emw4Oct -- careful -- you have NOT really introduced 'the length and thermal sum of the growing season' clearly. I tweaked this slightly 
+Here we leveraged observational data from a common garden to understand how plant growth responds to growing season length versus the thermal growing season. Working across four juvenile tree species sourced from four provenances, we found the thermal season increased tree growth for most species and was a stronger predictor of growth than season length. 
+% emw4Oct -- I think this is too specific (confusing) for an abstract... at least for NPH. 
+% we found increased tree growth with warmer seasons for three out of four species, and with longer seasons, for two out of four species. 
+Further supporting the importance of the thermal season, we found that end of season phenology---when conditions are much warmer---had a stronger influence on growth responses than start of season. 
+% emw4Oct -- I cut this just to save words ... 
+% , supporting recent work on the importance of the end of season to growth, 
+Our results were consistent across provenances, and suggest early season leafout may not directly drive increased growth unless it also increases the thermal season. 
+% suggesting these results may be applicable across species ranges.
+Our work has implications for forest regeneration and range expansion, predicting potentially increased juvenile tree growth under warmer conditions.
 
 \textbf{Keywords:} forest ecology, climate change, community ecology, dendrochronology, phenology, common garden, forestry.
 
