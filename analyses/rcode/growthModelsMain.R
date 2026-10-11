@@ -13,6 +13,7 @@ options(digits = 3)
 
 # Load library 
 library(rstan)
+library(loo)
 
 if (length(grep("christophe_rouleau-desrochers", getwd())) > 0) {
   setwd("/Users/christophe_rouleau-desrochers/github/wildchrokie/analyses")
@@ -4032,3 +4033,56 @@ abline(v = 0, lty = 2, col = "grey60")
 
 dev.off()
 }
+
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# LOO --------------------------------------------------------------------------
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# https://mc-stan.org/loo/articles/loo2-with-rstan.html
+
+# Start with Fit year
+log_lik_1 <- extract_log_lik(fityear, merge_chains = FALSE)
+
+# relative effective sample sizes
+r_eff <- relative_eff(exp(log_lik_1)) 
+
+loo_year <- loo(log_lik_1, r_eff = r_eff)
+
+plot(loo_year)
+# which observations are problematic
+pareto_k <- loo_year$diagnostics$pareto_k
+bad_obs <- which(pareto_k > 0.7)
+bad_obs
+
+emp[bad_obs, ]
+
+# GDD
+fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
+log_lik_gdd <- extract_log_lik(fitgdd, merge_chains = FALSE)
+r_eff_gdd <- relative_eff(exp(log_lik_gdd)) 
+loo_gdd <- loo(log_lik_gdd, r_eff = r_eff_gdd)
+
+# GSL
+fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
+log_lik_gsl <- extract_log_lik(fitgsl, merge_chains = FALSE)
+r_eff_gsl <- relative_eff(exp(log_lik_gsl)) 
+loo_gsl <- loo(log_lik_gsl, r_eff = r_eff_gsl)
+
+# comparison
+comp <- loo_compare(loo_gdd, loo_gsl)
+comp
+
+# SOS
+fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
+log_lik_sos <- extract_log_lik(fitsos, merge_chains = FALSE)
+r_eff_sos <- relative_eff(exp(log_lik_sos)) 
+loo_sos <- loo(log_lik_sos, r_eff = r_eff_sos)
+
+# EOS
+fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
+log_lik_eos <- extract_log_lik(fiteos, merge_chains = FALSE)
+r_eff_eos <- relative_eff(exp(log_lik_eos)) 
+loo_eos <- loo(log_lik_eos, r_eff = r_eff_eos)
+
+# comparison
+comp <- loo_compare(loo_sos, loo_eos)
+comp
