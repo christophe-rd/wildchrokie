@@ -1,0 +1,53 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem[{Dow \emph{et~al.}(2022)Dow, Kim, D’Orangeville
+  \emph{et~al.}}]{dow_warm_2022}
+Dow C, Kim AY, D’Orangeville L, \emph{et~al.} (2022) Warm springs alter
+  timing but not total growth of temperate deciduous trees.
+\newblock \emph{Nature}, \textbf{608}, 552--557.
+\newblock \doi{10.1038/s41586-022-05092-3}.
+\newblock \urlprefix\url{https://www.nature.com/articles/s41586-022-05092-3}.
+
+\bibitem[{Gao \emph{et~al.}(2022)Gao, Liang, Liu
+  \emph{et~al.}}]{gaoEarlierStartThermal2022}
+Gao S, Liang E, Liu R, \emph{et~al.} (2022) An earlier start of the thermal
+  growing season enhances tree growth in cold humid areas but not in dry areas.
+\newblock \emph{Nature Ecology \& Evolution}, \textbf{6}, 397--404.
+\newblock \doi{10.1038/s41559-022-01668-4}.
+\newblock \urlprefix\url{https://www.nature.com/articles/s41559-022-01668-4}.
+
+\bibitem[{Matula \emph{et~al.}(2023)Matula, Knířová, Vítámvás
+  \emph{et~al.}}]{matula_shifts_2023}
+Matula R, Knířová S, Vítámvás J, \emph{et~al.} (2023) Shifts in
+  intra-annual growth dynamics drive a decline in productivity of temperate
+  trees in {Central} {European} forest under warmer climate.
+\newblock \emph{Science of The Total Environment}, \textbf{905}, 166906.
+\newblock \doi{10.1016/j.scitotenv.2023.166906}.
+\newblock
+  \urlprefix\url{https://linkinghub.elsevier.com/retrieve/pii/S0048969723055316}.
+
+\bibitem[{Piao \emph{et~al.}(2019)Piao, Liu, Chen
+  \emph{et~al.}}]{piao_plant_2019}
+Piao S, Liu Q, Chen A, \emph{et~al.} (2019) Plant phenology and global climate
+  change: {Current} progresses and challenges.
+\newblock \emph{Global Change Biology}, \textbf{25}, 1922--1940.
+\newblock \doi{10.1111/gcb.14619}.
+\newblock
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/gcb.14619}.
+
+\bibitem[{Silvestro \emph{et~al.}(2023)Silvestro, Zeng, Buttò
+  \emph{et~al.}}]{silvestro_longer_2023}
+Silvestro R, Zeng Q, Buttò V, \emph{et~al.} (2023) A longer wood growing
+  season does not lead to higher carbon sequestration.
+\newblock \emph{Scientific Reports}, \textbf{13}, 4059.
+\newblock \doi{10.1038/s41598-023-31336-x}.
+\newblock \urlprefix\url{https://www.nature.com/articles/s41598-023-31336-x}.
+
+\end{thebibliography}
