@@ -41,6 +41,7 @@ fitmodelsZscored <- F
 fitmodelsBAI <- F
 fit2xpriors <- F
 fitasitePerSpp <- F
+runloo <- F
 
 emp <- read.csv("output/empiricalDataMAIN.csv")
 
@@ -3119,22 +3120,7 @@ dev.off()
 # LOO --------------------------------------------------------------------------
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # https://mc-stan.org/loo/articles/loo2-with-rstan.html
-
-# Start with Fit year
-log_lik_1 <- extract_log_lik(fityear, merge_chains = FALSE)
-
-# relative effective sample sizes
-r_eff <- relative_eff(exp(log_lik_1)) 
-
-loo_year <- loo(log_lik_1, r_eff = r_eff)
-
-plot(loo_year)
-# which observations are problematic
-pareto_k <- loo_year$diagnostics$pareto_k
-bad_obs <- which(pareto_k > 0.7)
-bad_obs
-
-emp[bad_obs, ]
+if(runloo) {
 
 # GDD
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
@@ -3148,9 +3134,10 @@ log_lik_gsl <- extract_log_lik(fitgsl, merge_chains = FALSE)
 r_eff_gsl <- relative_eff(exp(log_lik_gsl)) 
 loo_gsl <- loo(log_lik_gsl, r_eff = r_eff_gsl)
 
-# comparison
-comp <- loo_compare(loo_gdd, loo_gsl)
+# comparison (named list so rows are GDD/GSL instead of model1/model2)
+comp <- loo_compare(list(GDD = loo_gdd, GSL = loo_gsl))
 comp
+write.csv(comp, "output/looGDDGSL.csv")
 
 # SOS
 fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
@@ -3165,5 +3152,7 @@ r_eff_eos <- relative_eff(exp(log_lik_eos))
 loo_eos <- loo(log_lik_eos, r_eff = r_eff_eos)
 
 # comparison
-comp <- loo_compare(loo_sos, loo_eos)
+comp <- loo_compare(list(SOS = loo_sos, EOS = loo_eos))
 comp
+write.csv(comp, "output/looSOSEOS.csv")
+}
