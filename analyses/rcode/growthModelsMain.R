@@ -76,7 +76,7 @@ nrow(empfulleos)
 lineplotseqlength <- 25
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Most restricted amount of data ####
+# MOST RESTRICTED DATA (MAIN MODELS) ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 emp <- emp[!is.na(emp$pgsGDD5),]
 
@@ -235,14 +235,14 @@ diagnostics <- util$extract_hmc_diagnostics(fiteos)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot GDD fit ####
+# Plot GDD fit ----
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 fitgsl <- readRDS("output/stanOutput/fitGrowthGSL")
 fitsos <- readRDS("output/stanOutput/fitGrowthSOS")
 fiteos <- readRDS("output/stanOutput/fitGrowthEOS")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 # full posterior
 columns <- colnames(df_fitgdd)[!grepl("prior", colnames(df_fitgdd))]
@@ -279,7 +279,7 @@ a_df2  <- extract_params(df_fitgdd, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 # thanks to claude for these diagnostic recovery
 fit_summary_gdd <- as.data.frame(rstan::summary(fitgdd)$summary)
 fit_summary_gdd$param_full <- rownames(fit_summary_gdd)
@@ -325,7 +325,7 @@ write.csv(ayear_df2,  "output/GM_GDDparam_ayear.csv",  row.names = FALSE)
 write.csv(a_df2,      "output/GM_GDDparam_a.csv",      row.names = FALSE)
 
 
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -411,7 +411,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GSL fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgsl <- as.data.frame(fitgsl)
 # full posterior
 columns <- colnames(df_fitgsl)[!grepl("prior", colnames(df_fitgsl))]
@@ -444,7 +444,7 @@ a_df2  <- extract_params(df_fitgsl, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_gsl <- as.data.frame(rstan::summary(fitgsl)$summary)
 fit_summary_gsl$param_full <- rownames(fit_summary_gsl)
 rownames(fit_summary_gsl) <- NULL
@@ -482,7 +482,7 @@ write.csv(site_df2,   "output/GM_GSLparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GSLparam_ayear.csv",  row.names = FALSE)
 write.csv(a_df2,      "output/GM_GSLparam_a.csv",      row.names = FALSE)
 
-##### Plot posterior vs priors for GSL fit #####
+## Plot posterior vs priors for GSL fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -568,7 +568,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot SOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitsos <- as.data.frame(fitsos)
 # full posterior
 columns <- colnames(df_fitsos)[!grepl("prior", colnames(df_fitsos))]
@@ -601,7 +601,7 @@ a_df2  <- extract_params(df_fitsos, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_sos <- as.data.frame(rstan::summary(fitsos)$summary)
 fit_summary_sos$param_full <- rownames(fit_summary_sos)
 rownames(fit_summary_sos) <- NULL
@@ -639,7 +639,7 @@ write.csv(site_df2_sos,   "output/GM_SOSparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2_sos,  "output/GM_SOSparam_ayear.csv",  row.names = FALSE)
 write.csv(a_df2,          "output/GM_SOSparam_a.csv",      row.names = FALSE)
 
-##### Plot posterior vs priors for sos fit #####
+## Plot posterior vs priors for sos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -725,7 +725,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot EOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fiteos <- as.data.frame(fiteos)
 # full posterior
 columns <- colnames(df_fiteos)[!grepl("prior", colnames(df_fiteos))]
@@ -758,7 +758,7 @@ a_df2  <- extract_params(df_fiteos, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_eos <- as.data.frame(rstan::summary(fiteos)$summary)
 fit_summary_eos$param_full <- rownames(fit_summary_eos)
 rownames(fit_summary_eos) <- NULL
@@ -797,7 +797,7 @@ write.csv(site_df2_eos,   "output/GM_EOSparam_site.csv",   row.names = FALSE)
 write.csv(ayear_df2_eos,  "output/GM_EOSparam_ayear.csv",  row.names = FALSE)
 write.csv(a_df2,          "output/GM_EOSparam_a.csv",      row.names = FALSE)
 
-##### Plot posterior vs priors for eos fit #####
+## Plot posterior vs priors for eos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -881,7 +881,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Compute parameter estimates in percentages ####
+# Parameter estimates in percentages ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 df_fitgddper <- df_fitgdd
 df_fitgslper <- df_fitgsl
@@ -918,7 +918,7 @@ write.csv(bspp_per_sos, "output/GM_SOSparam_bspp_per.csv",   row.names = FALSE)
 write.csv(bspp_per_eos, "output/GM_EOSparam_bspp_per.csv",   row.names = FALSE)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- 
-##### Compute for spring and fall gdd #####
+## Compute for spring and fall gdd ----
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 logan <- read.csv("/Users/christophe_rouleau-desrochers/github/coringtreespotters/analyses/output/loganLongTermCleaned.csv")
 
@@ -989,7 +989,7 @@ bspp2_per_eos <- do.call(rbind, eos_list)
 bspp2_per_sos$spp_name <- emp$latbi[match(bspp2_per_sos$spp, emp$spp_num)]
 bspp2_per_eos$spp_name <- emp$latbi[match(bspp2_per_eos$spp, emp$spp_num)]
 
-##### Recover Rhat and ESS (for the underlying bsp[spp] params) #####
+## Recover Rhat and ESS (for the underlying bsp[spp] params) ----
 # these rows are nonlinear transforms of bsp[spp_num], so Rhat/n_eff of
 # the underlying bsp parameter is attached by matching on spp
 bspp_gain_diag <- get_diag(fit_summary_gdd, "spp", "bsp\\[(\\d+)\\]")
@@ -1318,7 +1318,7 @@ fiteosfull <- sampling(eosmodel, data = deosfull,
 saveRDS(fiteosfull, "output/stanOutput/fitGrowthEOSFull")
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Recover and plot parameters SOS restricted vs full #####
+## Recover and plot parameters SOS restricted vs full ----
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 fitsos     <- readRDS("output/stanOutput/fitGrowthSOS")
 fitsosfull <- readRDS("output/stanOutput/fitGrowthSOSFull")
@@ -1543,7 +1543,7 @@ dev.off()
 # === === === === === === === === === === === === === === === === === === === #
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Z-SCORED ####
+# Z-SCORED MODELS ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if (fitmodelsZscored) {
 genericmodel <- stan_model("stan/modelGrowth_z.stan")
@@ -1593,7 +1593,7 @@ diagnostics <- util$extract_hmc_diagnostics(fiteos)
 util$check_all_hmc_diagnostics(diagnostics)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Diagnostics #####
+## Diagnostics ----
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 samples <- util$extract_expectand_vals(fitgsl)
 
@@ -1609,14 +1609,14 @@ util$plot_div_pairs(asite, "sigma_asite", samples, diagnostics, transforms = lis
 dev.off()
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Plot GDD fit ####
+# Plot GDD fit ----
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDDZscored")
 fitgsl <- readRDS("output/stanOutput/fitGrowthGSLZscored")
 fitsos <- readRDS("output/stanOutput/fitGrowthSOSZscored")
 fiteos <- readRDS("output/stanOutput/fitGrowthEOSZscored")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -1654,7 +1654,7 @@ write.csv(aspp_df2,   "output/GM_GDDparam_Z_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GDDparam_Z_site.csv",   row.names = FALSE)
 
 
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/ZgddModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -1722,7 +1722,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GSL fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgsl <- as.data.frame(fitgsl)
 
 # full posterior
@@ -1757,7 +1757,7 @@ write.csv(treeid_df2, "output/GM_GSLparam_Z_treeid.csv", row.names = FALSE)
 write.csv(aspp_df2,   "output/GM_GSLparam_Z_aspp.csv",   row.names = FALSE)
 write.csv(site_df2,   "output/GM_GSLparam_Z_site.csv",   row.names = FALSE)
 
-##### Plot posterior vs priors for GSL fit #####
+## Plot posterior vs priors for GSL fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/ZgslModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -1825,7 +1825,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot SOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitsos <- as.data.frame(fitsos)
 
 # full posterior
@@ -1853,7 +1853,7 @@ treeid_df2_sos <- subset(treeid_df2_sos, !grepl("prior", treeid))
 site_df2_sos   <- extract_params(df_fitsos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 site_df2_sos <- subset(site_df2_sos, !grepl("z|sigma", site))
 
-##### Plot posterior vs priors for sos fit #####
+## Plot posterior vs priors for sos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/ZsosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -1921,7 +1921,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot EOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fiteos <- as.data.frame(fiteos)
 
 # full posterior
@@ -1949,7 +1949,7 @@ treeid_df2_eos <- subset(treeid_df2_eos, !grepl("prior", treeid))
 site_df2_eos   <- extract_params(df_fiteos, "asite", "fit_a_site", "site", "asite\\[(\\d+)\\]")
 site_df2_eos <- subset(site_df2_eos, !grepl("z|sigma", site))
 
-##### Plot posterior vs priors for eos fit #####
+## Plot posterior vs priors for eos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/ZeosModelPriorVSPosterior.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -2031,7 +2031,7 @@ fitgddppsite <- sampling(gddmodelpp, data = dgdd,
 saveRDS(fitgddppsite, "output/stanOutput/fitGrowthGDD_PPsite")
 fitgddppsite <- readRDS("output/stanOutput/fitGrowthGDD_PPsite")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgddpp <- as.data.frame(fitgddppsite)
 
 # full posterior
@@ -2064,7 +2064,7 @@ site_df2   <- extract_params(df_fitgddpp, "asite", "fit_a_site",
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 ayear_df2   <- extract_params(df_fitgddpp, "ayear", "fit_ayear", 
                              "year", "ayear\\[(\\d+)\\]")
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_PPsite.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -2149,7 +2149,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 # Recover fitgdd without partial pooling
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -2178,7 +2178,7 @@ site_df2_noPP   <- extract_params(df_fitgdd, "asite", "fit_a_site",
                              "site", "asite\\[(\\d+)\\]")
 
 
-##### Compare model output with and without partial pooling #####
+## Compare model output with and without partial pooling ----
 # Open device
 jpeg("figures/growthModelsMain/sitePPvsNoPP.jpeg", width = 9, height = 6, units = "in", res = 300)
 par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
@@ -2275,7 +2275,7 @@ saveRDS(fitgddayear, "output/stanOutput/fitGrowthGDD_ayear")
 # fitgddayear <- readRDS("output/stanOutput/fitGrowthGDD_ayear")
 
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgddayear <- as.data.frame(fitgddayear)
 
 # full posterior
@@ -2308,7 +2308,7 @@ site_df2   <- extract_params(df_fitgddayear, "asite", "fit_a_site",
 ayear_df2   <- extract_params(df_fitgddayear, "ayear", "fit_a_year", 
                              "year", "ayear\\[(\\d+)\\]")
 
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_ayear.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -2397,7 +2397,7 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 # Recover fitgdd without partial pooling
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -2447,7 +2447,7 @@ plot(bspp_df2_noayr$mean, y_pos,
 segments(bspp_df2_noayr$p5,  y_pos, bspp_df2_noayr$p95, y_pos, col = wccolslatbi, lwd = 1.5)
 segments(bspp_df2_noayr$p25, y_pos, bspp_df2_noayr$p75, y_pos, col = wccolslatbi, lwd = 3)
 
-##### Compare model output with and without partial pooling #####
+## Compare model output with and without partial pooling ----
 # Open device
 jpeg("figures/growthModelsMain/sitePPvsnoayr.jpeg", width = 9, height = 6, units = "in", res = 300)
 par(mfrow = c(2,3), oma = c(0, 2, 0, 0))
@@ -2585,7 +2585,7 @@ fitgdd <- sampling(gddmodelabv, data = dgdd,
 saveRDS(fitgdd, "output/stanOutput/fitGrowthGDD_abv30")
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_abv30")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -2626,7 +2626,7 @@ site_df2   <- extract_params(df_fitgdd, "asite", "fit_a_site",
 ayear_df2 <- subset(ayear_df2, !grepl("mean", year))
 site_df2 <- subset(site_df2, !grepl("z|sigma", site))
 
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_abv30.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -2807,11 +2807,11 @@ legend("right",
 dev.off()                 
 
 
-##### Compare model output with and without slope on max temp #####
+## Compare model output with and without slope on max temp ----
 # Recover fitgdd without partial pooling
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -2973,7 +2973,7 @@ fiteos <- sampling(eosmodel, data = deos,
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS_BAI")
 
 
-##### Recover parameters #####
+## Recover parameters ----
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_BAI")
 fitgsl <- readRDS("output/stanOutput/fitGrowthGSL_BAI")
 fitsos <- readRDS("output/stanOutput/fitGrowthSOS_BAI")
@@ -3016,7 +3016,7 @@ a_df2  <- extract_params(df_fitgdd, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_gdd <- as.data.frame(rstan::summary(fitgdd)$summary)
 fit_summary_gdd$param_full <- rownames(fit_summary_gdd)
 rownames(fit_summary_gdd) <- NULL
@@ -3062,7 +3062,7 @@ write.csv(ayear_df2,  "output/GM_GDDparam_ayear_BAI.csv",  row.names = FALSE)
 write.csv(a_df2,      "output/GM_GDDparam_a_BAI.csv",      row.names = FALSE)
 
 
-##### Plot posterior vs priors for gdd fit #####
+## Plot posterior vs priors for gdd fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gddModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -3148,7 +3148,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot GSL fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgsl <- as.data.frame(fitgsl)
 
 # full posterior
@@ -3183,7 +3183,7 @@ a_df2  <- extract_params(df_fitgsl, "a", "fit_a",
                          "grandmean", "a\\[(\\d+)\\]")
 a_df2 <- subset(a_df2, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_gsl <- as.data.frame(rstan::summary(fitgsl)$summary)
 fit_summary_gsl$param_full <- rownames(fit_summary_gsl)
 rownames(fit_summary_gsl) <- NULL
@@ -3228,7 +3228,7 @@ write.csv(site_df2,   "output/GM_GSLparam_site_BAI.csv",   row.names = FALSE)
 write.csv(ayear_df2,  "output/GM_GSLparam_ayear_BAI.csv",  row.names = FALSE)
 write.csv(a_df2,      "output/GM_GSLparam_a_BAI.csv",      row.names = FALSE)
 
-##### Plot posterior vs priors for GSL fit #####
+## Plot posterior vs priors for GSL fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/gslModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -3314,7 +3314,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot SOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fitsos <- as.data.frame(fitsos)
 
 # full posterior
@@ -3349,7 +3349,7 @@ a_df2_sos  <- extract_params(df_fitsos, "a", "fit_a",
                              "grandmean", "a\\[(\\d+)\\]")
 a_df2_sos <- subset(a_df2_sos, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_sos <- as.data.frame(rstan::summary(fitsos)$summary)
 fit_summary_sos$param_full <- rownames(fit_summary_sos)
 rownames(fit_summary_sos) <- NULL
@@ -3387,7 +3387,7 @@ write.csv(site_df2_sos,   "output/GM_SOSparam_site_BAI.csv",   row.names = FALSE
 write.csv(ayear_df2_sos,  "output/GM_SOSparam_ayear_BAI.csv",  row.names = FALSE)
 write.csv(a_df2_sos,     "output/GM_SOSparam_a_BAI.csv",       row.names = FALSE)
 
- ##### Plot posterior vs priors for sos fit #####
+ ## Plot posterior vs priors for sos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/sosModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -3473,7 +3473,7 @@ dev.off()
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 # Plot EOS fit ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-##### Recover parameters #####
+## Recover parameters ----
 df_fiteos <- as.data.frame(fiteos)
 
 # full posterior
@@ -3508,7 +3508,7 @@ a_df2_eos  <- extract_params(df_fiteos, "a", "fit_a",
                              "grandmean", "a\\[(\\d+)\\]")
 a_df2_eos <- subset(a_df2_eos, grandmean == "a")
 
-##### Recover Rhat and ESS #####
+## Recover Rhat and ESS ----
 fit_summary_eos <- as.data.frame(rstan::summary(fiteos)$summary)
 fit_summary_eos$param_full <- rownames(fit_summary_eos)
 rownames(fit_summary_eos) <- NULL
@@ -3546,7 +3546,7 @@ write.csv(site_df2_eos,   "output/GM_EOSparam_site_BAI.csv",   row.names = FALSE
 write.csv(ayear_df2_eos,  "output/GM_EOSparam_ayear_BAI.csv",  row.names = FALSE)
 write.csv(a_df2_eos,      "output/GM_EOSparam_a_BAI.csv",      row.names = FALSE)
 
-##### Plot posterior vs priors for eos fit #####
+## Plot posterior vs priors for eos fit ----
 pdf(file = "figures/growthModelsMain/diagnostics/eosModelPriorVSPosterior_BAI.pdf", width = 8, height = 10)
 
 pal <- wes_palette("AsteroidCity1")[3:4]
@@ -3629,11 +3629,11 @@ legend("topright", legend = c("Prior", "Posterior"), col = pal, lwd = 2)
 
 dev.off()
 
-##### Compare model output with and without slope on max temp #####
+## Compare model output with and without slope on max temp ----
 # Recover fitgdd without partial pooling
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD")
 
-##### Recover parameters #####
+## Recover parameters ----
 df_fitgdd <- as.data.frame(fitgdd)
 
 sigma_df2_rw  <- extract_params(df_fitgdd, "sigma", "mean", "sigma")
@@ -3795,7 +3795,7 @@ bpopfit <- stan_lmer(loglength ~ 1 + (1 | site/treeid),
                      data = bpop)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Recover parameters for ring width #####
+## Recover parameters for ring width ----
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 # thanks to claude for helping me recover the following
 s <- summary(aincfit, pars = "varying", probs = c(0.05, 0.25, 0.75, 0.95))
@@ -3920,7 +3920,7 @@ bpopfit <- stan_lmer(budset/10 ~ 1 + (1 | site/treeid),
                      data = bpop)
 
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-##### Recover parameters for budset #####
+## Recover parameters for budset ----
 # --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 s <- summary(aincfit, pars = "varying", probs = c(0.05, 0.25, 0.75, 0.95))
 site_rows <- grep("^b\\[\\(Intercept\\) site:", rownames(s), value = TRUE)
