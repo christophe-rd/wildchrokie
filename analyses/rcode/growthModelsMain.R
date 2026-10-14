@@ -2052,13 +2052,14 @@ fiteos <- sampling(eosmodel, data = deos,
                    warmup = wrmUp, iter = itrns, chains=4)
 saveRDS(fiteos, "output/stanOutput/fitGrowthEOS_BAI")
 
-
-## Recover parameters ----
 fitgdd <- readRDS("output/stanOutput/fitGrowthGDD_BAI")
 fitgsl <- readRDS("output/stanOutput/fitGrowthGSL_BAI")
 fitsos <- readRDS("output/stanOutput/fitGrowthSOS_BAI")
 fiteos <- readRDS("output/stanOutput/fitGrowthEOS_BAI")
 
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# Plot GDD fit ----
+# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 df_fitgdd <- as.data.frame(fitgdd)
 
 # full posterior
@@ -2854,7 +2855,7 @@ saveRDS(fiteos, "output/stanOutput/fitGrowthEOSZscored_largerPriors")
 }
 
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# Estimate site effect per species ####
+# ESTIMATE SITE EFFECT PER SPECIES ####
 # <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 if(fitasitePerSpp){
   
