@@ -1,4 +1,4 @@
-\begin{thebibliography}{90}
+\begin{thebibliography}{88}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Agel \emph{et~al.}(2025)Agel, Barlow, Skinner \&
@@ -12,8 +12,7 @@ Aitken, S.N. \& Bemmels, J.B. (2016) Time to get moving: assisted gene flow of
   forest trees. \emph{Evolutionary Applications} \textbf{9}, 271--290.
 
 \bibitem[{{Arnold Arboretum}(2026)}]{arnoldarboretum_weather_2026}
-{Arnold Arboretum} (2026) Weather {Data} at the {Arnold} {Arboretum}. Accessed:
-  2025-09-24.
+{Arnold Arboretum} (2026) Weather {Data} at the {Arnold} {Arboretum}.
 
 \bibitem[{Augspurger \& Bartlett(2003)}]{augspurger_differences_2003}
 Augspurger, C.K. \& Bartlett, E.A. (2003) Differences in leaf phenology between
@@ -121,7 +120,7 @@ Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt,
 \bibitem[{Carroll \emph{et~al.}(2026)Carroll, Weigle \&
   Petzoldt}]{carroll_network_2026}
 Carroll, J., Weigle, T. \& Petzoldt, C. (2026) The {Network} for {Environment}
-  and {Weather} {Applications} ({NEWA}) Accessed: 2025-09-24.
+  and {Weather} {Applications} ({NEWA}) .
 
 \bibitem[{Charlet De~Sauvage \emph{et~al.}(2022)Charlet De~Sauvage, Vitasse,
   Meier, Delzon \& Bigler}]{charletdesauvage_temperature_2022}
@@ -212,19 +211,6 @@ Etzold, S., Sterck, F., Bose, A.K., Braun, S., Buchmann, N., Eugster, W.,
 Finn, G., Straszewski, A. \& Peterson, V. (2007) A general growth stage key for
   describing trees and woody plants. \emph{Annals of Applied Biology}
   \textbf{151}, 127--131.
-
-\bibitem[{Finzi \emph{et~al.}(2020)Finzi, Giasson, Barker~Plotkin, Aber, Boose,
-  Davidson, Dietze, Ellison, Frey, Goldman, Keenan, Melillo, Munger,
-  Nadelhoffer, Ollinger, Orwig, Pederson, Richardson, Savage, Tang, Thompson,
-  Williams, Wofsy, Zhou \& Foster}]{finziCarbonBudgetHarvard2020}
-Finzi, A.C., Giasson, M., Barker~Plotkin, A.A., Aber, J.D., Boose, E.R.,
-  Davidson, E.A., Dietze, M.C., Ellison, A.M., Frey, S.D., Goldman, E., Keenan,
-  T.F., Melillo, J.M., Munger, J.W., Nadelhoffer, K.J., Ollinger, S.V., Orwig,
-  D.A., Pederson, N., Richardson, A.D., Savage, K., Tang, J., Thompson, J.R.,
-  Williams, C.A., Wofsy, S.C., Zhou, Z. \& Foster, D.R. (2020) Carbon budget of
-  the {Harvard} {Forest} {Long}‐{Term} {Ecological} {Research} site: pattern,
-  process, and response to global change. \emph{Ecological Monographs}
-  \textbf{90}, e01423.
 
 \bibitem[{Fong \emph{et~al.}(2026)Fong, Curry, Zhang \&
   Wolkovich}]{fong_tim_2026}
@@ -433,7 +419,7 @@ Menzel, A., Sparks, T.H., Estrella, N., Koch, E., Aasa, A., Ahas, R.,
 \bibitem[{{National Centers for Environmental
   Information}(2026)}]{nationalcentersforenvironmentalinformationncei_north_2026}
 {National Centers for Environmental Information} (2026) North {American}
-  {Drought} {Monitor}. Shortauthor: NCEI Accessed: 2026-04-22.
+  {Drought} {Monitor}. Shortauthor: NCEI.
 
 \bibitem[{{National Oceanic and Atmospheric
   Administration}(2026)}]{nationaloceanicandatmosphericadministration_local_2026}
@@ -474,12 +460,6 @@ Polgar, C.A. \& Primack, R.B. (2011) Leaf‐out phenology of temperate woody
 \bibitem[{{R Core Team}(2025)}]{rcoreteam_language_2021}
 {R Core Team} (2025) R: {A} {Language} and {Environment} for {Statistical}
   {Computing}.
-
-\bibitem[{Raden \emph{et~al.}(2020)Raden, Mattheis, Spiecker, Backofen \&
-  Kahle}]{radenPotentialIntraannualDensity2020a}
-Raden, M., Mattheis, A., Spiecker, H., Backofen, R. \& Kahle, H.P. (2020) The
-  potential of intra-annual density information for crossdating of short
-  tree-ring series. \emph{Dendrochronologia} \textbf{60}, 125679.
 
 \bibitem[{Richardson \emph{et~al.}(2012)Richardson, Anderson, Arain, Barr,
   Bohrer, Chen, Chen, Ciais, Davis, Desai, Dietze, Dragoni, Garrity, Gough,
@@ -558,11 +538,11 @@ Suzuki, M., Yoda, K. \& Suzuki, H. (1996) Phenological {Comparison} of the
   {Diffuse}-{Porous} {Deciduous} {Trees} in a {Japanese} {Temperate} {Forest}.
   \emph{IAWA Journal} \textbf{17}, 431--444.
 
-\bibitem[{Sweeney \emph{et~al.}(2024)Sweeney, Butler \&
-  Wingler}]{sweeneyComparisonTimingSpring2024}
-Sweeney, C.J., Butler, F. \& Wingler, A. (2024) Comparison of the timing of
-  spring phenological events between phenological garden trees and wild
-  populations. \emph{Journal of Plant Ecology} \textbf{17}, rtae008.
+\bibitem[{Vehtari \emph{et~al.}(2017)Vehtari, Gelman \&
+  Gabry}]{vehtari_practical_2017}
+Vehtari, A., Gelman, A. \& Gabry, J. (2017) Practical {Bayesian} model
+  evaluation using leave-one-out cross-validation and {WAIC}. \emph{Statistics
+  and Computing} \textbf{27}, 1413--1432.
 
 \bibitem[{Wang \& Engel(1998)}]{wang_simulation_1998}
 Wang, E. \& Engel, T. (1998) Simulation of phenological development of wheat

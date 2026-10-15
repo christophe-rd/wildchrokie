@@ -184,7 +184,7 @@ gddgsl <- gddgsl[,1:2]
 colnames(gddgsl) <- c("$\\Delta$ ELPD", "SE ELPD")
 print(xtable(gddgsl[, c("$\\Delta$ ELPD", "SE ELPD")],
   digits = 1,
-  caption = "LOO comparison of GDD and GSL growth models.",
+  caption = "Model comparison of the growing degree day (GDD) and growing season length (GSL) models with the expected log predictive density (ELPD) using the `loo package \\citep{vehtari_practical_2017}. `$\\Delta$' represents the difference in ELPD relative to GDD and `SE' (standard error) represents the uncertainty of the model performance estimate.",
   label = "tab:looGDDGSL"),
   sanitize.colnames.function = identity)
 
@@ -194,11 +194,11 @@ soseos <- soseos[,1:2]
 colnames(soseos) <- c("$\\Delta$ ELPD", "SE ELPD")
 print(xtable(soseos[, c("$\\Delta$ ELPD", "SE ELPD")],
   digits = 1,
-  caption = "LOO comparison of SOS and EOS growth models.",
+  caption = "Model comparison of the end of season (EOS) and start of season (SOS) models with the expected log predictive density (ELPD) using the `loo' package \\citep{vehtari_practical_2017}. `$\\Delta$' represents the difference in ELPD relative to GDD and `SE' (standard error) represents the uncertainty of the model performance estimate.",
   label = "tab:looSOSEOS"),
   sanitize.colnames.function = identity)
 @
-
+  
 <<Table prov climate, results='asis', echo = FALSE>>=
 
 t2019 <- wcjja$tmeanmean[wcjja$year == 2019]
