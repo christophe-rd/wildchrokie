@@ -23,7 +23,7 @@
 \begin{center}
 {\sc} {\Large Supplementary Material} \\
 \vspace{5ex}
-{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson$^6$, \& E.M. Wolkovich$^{1,2,3}$
+{\sc} Christophe Rouleau-Desrochers$^1$*, Victor Van der Meersch$^1$, D.M. Buonaiuto$^{2,3,5}$, C.J. Chamberlain$^{2,3,4}$, Deirdre Loughnan$^1$, Neil Pederson$^6$ \& E.M. Wolkovich$^{1,2,3}$
 \end{center}
 $^1$Forest \& Conservation Sciences, Faculty of Forestry \& Environmental Stewardship, University of British Columbia, Vancouver, British Columbia, Canada\\
 $^2$Arnold Arboretum of Harvard University, Boston, Massachusetts, USA\\
