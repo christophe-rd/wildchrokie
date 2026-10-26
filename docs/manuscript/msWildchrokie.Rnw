@@ -131,6 +131,9 @@ b_eosgain_mu$spp_name <- "all"
 \section{Abstract}
 Shifts in spring leafout and flowering with anthropogenic climate change can have cascading effects for tree growth with implications for global carbon sequestration. Earlier leafout has extended the vegetative growing season in many forests. While these longer growing seasons are expected to increase tree growth, multiple recent studies have failed to find this relationship. Earlier leafout, however, only extends the early season, when thermal conditions are poor for photosynthesis and growth; thus growing season length may not be the best predictor. Here we leveraged observational data from a common garden to understand how plant growth responds to growing season length versus the thermal growing season. Working across four juvenile tree species, we found the thermal season increased tree growth for most species and was a stronger predictor of growth than season length, with responses consistent across four sampled provenances. Further supporting the importance of the thermal season, we found that end of season phenology---when conditions are much warmer---had a stronger influence on growth responses than start of season. Our results suggest early season leafout may not directly drive increased growth unless it also increases the thermal season. 
 
+\section*{Plain Language Summary}
+Climate change extends the growing season which should increase tree growth. However, recent research showed that this may not be the case. Here we ask if juvenile trees grow more with longer and warmer growing seasons. We show that warmer seasons increased growth for most species which appears to be driven more by late summer than spring conditions. 
+
 \textbf{Keywords:} forest ecology, climate change, community ecology, dendrochronology, phenology, common garden, forestry.
 
 % <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
