@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: msWildchrokie.aux
+The style file: besjournals.bst
+Database file #1: ExportedItems.bib
+Warning--empty journal in carroll_network_2026
+Warning--empty journal in habjorg_photoperiodic_1978
+Warning--empty booktitle in stokes_introduction_1996
+You've used 91 entries,
+            2805 wiz_defined-function locations,
+            1549 strings with 41802 characters,
+and the built_in function-call counts, 83468 in all, are:
+= -- 5756
+> -- 6617
+< -- 32
++ -- 2523
+- -- 2413
+* -- 7762
+:= -- 13494
+add.period$ -- 174
+call.type$ -- 91
+change.case$ -- 1262
+chr.to.int$ -- 92
+cite$ -- 94
+duplicate$ -- 4855
+empty$ -- 4454
+format.name$ -- 2702
+if$ -- 15412
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 1331
+newline$ -- 277
+num.names$ -- 367
+pop$ -- 2562
+preamble$ -- 1
+purify$ -- 1167
+quote$ -- 0
+skip$ -- 1838
+stack$ -- 0
+substring$ -- 2874
+swap$ -- 3110
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 804
+warning$ -- 3
+while$ -- 404
+width$ -- 0
+write$ -- 991
+(There were 3 warnings)
